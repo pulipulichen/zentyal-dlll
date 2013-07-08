@@ -1,0 +1,4 @@
+class: EBox::SSH
+
+models:
+    - Settings

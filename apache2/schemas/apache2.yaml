@@ -1,0 +1,4 @@
+class: EBox::Apache2
+
+models:
+    - Settings

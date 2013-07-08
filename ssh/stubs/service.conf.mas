@@ -1,0 +1,90 @@
+<%args>
+    $port
+</%args>
+% print "# Package generated configuration file\n";
+% print "# See the sshd_config(5) manpage for details\n";
+
+% print "# What ports, IPs and protocols we listen for\n";
+Port <% $port %>
+% print "# Use these options to restrict which interfaces/protocols sshd will bind to\n";
+% print "#ListenAddress ::\n";
+% print "#ListenAddress 0.0.0.0\n";
+Protocol 2
+% print "# HostKeys for protocol version 2\n";
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+% print "#Privilege Separation is turned on for security\n";
+UsePrivilegeSeparation yes
+
+% print "# Lifetime and size of ephemeral version 1 server key\n";
+KeyRegenerationInterval 3600
+ServerKeyBits 768
+
+% print "# Logging\n";
+SyslogFacility AUTH
+LogLevel INFO
+
+% print "# Authentication:\n";
+LoginGraceTime 120
+PermitRootLogin yes
+StrictModes yes
+
+RSAAuthentication yes
+PubkeyAuthentication yes
+% print "#AuthorizedKeysFile    \%h/.ssh/authorized_keys\n";
+
+% print "# Don\'t read the user\'s ~/.rhosts and ~/.shosts files\n";
+IgnoreRhosts yes
+% print "# For this to work you will also need host keys in /etc/ssh_known_hosts\n";
+RhostsRSAAuthentication no
+% print "# similar for protocol version 2\n";
+HostbasedAuthentication no
+% print "# Uncomment if you don\'t trust ~/.ssh/known_hosts for RhostsRSAAuthentication\n";
+% print "#IgnoreUserKnownHosts yes\n";
+
+% print "# To enable empty passwords, change to yes (NOT RECOMMENDED)\n";
+PermitEmptyPasswords no
+
+% print "# Change to yes to enable challenge-response passwords (beware issues with\n";
+% print "# some PAM modules and threads)\n";
+ChallengeResponseAuthentication no
+
+% print "# Change to no to disable tunnelled clear text passwords\n";
+% print "#PasswordAuthentication yes\n";
+
+% print "# Kerberos options\n";
+% print "#KerberosAuthentication no\n";
+% print "#KerberosGetAFSToken no\n";
+% print "#KerberosOrLocalPasswd yes\n";
+% print "#KerberosTicketCleanup yes\n";
+
+% print "# GSSAPI options\n";
+% print "#GSSAPIAuthentication no\n";
+% print "#GSSAPICleanupCredentials yes\n";
+
+X11Forwarding yes
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+% print "#UseLogin no\n";
+
+% print "#MaxStartups 10:30:60\n";
+% print "#Banner /etc/issue.net\n";
+
+% print "# Allow client to pass locale environment variables\n";
+AcceptEnv LANG LC_*
+
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+% print "# Set this to \'yes\' to enable PAM authentication, account processing,\n";
+% print "# and session processing. If this is enabled, PAM authentication will\n";
+% print "# be allowed through the ChallengeResponseAuthentication and\n";
+% print "# PasswordAuthentication.  Depending on your PAM configuration,\n";
+% print "# PAM authentication via ChallengeResponseAuthentication may bypass\n";
+% print "# the setting of \"PermitRootLogin without-password\".\n";
+% print "# If you just want the PAM account and session checks to run without\n";
+% print "# PAM authentication, then enable this but set PasswordAuthentication\n";
+% print "# and ChallengeResponseAuthentication to \'no\'.\n";
+UsePAM yes
