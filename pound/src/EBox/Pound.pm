@@ -43,7 +43,7 @@ sub menu
     my ($self, $root) = @_;
 
     my $item = new EBox::Menu::Item(
-        url => 'Pound/View/Services',
+        url => 'Pound/Composite/Global',
         text => $self->printableName(),
         separator => 'Infrastructure',
         order => 421
@@ -85,7 +85,6 @@ sub _setConf
     my ($self) = @_;
 
     my $services = $self->model('Services');
-    my $servicesMod = EBox::Global->modInstance('services');
 
     # Iterate over table
     my @paramsArray = ();
@@ -115,7 +114,14 @@ sub _setConf
         });
     }
 
+    my $settings = $self->model('Settings');
+    my $address = $settings->value('address');
+    my $port = $settings->value('port');
+
+
     my @servicesParams = ();
+    push(@servicesParams, 'address' => $address);
+    push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'services' => \@paramsArray);
 
     $self->writeConfFile(

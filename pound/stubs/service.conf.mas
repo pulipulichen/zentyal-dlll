@@ -1,4 +1,6 @@
 <%args>
+    $address
+    $port
     $services
 </%args>
 % print "## Minimal sample pound.cfg\n";
@@ -35,8 +37,8 @@ Control "/var/run/pound/poundctl.socket"
 
 % print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
 ListenHTTP
-	Address 127.0.0.1
-	Port	8080
+	Address <% $address %>
+	Port	<% $port %>
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		0

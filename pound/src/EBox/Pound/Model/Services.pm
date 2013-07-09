@@ -64,6 +64,7 @@ sub _table
         tableDescription => \@fields,
         printableRowName => __('Pound Service'),
         sortedBy => 'domainName',
+        'HTTPUrlView'=> 'DNS/Composite/Global',
         help => __('This is the help of the model'),
     };
 

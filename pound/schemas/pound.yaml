@@ -1,4 +1,8 @@
 class: EBox::Pound
 
 models:
+    - Settings
     - Services
+
+composites:
+    Global: [Settings, Services]
