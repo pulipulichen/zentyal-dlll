@@ -1,0 +1,76 @@
+<%args>
+    $services
+</%args>
+% print "## Minimal sample pound.cfg\n";
+% print "##\n";
+% print "## see pound(8) for details\n";
+
+
+% print "######################################################################\n";
+% print "## global options:\n";
+
+User		"www-data"
+Group		"www-data"
+% print "#RootJail	\"/chroot/pound\"\n";
+
+% print "## Logging: (goes to syslog by default)\n";
+% print "##	0	no logging\n";
+% print "##	1	normal\n";
+% print "##	2	extended\n";
+% print "##	3	Apache-style (common log format)\n";
+LogLevel	1
+
+% print "## check backend every X secs:\n";
+Alive		30
+
+% print "## use hardware-accelleration card supported by openssl(1):\n";
+% print "#SSLEngine	\"<hw>\"\n";
+
+% print "# poundctl control socket\n";
+Control "/var/run/pound/poundctl.socket"
+
+
+% print "######################################################################\n";
+% print "## listen, redirect and ... to:\n";
+
+% print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
+ListenHTTP
+	Address 127.0.0.1
+	Port	8080
+
+% print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
+	xHTTP		0
+
+% print "#        Service\n";
+% print "#                HeadRequire \"Host: dlll.nccu.edu.tw.*\"\n";
+% print "#                BackEnd\n";
+% print "#                        Address 192.168.1.31\n";
+% print "#                        Port    80\n";
+% print "#                End\n";
+% print "#        End\n";
+
+	Service
+		BackEnd
+			Address	127.0.0.1
+			Port	80
+		End
+	End
+
+% foreach my $service (@{$services}) {
+%   my $domainNameValue = $service->{'domainNameValue'};
+%   my $ipaddrValue = $service->{'ipaddrValue'};
+%   my $portValue = $service->{'portValue'};
+%   my $enbaledValue = $service->{'enbaledValue'};
+%   if ($enbaledValue) {
+	Service
+                HeadRequire "Host: <% $domainNameValue %>.*
+		BackEnd
+			Address	<% $ipaddrValue %>
+			Port	<% $portValue %>
+		End
+	End
+%   }
+% }
+
+
+End

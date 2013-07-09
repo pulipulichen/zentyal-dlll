@@ -1,0 +1,4 @@
+class: EBox::Pound
+
+models:
+    - Services
