@@ -11,6 +11,8 @@ use EBox::Gettext;
 use EBox::Types::HostIP;
 use EBox::Types::Port;
 
+use EBox::Network;
+
 # Group: Public methods
 
 # Constructor: new
@@ -44,6 +46,20 @@ sub _table
 {
     my ($self) = @_;
 
+    my $network = EBox::Global->modInstance('network');
+    #my @ifaces = $network->allIfaces();
+    #for(my $i=0; $i <= \@ifaces; $i++) {
+    my $iface_help = "";
+    foreach my $if (@{$network->allIfaces()}) {
+        #$if = $ifaces[$i];
+        my $address = $network->ifaceAddress($if);
+        #$iface_help = $if . " " . $address;
+        if ($iface_help ne "") {
+            $iface_help = $iface_help . "<br />\n";
+        }
+        $iface_help = $iface_help . $if . ": " . $address;
+    }
+
     my @tableDesc =
       (
           new EBox::Types::HostIP(
@@ -51,6 +67,7 @@ sub _table
               printableName => __('Address'),
               editable      => 1,
               unique        => 1,
+              help          => __($iface_help),
              ),
           new EBox::Types::Port(
               fieldName     => 'port',

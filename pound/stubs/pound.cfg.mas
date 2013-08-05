@@ -65,7 +65,7 @@ ListenHTTP
 %   my $enbaledValue = $service->{'enbaledValue'};
 %   if ($enbaledValue) {
 	Service
-                HeadRequire "Host: <% $domainNameValue %>.*
+                HeadRequire "Host: <% $domainNameValue %>.*"
 		BackEnd
 			Address	<% $ipaddrValue %>
 			Port	<% $portValue %>

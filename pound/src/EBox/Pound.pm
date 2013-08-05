@@ -126,7 +126,7 @@ sub _setConf
 
     $self->writeConfFile(
         $CONFFILE,
-        "pound/service.conf.mas",
+        "pound/pound.cfg.mas",
         \@servicesParams,
         { uid => '0', gid => '0', mode => '644' }
     );
