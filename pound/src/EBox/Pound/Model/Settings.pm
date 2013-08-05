@@ -11,7 +11,7 @@ use EBox::Gettext;
 use EBox::Types::HostIP;
 use EBox::Types::Port;
 
-#use EBox::Network;
+use EBox::Network;
 
 # Group: Public methods
 
@@ -46,22 +46,15 @@ sub _table
 {
     my ($self) = @_;
 
-#    my $network = EBox::Global->modInstance('network');
-#    #my @ifaces = $network->allIfaces();
-#    #for(my $i=0; $i <= \@ifaces; $i++) {
-#    my $iface_help = "";
-#    my $external_address;
-#    foreach my $if (@{$network->allIfaces()}) {
-#        my $address = $network->ifaceAddress($if);
-#        
-#        if ($network->ifaceIsExternal($if)) {
-#            if ($iface_help ne "") {
-#                $iface_help = $iface_help . "<br />\n";
-#            }
-#            $iface_help = $iface_help . $if . ": " . $address;
-#            $external_address = $address;
-#        }
-#    }
+    my $network = EBox::Global->modInstance('network');
+    my $address;
+    my $external_iface;
+    foreach my $if (@{$network->allIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $external_iface = $if;
+            $address = $network->ifaceAddress($if);
+        }
+    }
 
     my @tableDesc =
       (
@@ -73,9 +66,17 @@ sub _table
 #              
 #              #help          => __($iface_help),
 #             ),
+          new EBox::Types::HostIP(
+              fieldName     => 'address',
+              printableName => __('Address'),
+              editable      => 0,
+              unique        => 1,
+              defaultValue  => $address,
+              help          => __('<a href="/Network/Ifaces?iface='.$external_iface.'">修改IP</a>')
+             ),
           new EBox::Types::Port(
               fieldName     => 'port',
-              printableName => __('port'),
+              printableName => __('Port'),
               editable      => 1,
               unique        => 1,
              ),
