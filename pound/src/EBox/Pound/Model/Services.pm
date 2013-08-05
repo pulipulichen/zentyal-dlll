@@ -31,19 +31,27 @@ sub _table
         ),
         new EBox::Types::HostIP(
             fieldName => 'ipaddr',
-            printableName => __('IP Address'),
+            printableName => __('Internal IP Address'),
             editable => 1,
         ),
         new EBox::Types::Port(
             fieldName => 'port',
-            printableName => __('port'),
+            printableName => __('Internal Port'),
             defaultValue => 80,
             editable => 1,
         ),
         new EBox::Types::Text(
             fieldName => 'description',
-            printableName => __('description'),
+            printableName => __('Description'),
             editable => 1,
+        ),
+        new EBox::Types::Boolean(
+            fieldName => 'bound_local_dns',
+            printableName => __('Bound Local DNS'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
         ),
         new EBox::Types::Boolean(
             fieldName => 'enabled',
@@ -71,4 +79,52 @@ sub _table
     return $dataTable;
 }
 
+sub addedRowNotify
+{
+#    my ($self) = @_;
+#    my $services = $self;
+#
+#    my $port;
+#    for my $id (@{$services->ids()}) {
+#        my $row = $services->row($id);
+#        $port = $row->valueByName('port');
+#    }
+#
+#    my $settings = $self->model('Settings');
+    #$settings->setValue({
+    #    port => 99
+    #});
+    #my $setting_row = $settings->row();
+    #my $field = $setting_row->elementByName('port');
+    #$field->setValue('99');
+    #$setting_row->store();
+    #$row->setValue($field);
+
+    my ($self, $row) = @_;
+
+    #$self->_autoDetectInterface($row);
+    my $port = $row->valueByName('port');
+    my $pound = $self->parentModule();
+    my $settings = $pound->model('Settings');
+    $settings->setAll('port', $port);
+
+}
+
+# 找尋row用
+#sub hostDomainChangedDone
+#{
+#    my ($self, $oldDomainName, $newDomainName) = @_;
+#
+#    my $domainModel = $self->model('DomainTable');
+#    my $row = $domainModel->find(domain => $oldDomainName);
+#    if (defined $row) {
+#        $row->elementByName('domain')->setValue($newDomainName);
+#        $row->store();
+#    }
+#}
+
+# 新增row用
+#    for my $mod (@modsToAdd) {
+#        $self->add( module => $mod, enabled => 1 );
+#    }
 1;

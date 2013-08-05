@@ -61,16 +61,16 @@ sub _table
       (
           new EBox::Types::HostIP(
               fieldName     => 'address',
-              printableName => __('Address'),
+              printableName => __('External IP Address'),
               editable      => 0,
               unique        => 1,
               defaultValue  => $address,
-              help          => '<a href="/Network/Ifaces?iface='.$external_iface.'">'.__('Modify IP Address').'</a>',
+              help          => '<a href="/Network/Ifaces?iface='.$external_iface.'">'.__('Modify External Network').'</a>',
               allowUnsafeChars => 1,
              ),
           new EBox::Types::Port(
               fieldName     => 'port',
-              printableName => __('Port'),
+              printableName => __('External Port'),
               editable      => 1,
               unique        => 1,
              ),
