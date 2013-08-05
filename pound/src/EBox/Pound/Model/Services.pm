@@ -81,32 +81,13 @@ sub _table
 
 sub addedRowNotify
 {
-#    my ($self) = @_;
-#    my $services = $self;
-#
-#    my $port;
-#    for my $id (@{$services->ids()}) {
-#        my $row = $services->row($id);
-#        $port = $row->valueByName('port');
-#    }
-#
-#    my $settings = $self->model('Settings');
-    #$settings->setValue({
-    #    port => 99
-    #});
-    #my $setting_row = $settings->row();
-    #my $field = $setting_row->elementByName('port');
-    #$field->setValue('99');
-    #$setting_row->store();
-    #$row->setValue($field);
-
     my ($self, $row) = @_;
 
-    #$self->_autoDetectInterface($row);
-    my $port = $row->valueByName('port');
-    my $pound = $self->parentModule();
-    my $settings = $pound->model('Settings');
-    $settings->setAll('port', $port);
+# 測試用，修改自己模組的port    
+#    my $port = $row->valueByName('port');
+#    my $pound = $self->parentModule();
+#    my $settings = $pound->model('Settings');
+#    $settings->setAll('port', $port);
 
 }
 
