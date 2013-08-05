@@ -53,26 +53,20 @@ sub _table
         if ($network->ifaceIsExternal($if)) {
             $external_iface = $if;
             $address = $network->ifaceAddress($if);
+            last;
         }
     }
 
     my @tableDesc =
       (
-#          new EBox::Types::HostIP(
-#              fieldName     => 'address',
-#              printableName => __('Address'),
-#              editable      => 0,
-#              unique        => 1,
-#              
-#              #help          => __($iface_help),
-#             ),
           new EBox::Types::HostIP(
               fieldName     => 'address',
               printableName => __('Address'),
               editable      => 0,
               unique        => 1,
               defaultValue  => $address,
-              help          => __('<a href="/Network/Ifaces?iface='.$external_iface.'">修改IP</a>')
+              help          => '<a href="/Network/Ifaces?iface='.$external_iface.'">'.__('Modify IP Address').'</a>',
+              allowUnsafeChars => 1,
              ),
           new EBox::Types::Port(
               fieldName     => 'port',
