@@ -115,9 +115,16 @@ sub _setConf
     }
 
     my $settings = $self->model('Settings');
-    my $address = $settings->value('address');
+#    my $address = $settings->value('address');
     my $port = $settings->value('port');
 
+    my $network = EBox::Global->modInstance('network');
+    my $address;
+    foreach my $if (@{$network->allIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $address = $network->ifaceAddress($if);
+        }
+    }
 
     my @servicesParams = ();
     push(@servicesParams, 'address' => $address);
