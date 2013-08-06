@@ -18,6 +18,8 @@ use EBox::DNS;
 use EBox::DNS::Model::Services;
 use EBox::DNS::Model::DomainTable;
 
+use EBox::Exceptions::Internal;
+
 # Method: _table
 #
 # Overrides:
@@ -58,6 +60,8 @@ sub _table
             defaultValue => 1,
             help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
         ),
+
+        # Enable Keep Last
         new EBox::Types::Boolean(
             fieldName => 'enabled',
             printableName => __('Enabled'),
@@ -72,7 +76,6 @@ sub _table
         tableName => 'PoundServices',
         printableTableName => __('Services'),
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
-        pageTitle => 'Services',
         modelDomain => 'Pound',
         tableDescription => \@fields,
         printableRowName => __('Pound Service'),
@@ -97,15 +100,35 @@ sub getExternalIpaddr
     return \@ipaddr;
 }
 
+sub getPortHeader 
+{
+    my ($self, $row) = @_;
+
+    # 測試用，變成ID前幾碼
+    my $ipaddr = $row->valueByName('ipaddr');
+    my @parts = split('\.', $ipaddr);
+    my $partC = $parts[2];
+        $partC = substr($partC, -1);
+    my $partD = $parts[3];
+        if (length($partD) == 1) {
+            $partD = "0" . $partD;
+        }
+        else {
+            $partC = substr($partC, -2);
+        }
+     my $portHeader = $partC.$partD;
+     
+     #$row->elementByName("description")->setValue($portHeader);
+     #$row->store();
+     #throw EBox::Exceptions::Internal("port header: ".$portHeader);
+
+     return $portHeader;
+}
+
 sub addedRowNotify
 {
     my ($self, $row) = @_;
 
-# 測試用，修改自己模組的port    
-#    my $port = $row->valueByName('port');
-#    my $pound = $self->parentModule();
-#    my $settings = $pound->model('Settings');
-#    $settings->setAll('port', $port);
     
     if ($row->valueByName('boundLocalDns') && $row->valueByName('enabled')) {
         my $domainName = $row->valueByName('domainName');
