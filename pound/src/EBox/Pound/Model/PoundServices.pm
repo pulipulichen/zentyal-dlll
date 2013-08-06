@@ -1,4 +1,4 @@
-package EBox::Pound::Model::Services;
+package EBox::Pound::Model::PoundServices;
 
 use base 'EBox::Model::DataTable';
 
@@ -12,6 +12,11 @@ use EBox::Types::HostIP;
 use EBox::Types::Port;
 use EBox::Types::Text;
 use EBox::Types::Boolean;
+
+use EBox::Global;
+use EBox::DNS;
+use EBox::DNS::Model::Services;
+use EBox::DNS::Model::DomainTable;
 
 # Method: _table
 #
@@ -46,7 +51,7 @@ sub _table
             editable => 1,
         ),
         new EBox::Types::Boolean(
-            fieldName => 'bound_local_dns',
+            fieldName => 'boundLocalDns',
             printableName => __('Bound Local DNS'),
             editable => 1,
             optional => 0,
@@ -55,16 +60,16 @@ sub _table
         ),
         new EBox::Types::Boolean(
             fieldName => 'enabled',
-            printableName => __('enabled'),
+            printableName => __('Enabled'),
             editable => 1,
             optional => 0,
-            defaultValue => 0
+            defaultValue => 1,
         ),
     );
 
     my $dataTable =
     {
-        tableName => 'Services',
+        tableName => 'PoundServices',
         printableTableName => __('Services'),
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
         pageTitle => 'Services',
@@ -72,11 +77,24 @@ sub _table
         tableDescription => \@fields,
         printableRowName => __('Pound Service'),
         sortedBy => 'domainName',
-        'HTTPUrlView'=> 'DNS/Composite/Global',
+        'HTTPUrlView'=> 'Pound/Composite/Global',
         help => __('This is the help of the model'),
     };
 
     return $dataTable;
+}
+
+sub getExternalIpaddr
+{
+    my $network = EBox::Global->modInstance('network');
+    my $address;
+    foreach my $if (@{$network->allIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $address = $network->ifaceAddress($if);
+        }
+    }
+    my @ipaddr=($address);
+    return \@ipaddr;
 }
 
 sub addedRowNotify
@@ -88,7 +106,50 @@ sub addedRowNotify
 #    my $pound = $self->parentModule();
 #    my $settings = $pound->model('Settings');
 #    $settings->setAll('port', $port);
+    
+    if ($row->valueByName('boundLocalDns') && $row->valueByName('enabled')) {
+        my $domainName = $row->valueByName('domainName');
+        
+        #my $domainsModel = EBox::DNS::instance()->model("DomainTable");
+        #my $global = EBox::Global->getInstance();
+        #my $dnsModule = @{$global->modInstancesOfType('EBox::DNS')};
+        #my $dnsModule = EBox::Global->modInstance('EBox::DNS')->model("DomainTable");
+        #my $dnsModule = EBox::Global->modInstance('dns');
+        #my $domainsModel = $dnsModule->model("DomainTable");
+        #$domainsModel->addDomain({domain_name => $domainName});
+        #$domainsModel->add( domain => $domainName, ipaddr => '192.168.1.1');
+        #$domainsModel->addDomain($domainName);
+        #$dnsModule->addDomain({
+        #       domain_name => $domainName 
+        #});
 
+        my $gl = EBox::Global->getInstance();
+        my $dns = $gl->modInstance('dns');
+        $dns->addDomain({
+            domain_name => $domainName,
+            #ipAddresses => $self->getExternalIpaddr(),
+        });
+    }
+}
+
+sub deletedRowNotify
+{
+    my ($self, $row) = @_;
+    my $domainName = $row->valueByName('domainName');
+
+    my $gl = EBox::Global->getInstance();
+    my $dns = $gl->modInstance('dns');
+    my $domModel = $dns->model('DomainTable');
+    my $id = $domModel->findId(domain => $domainName);
+    $domModel->removeRow($id);
+}
+
+sub updatedRowNotify
+{
+    my ($self, $row, $oldRow) = @_;
+    
+    $self->deletedRowNotify($oldRow);
+    $self->addedRowNotify($row);
 }
 
 # 找尋row用

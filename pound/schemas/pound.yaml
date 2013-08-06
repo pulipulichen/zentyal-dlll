@@ -2,7 +2,7 @@ class: EBox::Pound
 
 models:
     - Settings
-    - Services
+    - PoundServices
 
 composites:
-    Global: [Settings, Services]
+    Global: [Settings, PoundServices]

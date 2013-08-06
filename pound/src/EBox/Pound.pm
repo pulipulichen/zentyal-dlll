@@ -84,13 +84,17 @@ sub _setConf
 {
     my ($self) = @_;
 
-    my $services = $self->model('Services');
+    my $services = $self->model('PoundServices');
 
     # Iterate over table
     my @paramsArray = ();
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
+        if ($row->valueByName('enabled') == 0) {
+            next;
+        }
+
         my $domainNameValue = $row->valueByName('domainName');
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
