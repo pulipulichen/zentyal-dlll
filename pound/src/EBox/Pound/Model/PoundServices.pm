@@ -12,6 +12,8 @@ use EBox::Types::HostIP;
 use EBox::Types::Port;
 use EBox::Types::Text;
 use EBox::Types::Boolean;
+use EBox::Types::Union;
+use EBox::Types::Union::Text;
 
 use EBox::Global;
 use EBox::DNS;
@@ -61,6 +63,23 @@ sub _table
             defaultValue => 1,
             help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
         ),
+        new EBox::Types::Union(
+            'fieldName' => 'redirHTTP',
+            'printableName' => __('HTTP Redirect'),
+            'subtypes' =>
+            [
+            new EBox::Types::Port(
+                'fieldName' => 'redirHTTP_defaultPort',
+                'printableName' => __('Default Internal Port (80)'),
+                'editable' => 0,),
+            new EBox::Types::Port(
+                'fieldName' => 'redirHTTP_otherPort',
+                'printableName' => __('Other Internal Port'),
+                'editable' => 1,),
+            new EBox::Types::Union::Text(
+                'fieldName' => 'redirHTTP_disable',
+                'printableName' => __('Disable')),
+            ]),
 
         # Enable Keep Last
         new EBox::Types::Boolean(
@@ -99,6 +118,19 @@ sub getExternalIpaddr
     }
     my @ipaddr=($address);
     return \@ipaddr;
+}
+
+sub getExternalIface
+{
+    my $network = EBox::Global->modInstance('network');
+    my $iface;
+    foreach my $if (@{$network->allIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $iface = $if;
+            last;
+        }
+    }
+    return $iface;
 }
 
 sub getPortHeader 
@@ -158,20 +190,6 @@ sub addDomainName
 
     if ($row->valueByName('boundLocalDns') && $row->valueByName('enabled')) {
         my $domainName = $row->valueByName('domainName');
-        
-        #my $domainsModel = EBox::DNS::instance()->model("DomainTable");
-        #my $global = EBox::Global->getInstance();
-        #my $dnsModule = @{$global->modInstancesOfType('EBox::DNS')};
-        #my $dnsModule = EBox::Global->modInstance('EBox::DNS')->model("DomainTable");
-        #my $dnsModule = EBox::Global->modInstance('dns');
-        #my $domainsModel = $dnsModule->model("DomainTable");
-        #$domainsModel->addDomain({domain_name => $domainName});
-        #$domainsModel->add( domain => $domainName, ipaddr => '192.168.1.1');
-        #$domainsModel->addDomain($domainName);
-        #$dnsModule->addDomain({
-        #       domain_name => $domainName 
-        #});
-
         my $gl = EBox::Global->getInstance();
         my $dns = $gl->modInstance('dns');
         $dns->addDomain({
@@ -197,7 +215,33 @@ sub addRedirects
 {
     my ($self, $row) = @_;
 
-    
+    if ($row->valueByName('enabled')) {
+        my $portHeader = $self->getPortHeader($row);
+        my $localIpaddr = $row->valueByName('ipaddr');
+        my $internalPort = $row->valueByName('port');
+
+        my $gl = EBox::Global->getInstance();
+        my $firewall = $gl->modInstance('firewall');
+        my $redirMod = $firewall->model('RedirectsTable');
+
+        #先備資料
+        my $iface = $self->getExternalIface();
+        my $external_port = $portHeader . '80';
+
+        $redirMod->addRow(
+            interface => $iface,
+            origDest_selected => "origDest_ebox",
+            protocol => "tcp/udp",
+            external_port_range_type => 'single',
+            external_port_single_port => $external_port,
+            source_selected => 'source_any',
+            destination => $localIpaddr,
+            destination_port_selected => "destination_port_other",
+            destination_port_other => $internalPort,
+            snat => 1,
+            log => 0,
+        );
+    }
 }
 
 sub deletedRedirects
