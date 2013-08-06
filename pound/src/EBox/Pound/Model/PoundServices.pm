@@ -14,6 +14,7 @@ use EBox::Types::Text;
 use EBox::Types::Boolean;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
+use EBox::Types::Select;
 
 use EBox::Global;
 use EBox::DNS;
@@ -63,23 +64,22 @@ sub _table
             defaultValue => 1,
             help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
         ),
-        new EBox::Types::Union(
+        new EBox::Types::Select(
             'fieldName' => 'redirHTTP',
             'printableName' => __('HTTP Redirect'),
-            'subtypes' =>
-            [
-            new EBox::Types::Port(
-                'fieldName' => 'redirHTTP_defaultPort',
-                'printableName' => __('Default Internal Port (80)'),
-                'editable' => 0,),
-            new EBox::Types::Port(
-                'fieldName' => 'redirHTTP_otherPort',
-                'printableName' => __('Other Internal Port'),
-                'editable' => 1,),
-            new EBox::Types::Union::Text(
-                'fieldName' => 'redirHTTP_disable',
-                'printableName' => __('Disable')),
-            ]),
+            'editable' => 1,
+            'populate' => \&populateHTTP
+#            'populate' => (
+#                {
+#                    'value' => 'redirHTTP_default',
+#                    'printableValue' => __("Use Internal Port"),
+#                },
+#                {
+#                    'value' => 'redirHTTP_disable',
+#                    'printableValue' => __("Disable"),
+#                },
+#            ),
+        ),
 
         # Enable Keep Last
         new EBox::Types::Boolean(
@@ -105,6 +105,14 @@ sub _table
     };
 
     return $dataTable;
+}
+
+sub populateHTTP
+{
+    my @opts = ();
+    push (@opts, { value => 'redirHTTP_default', printableValue => 'Use Internal Port' });
+    push (@opts, { value => 'redirHTTP_disable', printableValue => 'Disable' });
+    return \@opts;
 }
 
 sub getExternalIpaddr
@@ -217,31 +225,41 @@ sub addRedirects
 
     if ($row->valueByName('enabled')) {
         my $portHeader = $self->getPortHeader($row);
-        my $localIpaddr = $row->valueByName('ipaddr');
-        my $internalPort = $row->valueByName('port');
-
+        
         my $gl = EBox::Global->getInstance();
         my $firewall = $gl->modInstance('firewall');
         my $redirMod = $firewall->model('RedirectsTable');
+        
+        # 加入HTTP
+        if ($row->valueByName('redirHTTP') ne 'redirHTTP_disable') {
+            my $extPort = $portHeader . '80';
+            my $intPort = $row->valueByName('port');
+            $self->addRedirectRow($row, $redirMod, $extPort, $intPort);
+        }
 
-        #先備資料
-        my $iface = $self->getExternalIface();
-        my $external_port = $portHeader . '80';
-
-        $redirMod->addRow(
-            interface => $iface,
-            origDest_selected => "origDest_ebox",
-            protocol => "tcp/udp",
-            external_port_range_type => 'single',
-            external_port_single_port => $external_port,
-            source_selected => 'source_any',
-            destination => $localIpaddr,
-            destination_port_selected => "destination_port_other",
-            destination_port_other => $internalPort,
-            snat => 1,
-            log => 0,
-        );
     }
+}
+
+sub addRedirectRow
+{
+    my ($self, $row, $redirMod, $extPort, $intPort) = @_;
+    
+    my $iface = $self->getExternalIface();
+    my $localIpaddr = $row->valueByName('ipaddr');
+
+    $redirMod->addRow(
+        interface => $iface,
+        origDest_selected => "origDest_ebox",
+        protocol => "tcp/udp",
+        external_port_range_type => 'single',
+        external_port_single_port => $extPort,
+        source_selected => 'source_any',
+        destination => $localIpaddr,
+        destination_port_selected => "destination_port_other",
+        destination_port_other => $intPort,
+        snat => 1,
+        log => 0,
+    );
 }
 
 sub deletedRedirects
