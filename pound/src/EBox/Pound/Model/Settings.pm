@@ -10,6 +10,8 @@ use EBox::Gettext;
 
 use EBox::Types::HostIP;
 use EBox::Types::Port;
+use EBox::Types::Union;
+use EBox::Types::Union::Text;
 
 use EBox::Network;
 
@@ -47,9 +49,9 @@ sub _table
     my ($self) = @_;
 
     my $network = EBox::Global->modInstance('network');
-    my $address;
-    my $external_iface;
-    foreach my $if (@{$network->allIfaces()}) {
+    my $address = "127.0.0.1";
+    my $external_iface = "eth0";
+    foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
             $external_iface = $if;
             $address = $network->ifaceAddress($if);
@@ -59,20 +61,37 @@ sub _table
 
     my @tableDesc =
       (
-          new EBox::Types::HostIP(
-              fieldName     => 'address',
-              printableName => __('External IP Address'),
-              editable      => 0,
-              unique        => 1,
-              defaultValue  => $address,
-              help          => '<a href="/Network/Ifaces?iface='.$external_iface.'">'.__('Modify External Network').'</a>',
-              allowUnsafeChars => 1,
-             ),
+#          new EBox::Types::HostIP(
+#              fieldName     => 'address',
+#              printableName => __('External IP Address'),
+#              editable      => 0,
+#              unique        => 1,
+#              defaultValue  => $address,
+#              help          => '<a href="/Network/Ifaces?iface='.$external_iface.'">'.__('Modify External Network').'</a>',
+#              allowUnsafeChars => 1,
+#             ),
+          new EBox::Types::Union(
+            'fieldName' => 'address',
+            'printableName' => __('External IP Address'),
+            'subtypes' =>
+            [
+            new EBox::Types::Union::Text(
+                'fieldName' => 'address_extIface',
+                'printableName' => $external_iface." (".$address.")"),
+            new EBox::Types::HostIP(
+                'fieldName' => 'address_custom',
+                'printableName' => __('Custom'),
+                'editable' => 1,),
+            ]
+          ),
           new EBox::Types::Port(
               fieldName     => 'port',
               printableName => __('External Port'),
               editable      => 1,
               unique        => 1,
+              help          => "<ul>"
+                                . '<li><a href="/Firewall/View/ExternalToEBoxRuleTable">' . __("Please add rule to allow this port from external networks link to Zentyal") . "</a></li>"
+                                . '<li><a href="/Firewall/View/ExternalToInternalRuleTable">' . __("Please add rule to allow port 10000~60000 from external networks link to internal networks") . "</a></li>"
              ),
       );
 

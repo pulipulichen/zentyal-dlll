@@ -180,7 +180,7 @@ sub updatedRowNotify
     $self->deletedRowNotify($oldRow);
     $self->addedRowNotify($row);
 
-    $self->deletedRedirects($row);
+    $self->deletedRedirects($oldRow);
     $self->addRedirects($row);
 }
 
@@ -278,8 +278,8 @@ sub populateHTTP
 sub getExternalIpaddr
 {
     my $network = EBox::Global->modInstance('network');
-    my $address;
-    foreach my $if (@{$network->allIfaces()}) {
+    my $address = "127.0.0.1";
+    foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
             $address = $network->ifaceAddress($if);
         }
@@ -291,8 +291,8 @@ sub getExternalIpaddr
 sub getExternalIface
 {
     my $network = EBox::Global->modInstance('network');
-    my $iface;
-    foreach my $if (@{$network->allIfaces()}) {
+    my $iface = "eth0";
+    foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
             $iface = $if;
             last;
@@ -341,7 +341,7 @@ sub getRedirectParamHTTP
     my $extPort = $portHeader . '80';
     my $intPort = $row->valueByName('port');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort);
+    return $self->getRedirectParameter($row, $extPort, $intPort, "HTTP");
 }
 
 sub getRedirectParamHTTPS
@@ -351,13 +351,9 @@ sub getRedirectParamHTTPS
     my $portHeader = $self->getPortHeader($row);
 
     my $extPort = $portHeader . '43';
-    my $intPort = 443;
-    if ($row->valueByName('redirHTTPS') eq 'redirHTTPS_other') 
-    {
-        $intPort = $row->valueByName('redirHTTPS_other');
-    }
+    my $intPort = $row->valueByName('redirHTTPS');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort);
+    return $self->getRedirectParameter($row, $extPort, $intPort, "HTTPS");
 }
 
 sub getRedirectParamSSH
@@ -367,13 +363,9 @@ sub getRedirectParamSSH
     my $portHeader = $self->getPortHeader($row);
 
     my $extPort = $portHeader . '22';
-    my $intPort = 22;
-    if ($row->valueByName('redirSSH') eq 'redirSSH_other') 
-    {
-        $intPort = $row->valueByName('redirSSH_other');
-    }
+    my $intPort = $row->valueByName('redirSSH');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort);
+    return $self->getRedirectParameter($row, $extPort, $intPort, "SSH");
 }
 
 sub getRedirectParamRDP
@@ -383,18 +375,14 @@ sub getRedirectParamRDP
     my $portHeader = $self->getPortHeader($row);
 
     my $extPort = $portHeader . '89';
-    my $intPort = 3389;
-    if ($row->valueByName('redirRDP') eq 'redirRDP_other') 
-    {
-        $intPort = $row->valueByName('redirRDP_other');
-    }
+    my $intPort = $row->valueByName('redirRDP');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort);
+    return $self->getRedirectParameter($row, $extPort, $intPort, "RDP");
 }
 
 sub getRedirectParameter
 {
-    my ($self, $row, $extPort, $intPort) = @_;
+    my ($self, $row, $extPort, $intPort, $desc) = @_;
 
     my $iface = $self->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
@@ -409,7 +397,7 @@ sub getRedirectParameter
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
-        description => 'Created by Pound Moudle',
+        description => 'Created by Pound Moudle for '.$desc,
         snat => 1,
         log => 0,
     );

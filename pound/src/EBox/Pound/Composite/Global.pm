@@ -18,7 +18,7 @@ use EBox::Global;
 #
 sub _description
 {
-    my $pageTitle = 'Pound';
+    my $pageTitle = 'Reverse Proxy (Pound)';
 
     my $description =
       {

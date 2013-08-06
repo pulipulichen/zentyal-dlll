@@ -23,7 +23,7 @@ sub _create
 
     my $self = $class->SUPER::_create(
         name => 'pound',
-        printableName => __('Pound'),
+        printableName => __('Reverse Proxy'),
         @_
     );
 
@@ -46,7 +46,7 @@ sub menu
         url => 'Pound/Composite/Global',
         text => $self->printableName(),
         separator => 'Infrastructure',
-        order => 421
+        order => 0
     );
 
     $root->add($item);
@@ -122,12 +122,19 @@ sub _setConf
 #    my $address = $settings->value('address');
     my $port = $settings->value('port');
 
-    my $network = EBox::Global->modInstance('network');
-    my $address;
-    foreach my $if (@{$network->allIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $address = $network->ifaceAddress($if);
+    my $address = "127.0.0.1";
+    if ($settings->valueByName("address") eq "address_extIface")
+    {
+        my $network = EBox::Global->modInstance('network');
+        foreach my $if (@{$network->ExternalIfaces()}) {
+            if ($network->ifaceIsExternal($if)) {
+                $address = $network->ifaceAddress($if);
+            }
         }
+    }
+    else
+    {
+        $address = $settings->valueByName("address_custom");
     }
 
     my @servicesParams = ();
