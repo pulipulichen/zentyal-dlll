@@ -3,5 +3,6 @@
 set -e
 
 ### Actions to be executed when installing the module for the first time ###
+apt-get -y install pound
 
 exit 0
