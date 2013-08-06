@@ -19,6 +19,7 @@ use EBox::DNS::Model::Services;
 use EBox::DNS::Model::DomainTable;
 
 use EBox::Exceptions::Internal;
+use EBox::Exceptions::External;
 
 # Method: _table
 #
@@ -104,12 +105,21 @@ sub getPortHeader
 {
     my ($self, $row) = @_;
 
-    # 測試用，變成ID前幾碼
+    # 變成ID前幾碼
     my $ipaddr = $row->valueByName('ipaddr');
     my @parts = split('\.', $ipaddr);
     my $partC = $parts[2];
-        $partC = substr($partC, -1);
     my $partD = $parts[3];
+
+    # 檢查
+    if ( !($partC > 0 && $partC < 5)
+        || !($partD > 0 && $partD < 100) ) {
+        throw EBox::Exceptions::External("Error IP address format (".$ipaddr."). The third part should be between 1~5, and the forth part should be between 1~99");
+    }
+    
+    # 重新組合
+        $partC = substr($partC, -1);
+    
         if (length($partD) == 1) {
             $partD = "0" . $partD;
         }
@@ -118,18 +128,34 @@ sub getPortHeader
         }
      my $portHeader = $partC.$partD;
      
-     #$row->elementByName("description")->setValue($portHeader);
-     #$row->store();
-     #throw EBox::Exceptions::Internal("port header: ".$portHeader);
-
      return $portHeader;
 }
 
 sub addedRowNotify
 {
     my ($self, $row) = @_;
+    $self->addDomainName($row);
+    $self->addRedirects($row);
+}
 
-    
+sub deletedRowNotify
+{
+    my ($self, $row) = @_;
+    $self->deletedDomainName($row);
+    $self->deletedRedirects($row);
+}
+
+sub updatedRowNotify
+{
+    my ($self, $row, $oldRow) = @_;
+    $self->deletedRowNotify($oldRow);
+    $self->addedRowNotify($row);
+}
+
+sub addDomainName
+{
+    my ($self, $row) = @_;
+
     if ($row->valueByName('boundLocalDns') && $row->valueByName('enabled')) {
         my $domainName = $row->valueByName('domainName');
         
@@ -155,7 +181,7 @@ sub addedRowNotify
     }
 }
 
-sub deletedRowNotify
+sub deletedDomainName
 {
     my ($self, $row) = @_;
     my $domainName = $row->valueByName('domainName');
@@ -167,12 +193,18 @@ sub deletedRowNotify
     $domModel->removeRow($id);
 }
 
-sub updatedRowNotify
+sub addRedirects
 {
-    my ($self, $row, $oldRow) = @_;
+    my ($self, $row) = @_;
+
     
-    $self->deletedRowNotify($oldRow);
-    $self->addedRowNotify($row);
+}
+
+sub deletedRedirects
+{
+    my ($self, $row) = @_;
+
+    
 }
 
 # 找尋row用
