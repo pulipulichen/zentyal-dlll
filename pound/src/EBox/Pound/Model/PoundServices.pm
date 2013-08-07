@@ -11,6 +11,7 @@ use EBox::Types::DomainName;
 use EBox::Types::HostIP;
 use EBox::Types::Port;
 use EBox::Types::Text;
+use EBox::Types::HTML;
 use EBox::Types::Boolean;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
@@ -64,11 +65,16 @@ sub _table
             defaultValue => 1,
             help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
         ),
+        
+
+
         new EBox::Types::Select(
             'fieldName' => 'redirHTTP',
             'printableName' => __('HTTP Redirect'),
             'editable' => 1,
             'populate' => \&populateHTTP,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
         ),
         new EBox::Types::Union(
             'fieldName' => 'redirHTTPS',
@@ -88,7 +94,9 @@ sub _table
             new EBox::Types::Union::Text(
                 'fieldName' => 'redirHTTPS_disable',
                 'printableName' => __('Disable')),
-            ]
+            ],
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
         ),
         new EBox::Types::Union(
             'fieldName' => 'redirSSH',
@@ -108,7 +116,9 @@ sub _table
             new EBox::Types::Union::Text(
                 'fieldName' => 'redirSSH_disable',
                 'printableName' => __('Disable')),
-            ]
+            ],
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
         ),
         new EBox::Types::Union(
             'fieldName' => 'redirRDP',
@@ -128,7 +138,18 @@ sub _table
             new EBox::Types::Union::Text(
                 'fieldName' => 'redirRDP_disable',
                 'printableName' => __('Disable')),
-            ]
+            ],
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+
+        new EBox::Types::HTML(
+            fieldName => 'redirPorts',
+            printableName => __('Redirect Ports'),
+            editable => 0,
+            optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 0,
         ),
 
         # ==============================
@@ -165,6 +186,8 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->addDomainName($row);
     $self->addRedirects($row);
+
+    $self->updateRedirectPorts($row);
 }
 
 sub deletedRowNotify
@@ -182,6 +205,8 @@ sub updatedRowNotify
 
     $self->deletedRedirects($oldRow);
     $self->addRedirects($row);
+
+    $self->updateRedirectPorts($row);
 }
 
 # ---------------------------------------
@@ -425,6 +450,56 @@ sub deleteRedirectRow
     my $id = $redirMod->findId(%param);
     if (defined($id)) {
         $redirMod->removeRow($id);
+    }
+}
+
+sub updateRedirectPorts
+{
+    my ($self, $row) = @_;
+
+    my $hint = '';
+    if ($row->valueByName('enabled')) {
+        
+        my $portHeader = $self->getPortHeader($row);
+        # 加入HTTP
+        if ($row->valueByName('redirHTTP') ne 'redirHTTP_disable') {
+            
+            my $extPort = $portHeader . '80';
+            my $intPort = $row->valueByName('port');
+            $hint = $hint . "<li><strong>HTTP</strong>: " . $extPort ." ->&gt; " . $intPort."</li>";  
+        }
+
+        # 加入HTTPS
+        if ($row->valueByName('redirHTTPS') ne 'redirHTTPS_disable') {
+            my $extPort = $portHeader . '43';
+            my $intPort = $row->valueByName('redirHTTPS');
+            $hint = $hint . "<li><strong>HTTPS</strong>: " . $extPort ." -&gt; " . $intPort."</li>";  
+        }
+
+        
+        # 加入SSH
+        if ($row->valueByName('redirSSH') ne 'redirSSH_disable') {
+            my $extPort = $portHeader . '22';
+            my $intPort = $row->valueByName('redirSSH');
+            $hint = $hint . "<li><strong>SSH</strong>: " . $extPort ." -&gt; " . $intPort."</li>";   
+        }
+
+        
+        # 加入RDP
+        if ($row->valueByName('redirRDP') ne 'redirRDP_disable') {
+            my $extPort = $portHeader . '89';
+            my $intPort = $row->valueByName('redirRDP');
+            $hint = $hint . "<li><strong>RDP</strong>: " . $extPort ." -&gt; " . $intPort."</li>";  
+        }
+
+        if ($hint ne '')
+        {
+            $hint = "<ul style='text-align:left;'>". $hint . "</ul>";
+        }
+        
+
+        $row->elementByName('redirPorts')->setValue($hint);
+        $row->store();
     }
 }
 

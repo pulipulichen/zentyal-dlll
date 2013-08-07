@@ -2079,7 +2079,7 @@ sub fields
 #
 sub fieldsWithUndefSetter
 {
-    my ($self) = @_;
+    my ($self) = @_; 
 
     unless (defined($self->table()->{'tableDescription'})) {
         throw Excepetions::Internal('table description not defined');
