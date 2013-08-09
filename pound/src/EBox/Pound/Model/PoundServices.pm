@@ -41,7 +41,7 @@ sub _table
             fieldName => 'domainName',
             printableName => __('Domain Name'),
             editable => 1,
-            #'unique' => 1,
+            'unique' => 1,
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
@@ -128,7 +128,7 @@ sub _table
         new EBox::Types::Union(
             'fieldName' => 'redirHTTPS_extPort',
             'printableName' => __('HTTPS External Port'),
-            #'unique' => 1,
+            'unique' => 1,
             'subtypes' =>
             [
             new EBox::Types::Union::Text(
@@ -174,7 +174,7 @@ sub _table
         new EBox::Types::Union(
             'fieldName' => 'redirSSH_extPort',
             'printableName' => __('SSH External Port'),
-            #'unique' => 1,
+            'unique' => 1,
             'subtypes' =>
             [
             new EBox::Types::Union::Text(
@@ -220,7 +220,7 @@ sub _table
         new EBox::Types::Union(
             'fieldName' => 'redirRDP_extPort',
             'printableName' => __('RDP External Port'),
-            #'unique' => 1,
+            'unique' => 1,
             'subtypes' =>
             [
             new EBox::Types::Union::Text(
@@ -255,14 +255,14 @@ sub _table
         ),
         # --------------------------------
 
-#        new EBox::Types::HTML(
-#            fieldName => 'redirPorts',
-#            printableName => __('Redirect Ports'),
-#            editable => 0,
-#            optional=>1,
-#                hiddenOnSetter => 1,
-#                hiddenOnViewer => 0,
-#        ),
+        new EBox::Types::HTML(
+            fieldName => 'redirPorts',
+            printableName => __('Redirect Ports'),
+            editable => 0,
+            optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 0,
+        ),
 
         # ----------------------------------
 
