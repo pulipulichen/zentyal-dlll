@@ -120,10 +120,10 @@ sub _setConf
 
     my $settings = $self->model('Settings');
 #    my $address = $settings->value('address');
-    my $port = $settings->valueByName('port');
+    my $port = $settings->value('port');
 
     my $address = "127.0.0.1";
-    if ($settings->valueByName("address") eq "address_extIface")
+    if ($settings->value("address") eq "address_extIface")
     {
         my $network = EBox::Global->modInstance('network');
         foreach my $if (@{$network->ExternalIfaces()}) {
@@ -134,7 +134,7 @@ sub _setConf
     }
     else
     {
-        $address = $settings->valueByName("address");
+        $address = $settings->value("address");
     }
 
     my @servicesParams = ();
