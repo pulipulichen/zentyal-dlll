@@ -271,6 +271,7 @@ sub _table
             'printableName' => __('Other Redirect Ports'),
             'foreignModel' => 'Redirections',
             'view' => '/Pound/View/Redirections',
+            'backView' => '/Pound/View/Global',
        ),
 
         # ==============================
