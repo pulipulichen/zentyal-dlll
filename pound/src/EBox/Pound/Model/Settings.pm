@@ -123,10 +123,10 @@ sub updatedRowNotify
     }
     if ($self->checkServicePort($row) == 0)
     {
-        #$self->addServicePort($row);
+        $self->addServicePort($row);
     }
 
-    if ($self->checkFilter()) 
+    if ($self->checkFilter() == 0) 
     {
         $self->addFilter();
     }
@@ -283,7 +283,9 @@ sub deleteServicePort
     my $port = $row->valueByName("port");
     my %param = $self->getServicePortParam($port);
 
-    $portMod->removeRow(%param);
+    my $id = $portMod->findId(%param);
+
+    $portMod->removeRow($id);
 }
 
 # ----------------------
