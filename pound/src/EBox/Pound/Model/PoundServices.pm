@@ -266,15 +266,18 @@ sub _table
 
         # ----------------------------------
 
-        new EBox::Types::HasMany(
-            'fieldName' => 'redirOther',
-            'printableName' => __('Other Redirect Ports'),
-            'foreignModel' => 'Redirections',
-            'view' => '/Pound/View/Redirections',
+# 不知道為什麼加入HasMany之後就不能用了，只能說是傷心啊，不採用了
+#        new EBox::Types::HasMany(
+#            'fieldName' => 'redirOther',
+#            'printableName' => __('Other Redirect Ports'),
+#            'foreignModel' => 'Redirections',
+#            'view' => '/Pound/View/Redirections',
 #            'backView' => '/Pound/View/Global',
 #            'size' => '1',
-            optional=>1,
-       ),
+#            optional=>1,
+#                hiddenOnSetter => 1,
+#                hiddenOnViewer => 0,
+#       ),
 
         # ==============================
         # Enable Keep Last
