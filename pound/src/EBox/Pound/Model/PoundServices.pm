@@ -632,6 +632,32 @@ sub getRedirectParameter
     );
 }
 
+sub getRedirectParameterSecure
+{
+    my ($self, $row, $extPort, $intPort, $desc) = @_;
+
+    my $iface = $self->getExternalIface();
+    my $localIpaddr = $row->valueByName('ipaddr');
+
+    my $sourceIp = '192.168.11.1/24';
+
+    return (
+        interface => $iface,
+        origDest_selected => "origDest_ebox",
+        protocol => "tcp/udp",
+        external_port_range_type => 'single',
+        external_port_single_port => $extPort,
+        source_selected => 'source_ipaddr',
+        source_ipaddr_ip => $sourceIp,
+        destination => $localIpaddr,
+        destination_port_selected => "destination_port_other",
+        destination_port_other => $intPort,
+        description => 'Created by Pound Moudle for '.$desc,
+        snat => 1,
+        log => 0,
+    );
+}
+
 sub addRedirectRow
 {
     my ($self, %params) = @_;
