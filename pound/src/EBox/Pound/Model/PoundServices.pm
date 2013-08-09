@@ -125,6 +125,15 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+        new EBox::Types::Boolean(
+            fieldName => 'redirHTTPS_secure',
+            printableName => __('Only For LAN'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
         new EBox::Types::Union(
             'fieldName' => 'redirHTTPS_extPort',
             'printableName' => __('HTTPS External Port'),
@@ -171,6 +180,15 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+        new EBox::Types::Boolean(
+            fieldName => 'redirSSH_secure',
+            printableName => __('Only For LAN'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
         new EBox::Types::Union(
             'fieldName' => 'redirSSH_extPort',
             'printableName' => __('SSH External Port'),
@@ -211,6 +229,16 @@ sub _table
         new EBox::Types::Boolean(
             fieldName => 'redirRDP_enable',
             printableName => __('Enable RDP Redirect'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+            help: __('Connection only allowed for lan.'),
+        ),
+        new EBox::Types::Boolean(
+            fieldName => 'redirRDP_secure',
+            printableName => __('Only For LAN'),
             editable => 1,
             optional => 0,
             defaultValue => 1,
@@ -536,7 +564,15 @@ sub getRedirectParamHTTPS
 
     my $intPort = $row->valueByName('redirHTTPS_intPort');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort, "HTTPS");
+    if ($row->valueByName('redirHTTPS_secure') == 1)
+    {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "HTTPS");
+    }
+    else
+    {
+        return $self->getRedirectParameter($row, $extPort, $intPort, "HTTPS");
+    }
+    
 }
 
 sub getHTTPSextPort
@@ -564,7 +600,14 @@ sub getRedirectParamSSH
 
     my $intPort = $row->valueByName('redirSSH_intPort');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort, "SSH");
+    if ($row->valueByName('redirSSH_secure') == 1)
+    {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "SSH");
+    }
+    else
+    {
+        return $self->getRedirectParameter($row, $extPort, $intPort, "SSH");
+    }
 }
 
 sub getSSHextPort
@@ -592,7 +635,14 @@ sub getRedirectParamRDP
 
     my $intPort = $row->valueByName('redirRDP_intPort');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort, "RDP");
+    if ($row->valueByName('redirRDP_secure') == 1)
+    {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "RDP");
+    }
+    else
+    {
+        return $self->getRedirectParameter($row, $extPort, $intPort, "RDP");
+    }
 }
 
 sub getRDPextPort
