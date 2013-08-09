@@ -1,1 +1,1 @@
-sudo apt-get install zentyal-core
+sudo apt-get y install zentyal-core

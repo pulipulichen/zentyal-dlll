@@ -3,6 +3,7 @@ class: EBox::Pound
 models:
     - Settings
     - PoundServices
+    - Redirections
 
 composites:
     Global: [Settings, PoundServices]

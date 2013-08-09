@@ -45,7 +45,7 @@ sub menu
     my $item = new EBox::Menu::Item(
         url => 'Pound/Composite/Global',
         text => $self->printableName(),
-        separator => 'Infrastructure',
+        separator => 'Virtual Router',
         order => 0
     );
 

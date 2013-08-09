@@ -91,7 +91,9 @@ sub _table
               unique        => 1,
               help          => "<ul>"
                                 . '<li><a href="/Firewall/View/ExternalToEBoxRuleTable">' . __("Please add rule to allow this port from external networks link to Zentyal") . "</a></li>"
-                                . '<li><a href="/Firewall/View/ExternalToInternalRuleTable">' . __("Please add rule to allow port 10000~60000 from external networks link to internal networks") . "</a></li>"
+                                #. '<li><a href="/Firewall/View/ExternalToInternalRuleTable">' . __("Please add rule to allow port 10000~60000 from external networks link to internal networks") . "</a></li>"
+                                . '</ul>'
+                                . '<a href="/Firewall/View/RedirectsTable" target="_blank">Custom Port Forwarding</a>'
              ),
       );
 

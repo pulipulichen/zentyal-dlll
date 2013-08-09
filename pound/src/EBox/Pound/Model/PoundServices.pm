@@ -16,6 +16,7 @@ use EBox::Types::Boolean;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
 use EBox::Types::Select;
+use EBox::Types::HasMany;
 
 use EBox::Global;
 use EBox::DNS;
@@ -40,11 +41,24 @@ sub _table
             fieldName => 'domainName',
             printableName => __('Domain Name'),
             editable => 1,
+            #'unique' => 1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'domainNameLink',
+            printableName => __('Domain Name'),
+            editable => 0,
+            optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 0,
         ),
         new EBox::Types::HostIP(
             fieldName => 'ipaddr',
             printableName => __('Internal IP Address'),
             editable => 1,
+            'unique' => 1,
+            help => __('The third part should be between 1~5, and the forth part should be between 1~99'),
         ),
         new EBox::Types::Port(
             fieldName => 'port',
@@ -67,17 +81,69 @@ sub _table
         ),
         
 
-
-        new EBox::Types::Select(
-            'fieldName' => 'redirHTTP',
-            'printableName' => __('HTTP Redirect'),
-            'editable' => 1,
-            'populate' => \&populateHTTP,
+        new EBox::Types::Boolean(
+            fieldName => 'redirHTTP_enable',
+            printableName => __('Enable HTTP Redirect'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
         new EBox::Types::Union(
-            'fieldName' => 'redirHTTPS',
+            'fieldName' => 'redirHTTP_extPort',
+            'printableName' => __('HTTP External Port'),
+            #'unique' => 1,
+            'subtypes' =>
+            [
+            new EBox::Types::Union::Text(
+                'fieldName' => 'redirHTTP_extPort_default',
+                'printableName' => __('Default: Based on IP address.')),
+            new EBox::Types::Port(
+                'fieldName' => 'redirHTTP_extPort_other',
+                'printableName' => __('Other'),
+                'editable' => 1,),
+            ],
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Text(
+            'fieldName' => 'redirHTTP_intPort',
+            'printableName' => __('HTTP Internal Port'),
+            'editable' => 0,
+            'defaultValue' => "Use reverse proxy internal port",
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
+        # ----------------------
+        new EBox::Types::Boolean(
+            fieldName => 'redirHTTPS_enable',
+            printableName => __('Enable HTTPS Redirect'),
+             editable => 1,
+            optional => 0,
+            defaultValue => 1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Union(
+            'fieldName' => 'redirHTTPS_extPort',
+            'printableName' => __('HTTPS External Port'),
+            #'unique' => 1,
+            'subtypes' =>
+            [
+            new EBox::Types::Union::Text(
+                'fieldName' => 'redirHTTPS_extPort_default',
+                'printableName' => __('Default: Based on IP address.')),
+            new EBox::Types::Port(
+                'fieldName' => 'redirHTTPS_extPort_other',
+                'printableName' => __('Other'),
+                'editable' => 1,),
+            ],
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Union(
+            'fieldName' => 'redirHTTPS_intPort',
             'printableName' => __('HTTPS Redirect'),
             'subtypes' =>
             [
@@ -91,15 +157,39 @@ sub _table
                 'fieldName' => 'redirHTTPS_other',
                 'printableName' => __('Other'),
                 'editable' => 1,),
+            ],
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        # --------------------------------
+        new EBox::Types::Boolean(
+            fieldName => 'redirSSH_enable',
+            printableName => __('Enable SSH Redirect'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Union(
+            'fieldName' => 'redirSSH_extPort',
+            'printableName' => __('SSH External Port'),
+            #'unique' => 1,
+            'subtypes' =>
+            [
             new EBox::Types::Union::Text(
-                'fieldName' => 'redirHTTPS_disable',
-                'printableName' => __('Disable')),
+                'fieldName' => 'redirSSH_extPort_default',
+                'printableName' => __('Default: Based on IP address.')),
+            new EBox::Types::Port(
+                'fieldName' => 'redirSSH_extPort_other',
+                'printableName' => __('Other'),
+                'editable' => 1,),
             ],
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
         new EBox::Types::Union(
-            'fieldName' => 'redirSSH',
+            'fieldName' => 'redirSSH_intPort',
             'printableName' => __('SSH Redirect'),
             'subtypes' =>
             [
@@ -113,15 +203,39 @@ sub _table
                 'fieldName' => 'redirSSH_other',
                 'printableName' => __('Other'),
                 'editable' => 1,),
+            ],
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        # --------------------------------
+        new EBox::Types::Boolean(
+            fieldName => 'redirRDP_enable',
+            printableName => __('Enable RDP Redirect'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Union(
+            'fieldName' => 'redirRDP_extPort',
+            'printableName' => __('RDP External Port'),
+            #'unique' => 1,
+            'subtypes' =>
+            [
             new EBox::Types::Union::Text(
-                'fieldName' => 'redirSSH_disable',
-                'printableName' => __('Disable')),
+                'fieldName' => 'redirRDP_extPort_default',
+                'printableName' => __('Default: Based on IP address.')),
+            new EBox::Types::Port(
+                'fieldName' => 'redirRDP_extPort_other',
+                'printableName' => __('Other'),
+                'editable' => 1,),
             ],
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
         new EBox::Types::Union(
-            'fieldName' => 'redirRDP',
+            'fieldName' => 'redirRDP_intPort',
             'printableName' => __('RDP Redirect'),
             'subtypes' =>
             [
@@ -135,45 +249,52 @@ sub _table
                 'fieldName' => 'redirRDP_other',
                 'printableName' => __('Other'),
                 'editable' => 1,),
-            new EBox::Types::Union::Text(
-                'fieldName' => 'redirRDP_disable',
-                'printableName' => __('Disable')),
             ],
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+        # --------------------------------
 
-        new EBox::Types::HTML(
-            fieldName => 'redirPorts',
-            printableName => __('Redirect Ports'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
-        ),
+#        new EBox::Types::HTML(
+#            fieldName => 'redirPorts',
+#            printableName => __('Redirect Ports'),
+#            editable => 0,
+#            optional=>1,
+#                hiddenOnSetter => 1,
+#                hiddenOnViewer => 0,
+#        ),
+
+        # ----------------------------------
+
+        new EBox::Types::HasMany(
+            'fieldName' => 'redirections',
+            'printableName' => __('Other Redirect Ports'),
+            'foreignModel' => 'Redirections',
+            'view' => '/Pound/View/Redirections',
+       ),
 
         # ==============================
         # Enable Keep Last
-        new EBox::Types::Boolean(
-            fieldName => 'enabled',
-            printableName => __('Enabled'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-        ),
+        #new EBox::Types::Boolean(
+        #    fieldName => 'enabled',
+        #    printableName => __('Enabled'),
+        #    editable => 1,
+        #    optional => 0,
+        #    defaultValue => 1,
+        #),
     );
 
     my $dataTable =
     {
         tableName => 'PoundServices',
-        printableTableName => __('Services'),
+        printableTableName => __('Pound Services'),
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
         modelDomain => 'Pound',
         tableDescription => \@fields,
         printableRowName => __('Pound Service'),
         sortedBy => 'domainName',
         'HTTPUrlView'=> 'Pound/Composite/Global',
-        help => __('This is the help of the model'),
+        'enableProperty' => 1,
     };
 
     return $dataTable;
@@ -215,7 +336,7 @@ sub addDomainName
 {
     my ($self, $row) = @_;
 
-    if ($row->valueByName('boundLocalDns') && $row->valueByName('enabled')) {
+    if ($row->valueByName('boundLocalDns')) {
         my $domainName = $row->valueByName('domainName');
         my $gl = EBox::Global->getInstance();
         my $dns = $gl->modInstance('dns');
@@ -223,6 +344,8 @@ sub addDomainName
             domain_name => $domainName,
         });
     }
+
+    $self->updateDomainNameLink($row);
 }
 
 sub deletedDomainName
@@ -246,31 +369,31 @@ sub addRedirects
 {
     my ($self, $row) = @_;
 
-    if ($row->valueByName('enabled')) {
+    #if ($row->valueByName('enabled')) {
         # 加入HTTP
-        if ($row->valueByName('redirHTTP') ne 'redirHTTP_disable') {
+        if ($row->valueByName('redirHTTP_enable') == 1) {
             my %param = $self->getRedirectParamHTTP($row);
             $self->addRedirectRow(%param);
         }
 
         # 加入HTTPS
-        if ($row->valueByName('redirHTTPS') ne 'redirHTTPS_disable') {
+        if ($row->valueByName('redirHTTPS_enable') == 1) {
             my %param = $self->getRedirectParamHTTPS($row);
             $self->addRedirectRow(%param);
         }
         
         # 加入SSH
-        if ($row->valueByName('redirSSH') ne 'redirSSH_disable') {
+        if ($row->valueByName('redirSSH_enable') == 1) {
             my %param = $self->getRedirectParamSSH($row);
             $self->addRedirectRow(%param);
         }
         
         # 加入RDP
-        if ($row->valueByName('redirRDP') ne 'redirRDP_disable') {
+        if ($row->valueByName('redirSSH_enable') == 1) {
             my %param = $self->getRedirectParamRDP($row);
             $self->addRedirectRow(%param);
         }
-    }
+    #}
 }
 
 sub deletedRedirects
@@ -300,7 +423,7 @@ sub populateHTTP
     return \@opts;
 }
 
-sub getExternalIpaddr
+sub getExternalIpaddrs
 {
     my $network = EBox::Global->modInstance('network');
     my $address = "127.0.0.1";
@@ -311,6 +434,18 @@ sub getExternalIpaddr
     }
     my @ipaddr=($address);
     return \@ipaddr;
+}
+
+sub getExternalIpaddr
+{
+    my $network = EBox::Global->modInstance('network');
+    my $address = "127.0.0.1";
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $address = $network->ifaceAddress($if);
+        }
+    }
+    return $address;
 }
 
 sub getExternalIface
@@ -337,7 +472,7 @@ sub getPortHeader
     my $partD = $parts[3];
 
     # 檢查
-    if ( !($partC > 0 && $partC < 5)
+    if ( !($partC > 0 && $partC < 6)
         || !($partD > 0 && $partD < 100) ) {
         throw EBox::Exceptions::External("Error IP address format (".$ipaddr."). The third part should be between 1~5, and the forth part should be between 1~99");
     }
@@ -361,48 +496,111 @@ sub getRedirectParamHTTP
 {
     my ($self, $row) = @_;
 
-    my $portHeader = $self->getPortHeader($row);
+    my $extPort = $self->getHTTPextPort($row);
+    #my $portHeader = $self->getPortHeader($row);
+    #my $extPort = $portHeader . '80';
 
-    my $extPort = $portHeader . '80';
     my $intPort = $row->valueByName('port');
 
     return $self->getRedirectParameter($row, $extPort, $intPort, "HTTP");
+}
+
+sub getHTTPextPort
+{
+    my ($self, $row) = @_;
+
+    my $extPort = $row->valueByName('redirHTTP_extPort');
+    if ($row->valueByName('redirHTTP_extPort') eq 'redirHTTP_extPort_default')
+    {
+        my $portHeader = $self->getPortHeader($row);    
+        $extPort = $portHeader . '80';
+    }
+
+    return $extPort;
 }
 
 sub getRedirectParamHTTPS
 {
     my ($self, $row) = @_;
 
-    my $portHeader = $self->getPortHeader($row);
+    my $extPort = $self->getHTTPSextPort($row);
+    
+    #my $portHeader = $self->getPortHeader($row);
+    #my $extPort = $portHeader."43";
 
-    my $extPort = $portHeader . '43';
-    my $intPort = $row->valueByName('redirHTTPS');
+    my $intPort = $row->valueByName('redirHTTPS_intPort');
 
     return $self->getRedirectParameter($row, $extPort, $intPort, "HTTPS");
+}
+
+sub getHTTPSextPort
+{
+    my ($self, $row) = @_;
+    
+    my $extPort = $row->valueByName('redirHTTPS_extPort');
+    if ($row->valueByName('redirHTTPS_extPort') eq 'redirHTTPS_extPort_default')
+    {
+        my $portHeader = $self->getPortHeader($row);    
+        $extPort = $portHeader . '43';
+    }
+
+    return $extPort;
 }
 
 sub getRedirectParamSSH
 {
     my ($self, $row) = @_;
 
-    my $portHeader = $self->getPortHeader($row);
+    my $extPort = $self->getSSHextPort($row);
+    
+    #my $portHeader = $self->getPortHeader($row);
+    #my $extPort = $portHeader.'22';
 
-    my $extPort = $portHeader . '22';
-    my $intPort = $row->valueByName('redirSSH');
+    my $intPort = $row->valueByName('redirSSH_intPort');
 
     return $self->getRedirectParameter($row, $extPort, $intPort, "SSH");
+}
+
+sub getSSHextPort
+{
+    my ($self, $row) = @_;
+
+    my $extPort = $row->valueByName('redirSSH_extPort');
+    if ($row->valueByName('redirSSH_extPort') eq 'redirSSH_extPort_default')
+    {
+        my $portHeader = $self->getPortHeader($row);    
+        $extPort = $portHeader . '22';
+    }
+
+    return $extPort;
 }
 
 sub getRedirectParamRDP
 {
     my ($self, $row) = @_;
 
-    my $portHeader = $self->getPortHeader($row);
+    my $extPort = $self->getRDPextPort($row);
+    
+    #my $portHeader = $self->getPortHeader($row);
+    #my $extPort = $portHeader.'89';
 
-    my $extPort = $portHeader . '89';
-    my $intPort = $row->valueByName('redirRDP');
+    my $intPort = $row->valueByName('redirRDP_intPort');
 
     return $self->getRedirectParameter($row, $extPort, $intPort, "RDP");
+}
+
+sub getRDPextPort
+{
+    my ($self, $row) = @_;
+
+    my $extPort = $row->valueByName('redirRDP_extPort');
+    if ($row->valueByName('redirRDP_extPort') eq 'redirRDP_extPort_default')
+    {
+        my $portHeader = $self->getPortHeader($row);    
+        $extPort = $portHeader . '89';
+    }
+
+    return $extPort;
 }
 
 sub getRedirectParameter
@@ -458,53 +656,83 @@ sub updateRedirectPorts
     my ($self, $row) = @_;
 
     my $hint = '';
-    if ($row->valueByName('enabled')) {
+    #if ($row->valueByName('enabled')) {
         
+        my $ipaddr = $self->getExternalIpaddr();
+
         my $portHeader = $self->getPortHeader($row);
         # 加入HTTP
-        if ($row->valueByName('redirHTTP') ne 'redirHTTP_disable') {
+        if ($row->valueByName('redirHTTP_enable') == 1) {
             
-            my $extPort = $portHeader . '80';
+            my $extPort = $self->getHTTPextPort($row); 
+            #my $extPort = $portHeader.80;
             my $intPort = $row->valueByName('port');
-            $hint = $hint . "<li><strong>HTTP</strong>: " . $extPort ." ->&gt; " . $intPort."</li>";  
+            my $url = "http\://" . $ipaddr . "\:".$extPort."/";
+            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTP</strong>: " . $extPort ." &gt; " . $intPort."</a></li>";  
         }
 
         # 加入HTTPS
-        if ($row->valueByName('redirHTTPS') ne 'redirHTTPS_disable') {
-            my $extPort = $portHeader . '43';
-            my $intPort = $row->valueByName('redirHTTPS');
-            $hint = $hint . "<li><strong>HTTPS</strong>: " . $extPort ." -&gt; " . $intPort."</li>";  
+        if ($row->valueByName('redirHTTPS_enable') == 1) {
+        
+            my $extPort = $self->getHTTPSextPort($row);
+            #my $extPort = $portHeader.43;
+            my $intPort = $row->valueByName('redirHTTPS_intPort');
+            my $url = "https\://" . $ipaddr . "\:".$extPort."/";
+            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTPS</strong>: " . $extPort ." &gt; " . $intPort."</a></li>";  
         }
 
         
         # 加入SSH
-        if ($row->valueByName('redirSSH') ne 'redirSSH_disable') {
-            my $extPort = $portHeader . '22';
-            my $intPort = $row->valueByName('redirSSH');
-            $hint = $hint . "<li><strong>SSH</strong>: " . $extPort ." -&gt; " . $intPort."</li>";   
+        if ($row->valueByName('redirSSH_enable') == 1) {
+        
+            my $extPort = $self->getSSHextPort($row);
+            #my $extPort = $portHeader.22;
+            my $intPort = $row->valueByName('redirSSH_intPort');
+            $hint = $hint . "<li><strong>SSH</strong>: " . $extPort ." &gt; " . $intPort."</li>";   
         }
 
         
         # 加入RDP
-        if ($row->valueByName('redirRDP') ne 'redirRDP_disable') {
-            my $extPort = $portHeader . '89';
-            my $intPort = $row->valueByName('redirRDP');
-            $hint = $hint . "<li><strong>RDP</strong>: " . $extPort ." -&gt; " . $intPort."</li>";  
+        if ($row->valueByName('redirRDP_enable') == 1) {
+        
+            my $extPort = $self->getRDPextPort($row);
+            #my $extPort = $portHeader.89;
+            my $intPort = $row->valueByName('redirRDP_intPort');
+            $hint = $hint . "<li><strong>RDP</strong>: " . $extPort ." &gt; " . $intPort."</li>";  
         }
 
         if ($hint ne '')
         {
             $hint = "<ul style='text-align:left;'>". $hint . "</ul>";
         }
-        
 
         $row->elementByName('redirPorts')->setValue($hint);
         $row->store();
+    #}
+}
+
+sub updateDomainNameLink
+{
+    my ($self, $row) = @_;
+    
+    my $domainName = $row->valueByName("domainName");
+    my $port = $self->parentModule()->model("Settings")->row()->valueByName("port");
+
+    if ($port == 80) 
+    {
+        $port = "";
     }
+    else 
+    {
+        $port = ":" . $port;
+    }
+    my $link = "http\://" . $domainName . $port . "/";
+    $link = '<a href="'.$link.'" target="_blank" style="background: none;text-decoration: underline;color: #A3BD5B;">'.$domainName.'</a>';
+    $row->elementByName("domainNameLink")->setValue($link);
 }
 
 # 找尋row用
-#sub hostDomainChangedDone
+#sub hostDomainChangedDonepa
 #{
 #    my ($self, $oldDomainName, $newDomainName) = @_;
 #
