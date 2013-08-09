@@ -59,7 +59,7 @@ sub _table
         'tableName' => 'Redirections',
         'printableTableName' => __('Port Redirect'),
         'printableRowName' => __('Port Redirect'),
-        'modelDomain' => 'Pound','),
+        'modelDomain' => 'Pound',
         automaticRemove => 1,
         defaultController => '/Pound/Controller/Redirections',
         'defaultActions' => ['add', 'del', 'editField', 'changeView' ],

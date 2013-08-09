@@ -120,7 +120,7 @@ sub _setConf
 
     my $settings = $self->model('Settings');
 #    my $address = $settings->value('address');
-    my $port = $settings->value('port');
+    my $port = $settings->valueByName('port');
 
     my $address = "127.0.0.1";
     if ($settings->valueByName("address") eq "address_extIface")
@@ -134,7 +134,7 @@ sub _setConf
     }
     else
     {
-        $address = $settings->valueByName("address_custom");
+        $address = $settings->valueByName("address");
     }
 
     my @servicesParams = ();
