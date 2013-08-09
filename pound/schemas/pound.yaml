@@ -4,6 +4,7 @@ depends:
     - network
     - dns
     - firewall
+    - services
 
 models:
     - Settings
