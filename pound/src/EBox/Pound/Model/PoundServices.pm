@@ -90,6 +90,15 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+        new EBox::Types::Boolean(
+            fieldName => 'redirHTTP_secure',
+            printableName => __('Only For LAN'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 0,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
         new EBox::Types::Union(
             'fieldName' => 'redirHTTP_extPort',
             'printableName' => __('HTTP External Port'),
@@ -130,7 +139,7 @@ sub _table
             printableName => __('Only For LAN'),
             editable => 1,
             optional => 0,
-            defaultValue => 1,
+            defaultValue => 0,
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
@@ -234,7 +243,6 @@ sub _table
             defaultValue => 1,
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
-            help: __('Connection only allowed for lan.'),
         ),
         new EBox::Types::Boolean(
             fieldName => 'redirRDP_secure',
@@ -329,6 +337,7 @@ sub _table
         sortedBy => 'domainName',
         'HTTPUrlView'=> 'Pound/Composite/Global',
         'enableProperty' => 1,
+        defaultEnabledValue => 1,
     };
 
     return $dataTable;
@@ -434,6 +443,10 @@ sub deletedRedirects
 {
     my ($self, $row) = @_;
 
+    
+    #my %param = $self->getRedirectParameterFind($row);
+    #$self->deleteRedirectRow(%param);
+
     my %param = $self->getRedirectParamHTTP($row);
     $self->deleteRedirectRow(%param);
 
@@ -536,7 +549,14 @@ sub getRedirectParamHTTP
 
     my $intPort = $row->valueByName('port');
 
-    return $self->getRedirectParameter($row, $extPort, $intPort, "HTTP");
+    if ($row->valueByName('redirHTTP_secure') == 1)
+    {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "HTTP");
+    }
+    else
+    {
+        return $self->getRedirectParameter($row, $extPort, $intPort, "HTTP");
+    }
 }
 
 sub getHTTPextPort
@@ -689,7 +709,45 @@ sub getRedirectParameterSecure
     my $iface = $self->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
-    my $sourceIp = '192.168.11.1/24';
+    my $sourceIp = '192.168.11.0';
+    my $sourceMask = '24';
+
+    my $network = EBox::Global->modInstance('network');
+    my $address = "127.0.0.1";
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $address = $network->ifaceAddress($if);
+            $sourceMask = $network->ifaceNetmask($if);
+        }
+    }
+    
+    #把address轉換成source
+    
+    # 變成ID前幾碼
+    my $ipaddr = $address;
+    my @parts = split('\.', $ipaddr);
+
+    # 重新組合
+    if ($sourceMask eq '255.255.255.0')
+    {
+        $sourceIp = $parts[0].".".$parts[1].".".$parts[2].".0";
+        $sourceMask = "24";
+    }
+    elsif ($sourceMask eq '255.255.0.0')
+    {
+        $sourceIp = $parts[0].".".$parts[1].".0.0";
+        $sourceMask = "16";
+    }
+    elsif ($sourceMask eq '255.0.0.0')
+    {
+        $sourceIp = $parts[0].".0.0.0";
+        $sourceMask = "8";
+    }
+    elsif ($sourceMask eq '0.0.0.0')
+    {
+        $sourceIp = "0.0.0.0";
+        $sourceMask = "1";
+    }
 
     return (
         interface => $iface,
@@ -699,10 +757,30 @@ sub getRedirectParameterSecure
         external_port_single_port => $extPort,
         source_selected => 'source_ipaddr',
         source_ipaddr_ip => $sourceIp,
+        source_ipaddr_mask => $sourceMask,
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
         description => 'Created by Pound Moudle for '.$desc,
+        snat => 1,
+        log => 0,
+    );
+}
+
+sub getRedirectParameterFind
+{
+    my ($self, $row) = @_;
+
+    my $iface = $self->getExternalIface();
+    my $localIpaddr = $row->valueByName('ipaddr');
+
+    return (
+        interface => $iface,
+        origDest_selected => "origDest_ebox",
+        protocol => "tcp/udp",
+        external_port_range_type => 'single',
+        destination => $localIpaddr,
+        destination_port_selected => "destination_port_other",
         snat => 1,
         log => 0,
     );
