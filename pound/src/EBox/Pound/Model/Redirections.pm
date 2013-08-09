@@ -17,16 +17,16 @@ use EBox::Types::Port;
 
 # Group: Public methods
 
-sub new
-{
-    my $class = shift;
-    my %parms = @_;
-
-    my $self = $class->SUPER::new(@_);
-    bless ($self, $class);
-
-    return $self;
-}
+#sub new
+#{
+#    my $class = shift;
+#    my %parms = @_;
+#
+#    my $self = $class->SUPER::new(@_);
+#    bless ($self, $class);
+#
+#    return $self;
+#}
 
 sub pageTitle
 {
@@ -59,10 +59,13 @@ sub _table
         'tableName' => 'Redirections',
         'printableTableName' => __('Port Redirect'),
         'printableRowName' => __('Port Redirect'),
-        'modelDomain' => 'Pound',
+        'modelDomain' => 'Pound','),
+        automaticRemove => 1,
+        defaultController => '/Pound/Controller/Redirections',
         'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
         'tableDescription' => \@fields,
         'sortedBy' => 'extPort',
+        class => 'dataTable',
         'enableProperty' => 1,
     };
 

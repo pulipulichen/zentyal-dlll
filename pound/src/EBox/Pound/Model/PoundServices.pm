@@ -267,11 +267,13 @@ sub _table
         # ----------------------------------
 
         new EBox::Types::HasMany(
-            'fieldName' => 'redirections',
+            'fieldName' => 'redirOther',
             'printableName' => __('Other Redirect Ports'),
             'foreignModel' => 'Redirections',
             'view' => '/Pound/View/Redirections',
-            'backView' => '/Pound/View/Global',
+#            'backView' => '/Pound/View/Global',
+#            'size' => '1',
+            optional=>1,
        ),
 
         # ==============================

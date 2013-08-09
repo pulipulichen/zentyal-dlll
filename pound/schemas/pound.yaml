@@ -1,5 +1,10 @@
 class: EBox::Pound
 
+depends:
+    - network
+    - dns
+    - firewall
+
 models:
     - Settings
     - PoundServices
