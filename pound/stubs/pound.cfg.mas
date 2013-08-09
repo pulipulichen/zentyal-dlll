@@ -51,25 +51,32 @@ ListenHTTP
 % print "#                End\n";
 % print "#        End\n";
 
-	Service
-		BackEnd
-			Address	127.0.0.1
-			Port	80
-		End
-	End
-
 % foreach my $service (@{$services}) {
 %   my $domainNameValue = $service->{'domainNameValue'};
 %   my $ipaddrValue = $service->{'ipaddrValue'};
 %   my $portValue = $service->{'portValue'};
 %   my $enbaledValue = $service->{'enbaledValue'};
+%   my $httpToHttpsValue = $service->{'httpToHttpsValue'};
+%   my $httpsPortValue = $service->{'httpsPortValue'};
+
 %   if ($enbaledValue) {
 	Service
                 HeadRequire "Host: <% $domainNameValue %>.*"
+
+%   if ($httpToHttpsValue) {
+
+                redirect "https://<% $domainNameValue %>:<% $httpsPortValue %>/"
+
+%   }
+%   else {
+
 		BackEnd
 			Address	<% $ipaddrValue %>
 			Port	<% $portValue %>
 		End
+
+%   }
+
 	End
 %   }
 % }

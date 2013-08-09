@@ -100,6 +100,8 @@ sub _setConf
         my $descriptionValue = $row->valueByName('description');
         my $portValue = $row->valueByName('port');
         my $enbaledValue = $row->valueByName('enabled');
+        my $httpToHttpsValue = $row->valueByName('httpToHttps');
+        my $httpsPortValue = $services->getHTTPSextPort($row);
 
         my @params = (
             domainNameValue => $domainNameValue,
@@ -107,6 +109,8 @@ sub _setConf
             portValue => $portValue,
             descriptionValue => $descriptionValue,
             enbaledValue => $enbaledValue,
+            httpToHttpsValue => $httpToHttpsValue,
+            httpsPortValue => $httpsPortValue,
         );
 
         push (@paramsArray, {
@@ -115,6 +119,8 @@ sub _setConf
             portValue => $portValue,
             descriptionValue => $descriptionValue,
             enbaledValue => $enbaledValue,
+            httpToHttpsValue => $httpToHttpsValue,
+            httpsPortValue => $httpsPortValue,
         });
     }
 

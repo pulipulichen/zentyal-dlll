@@ -72,6 +72,13 @@ sub _table
             editable => 1,
         ),
         new EBox::Types::Boolean(
+            fieldName => 'httpToHttps',
+            printableName => __('HTTP Redirect to HTTPS'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 0,
+        ),
+        new EBox::Types::Boolean(
             fieldName => 'boundLocalDns',
             printableName => __('Bound Local DNS'),
             editable => 1,
@@ -443,10 +450,6 @@ sub deletedRedirects
 {
     my ($self, $row) = @_;
 
-    
-    #my %param = $self->getRedirectParameterFind($row);
-    #$self->deleteRedirectRow(%param);
-
     my %param = $self->getRedirectParamHTTP($row);
     $self->deleteRedirectRow(%param);
 
@@ -683,6 +686,7 @@ sub getRedirectParameter
 {
     my ($self, $row, $extPort, $intPort, $desc) = @_;
 
+    my $domainName = $row->valueByName("domainName");
     my $iface = $self->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
@@ -696,7 +700,7 @@ sub getRedirectParameter
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
-        description => 'Created by Pound Moudle for '.$desc,
+        description => 'Created by Pound Moudle for '.$domainName. " " . $desc,
         snat => 1,
         log => 0,
     );
@@ -706,6 +710,7 @@ sub getRedirectParameterSecure
 {
     my ($self, $row, $extPort, $intPort, $desc) = @_;
 
+    my $domainName = $row->valueByName("domainName");
     my $iface = $self->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
@@ -761,7 +766,7 @@ sub getRedirectParameterSecure
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
-        description => 'Created by Pound Moudle for '.$desc,
+        description => 'Created by Pound Moudle for '.$domainName. " " . $desc,
         snat => 1,
         log => 0,
     );
@@ -771,6 +776,7 @@ sub getRedirectParameterFind
 {
     my ($self, $row) = @_;
 
+    my $domainName = $row->valueByName("domainName");
     my $iface = $self->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
