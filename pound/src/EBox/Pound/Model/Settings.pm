@@ -97,10 +97,10 @@ sub _table
                                 '<a href="/Firewall/View/RedirectsTable" target="_blank">Custom Port Forwarding</a>'
              ),
           new EBox::Types::Text(
-                fieldName => 'domainNameHint',
+                fieldName => 'domainNameHelpURL',
                 printableName => __('Domain Name Help Webpage'),
                 editable => 1,
-                defaultValue=> "http://raw.github.com/pulipulichen/zentyal-dlll/master/pound/domain-name-help.txt",
+                defaultValue=> "http://raw.github.com/pulipulichen/zentyal-dlll/master/pound/domain-name-help.html",
             ),
       );
 

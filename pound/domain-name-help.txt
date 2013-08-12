@@ -1,3 +1,0 @@
-Domain Name Format: "[type]-[name]-[year].[main-domain-name]"
-
-For example: "test-zentyal-2013.dlll.nccu.edu.tw". [type]: exp (experiment), test, pc (personal computer), teach, demo, public (format domain name), 

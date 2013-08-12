@@ -26,6 +26,8 @@ use EBox::DNS::Model::DomainTable;
 use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 
+use LWP::Simple;
+
 # 20130812 Pulipuli Chen
 # 想要寫出切換功能，可是失敗了。
 #use EBox::Validate qw(:all);
@@ -40,7 +42,7 @@ sub _table
 {
     my ($self) = @_;
 
-    my $domainNameHint = $self->parentModule()->model("Settings")->row()->valueByName("domainNameHint");
+    my $domainNameHelpURL = $self->parentModule()->model("Settings")->value("domainNameHelpURL");
 
     my @fields = (
         new EBox::Types::DomainName(
@@ -50,7 +52,7 @@ sub _table
             'unique' => 1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            'help' => $domainNameHint,
+            'help' => get($domainNameHelpURL) . 'Format Help: <a href="'.$domainNameHelpURL.'" target="_blank">'.$domainNameHelpURL.'</a>',
         ),
         new EBox::Types::HTML(
             fieldName => 'domainNameLink',
