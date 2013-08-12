@@ -26,6 +26,10 @@ use EBox::DNS::Model::DomainTable;
 use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 
+# 20130812 Pulipuli Chen
+# 想要寫出切換功能，可是失敗了。
+#use EBox::Validate qw(:all);
+
 # Method: _table
 #
 # Overrides:
@@ -349,6 +353,29 @@ sub _table
 
     return $dataTable;
 }
+
+# --------------------------------------
+# 20130812 Pulipuli Chen
+# 想要寫出切換功能，可是失敗了。
+
+#sub viewCustomizer
+#{
+#    my ($self) = @_;
+#
+#    my $customizer = $self->SUPER::viewCustomizer();
+#
+#    # disable port selection in protless protocols
+#    my $httpFields = [qw(redirHTTP_secure)];
+#    $customizer->setOnChangeActions({
+#        redirHTTPS_enable => {
+#            1 => {show => $httpFields},
+#            0 => {hide => $httpFields},
+#        }
+#    });
+#
+#    return $customizer;
+#}
+
 
 # ---------------------------------------
 

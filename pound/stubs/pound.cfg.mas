@@ -67,7 +67,7 @@ ListenHTTP
 
                 redirect "https://<% $domainNameValue %>:<% $httpsPortValue %>/"
 
-%   }
+%   }   #if ($httpToHttpsValue) {
 %   else {
 
 		BackEnd
@@ -75,11 +75,11 @@ ListenHTTP
 			Port	<% $portValue %>
 		End
 
-%   }
+%   }   #else {
 
 	End
-%   }
-% }
+%   }   #if ($enbaledValue) {
+% } #foreach my $service (@{$services}) {
 
 
 End
