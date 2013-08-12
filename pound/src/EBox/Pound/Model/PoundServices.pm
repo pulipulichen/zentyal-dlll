@@ -64,7 +64,7 @@ sub _table
             fieldName => 'ipaddr',
             printableName => __('Internal IP Address'),
             editable => 1,
-            'unique' => 1,
+            #'unique' => 1,
             help => __('The third part should be between 1~5, and the forth part should be between 1~99'),
         ),
         new EBox::Types::Port(

@@ -91,6 +91,11 @@ sub _setConf
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
+        if ($row->valueByName('enabled') == 0)
+        {
+            next;
+        }
+
         my $domainNameValue = $row->valueByName('domainName');
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
@@ -114,6 +119,11 @@ sub _setConf
     my @redirArray = ();
     for my $id (@{$redirect->ids()}) {
         my $row = $redirect->row($id);
+
+        if ($row->valueByName('enabled') == 0)
+        {
+            next;
+        }
 
         my $domainNameValue = $row->valueByName('domainName');
         my $urlValue = $row->valueByName('url');
