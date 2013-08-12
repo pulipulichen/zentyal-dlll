@@ -2,6 +2,7 @@
     $address
     $port
     $services
+    $redir
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
@@ -55,11 +56,9 @@ ListenHTTP
 %   my $domainNameValue = $service->{'domainNameValue'};
 %   my $ipaddrValue = $service->{'ipaddrValue'};
 %   my $portValue = $service->{'portValue'};
-%   my $enbaledValue = $service->{'enbaledValue'};
 %   my $httpToHttpsValue = $service->{'httpToHttpsValue'};
 %   my $httpsPortValue = $service->{'httpsPortValue'};
 
-%   if ($enbaledValue) {
 	Service
                 HeadRequire "Host: <% $domainNameValue %>.*"
 
@@ -78,8 +77,21 @@ ListenHTTP
 %   }   #else {
 
 	End
-%   }   #if ($enbaledValue) {
 % } #foreach my $service (@{$services}) {
 
+% print "#        Service\n";
+% print "#                HeadRequire \"Host: test-redir.dlll.nccu.edu.tw.*\"\n";
+% print "#                Redirect \"http://dlll.nccu.edu.tw\"\n";
+% print "#        End\n";
+
+% foreach my $r (@{$redir}) {
+%   my $domainNameValue = $r->{'domainNameValue'};
+%   my $urlValue = $r->{'urlValue'};
+
+	Service
+                HeadRequire "Host: <% $domainNameValue %>.*"
+                redirect "<% $urlValue %>"
+	End
+% } #foreach my $r (@{$redir}) {
 
 End

@@ -116,13 +116,14 @@ sub urlToLink
 {
     my ($self, $url) = @_;
 
-    if ( (substr($url, 0, 7) ne 'http://') &&  (substr($url, 0, 8) ne 'https://')) {
-        $url = "http://" . $url . "/";
+    my $link = $url;
+    if ( (substr($link, 0, 7) ne 'http://') &&  (substr($link, 0, 8) ne 'https://')) {
+        $link = "http://" . $link . "/";
     }
 
-    $url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
+    $link = '<a href="'.$link.'" target="_blank">'.$url.'</a>';
 
-    return $url;
+    return $link;
 }
 
 1;

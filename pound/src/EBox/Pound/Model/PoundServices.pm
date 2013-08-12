@@ -852,7 +852,6 @@ sub updateRedirectPorts
     my ($self, $row) = @_;
 
     my $hint = '';
-    #if ($row->valueByName('enabled')) {
         
         my $ipaddr = $self->getExternalIpaddr();
 
@@ -904,7 +903,7 @@ sub updateRedirectPorts
 
         $row->elementByName('redirPorts')->setValue($hint);
         $row->store();
-    #}
+
 }
 
 sub updateDomainNameLink

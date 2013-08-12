@@ -91,34 +91,18 @@ sub _setConf
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
-        if ($row->valueByName('enabled') == 0) {
-            next;
-        }
-
         my $domainNameValue = $row->valueByName('domainName');
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
         my $portValue = $row->valueByName('port');
-        my $enbaledValue = $row->valueByName('enabled');
         my $httpToHttpsValue = $row->valueByName('httpToHttps');
         my $httpsPortValue = $services->getHTTPSextPort($row);
-
-#        my @params = (
-#            domainNameValue => $domainNameValue,
-#            ipaddrValue => $ipaddrValue,
-#            portValue => $portValue,
-#            descriptionValue => $descriptionValue,
-#            enbaledValue => $enbaledValue,
-#            httpToHttpsValue => $httpToHttpsValue,
-#            httpsPortValue => $httpsPortValue,
-#        );
 
         push (@paramsArray, {
             domainNameValue => $domainNameValue,
             ipaddrValue => $ipaddrValue,
             portValue => $portValue,
             descriptionValue => $descriptionValue,
-            enbaledValue => $enbaledValue,
             httpToHttpsValue => $httpToHttpsValue,
             httpsPortValue => $httpsPortValue,
         });
@@ -127,35 +111,20 @@ sub _setConf
     my $redirect = $self->model('Redirect');
 
     # Iterate over table
-#    my @paramsArray = ();
-#    for my $id (@{$services->ids()}) {
-#        my $row = $services->row($id);
-#        
-#        if ($row->valueByName('enabled') == 0) {
-#            next;
-#        }
-#
-#        my $domainNameValue = $row->valueByName('domainName');
-#        my $ipaddrValue = $row->valueByName('ipaddr');
-#        my $descriptionValue = $row->valueByName('description');
-#        my $portValue = $row->valueByName('port');
-#        my $enbaledValue = $row->valueByName('enabled');
-#        my $httpToHttpsValue = $row->valueByName('httpToHttps');
-#        my $httpsPortValue = $services->getHTTPSextPort($row);
+    my @redirArray = ();
+    for my $id (@{$redirect->ids()}) {
+        my $row = $redirect->row($id);
 
-#        push (@paramsArray, {
-#            domainNameValue => $domainNameValue,
-#            ipaddrValue => $ipaddrValue,
-#            portValue => $portValue,
-#            descriptionValue => $descriptionValue,
-#            enbaledValue => $enbaledValue,
-#            httpToHttpsValue => $httpToHttpsValue,
-#            httpsPortValue => $httpsPortValue,
-#        });
-#    }
+        my $domainNameValue = $row->valueByName('domainName');
+        my $urlValue = $row->valueByName('url');
+
+        push (@redirArray, {
+            domainNameValue => $domainNameValue,
+            urlValue => $urlValue,
+        });
+    }
 
     my $settings = $self->model('Settings');
-#    my $address = $settings->value('address');
     my $port = $settings->value('port');
 
     my $address = "127.0.0.1";
@@ -177,6 +146,7 @@ sub _setConf
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'services' => \@paramsArray);
+    push(@servicesParams, 'redir' => \@redirArray);
 
     $self->writeConfFile(
         $CONFFILE,
