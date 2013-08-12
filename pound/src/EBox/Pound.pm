@@ -103,15 +103,15 @@ sub _setConf
         my $httpToHttpsValue = $row->valueByName('httpToHttps');
         my $httpsPortValue = $services->getHTTPSextPort($row);
 
-        my @params = (
-            domainNameValue => $domainNameValue,
-            ipaddrValue => $ipaddrValue,
-            portValue => $portValue,
-            descriptionValue => $descriptionValue,
-            enbaledValue => $enbaledValue,
-            httpToHttpsValue => $httpToHttpsValue,
-            httpsPortValue => $httpsPortValue,
-        );
+#        my @params = (
+#            domainNameValue => $domainNameValue,
+#            ipaddrValue => $ipaddrValue,
+#            portValue => $portValue,
+#            descriptionValue => $descriptionValue,
+#            enbaledValue => $enbaledValue,
+#            httpToHttpsValue => $httpToHttpsValue,
+#            httpsPortValue => $httpsPortValue,
+#        );
 
         push (@paramsArray, {
             domainNameValue => $domainNameValue,
@@ -123,6 +123,36 @@ sub _setConf
             httpsPortValue => $httpsPortValue,
         });
     }
+
+    my $redirect = $self->model('Redirect');
+
+    # Iterate over table
+#    my @paramsArray = ();
+#    for my $id (@{$services->ids()}) {
+#        my $row = $services->row($id);
+#        
+#        if ($row->valueByName('enabled') == 0) {
+#            next;
+#        }
+#
+#        my $domainNameValue = $row->valueByName('domainName');
+#        my $ipaddrValue = $row->valueByName('ipaddr');
+#        my $descriptionValue = $row->valueByName('description');
+#        my $portValue = $row->valueByName('port');
+#        my $enbaledValue = $row->valueByName('enabled');
+#        my $httpToHttpsValue = $row->valueByName('httpToHttps');
+#        my $httpsPortValue = $services->getHTTPSextPort($row);
+
+#        push (@paramsArray, {
+#            domainNameValue => $domainNameValue,
+#            ipaddrValue => $ipaddrValue,
+#            portValue => $portValue,
+#            descriptionValue => $descriptionValue,
+#            enbaledValue => $enbaledValue,
+#            httpToHttpsValue => $httpToHttpsValue,
+#            httpsPortValue => $httpsPortValue,
+#        });
+#    }
 
     my $settings = $self->model('Settings');
 #    my $address = $settings->value('address');

@@ -10,9 +10,10 @@ models:
     - Settings
     - PoundServices
     - Redirections
+    - Redirect
 
 composites:
-    Global: [Settings, PoundServices]
+    Global: [Settings, PoundServices, Redirect]
     
 foreign:
     PoundServices: [Redirections]
