@@ -13,6 +13,7 @@ use EBox::Types::Port;
 use EBox::Types::Link;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
+use EBox::Types::HTML;
 
 use EBox::Network;
 
@@ -94,14 +95,21 @@ sub _table
                                 #. '<li><a href="/Firewall/View/ExternalToEBoxRuleTable">' . __("Please add rule to allow this port from external networks link to Zentyal") . "</a></li>"
                                 #. '<li><a href="/Firewall/View/ExternalToInternalRuleTable">' . __("Please add rule to allow port 10000~60000 from external networks link to internal networks") . "</a></li>"
                                 #. '</ul>'
-                                '<a href="/Firewall/View/RedirectsTable" target="_blank">Custom Port Forwarding</a>'
+                                
              ),
           new EBox::Types::Text(
                 fieldName => 'domainNameHelpURL',
                 printableName => __('Domain Name Help Webpage'),
                 editable => 1,
-                defaultValue=> "http://raw.github.com/pulipulichen/zentyal-dlll/master/pound/domain-name-help.html",
+                defaultValue=> "https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help",
+                optional => 0,
             ),
+          new EBox::Types::HTML(
+            fieldName => 'portForwarding',
+            printableName => __('Port Forwarding Setup'),
+            editable => 0,
+            defaultValue => '<a href="/Firewall/View/RedirectsTable" target="_blank">'.__('Custom Port Forwarding').'</a>',
+        ),
       );
 
     my $dataTable =

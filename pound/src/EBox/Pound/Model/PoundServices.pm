@@ -42,8 +42,6 @@ sub _table
 {
     my ($self) = @_;
 
-    my $domainNameHelpURL = $self->parentModule()->model("Settings")->value("domainNameHelpURL");
-
     my @fields = (
         new EBox::Types::DomainName(
             fieldName => 'domainName',
@@ -52,7 +50,7 @@ sub _table
             'unique' => 1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            'help' => get($domainNameHelpURL) . 'Format Help: <a href="'.$domainNameHelpURL.'" target="_blank">'.$domainNameHelpURL.'</a>',
+            #'help' => get($domainNameHelpURL) . 'Format Help: <a href="'.$domainNameHelpURL.'" target="_blank">'.$domainNameHelpURL.'</a>',
         ),
         new EBox::Types::HTML(
             fieldName => 'domainNameLink',
