@@ -15,5 +15,3 @@ models:
 composites:
     Global: [Settings, PoundServices, Redirect]
     
-foreign:
-    PoundServices: [Redirections]
