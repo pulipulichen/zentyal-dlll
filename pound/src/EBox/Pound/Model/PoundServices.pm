@@ -40,14 +40,17 @@ sub _table
 {
     my ($self) = @_;
 
+    my $domainNameHint = $self->parentModule()->model("Settings")->row()->valueByName("domainNameHint");
+
     my @fields = (
         new EBox::Types::DomainName(
             fieldName => 'domainName',
             printableName => __('Domain Name'),
             editable => 1,
             'unique' => 1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            'help' => $domainNameHint,
         ),
         new EBox::Types::HTML(
             fieldName => 'domainNameLink',

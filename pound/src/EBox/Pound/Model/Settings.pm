@@ -10,6 +10,7 @@ use EBox::Gettext;
 
 use EBox::Types::HostIP;
 use EBox::Types::Port;
+use EBox::Types::Link;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
 
@@ -95,6 +96,12 @@ sub _table
                                 #. '</ul>'
                                 '<a href="/Firewall/View/RedirectsTable" target="_blank">Custom Port Forwarding</a>'
              ),
+          new EBox::Types::Text(
+                fieldName => 'domainNameHint',
+                printableName => __('Domain Name Help Webpage'),
+                editable => 1,
+                defaultValue=> "http://raw.github.com/pulipulichen/zentyal-dlll/master/pound/domain-name-help.txt",
+            ),
       );
 
     my $dataTable =
