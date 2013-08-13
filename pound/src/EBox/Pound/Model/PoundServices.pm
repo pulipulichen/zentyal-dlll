@@ -418,17 +418,16 @@ sub addDomainName
 
     if ($row->valueByName('boundLocalDns')) {
         my $domainName = $row->valueByName('domainName');
-        my $gl = EBox::Global->getIdomain_namenstance();
+        my $gl = EBox::Global->getInstance();
         my $dns = $gl->modInstance('dns');
-
-        #my $domain = $dns->model('DomainTable');
-        #my $id = $domain->findId('domain' => $domainName);
-        #if (defined($id) == 0) {
+        my $domModel = $dns->model('DomainTable');
+        my $id = $domModel->findId(domain => $domainName);
+        if (defined($id) == 0) 
+        {
             $dns->addDomain({
                 domain_name => $domainName,
             });
-        #}
-        
+        }
     }
 
     $self->updateDomainNameLink($row);

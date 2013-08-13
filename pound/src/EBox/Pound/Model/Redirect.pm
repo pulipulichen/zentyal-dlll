@@ -14,6 +14,10 @@ use warnings;
 use EBox::Gettext;
 
 use EBox::Types::Port;
+use EBox::Types::HTML;
+use EBox::Types::Date;
+use EBox::Types::Boolean;
+use EBox::Types::Text;
 
 # Group: Public methods
 
@@ -42,7 +46,6 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),
-        
         new EBox::Types::Text(
             'fieldName' => 'url',
             'printableName' => __('Redirect URL'),
@@ -50,7 +53,6 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),
-        
         new EBox::Types::HTML(
             fieldName => 'domainNameLink',
             printableName => __('Domain Name'),
@@ -81,6 +83,12 @@ sub _table
             editable => 1,
             optional=>1,
         ),
+        new EBox::Types::Date(
+            fieldName => 'updateDate',
+            printableName => __('Update Date'),
+            editable => 0,
+            optional=>1,
+        ),
     );
 
     my $dataTable =
@@ -106,21 +114,21 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->setLink($row);
 
-    $self->parentModule()->model("PoundServices")->addDomainName($row);
+    $self->addDomainName($row);
 }
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
     $self->setLink($row);
 
-    $self->parentModule()->model("PoundServices")->deletedDomainName($oldRow);
-    $self->parentModule()->model("PoundServices")->addDomainName($row);
+    $self->deletedDomainName($oldRow);
+    $self->addDomainName($row);
 }
 
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
-    $self->parentModule()->model("PoundServices")->deletedDomainName($row);
+    $self->deletedDomainName($row);
 }
 
 sub setLink
@@ -152,5 +160,42 @@ sub urlToLink
 
     return $link;
 }
+# ---------------------------------------
+
+sub addDomainName
+{
+    my ($self, $row) = @_;
+
+    if ($row->valueByName('boundLocalDns')) {
+        my $domainName = $row->valueByName('domainName');
+        my $gl = EBox::Global->getInstance();
+        my $dns = $gl->modInstance('dns');
+        my $domModel = $dns->model('DomainTable');
+        my $id = $domModel->findId(domain => $domainName);
+        if (defined($id) == 0) 
+        {
+            $dns->addDomain({
+                domain_name => $domainName,
+            });
+        }
+    }
+}
+
+sub deletedDomainName
+{
+    my ($self, $row) = @_;
+    my $domainName = $row->valueByName('domainName');
+
+    my $gl = EBox::Global->getInstance();
+    my $dns = $gl->modInstance('dns');
+    my $domModel = $dns->model('DomainTable');
+    my $id = $domModel->findId(domain => $domainName);
+    if (defined($id)) 
+    {
+        $domModel->removeRow($id);
+    }
+}
+
+# -----------------------------
 
 1;
