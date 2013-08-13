@@ -19,6 +19,8 @@ use EBox::Types::Date;
 use EBox::Types::Boolean;
 use EBox::Types::Text;
 
+use POSIX qw(strftime);
+
 # Group: Public methods
 
 #sub new
@@ -68,6 +70,8 @@ sub _table
             optional => 0,
             defaultValue => 1,
             help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         ),
         new EBox::Types::HTML(
             fieldName => 'urlLink',
@@ -78,16 +82,52 @@ sub _table
                 hiddenOnViewer => 0,
         ),
         new EBox::Types::Text(
+            fieldName => 'contactName',
+            printableName => __('Contact Name'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Text(
+            fieldName => 'contactEmail',
+            printableName => __('Contact Email'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'contactLink',
+            printableName => __('Contact & Last Update Date'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        ),
+        new EBox::Types::Text(
             fieldName => 'description',
             printableName => __('Description'),
             editable => 1,
-            optional=>1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         ),
-        new EBox::Types::Date(
-            fieldName => 'updateDate',
-            printableName => __('Update Date'),
+        new EBox::Types::HTML(
+            fieldName => 'createDate',
+            printableName => __('Create Date'),
             editable => 0,
             optional=>1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'updateDate',
+            printableName => __('Last Update Date'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         ),
     );
 
@@ -115,6 +155,11 @@ sub addedRowNotify
     $self->setLink($row);
 
     $self->addDomainName($row);
+
+    $self->setCreateDate($row);
+    $self->setUpdateDate($row);
+
+    $self->setContactLink($row);
 }
 sub updatedRowNotify
 {
@@ -122,7 +167,12 @@ sub updatedRowNotify
     $self->setLink($row);
 
     $self->deletedDomainName($oldRow);
+
     $self->addDomainName($row);
+
+    $self->setUpdateDate($row);
+
+    $self->setContactLink($row);
 }
 
 sub deletedRowNotify
@@ -138,7 +188,7 @@ sub setLink
     my $domainName = $row->valueByName('domainName');
     my $url = $row->valueByName('url');
 
-    my $domainNameLink = $self->urlToLink($domainName);
+    my $domainNameLink = $self->domainNameToLink($domainName);
     my $urlLink = $self->urlToLink($url);
 
     $row->elementByName('domainNameLink')->setValue($domainNameLink);
@@ -156,7 +206,28 @@ sub urlToLink
         $link = "http://" . $link . "/";
     }
 
-    $link = '<a href="'.$link.'" target="_blank">'.$url.'</a>';
+    if (length($url) > 20) 
+    {
+        $url = substr($url, 0, 20) . "...";
+    }
+
+    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
+
+    return $link;
+}
+
+sub domainNameToLink
+{
+    my ($self, $url) = @_;
+
+    my $link = $url;
+    if ( (substr($link, 0, 7) ne 'http://') &&  (substr($link, 0, 8) ne 'https://')) {
+        $link = "http://" . $link . "/";
+    }
+
+    $url = $self->parentModule()->model("PoundServices")->breakUrl($url);
+
+    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
 
     return $link;
 }
@@ -196,6 +267,43 @@ sub deletedDomainName
     }
 }
 
+sub setUpdateDate
+{
+    my ($self, $row) = @_;
+
+    my $date = strftime "%Y/%m/%d", localtime;
+
+    $row->elementByName('updateDate')->setValue('<span>'.$date."</span>");
+    $row->store();
+}
+
+sub setCreateDate
+{
+    my ($self, $row) = @_;
+
+    my $date = strftime "%Y/%m/%d", localtime;
+
+    $row->elementByName('createDate')->setValue('<span>'.$date."</span>");
+    $row->store();
+}
+
+sub setContactLink
+{
+    my ($self, $row) = @_;
+
+    my $name = $row->valueByName('contactName');
+    my $email = $row->valueByName('contactEmail');
+
+    my $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
+
+    my $date = strftime "%Y/%m/%d", localtime;
+    $link = $link."<br />".$date;
+    $link = "<span>".$link."</span>";
+
+    $row->elementByName('contactLink')->setValue($link);
+    $row->store();
+}
+
 # -----------------------------
 
-1;
+1

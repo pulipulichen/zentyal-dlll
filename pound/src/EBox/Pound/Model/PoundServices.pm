@@ -74,9 +74,28 @@ sub _table
             editable => 1,
         ),
         new EBox::Types::Text(
+            fieldName => 'contactName',
+            printableName => __('Contact Name'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Text(
+            fieldName => 'contactEmail',
+            printableName => __('Contact Email'),
+            editable => 1,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Text(
             fieldName => 'description',
             printableName => __('Description'),
             editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         ),
         new EBox::Types::Boolean(
             fieldName => 'httpToHttps',
@@ -84,6 +103,8 @@ sub _table
             editable => 1,
             optional => 0,
             defaultValue => 0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         ),
         new EBox::Types::Boolean(
             fieldName => 'boundLocalDns',
@@ -92,6 +113,8 @@ sub _table
             optional => 0,
             defaultValue => 1,
             help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         ),
         
 
@@ -313,6 +336,31 @@ sub _table
                 hiddenOnSetter => 1,
                 hiddenOnViewer => 0,
         ),
+        new EBox::Types::HTML(
+            fieldName => 'createDate',
+            printableName => __('Create Date'),
+            editable => 0,
+            optional=>1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'updateDate',
+            printableName => __('Last Update Date'),
+            editable => 0,
+            optional=>1,
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+
+        new EBox::Types::HTML(
+            fieldName => 'contactLink',
+            printableName => __('Contact & Last Update Date'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        ),
 
         # ----------------------------------
 
@@ -389,6 +437,12 @@ sub addedRowNotify
     $self->addRedirects($row);
 
     $self->updateRedirectPorts($row);
+
+
+    $self->parentModule()->model("Redirect")->setCreateDate($row);
+    $self->parentModule()->model("Redirect")->setUpdateDate($row);
+
+    $self->parentModule()->model("Redirect")->setContactLink($row);
 }
 
 sub deletedRowNotify
@@ -408,6 +462,9 @@ sub updatedRowNotify
     $self->addRedirects($row);
 
     $self->updateRedirectPorts($row);
+
+    $self->parentModule()->model("Redirect")->setUpdateDate($row);
+    $self->parentModule()->model("Redirect")->setContactLink($row);
 }
 
 # ---------------------------------------
@@ -868,7 +925,7 @@ sub updateRedirectPorts
             #my $extPort = $portHeader.80;
             my $intPort = $row->valueByName('port');
             my $url = "http\://" . $ipaddr . "\:".$extPort."/";
-            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTP</strong>: " . $extPort ." &gt; " . $intPort."</a></li>";  
+            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTP</strong>: <br />" . $extPort ." &gt; " . $intPort."</a></li>";  
         }
 
         # 加入HTTPS
@@ -878,7 +935,7 @@ sub updateRedirectPorts
             #my $extPort = $portHeader.43;
             my $intPort = $row->valueByName('redirHTTPS_intPort');
             my $url = "https\://" . $ipaddr . "\:".$extPort."/";
-            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTPS</strong>: " . $extPort ." &gt; " . $intPort."</a></li>";  
+            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTPS</strong>: <br />" . $extPort ." &gt; " . $intPort."</a></li>";  
         }
 
         
@@ -888,7 +945,7 @@ sub updateRedirectPorts
             my $extPort = $self->getSSHextPort($row);
             #my $extPort = $portHeader.22;
             my $intPort = $row->valueByName('redirSSH_intPort');
-            $hint = $hint . "<li><strong>SSH</strong>: " . $extPort ." &gt; " . $intPort."</li>";   
+            $hint = $hint . "<li><strong>SSH</strong>: <br />" . $extPort ." &gt; " . $intPort."</li>";   
         }
 
         
@@ -898,7 +955,7 @@ sub updateRedirectPorts
             my $extPort = $self->getRDPextPort($row);
             #my $extPort = $portHeader.89;
             my $intPort = $row->valueByName('redirRDP_intPort');
-            $hint = $hint . "<li><strong>RDP</strong>: " . $extPort ." &gt; " . $intPort."</li>";  
+            $hint = $hint . "<li><strong>RDP</strong>: <br />" . $extPort ." &gt; " . $intPort."</li>";  
         }
 
         if ($hint ne '')
@@ -927,8 +984,20 @@ sub updateDomainNameLink
         $port = ":" . $port;
     }
     my $link = "http\://" . $domainName . $port . "/";
+
+    $domainName = $self->breakUrl($domainName);
+
     $link = '<a href="'.$link.'" target="_blank" style="background: none;text-decoration: underline;color: #A3BD5B;">'.$domainName.'</a>';
     $row->elementByName("domainNameLink")->setValue($link);
+}
+
+sub breakUrl
+{
+    my ($self, $url) = @_;
+
+     my $result = index($url, ".");
+    $url = substr($url, 0, $result) . "<br />" . substr($url, $result);
+    return $url;
 }
 
 # 找尋row用
