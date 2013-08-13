@@ -42,6 +42,7 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),
+        
         new EBox::Types::Text(
             'fieldName' => 'url',
             'printableName' => __('Redirect URL'),
@@ -49,6 +50,7 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),
+        
         new EBox::Types::HTML(
             fieldName => 'domainNameLink',
             printableName => __('Domain Name'),
@@ -57,6 +59,14 @@ sub _table
                 hiddenOnSetter => 1,
                 hiddenOnViewer => 0,
         ),
+        new EBox::Types::Boolean(
+            fieldName => 'boundLocalDns',
+            printableName => __('Bound Local DNS'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
+        ),
         new EBox::Types::HTML(
             fieldName => 'urlLink',
             printableName => __('Redirect URL'),
@@ -64,6 +74,12 @@ sub _table
             optional=>1,
                 hiddenOnSetter => 1,
                 hiddenOnViewer => 0,
+        ),
+        new EBox::Types::Text(
+            fieldName => 'description',
+            printableName => __('Description'),
+            editable => 1,
+            optional=>1,
         ),
     );
 
@@ -89,11 +105,22 @@ sub addedRowNotify
 {
     my ($self, $row) = @_;
     $self->setLink($row);
+
+    $self->parentModule()->model("PoundServices")->addDomainName($row);
 }
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
     $self->setLink($row);
+
+    $self->parentModule()->model("PoundServices")->deletedDomainName($oldRow);
+    $self->parentModule()->model("PoundServices")->addDomainName($row);
+}
+
+sub deletedRowNotify
+{
+    my ($self, $row) = @_;
+    $self->parentModule()->model("PoundServices")->deletedDomainName($row);
 }
 
 sub setLink
