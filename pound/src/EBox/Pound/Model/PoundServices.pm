@@ -97,6 +97,14 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),
+        new EBox::Types::Text(
+            fieldName => 'expiry',
+            printableName => __('Expiry Date'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
         new EBox::Types::Boolean(
             fieldName => 'httpToHttps',
             printableName => __('HTTP Redirect to HTTPS'),

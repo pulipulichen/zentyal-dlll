@@ -113,6 +113,14 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),
+        new EBox::Types::Text(
+            fieldName => 'expiry',
+            printableName => __('Expiry Date'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
         new EBox::Types::HTML(
             fieldName => 'createDate',
             printableName => __('Create Date'),
@@ -293,11 +301,13 @@ sub setContactLink
 
     my $name = $row->valueByName('contactName');
     my $email = $row->valueByName('contactEmail');
+    my $expiry = $row->valueByName('expiry');
 
     my $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
 
     my $date = strftime "%Y/%m/%d", localtime;
-    $link = $link."<br />".$date;
+    $link = $link."<br />[Update] ".$date;
+    $link = $link."<br />[Expiry] ".$expiry;
     $link = "<span>".$link."</span>";
 
     $row->elementByName('contactLink')->setValue($link);
