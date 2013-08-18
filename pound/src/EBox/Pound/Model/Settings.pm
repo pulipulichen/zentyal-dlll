@@ -91,11 +91,14 @@ sub _table
               printableName => __('External Port'),
               editable      => 1,
               unique        => 1,
-              help          => #"<ul>"
-                                #. '<li><a href="/Firewall/View/ExternalToEBoxRuleTable">' . __("Please add rule to allow this port from external networks link to Zentyal") . "</a></li>"
-                                #. '<li><a href="/Firewall/View/ExternalToInternalRuleTable">' . __("Please add rule to allow port 10000~60000 from external networks link to internal networks") . "</a></li>"
-                                #. '</ul>'
-                                
+             ),
+          new EBox::Types::Text(
+              fieldName     => 'alive',
+              printableName => __('Alive Time'),
+              editable      => 1,
+              unique        => 0,
+              default => 30,
+              help => __("Check backend every X secs"),
              ),
           new EBox::Types::Text(
                 fieldName => 'helpURL',

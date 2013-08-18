@@ -1,6 +1,7 @@
 <%args>
     $address
     $port
+    $alive
     $services
     $redir
 </%args>
@@ -24,7 +25,7 @@ Group		"www-data"
 LogLevel	1
 
 % print "## check backend every X secs:\n";
-Alive		30
+Alive		<% $alive %>
 
 % print "## use hardware-accelleration card supported by openssl(1):\n";
 % print "#SSLEngine	\"<hw>\"\n";
