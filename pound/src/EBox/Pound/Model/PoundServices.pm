@@ -580,6 +580,7 @@ sub getExternalIpaddrs
     foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
             $address = $network->ifaceAddress($if);
+            last;
         }
     }
     my @ipaddr=($address);
