@@ -1,5 +1,5 @@
 Format: 1.8
-Date: Mon, 19 Aug 2013 04:45:31 +0800
+Date: Sun, 25 Aug 2013 23:45:44 +0800
 Source: zentyal-pound
 Binary: zentyal-pound
 Architecture: source all
@@ -15,14 +15,14 @@ Changes:
  .
    * New upstream release
 Checksums-Sha1: 
- 30e3b2f9534cc2eadfaef2fdc858103180468c96 585 zentyal-pound_3.0.dsc
- 23b03f16954084e1886780af37d45dd6505900b7 6860838 zentyal-pound_3.0.tar.gz
- e3ed44ac20eed16f037f0e91cd9ecb18551c2b4e 11752 zentyal-pound_3.0_all.deb
+ 50c6f5e339f448b395037d4232e2872e6e93da3d 585 zentyal-pound_3.0.dsc
+ d4cd188365cf1a1a338eb952cf366f35e170c91a 6891781 zentyal-pound_3.0.tar.gz
+ 45ca0f767e628cd2bd5994ae2077b4758eee2928 11762 zentyal-pound_3.0_all.deb
 Checksums-Sha256: 
- 0a1e8115df1398babb89a58750c4eefaa4107f4fa7af48020c31e0d8cf4c67ff 585 zentyal-pound_3.0.dsc
- 7ae32acbb09b97ce501def64a0f29107d04471390697feb7a4ee23cc77737551 6860838 zentyal-pound_3.0.tar.gz
- f1a9eecf0b973c3149c5918fb443d8815e5ba0895af3df5d7e4162ade43289ed 11752 zentyal-pound_3.0_all.deb
+ 8063baf84a35a274c25bad0a10af7caebc52bce9a649b509e9eb833e3e8fc992 585 zentyal-pound_3.0.dsc
+ 53ec49b8dbce0983462bdc5e3c339fd3480a9c24664746b94307e28a7f711a0c 6891781 zentyal-pound_3.0.tar.gz
+ 8bb4dee927f500f448cc4137017204e5b87ac1146cfaf53a8da9f0f1f8970a36 11762 zentyal-pound_3.0_all.deb
 Files: 
- 327e7c1214edbde556d9e2abb3b438a6 585 web optional zentyal-pound_3.0.dsc
- 5afd68b1619c11bfda887fece8fb8e97 6860838 web optional zentyal-pound_3.0.tar.gz
- ce1771c910ffc659a949f86d96865363 11752 web optional zentyal-pound_3.0_all.deb
+ 9970fb713f2950b979714e06ce901956 585 web optional zentyal-pound_3.0.dsc
+ 7716618d7a25145a86e2b06838c0bf10 6891781 web optional zentyal-pound_3.0.tar.gz
+ 4aa81f076635d187598a8412da82f7b6 11762 web optional zentyal-pound_3.0_all.deb
