@@ -1,5 +1,5 @@
 Format: 1.8
-Date: Sun, 25 Aug 2013 23:52:24 +0800
+Date: Mon, 26 Aug 2013 16:43:00 +0800
 Source: zentyal-pound
 Binary: zentyal-pound
 Architecture: source all
@@ -7,7 +7,7 @@ Version: 3.0
 Distribution: precise
 Urgency: low
 Maintainer: Zentyal Packaging Maintainers <pkg-team@zentyal.com>
-Changed-By: root <root@zentyal-dlll.zentyal-domain.lan>
+Changed-By: <dlll@zentyal.zentyal.dlll.nccu.edu.tw>
 Description: 
  zentyal-pound - Zentyal - Pound module
 Changes: 
@@ -15,14 +15,14 @@ Changes:
  .
    * New upstream release
 Checksums-Sha1: 
- ac2baff36f563c2734b471235d4a024aab6667a9 585 zentyal-pound_3.0.dsc
- 5381a8752bc11c75bead8e2066fc3135ae6da41d 6922112 zentyal-pound_3.0.tar.gz
- 3194fccbc7ecd444e076cba04df89e2dfdfd1a1b 11762 zentyal-pound_3.0_all.deb
+ d2db4b5af1901d69acb4d9c93d31bddc360cb464 588 zentyal-pound_3.0.dsc
+ 565a9df290b11c9fb5aee6ec4a47624c06d20576 10192090 zentyal-pound_3.0.tar.gz
+ 1994fdb7646d07604278885df9d8f0a828e2ed40 12988 zentyal-pound_3.0_all.deb
 Checksums-Sha256: 
- 03389d757cdc883e154b9dfa62a9697448c7fe22abd7c8051caa0127ff545cd9 585 zentyal-pound_3.0.dsc
- a651951cf2f42871074761b044874979a6025777a067b1d450107b601bf1c407 6922112 zentyal-pound_3.0.tar.gz
- 52c88946081d5ba2d71b2730dabf4791674f1a2984cf437a9d7d274e40554b0c 11762 zentyal-pound_3.0_all.deb
+ 555bc0e3a0f1fb37bb7bde5969ae7cf91ec336e5f76a0cd932b50e1493d3b777 588 zentyal-pound_3.0.dsc
+ d97b7653a70aacd5678bf04813ac743ed1b0a1e9318b0824bda7e23ab05a9216 10192090 zentyal-pound_3.0.tar.gz
+ b1ea861c2a2a04b32f3a2caa332824886f93febedc325ee7c695c095a48c6c90 12988 zentyal-pound_3.0_all.deb
 Files: 
- ef4f9f14439cbfc1c813140497247d00 585 web optional zentyal-pound_3.0.dsc
- 2e4d2020181816dbbea35f67c0b187e3 6922112 web optional zentyal-pound_3.0.tar.gz
- bb0e24312af19431369511fae6d6df18 11762 web optional zentyal-pound_3.0_all.deb
+ 32e9f050eeb48441a369bc0b495c23f1 588 web optional zentyal-pound_3.0.dsc
+ 5bf586fe0801ba5e71343d9a32749397 10192090 web optional zentyal-pound_3.0.tar.gz
+ f0178159198003ed921b8a9514bafd32 12988 web optional zentyal-pound_3.0_all.deb

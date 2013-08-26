@@ -203,10 +203,10 @@ sub checkService
     my $serviceMod = $self->getServiceModel();
 
     # 確認
-    my $id = $serviceMod->findId('internal'=>$param{internal});
+    my $id = $serviceMod->findId('name' => $param{name});
 
     my $existed = 0;
-    if (defined $id)
+    if (defined($id) == 1)
     {
         $existed = 1;
     }
@@ -221,7 +221,12 @@ sub addService
 
     # 新增服務
     my $serviceMod = $self->getServiceModel();
-    $serviceMod->addRow(%param);
+
+    my $id = $serviceMod->findId(name=> $param{name});
+
+    if (defined($id) == 0) {
+        $serviceMod->addRow(%param);
+    }
 }
 
 sub getServiceRowId
@@ -230,7 +235,7 @@ sub getServiceRowId
     
     my %param = $self->getServiceParam();
     my $serviceMod = $self->getServiceModel();
-    my $id = $serviceMod->findId('internal'=>$param{internal});
+    my $id = $serviceMod->findId('name'=>$param{name});
     
     return $id;
 }
@@ -239,14 +244,19 @@ sub getServiceRow
 {
      my ($self) = @_;
      
-     if ($self->checkService() == 0) {
+    if ($self->checkService() == 0) {
         $self->addService();
     }
 
      my $serviceMod = $self->getServiceModel();
      my $id = $self->getServiceRowId();
 
-     return $serviceMod->row($id);
+     if (defined($id) == 1) {
+        return $serviceMod->row($id);
+     }
+     else {
+        return undef;
+     }
 }
 
 # ------------------
@@ -254,9 +264,14 @@ sub getServiceRow
 sub getServicePortModel
 {
     my ($self) = @_;
-
+    
     my $serviceRow = $self->getServiceRow();
-    return $serviceRow->subModel('configuration');
+    if (defined($serviceRow) == 1) {
+        return $serviceRow->subModel('configuration');
+    }
+    else {
+        return undef;
+    }
 }
 
 sub getServicePortParam
@@ -282,10 +297,10 @@ sub checkServicePort
     my $port = $row->valueByName("port");
     my %param = $self->getServicePortParam($port);
 
-    my $id = $portMod->findId('internal'=> $param{'internal'} );
+    my $id = $portMod->findId('destination'=> $port );
     
     my $existed = 0;
-    if (defined $id)
+    if (defined($id) == 1)
     {
         $existed = 1;
     }
@@ -300,7 +315,10 @@ sub addServicePort
     my $port = $row->valueByName("port");
     my %param = $self->getServicePortParam($port);
 
-    $portMod->addRow(%param);
+    my $id = $portMod->findId('destination'=>$port);
+    if (defined($id) == 0) {
+        $portMod->addRow(%param);
+    }
 }
 
 sub deleteServicePort
@@ -311,9 +329,11 @@ sub deleteServicePort
     my $port = $row->valueByName("port");
     my %param = $self->getServicePortParam($port);
 
-    my $id = $portMod->findId('destination_single_port'=>$port);
+    my $id = $portMod->findId('destination'=>$port);
 
-    $portMod->removeRow($id);
+    if (defined($id) == 1) {
+        $portMod->removeRow($id);
+    }
 }
 
 # ----------------------
@@ -326,6 +346,10 @@ sub checkFilter
     my %param = $self->getFilterParam();
 
     my $existed = 0;
+    my $id = $filterMod->findId(description => $param{description});
+    if (defined($id) == 1) {
+        $existed = 1;
+    }
     return $existed;
 }
 
@@ -336,7 +360,10 @@ sub addFilter
     my $filterMod = $self->getFilterModel();
     my %param = $self->getFilterParam();
 
-    $filterMod->addRow(%param);
+    my $id = $filterMod->findId('description'=>$param{description});
+    if (defined($id) == 0) {
+        $filterMod->addRow(%param);
+    }
 }
 
 sub getFilterRow
@@ -348,7 +375,12 @@ sub getFilterRow
 
     my $id = $filterMod->findId('description'=>$param{description});
 
-    return $filterMod->row($id);
+    if (defined($id) == 1) {
+        return $filterMod->row($id);
+    }
+    else {
+        return undef;
+    }
 }
 
 sub getFilterParam
@@ -363,6 +395,5 @@ sub getFilterParam
         'description' => 'For Reverse Proxy use.',
     );
 }
-
 
 1;
