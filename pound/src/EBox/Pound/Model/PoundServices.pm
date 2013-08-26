@@ -466,7 +466,7 @@ sub deletedRowNotify
 {
     my ($self, $row) = @_;
     $self->deletedDomainName($row);
-    #$self->deletedRedirects($row);
+    $self->deletedRedirects($row);
 }
 
 sub updatedRowNotify
@@ -555,14 +555,14 @@ sub deletedRedirects
     my %param = $self->getRedirectParamHTTP($row);
     $self->deleteRedirectRow(%param);
 
-    %param = $self->getRedirectParamHTTPS($row);
-    $self->deleteRedirectRow(%param);
+    #%param = $self->getRedirectParamHTTPS($row);
+    #$self->deleteRedirectRow(%param);
     
-    %param = $self->getRedirectParamSSH($row);
-    $self->deleteRedirectRow(%param);
+    #%param = $self->getRedirectParamSSH($row);
+    #$self->deleteRedirectRow(%param);
 
-    %param = $self->getRedirectParamRDP($row);
-    $self->deleteRedirectRow(%param);
+    #%param = $self->getRedirectParamRDP($row);
+    #$self->deleteRedirectRow(%param);
 }
 
 # -----------------------------
@@ -917,13 +917,10 @@ sub deleteRedirectRow
     my $firewall = $gl->modInstance('firewall');
     my $redirMod = $firewall->model('RedirectsTable');
 
-    my %delParam = (
-        destination => $param->{'destination'},
-        destination_port_selected => $param->{'destination_port_other'},
+    my $id = $redirMod->findId(
+        description => $param->{description}
     );
-
-    my $id = $redirMod->findId(%delParam);
-    if (defined($id)) {
+    if (defined($id) == 1) {
         $redirMod->removeRow($id);
     }
 }
