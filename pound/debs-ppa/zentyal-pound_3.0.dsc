@@ -10,8 +10,8 @@ Build-Depends: debhelper (>= 7.0.0), cdbs
 Package-List: 
  zentyal-pound deb web optional
 Checksums-Sha1: 
- 565a9df290b11c9fb5aee6ec4a47624c06d20576 10192090 zentyal-pound_3.0.tar.gz
+ 9ed3f2ae3ace9990fbe0ec1159fb48179a4c8552 11248344 zentyal-pound_3.0.tar.gz
 Checksums-Sha256: 
- d97b7653a70aacd5678bf04813ac743ed1b0a1e9318b0824bda7e23ab05a9216 10192090 zentyal-pound_3.0.tar.gz
+ 5fe379a040ebc9788bc472be2aa9d4a137d274b9202ba43637194dba95c518ff 11248344 zentyal-pound_3.0.tar.gz
 Files: 
- 5bf586fe0801ba5e71343d9a32749397 10192090 zentyal-pound_3.0.tar.gz
+ f41ef4c81d8a14c45d783185fa0bb42f 11248344 zentyal-pound_3.0.tar.gz
