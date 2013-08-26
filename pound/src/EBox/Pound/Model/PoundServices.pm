@@ -438,15 +438,17 @@ sub _table
 
 # ---------------------------------------
 
+my $ROW_NEED_UPDATE = 0;
+
 sub addedRowNotify
 {
     my ($self, $row) = @_;
+
+    $ROW_NEED_UPDATE = 1;
     
     $self->updateDomainNameLink($row);
-    $self->addRedirects($row);
-
+    
     $self->updateRedirectPorts($row);
-
 
     $self->parentModule()->model("Redirect")->setCreateDate($row);
     $self->parentModule()->model("Redirect")->setUpdateDate($row);
@@ -454,28 +456,27 @@ sub addedRowNotify
     $self->parentModule()->model("Redirect")->setContactLink($row);
 
     $self->addDomainName($row);
+    $self->addRedirects($row);
+
+    $row->store();
+    $ROW_NEED_UPDATE = 0;
 }
 
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
     $self->deletedDomainName($row);
-    $self->deletedRedirects($row);
+    #$self->deletedRedirects($row);
 }
 
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
-    $self->deletedRowNotify($oldRow);
-    $self->addedRowNotify($row);
 
-    $self->deletedRedirects($oldRow);
-    $self->addRedirects($row);
-
-    $self->updateRedirectPorts($row);
-
-    $self->parentModule()->model("Redirect")->setUpdateDate($row);
-    $self->parentModule()->model("Redirect")->setContactLink($row);
+    if ($ROW_NEED_UPDATE == 0) {
+        $self->deletedRowNotify($oldRow);
+        $self->addedRowNotify($row);
+    }
 }
 
 # ---------------------------------------
@@ -522,30 +523,28 @@ sub addRedirects
 {
     my ($self, $row) = @_;
 
-    if ($row->valueByName('enabled')) {
-        # 加入HTTP
-        if ($row->valueByName('redirHTTP_enable') == 1) {
-            my %param = $self->getRedirectParamHTTP($row);
-            $self->addRedirectRow(%param);
-        }
+    # 加入HTTP
+    if ($row->valueByName('redirHTTP_enable') == 1) {
+        my %param = $self->getRedirectParamHTTP($row);
+        $self->addRedirectRow(%param);
+    }
 
-        # 加入HTTPS
-        if ($row->valueByName('redirHTTPS_enable') == 1) {
-            my %param = $self->getRedirectParamHTTPS($row);
-            $self->addRedirectRow(%param);
-        }
-        
-        # 加入SSH
-        if ($row->valueByName('redirSSH_enable') == 1) {
-            my %param = $self->getRedirectParamSSH($row);
-            $self->addRedirectRow(%param);
-        }
-        
-        # 加入RDP
-        if ($row->valueByName('redirRDP_enable') == 1) {
-            my %param = $self->getRedirectParamRDP($row);
-            $self->addRedirectRow(%param);
-        }
+    # 加入HTTPS
+    if ($row->valueByName('redirHTTPS_enable') == 1) {
+        my %param = $self->getRedirectParamHTTPS($row);
+        $self->addRedirectRow(%param);
+    }
+
+    # 加入SSH
+    if ($row->valueByName('redirSSH_enable') == 1) {
+        my %param = $self->getRedirectParamSSH($row);
+        $self->addRedirectRow(%param);
+    }
+
+    # 加入RDP
+    if ($row->valueByName('redirRDP_enable') == 1) {
+        my %param = $self->getRedirectParamRDP($row);
+        $self->addRedirectRow(%param);
     }
 }
 
@@ -982,9 +981,13 @@ sub updateRedirectPorts
         {
             $hint = "<ul style='text-align:left;'>". $hint . "</ul>";
         }
+        else
+        {
+            $hint = "<span>-</span>";
+        }
 
         $row->elementByName('redirPorts')->setValue($hint);
-        $row->store();
+        #$row->store();
 
 }
 
@@ -993,7 +996,7 @@ sub updateDomainNameLink
     my ($self, $row) = @_;
     
     my $domainName = $row->valueByName("domainName");
-    my $port = $self->parentModule()->model("Settings")->row()->valueByName("port");
+    my $port = $self->parentModule()->model("Settings")->value("port");
 
     if ($port == 80) 
     {
@@ -1009,6 +1012,8 @@ sub updateDomainNameLink
 
     $link = '<a href="'.$link.'" target="_blank" style="background: none;text-decoration: underline;color: #A3BD5B;">'.$domainName.'</a>';
     $row->elementByName("domainNameLink")->setValue($link);
+
+    #$row->store();
 }
 
 sub breakUrl
