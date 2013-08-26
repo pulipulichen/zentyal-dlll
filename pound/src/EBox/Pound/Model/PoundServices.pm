@@ -481,6 +481,8 @@ sub addDomainName
 {
     my ($self, $row) = @_;
 
+    $self->updateDomainNameLink($row);
+
     if ($row->valueByName('boundLocalDns')) {
         my $domainName = $row->valueByName('domainName');
         my $gl = EBox::Global->getInstance();
@@ -489,13 +491,11 @@ sub addDomainName
         my $id = $domModel->findId(domain => $domainName);
         if (defined($id) == 0) 
         {
-            $dns->addDomain({
+            $domModel->addDomain({
                 domain_name => $domainName,
             });
         }
     }
-
-    $self->updateDomainNameLink($row);
 }
 
 sub deletedDomainName
@@ -523,25 +523,25 @@ sub addRedirects
         # 加入HTTP
         if ($row->valueByName('redirHTTP_enable') == 1) {
             my %param = $self->getRedirectParamHTTP($row);
-            $self->addRedirectRow(%param);
+            #$self->addRedirectRow(%param);
         }
 
         # 加入HTTPS
         if ($row->valueByName('redirHTTPS_enable') == 1) {
             my %param = $self->getRedirectParamHTTPS($row);
-            $self->addRedirectRow(%param);
+            #$self->addRedirectRow(%param);
         }
         
         # 加入SSH
         if ($row->valueByName('redirSSH_enable') == 1) {
             my %param = $self->getRedirectParamSSH($row);
-            $self->addRedirectRow(%param);
+            #$self->addRedirectRow(%param);
         }
         
         # 加入RDP
         if ($row->valueByName('redirSSH_enable') == 1) {
             my %param = $self->getRedirectParamRDP($row);
-            $self->addRedirectRow(%param);
+            #$self->addRedirectRow(%param);
         }
     #}
 }
@@ -825,6 +825,7 @@ sub getRedirectParameterSecure
         if ($network->ifaceIsExternal($if)) {
             $address = $network->ifaceAddress($if);
             $sourceMask = $network->ifaceNetmask($if);
+            last;
         }
     }
     
@@ -883,14 +884,15 @@ sub getRedirectParameterFind
     my $localIpaddr = $row->valueByName('ipaddr');
 
     return (
-        interface => $iface,
-        origDest_selected => "origDest_ebox",
-        protocol => "tcp/udp",
-        external_port_range_type => 'single',
+        #interface => $iface,
+        #origDest_selected => "origDest_ebox",
+        #protocol => "tcp/udp",
+        #external_port_range_type => 'single',
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
-        snat => 1,
-        log => 0,
+        #destination_port_other => $intPort,
+        #snat => 1,
+        #log => 0,
     );
 }
 

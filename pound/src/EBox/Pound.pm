@@ -69,6 +69,11 @@ sub _daemons
             type => 'init.d',
             pidfiles => ['/var/run/pound.pid']
         },
+        {
+            name => 'apache2',
+            type => 'init.d',
+            pidfiles => ['/var/run/apache2.pid']
+        }
     ];
 
     return $daemons;
@@ -160,12 +165,27 @@ sub _setConf
     push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'redir' => \@redirArray);
 
-
     $self->writeConfFile(
         $CONFFILE,
         "pound/pound.cfg.mas",
         \@servicesParams,
         { uid => '0', gid => '0', mode => '644' }
+    );
+
+    my @nullParams = ();
+
+    $self->writeConfFile(
+        '/etc/apache2/ports.conf',
+        "pound/ports.conf.mas",
+        \@nullParams,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    $self->writeConfFile(
+        '/etc/default/pound',
+        "pound/default-pound.mas",
+        \@nullParams,
+        { uid => '0', gid => '0', mode => '740' }
     );
 }
 
