@@ -441,7 +441,8 @@ sub _table
 sub addedRowNotify
 {
     my ($self, $row) = @_;
-    $self->addDomainName($row);
+    
+    $self->updateDomainNameLink($row);
     $self->addRedirects($row);
 
     $self->updateRedirectPorts($row);
@@ -451,6 +452,8 @@ sub addedRowNotify
     $self->parentModule()->model("Redirect")->setUpdateDate($row);
 
     $self->parentModule()->model("Redirect")->setContactLink($row);
+
+    $self->addDomainName($row);
 }
 
 sub deletedRowNotify
@@ -481,8 +484,6 @@ sub addDomainName
 {
     my ($self, $row) = @_;
 
-    $self->updateDomainNameLink($row);
-
     if ($row->valueByName('boundLocalDns')) {
         my $domainName = $row->valueByName('domainName');
         my $gl = EBox::Global->getInstance();
@@ -492,11 +493,13 @@ sub addDomainName
         if (defined($id) == 0) 
         {
             $domModel->addDomain({
-                domain_name => $domainName,
+                'domain_name' => $domainName,
             });
         }
     }
 }
+
+
 
 sub deletedDomainName
 {
@@ -519,31 +522,31 @@ sub addRedirects
 {
     my ($self, $row) = @_;
 
-    #if ($row->valueByName('enabled')) {
+    if ($row->valueByName('enabled')) {
         # 加入HTTP
         if ($row->valueByName('redirHTTP_enable') == 1) {
             my %param = $self->getRedirectParamHTTP($row);
-            #$self->addRedirectRow(%param);
+            $self->addRedirectRow(%param);
         }
 
         # 加入HTTPS
         if ($row->valueByName('redirHTTPS_enable') == 1) {
             my %param = $self->getRedirectParamHTTPS($row);
-            #$self->addRedirectRow(%param);
+            $self->addRedirectRow(%param);
         }
         
         # 加入SSH
         if ($row->valueByName('redirSSH_enable') == 1) {
             my %param = $self->getRedirectParamSSH($row);
-            #$self->addRedirectRow(%param);
+            $self->addRedirectRow(%param);
         }
         
         # 加入RDP
-        if ($row->valueByName('redirSSH_enable') == 1) {
+        if ($row->valueByName('redirRDP_enable') == 1) {
             my %param = $self->getRedirectParamRDP($row);
-            #$self->addRedirectRow(%param);
+            $self->addRedirectRow(%param);
         }
-    #}
+    }
 }
 
 sub deletedRedirects
@@ -909,13 +912,18 @@ sub addRedirectRow
 
 sub deleteRedirectRow
 {
-    my ($self, %param) = @_;
+    my ($self, $param) = @_;
     
     my $gl = EBox::Global->getInstance();
     my $firewall = $gl->modInstance('firewall');
     my $redirMod = $firewall->model('RedirectsTable');
 
-    my $id = $redirMod->findId(%param);
+    my %delParam = (
+        destination => $param->{'destination'},
+        destination_port_selected => $param->{'destination_port_other'},
+    );
+
+    my $id = $redirMod->findId(%delParam);
     if (defined($id)) {
         $redirMod->removeRow($id);
     }

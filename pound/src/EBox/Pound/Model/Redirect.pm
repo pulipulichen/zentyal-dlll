@@ -162,12 +162,12 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->setLink($row);
 
-    $self->addDomainName($row);
-
     $self->setCreateDate($row);
     $self->setUpdateDate($row);
 
     $self->setContactLink($row);
+
+    $self->addDomainName($row);
 }
 sub updatedRowNotify
 {
@@ -176,11 +176,12 @@ sub updatedRowNotify
 
     $self->deletedDomainName($oldRow);
 
-    $self->addDomainName($row);
-
     $self->setUpdateDate($row);
 
     $self->setContactLink($row);
+
+
+    $self->addDomainName($row);
 }
 
 sub deletedRowNotify
