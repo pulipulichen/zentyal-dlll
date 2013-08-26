@@ -157,31 +157,41 @@ sub _table
     return $dataTable;
 }
 
+my $ROW_NEED_UPDATE = 0;
+
 sub addedRowNotify
 {
     my ($self, $row) = @_;
+
+    $ROW_NEED_UPDATE = 1;
+
     $self->setLink($row);
 
     $self->setCreateDate($row);
     $self->setUpdateDate($row);
-
     $self->setContactLink($row);
-
     $self->addDomainName($row);
+
+    $row->store();
+    $ROW_NEED_UPDATE = 0;
 }
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
-    $self->setLink($row);
 
-    $self->deletedDomainName($oldRow);
+    if ($ROW_NEED_UPDATE == 0) {
+        $ROW_NEED_UPDATE = 1;
 
-    $self->setUpdateDate($row);
+        $self->deletedDomainName($oldRow);
 
-    $self->setContactLink($row);
+        $self->setLink($row);
+        $self->setUpdateDate($row);
+        $self->setContactLink($row);
+        $self->addDomainName($row);
 
-
-    $self->addDomainName($row);
+        $row->store();
+        $ROW_NEED_UPDATE = 0;
+    }
 }
 
 sub deletedRowNotify
@@ -189,6 +199,8 @@ sub deletedRowNotify
     my ($self, $row) = @_;
     $self->deletedDomainName($row);
 }
+
+# ----------------------------------------
 
 sub setLink
 {
@@ -203,7 +215,7 @@ sub setLink
     $row->elementByName('domainNameLink')->setValue($domainNameLink);
     $row->elementByName('urlLink')->setValue($urlLink);
 
-    $row->store();
+    #$row->store();
 }
 
 sub urlToLink
@@ -283,7 +295,7 @@ sub setUpdateDate
     my $date = strftime "%Y/%m/%d", localtime;
 
     $row->elementByName('updateDate')->setValue('<span>'.$date."</span>");
-    $row->store();
+    #$row->store();
 }
 
 sub setCreateDate
@@ -293,7 +305,7 @@ sub setCreateDate
     my $date = strftime "%Y/%m/%d", localtime;
 
     $row->elementByName('createDate')->setValue('<span>'.$date."</span>");
-    $row->store();
+    #$row->store();
 }
 
 sub setContactLink
@@ -312,7 +324,7 @@ sub setContactLink
     $link = "<span>".$link."</span>";
 
     $row->elementByName('contactLink')->setValue($link);
-    $row->store();
+    #$row->store();
 }
 
 # -----------------------------

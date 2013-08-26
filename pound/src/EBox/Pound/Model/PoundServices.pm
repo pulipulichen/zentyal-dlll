@@ -474,8 +474,23 @@ sub updatedRowNotify
     my ($self, $row, $oldRow) = @_;
 
     if ($ROW_NEED_UPDATE == 0) {
+        $ROW_NEED_UPDATE = 1;
         $self->deletedRowNotify($oldRow);
-        $self->addedRowNotify($row);
+        
+        $self->updateDomainNameLink($row);
+    
+        $self->updateRedirectPorts($row);
+
+        $self->parentModule()->model("Redirect")->setCreateDate($row);
+        $self->parentModule()->model("Redirect")->setUpdateDate($row);
+
+        $self->parentModule()->model("Redirect")->setContactLink($row);
+
+        $self->addDomainName($row);
+        $self->addRedirects($row);
+
+        $row->store();
+        $ROW_NEED_UPDATE = 0;
     }
 }
 
@@ -907,7 +922,7 @@ sub addRedirectRow
     my $redirMod = $firewall->model('RedirectsTable');
 
     my $id = $redirMod->findId(
-        description => %params->{description}
+        description => $params{description}
     );
     
     if (defined($id) == 0) {
@@ -924,7 +939,7 @@ sub deleteRedirectRow
     my $redirMod = $firewall->model('RedirectsTable');
 
     my $id = $redirMod->findId(
-        description => %param->{description}
+        description => $param{description}
     );
     if (defined($id) == 1) {
         $redirMod->removeRow($id);
