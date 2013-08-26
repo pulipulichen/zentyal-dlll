@@ -555,14 +555,14 @@ sub deletedRedirects
     my %param = $self->getRedirectParamHTTP($row);
     $self->deleteRedirectRow(%param);
 
-    #%param = $self->getRedirectParamHTTPS($row);
-    #$self->deleteRedirectRow(%param);
+    %param = $self->getRedirectParamHTTPS($row);
+    $self->deleteRedirectRow(%param);
     
-    #%param = $self->getRedirectParamSSH($row);
-    #$self->deleteRedirectRow(%param);
+    %param = $self->getRedirectParamSSH($row);
+    $self->deleteRedirectRow(%param);
 
-    #%param = $self->getRedirectParamRDP($row);
-    #$self->deleteRedirectRow(%param);
+    %param = $self->getRedirectParamRDP($row);
+    $self->deleteRedirectRow(%param);
 }
 
 # -----------------------------
@@ -906,19 +906,25 @@ sub addRedirectRow
     my $firewall = $gl->modInstance('firewall');
     my $redirMod = $firewall->model('RedirectsTable');
 
-    $redirMod->addRow(%params);
+    my $id = $redirMod->findId(
+        description => %params->{description}
+    );
+    
+    if (defined($id) == 0) {
+        $redirMod->addRow(%params);
+    }
 }
 
 sub deleteRedirectRow
 {
-    my ($self, $param) = @_;
+    my ($self, %param) = @_;
     
     my $gl = EBox::Global->getInstance();
     my $firewall = $gl->modInstance('firewall');
     my $redirMod = $firewall->model('RedirectsTable');
 
     my $id = $redirMod->findId(
-        description => $param->{description}
+        description => %param->{description}
     );
     if (defined($id) == 1) {
         $redirMod->removeRow($id);
