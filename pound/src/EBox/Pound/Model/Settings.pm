@@ -189,7 +189,7 @@ sub getServiceParam
         'internal' => 'pound',
         'name' => 'pound',
         'printableName' => 'pound',
-        'description' => 'For Reverse Proxy use',
+        'description' => 'For Reverse Proxy use.',
     );
 }
 
