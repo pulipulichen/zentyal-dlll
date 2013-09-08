@@ -11,7 +11,8 @@ models:
     - PoundServices
     - Redirections
     - Redirect
+    - DNS
 
 composites:
-    Global: [Settings, PoundServices, Redirect]
+    Global: [Settings, Redirect]
     

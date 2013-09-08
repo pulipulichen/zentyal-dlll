@@ -40,16 +40,36 @@ sub _create
 #
 sub menu
 {
+#    my ($self, $root) = @_;
+
+#   my $item = new EBox::Menu::Item(
+#        url => 'Pound/Composite/Global',
+#        text => $self->printableName(),
+#        separator => 'Virtual Router',
+#        order => 0
+#    );
+
+    #$root->add($item);
+
     my ($self, $root) = @_;
 
-    my $item = new EBox::Menu::Item(
-        url => 'Pound/Composite/Global',
-        text => $self->printableName(),
-        separator => 'Virtual Router',
-        order => 0
-    );
+    my $folder = new EBox::Menu::Folder('name' => 'Pound',
+                                        'text' => $self->printableName(),
+                                        'separator' => 'Virtual Router',
+                                        'order' => 0);
 
-    $root->add($item);
+    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/Settings',
+                                      'text' => __('Settings')));
+    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/PoundServices',
+                                      'text' => __('Pound')));
+    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/Redirect',
+                                      'text' => __('Redirect')));
+    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/DNS',
+                                      'text' => __('DNS')));
+    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/PortForwarding',
+                                      'text' => __('Port Forwarding')));
+
+    $root->add($folder);
 }
 
 # Method: _daemons
