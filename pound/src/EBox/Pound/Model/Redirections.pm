@@ -19,6 +19,7 @@ use EBox::Types::Boolean;
 use EBox::Types::Int;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
+use EBox::Types::HTML;
 
 # Group: Public methods
 
@@ -67,7 +68,18 @@ sub _table
             'unique' => 1,
             'editable' => 1,
             optional=>0,
-            help => "Please enter external port last 2 number, from 0 to 99. For example, 64 means ***64. *** is based on internal IP address."
+            help => "Please enter external port last 2 number, from 0 to 99. For example, 64 means ***64. *** is based on internal IP address.",
+            
+                hiddenOnSetter => 0,
+                hiddenOnViewer => 1,
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'extPortHTML',
+            printableName => __('External Port'),
+            editable => 0,
+            optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 0,
         ),
         new EBox::Types::Port(
             'fieldName' => 'intPort',
@@ -104,9 +116,15 @@ sub _table
     return $dataTable;
 }
 
+# --------------------------------
+
+my $ROW_NEED_UPDATE = 0;
+
 sub addedRowNotify
 {
     my ($self, $redirRow) = @_;
+
+    $ROW_NEED_UPDATE = 1;
 
     $self->checkExternalPort($redirRow);
 
@@ -116,7 +134,9 @@ sub addedRowNotify
 
     $self->addRedirect($row, $redirRow);
 
-    
+    $self->updateExtPortHTML($row, $redirRow);
+
+    $ROW_NEED_UPDATE = 0;
 }
 sub deletedRowNotify
 {
@@ -132,6 +152,7 @@ sub updatedRowNotify
 {
     my ($self, $redirRow, $oldRedirRow) = @_;
 
+
     $self->checkExternalPort($redirRow);
     my $row = $self->parentRow();
 
@@ -139,7 +160,15 @@ sub updatedRowNotify
     $self->addRedirect($row, $redirRow);
 
     $self->updateRedirectPorts($redirRow);
+
+    if ($ROW_NEED_UPDATE == 0) {
+        $ROW_NEED_UPDATE = 1;
+        $self->updateExtPortHTML($row, $redirRow);
+        $ROW_NEED_UPDATE = 0;
+    }
 }
+
+# --------------------------------
 
 sub addRedirect
 {
@@ -219,6 +248,25 @@ sub checkExternalPort
 
     if ( $extPort > 99 ) {
         throw EBox::Exceptions::External("Error External Port Last 2 Numbers format (".$extPort."). Please enter 0~99");
+    }
+}
+
+sub updateExtPortHTML
+{
+    my ($self, $row, $redirRow) = @_;
+
+    #my $row = $self->parentRow();
+
+    if ($row ne undef)
+    {
+        my $poundModel = $self->parentModule()->model("PoundServices");
+        my %param = $poundModel->getRedirectParamOther($row, $redirRow);
+        
+        my $extPort = $param{external_port_single_port};
+        $extPort = "<span>".$extPort."</span>";
+
+        $redirRow->elementByName('extPortHTML')->setValue($extPort);
+        $redirRow->store();
     }
 }
 
