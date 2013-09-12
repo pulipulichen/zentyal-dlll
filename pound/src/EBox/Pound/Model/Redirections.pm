@@ -110,9 +110,13 @@ sub addedRowNotify
 
     $self->checkExternalPort($redirRow);
 
-    $self->addRedirect($redirRow);
-
     $self->updateRedirectPorts($redirRow);
+    
+    my $row = $self->parentRow();
+
+    $self->addRedirect($row, $redirRow);
+
+    
 }
 sub deletedRowNotify
 {
@@ -132,16 +136,16 @@ sub updatedRowNotify
     my $row = $self->parentRow();
 
     $self->deleteRedirect($row, $oldRedirRow);
-    $self->addRedirect($redirRow);
+    $self->addRedirect($row, $redirRow);
 
     $self->updateRedirectPorts($redirRow);
 }
 
 sub addRedirect
 {
-    my ($self, $redirRow) = @_;
+    my ($self, $row, $redirRow) = @_;
 
-    my $row = $self->parentRow();
+    #my $row = $self->parentRow();
 
     if ($row ne undef)
     {
@@ -200,7 +204,7 @@ sub updateRedirectPorts
 
     if ($row ne undef)
     {
-        $self->addRedirect($redirRow);
+        $self->addRedirect($row, $redirRow);
 
         $self->parentModule()->model("PoundServices")->updateRedirectPorts($row);
         $row->store();

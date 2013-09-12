@@ -500,6 +500,13 @@ sub updatedRowNotify
         $self->addDomainName($row);
         $self->addRedirects($row);
 
+        for my $subId (@{$row->subModel('redirOther')->ids()}) {
+            my $redirRow = $row->subModel('redirOther')->row($subId);
+            my $redirModel = $row->subModel('redirOther');
+            $redirModel->deleteRedirect($oldRow, $redirRow);
+            $redirModel->addRedirect($row, $redirRow);
+        }
+
         $row->store();
         $ROW_NEED_UPDATE = 0;
     }
@@ -571,13 +578,11 @@ sub addRedirects
         $self->addRedirectRow(%param);
     }
 
-#    # 加錯了，不應該設在這裡
-#    for my $subId (@{$row->subModel('redirOther')->ids()}) {
-#            my $redirRow = $row->subModel('redirOther')->row($subId);
-#            #print "\t\t" . $aliasRow->valueByName('name') . "\n";
-#            my %param = $self->getRedirectParamOther($row, $redirRow);
-#            $self->addRedirectRow(%param);
-#    }
+    for my $subId (@{$row->subModel('redirOther')->ids()}) {
+        my $redirRow = $row->subModel('redirOther')->row($subId);
+        my $redirModel = $row->subModel('redirOther');
+        $redirModel->addRedirect($row, $redirRow);
+    }
 }
 
 sub deletedRedirects
