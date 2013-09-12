@@ -504,6 +504,7 @@ sub updatedRowNotify
             my $redirRow = $row->subModel('redirOther')->row($subId);
             my $redirModel = $row->subModel('redirOther');
             $redirModel->deleteRedirect($oldRow, $redirRow);
+            $redirModel->updateExtPortHTML($row, $redirRow);
             $redirModel->addRedirect($row, $redirRow);
         }
 
