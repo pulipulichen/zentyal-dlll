@@ -190,38 +190,13 @@ sub deleteRedirect
 
     #my $row = $self->parentRow();
 
-    #if ($row ne undef)
-    #{
-    #    my $poundModel = $self->parentModule()->model("PoundServices");
-    #    my %param = $poundModel->getRedirectParamOther($row, $redirRow);
-    #    $poundModel->deleteRedirectRow(%param);
-    
-    #    throw EBox::Exceptions::External("Try to delete redirect: " .  $param{description});
-    #}
-    
-    #my $row = $self->parentRow();
-
     if ($row ne undef)
     {
-        my $domainName = $row->valueByName('domainName');
-        my $desc = $redirRow->valueByName('description');
         my $poundModel = $self->parentModule()->model("PoundServices");
-        #$poundModel->deleteRedirectRow((
-        #    description => 'Created by Pound Module for '.$domainName. " " . $desc,
-        #));
-        #throw EBox::Exceptions::External("Try to delete redirect: " .  $desc);
-
-        my $gl = EBox::Global->getInstance();
-        my $firewall = $gl->modInstance('firewall');
-        my $redirMod = $firewall->model('RedirectsTable');
-
-        my $id = $redirMod->findId(
-            description => 'Created by Pound Module for '.$domainName. " " . $desc
-        );
-        if (defined($id) == 1) {
-            $redirMod->removeRow($id);
-            #throw EBox::Exceptions::External("Try to delete redirect: " .  $id . " - " . defined($id));
-        }
+        my %param = $poundModel->getRedirectParamOther($row, $redirRow);
+        $poundModel->deleteRedirectRow(%param);
+    
+    #    throw EBox::Exceptions::External("Try to delete redirect: " .  $param{description});
     }
 }
 

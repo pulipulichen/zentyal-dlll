@@ -842,6 +842,7 @@ sub getRedirectParamOther
 
     my $intPort = $redirRow->valueByName('intPort');
     my $desc = $redirRow->valueByName('description');
+    $desc = "Other (".$desc.")";
 
     if ($redirRow->valueByName('secure') == 1)
     {
@@ -885,7 +886,7 @@ sub getRedirectParameter
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
-        description => 'Created by Pound Module for '.$domainName. " " . $desc,
+        description => $domainName. " (" . $localIpaddr . "): " . $desc,
         snat => 1,
         log => 0,
     );
@@ -952,7 +953,7 @@ sub getRedirectParameterSecure
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
-        description => 'Created by Pound Module for '.$domainName. " " . $desc,
+        description => $domainName. " (" . $localIpaddr . "): " . $desc,
         snat => 1,
         log => 0,
     );
