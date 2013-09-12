@@ -134,10 +134,11 @@ sub _table
 
         'pageTitle' => __('DNS'),
         printableRowName => __('DNS'),
-        sortedBy => 'domainName',
+        #sortedBy => 'domainName',
         'HTTPUrlView'=> 'Pound/View/DNS',
         'enableProperty' => 1,
         defaultEnabledValue => 1,
+        'order' => 1,
     };
 
     return $dataTable;

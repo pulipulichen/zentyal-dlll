@@ -149,10 +149,11 @@ sub _table
         defaultController => '/Pound/Controller/Redirect',
         'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
         'tableDescription' => \@fields,
-        'sortedBy' => 'domainName',
+        #'sortedBy' => 'domainName',
         class => 'dataTable',
         'enableProperty' => 1,
         defaultEnabledValue => 1,
+        'order' => 1,
     };
 
     return $dataTable;
