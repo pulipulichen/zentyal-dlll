@@ -14,6 +14,8 @@ use warnings;
 use EBox::Gettext;
 
 use EBox::Types::Port;
+use EBox::Types::Text;
+use EBox::Types::Boolean;
 
 # Group: Public methods
 
@@ -31,7 +33,16 @@ use EBox::Types::Port;
 sub pageTitle
 {
     my ($self) = @_;
-    return $self->parentRow()->printableValueByName('domainName');
+    my $row = $self->parentRow();
+    if ($row ne undef)
+    {
+        my $domainName = $self->parentRow()->printableValueByName('domainName');
+        my $ip = $self->parentRow()->printableValueByName('ipaddr');
+        return $domainName . " (" . $ip . ")";
+    }
+    else {
+        return __("Port Redirect");
+    } 
 }
 
 sub _table
@@ -40,17 +51,32 @@ sub _table
     my ($self) = @_;  
 
     my @fields = (
+        new EBox::Types::Text(
+            fieldName => 'description',
+            printableName => __('Description'),
+            editable => 1,
+            optional=>0,
+            'unique'=>1,
+        ),
         new EBox::Types::Port(
             'fieldName' => 'extPort',
             'printableName' => __('External Port'),
             'unique' => 1,
-            'editable' => 1
+            'editable' => 1,
+            optional=>0,
         ),
         new EBox::Types::Port(
             'fieldName' => 'intPort',
             'printableName' => __('Internal Port'),
             'unique' => 1,
-            'editable' => 1
+            'editable' => 1,
+            optional=>0,
+        ),
+        new EBox::Types::Boolean(
+            'fieldName' => 'secure',
+            'printableName' => __('Only for LAN'),
+            'editable' => 1,
+            optional=>0,
         ),
     );
 
@@ -59,6 +85,7 @@ sub _table
         'tableName' => 'Redirections',
         'printableTableName' => __('Port Redirect'),
         'printableRowName' => __('Port Redirect'),
+        'pageTitle' => $self->pageTitle(),
         'modelDomain' => 'Pound',
         automaticRemove => 1,
         defaultController => '/Pound/Controller/Redirections',
@@ -67,9 +94,109 @@ sub _table
         'sortedBy' => 'extPort',
         class => 'dataTable',
         'enableProperty' => 1,
+        defaultEnabledValue => 1,
     };
 
     return $dataTable;
 }
 
+sub addedRowNotify
+{
+    my ($self, $redirRow) = @_;
+
+    $self->addRedirect($redirRow);
+
+    $self->updateRedirectPorts($redirRow);
+}
+sub deletedRowNotify
+{
+    my ($self, $redirRow) = @_;
+    
+    $self->updateRedirectPorts($redirRow);
+
+    my $row = $self->parentRow();
+    $self->deleteRedirect($row, $redirRow);
+}
+
+sub updatedRowNotify
+{
+    my ($self, $redirRow, $oldRedirRow) = @_;
+
+    my $row = $self->parentRow();
+
+    $self->deleteRedirect($row, $oldRedirRow);
+    $self->addRedirect($redirRow);
+
+    $self->updateRedirectPorts($redirRow);
+}
+
+sub addRedirect
+{
+    my ($self, $redirRow) = @_;
+
+    my $row = $self->parentRow();
+
+    if ($row ne undef)
+    {
+        my $poundModel = $self->parentModule()->model("PoundServices");
+        my %param = $poundModel->getRedirectParamOther($row, $redirRow);
+        $poundModel->addRedirectRow(%param);
+    }
+}
+
+sub deleteRedirect
+{
+    my ($self, $row, $redirRow) = @_;
+
+    #my $row = $self->parentRow();
+
+    #if ($row ne undef)
+    #{
+    #    my $poundModel = $self->parentModule()->model("PoundServices");
+    #    my %param = $poundModel->getRedirectParamOther($row, $redirRow);
+    #    $poundModel->deleteRedirectRow(%param);
+    
+    #    throw EBox::Exceptions::External("Try to delete redirect: " .  $param{description});
+    #}
+    
+    #my $row = $self->parentRow();
+
+    if ($row ne undef)
+    {
+        my $domainName = $row->valueByName('domainName');
+        my $desc = $redirRow->valueByName('description');
+        my $poundModel = $self->parentModule()->model("PoundServices");
+        #$poundModel->deleteRedirectRow((
+        #    description => 'Created by Pound Module for '.$domainName. " " . $desc,
+        #));
+        #throw EBox::Exceptions::External("Try to delete redirect: " .  $desc);
+
+        my $gl = EBox::Global->getInstance();
+        my $firewall = $gl->modInstance('firewall');
+        my $redirMod = $firewall->model('RedirectsTable');
+
+        my $id = $redirMod->findId(
+            description => 'Created by Pound Module for '.$domainName. " " . $desc
+        );
+        if (defined($id) == 1) {
+            $redirMod->removeRow($id);
+            #throw EBox::Exceptions::External("Try to delete redirect: " .  $id . " - " . defined($id));
+        }
+    }
+}
+
+sub updateRedirectPorts
+{
+    my ($self, $redirRow) = @_;
+
+    my $row = $self->parentRow();
+
+    if ($row ne undef)
+    {
+        $self->addRedirect($redirRow);
+
+        $self->parentModule()->model("PoundServices")->updateRedirectPorts($row);
+        $row->store();
+    }
+}
 1;

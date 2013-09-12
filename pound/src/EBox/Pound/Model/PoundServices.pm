@@ -334,6 +334,7 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+
         # --------------------------------
 
         new EBox::Types::HTML(
@@ -344,6 +345,33 @@ sub _table
                 hiddenOnSetter => 1,
                 hiddenOnViewer => 0,
         ),
+
+        # --------------------------------
+
+        new EBox::Types::HasMany(
+            'fieldName' => 'redirOther',
+            'printableName' => __('Other Redirect Ports'),
+            'foreignModel' => 'Redirections',
+            'view' => '/Pound/View/Redirections',
+            'backView' => '/Pound/View/PoundServices',
+            'size' => '1',
+            #optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 0,
+       ),
+       new EBox::Types::Text(
+            fieldName => 'redirOtherHelp',
+            printableName => __('Other Redirect Ports'),
+            defaultValue => __('You can configure other redirection at following table. You have to add this row first.'),
+            editable => 0,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
+
+        # --------------------------------
+
+
         new EBox::Types::HTML(
             fieldName => 'createDate',
             printableName => __('Create Date'),
@@ -372,42 +400,25 @@ sub _table
 
         # ----------------------------------
 
-# 不知道為什麼加入HasMany之後就不能用了，只能說是傷心啊，不採用了
-#        new EBox::Types::HasMany(
-#            'fieldName' => 'redirOther',
-#            'printableName' => __('Other Redirect Ports'),
-#            'foreignModel' => 'Redirections',
-#            'view' => '/Pound/View/Redirections',
-#            'backView' => '/Pound/View/Global',
-#            'size' => '1',
-#            optional=>1,
-#                hiddenOnSetter => 1,
-#                hiddenOnViewer => 0,
-#       ),
+        
 
-        # ==============================
-        # Enable Keep Last
-        #new EBox::Types::Boolean(
-        #    fieldName => 'enabled',
-        #    printableName => __('Enabled'),
-        #    editable => 1,
-        #    optional => 0,
-        #    defaultValue => 1,
-        #),
     );
 
     my $dataTable =
     {
         tableName => 'PoundServices',
+
+        'pageTitle' => __('Pound'),
         printableTableName => __('Pound Services'),
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
         modelDomain => 'Pound',
         tableDescription => \@fields,
         printableRowName => __('Pound Service'),
-        sortedBy => 'domainName',
+        #sortedBy => 'updateDate',
         'HTTPUrlView'=> 'Pound/View/PoundServices',
         'enableProperty' => 1,
         defaultEnabledValue => 1,
+        'order' => 1,
     };
 
     return $dataTable;
@@ -481,7 +492,7 @@ sub updatedRowNotify
     
         $self->updateRedirectPorts($row);
 
-        $self->parentModule()->model("Redirect")->setCreateDate($row);
+        #$self->parentModule()->model("Redirect")->setCreateDate($row);
         $self->parentModule()->model("Redirect")->setUpdateDate($row);
 
         $self->parentModule()->model("Redirect")->setContactLink($row);
@@ -514,8 +525,6 @@ sub addDomainName
         }
     }
 }
-
-
 
 sub deletedDomainName
 {
@@ -561,6 +570,14 @@ sub addRedirects
         my %param = $self->getRedirectParamRDP($row);
         $self->addRedirectRow(%param);
     }
+
+#    # 加錯了，不應該設在這裡
+#    for my $subId (@{$row->subModel('redirOther')->ids()}) {
+#            my $redirRow = $row->subModel('redirOther')->row($subId);
+#            #print "\t\t" . $aliasRow->valueByName('name') . "\n";
+#            my %param = $self->getRedirectParamOther($row, $redirRow);
+#            $self->addRedirectRow(%param);
+#    }
 }
 
 sub deletedRedirects
@@ -578,6 +595,12 @@ sub deletedRedirects
 
     %param = $self->getRedirectParamRDP($row);
     $self->deleteRedirectRow(%param);
+
+    for my $subId (@{$row->subModel('redirOther')->ids()}) {
+        my $redirRow = $row->subModel('redirOther')->row($subId);
+        my $redirModel = $row->subModel('redirOther');
+        $redirModel->deleteRedirect($row, $redirRow);
+    }
 }
 
 # -----------------------------
@@ -787,6 +810,24 @@ sub getRedirectParamRDP
     }
 }
 
+sub getRedirectParamOther
+{
+    my ($self, $row, $redirRow) = @_;
+
+    my $extPort = $redirRow->valueByName('extPort');
+    my $intPort = $redirRow->valueByName('intPort');
+    my $desc = $redirRow->valueByName('description');
+
+    if ($redirRow->valueByName('secure') == 1)
+    {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc);
+    }
+    else
+    {
+        return $self->getRedirectParameter($row, $extPort, $intPort, $desc);
+    }
+}
+
 sub getRDPextPort
 {
     my ($self, $row) = @_;
@@ -819,7 +860,7 @@ sub getRedirectParameter
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
-        description => 'Created by Pound Moudle for '.$domainName. " " . $desc,
+        description => 'Created by Pound Module for '.$domainName. " " . $desc,
         snat => 1,
         log => 0,
     );
@@ -886,7 +927,7 @@ sub getRedirectParameterSecure
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
-        description => 'Created by Pound Moudle for '.$domainName. " " . $desc,
+        description => 'Created by Pound Module for '.$domainName. " " . $desc,
         snat => 1,
         log => 0,
     );
@@ -995,6 +1036,17 @@ sub updateRedirectPorts
             $hint = $hint . "<li><strong>RDP</strong>: <br />" . $extPort ." &gt; " . $intPort."</li>";  
         }
 
+        for my $subId (@{$row->subModel('redirOther')->ids()}) {
+                my $redirRow = $row->subModel('redirOther')->row($subId);
+                #my %param = $self->getRedirectParamOther($row, $redirRow);
+                my $extPort = $redirRow->valueByName('extPort');
+                my $intPort = $redirRow->valueByName('intPort');
+                my $desc = $redirRow->valueByName('description');
+
+                $hint = $hint . "<li><strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."</li>";   
+        }
+
+        # 最後結尾
         if ($hint ne '')
         {
             $hint = "<ul style='text-align:left;'>". $hint . "</ul>";

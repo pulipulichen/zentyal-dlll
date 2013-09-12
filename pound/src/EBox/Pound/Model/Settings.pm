@@ -124,6 +124,7 @@ sub _table
     my $dataTable =
         {
             tableName => 'Settings',
+            'pageTitle' => __('Settings'),
             printableTableName => __('Settings'),
             modelDomain     => 'Pound',
             defaultActions => [ 'editField',  'changeView' ],

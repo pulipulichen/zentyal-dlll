@@ -66,8 +66,10 @@ sub menu
                                       'text' => __('Redirect')));
     $folder->add(new EBox::Menu::Item('url' => 'Pound/View/DNS',
                                       'text' => __('DNS')));
-    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/PortForwarding',
-                                      'text' => __('Port Forwarding')));
+    
+    # 不要Port Forwarding了，留給Pound去設定就好                                  
+    #$folder->add(new EBox::Menu::Item('url' => 'Pound/View/PortForwarding',
+    #                                  'text' => __('Port Forwarding')));
 
     $root->add($folder);
 }

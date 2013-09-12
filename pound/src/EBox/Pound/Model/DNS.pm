@@ -131,6 +131,8 @@ sub _table
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
         modelDomain => 'Pound',
         tableDescription => \@fields,
+
+        'pageTitle' => __('DNS'),
         printableRowName => __('DNS'),
         sortedBy => 'domainName',
         'HTTPUrlView'=> 'Pound/View/DNS',

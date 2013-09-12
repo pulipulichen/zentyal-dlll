@@ -144,6 +144,7 @@ sub _table
         'tableName' => 'Redirect',
         'printableTableName' => __('URL Redirect'),
         'printableRowName' => __('URL Redirect'),
+        'pageTitle' => __('Redirect'),
         'modelDomain' => 'Pound',
         defaultController => '/Pound/Controller/Redirect',
         'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
