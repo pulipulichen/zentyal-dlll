@@ -815,6 +815,9 @@ sub getRedirectParamOther
     my ($self, $row, $redirRow) = @_;
 
     my $extPort = $redirRow->valueByName('extPort');
+    my $portHeader = $self->getPortHeader($row);
+    $extPort = $portHeader . $extPort;
+
     my $intPort = $redirRow->valueByName('intPort');
     my $desc = $redirRow->valueByName('description');
 
@@ -1040,6 +1043,8 @@ sub updateRedirectPorts
                 my $redirRow = $row->subModel('redirOther')->row($subId);
                 #my %param = $self->getRedirectParamOther($row, $redirRow);
                 my $extPort = $redirRow->valueByName('extPort');
+                my $portHeader = $self->getPortHeader($row);
+                $extPort = $portHeader . $extPort;
                 my $intPort = $redirRow->valueByName('intPort');
                 my $desc = $redirRow->valueByName('description');
 

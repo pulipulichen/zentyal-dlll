@@ -16,6 +16,9 @@ use EBox::Gettext;
 use EBox::Types::Port;
 use EBox::Types::Text;
 use EBox::Types::Boolean;
+use EBox::Types::Int;
+use EBox::Types::Union;
+use EBox::Types::Union::Text;
 
 # Group: Public methods
 
@@ -60,10 +63,11 @@ sub _table
         ),
         new EBox::Types::Port(
             'fieldName' => 'extPort',
-            'printableName' => __('External Port'),
+            'printableName' => __('External Port Last 2 Numbers'),
             'unique' => 1,
             'editable' => 1,
             optional=>0,
+            help => "Please enter external port last 2 number, from 0 to 99. For example, 64 means ***64. *** is based on internal IP address."
         ),
         new EBox::Types::Port(
             'fieldName' => 'intPort',
@@ -104,6 +108,8 @@ sub addedRowNotify
 {
     my ($self, $redirRow) = @_;
 
+    $self->checkExternalPort($redirRow);
+
     $self->addRedirect($redirRow);
 
     $self->updateRedirectPorts($redirRow);
@@ -122,6 +128,7 @@ sub updatedRowNotify
 {
     my ($self, $redirRow, $oldRedirRow) = @_;
 
+    $self->checkExternalPort($redirRow);
     my $row = $self->parentRow();
 
     $self->deleteRedirect($row, $oldRedirRow);
@@ -199,4 +206,16 @@ sub updateRedirectPorts
         $row->store();
     }
 }
+
+sub checkExternalPort
+{
+    my ($self, $redirRow) = @_;
+
+    my $extPort = $redirRow->valueByName("extPort");
+
+    if ( $extPort > 99 ) {
+        throw EBox::Exceptions::External("Error External Port Last 2 Numbers format (".$extPort."). Please enter 0~99");
+    }
+}
+
 1;
