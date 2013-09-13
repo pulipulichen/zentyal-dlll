@@ -111,10 +111,38 @@ sub _setConf
 {
     my ($self) = @_;
 
+    # ----------------------------
+    # 設定
+    # ----------------------------
+
+    my $settings = $self->model('Settings');
+    my $port = $settings->value('port');
+    my $alive = $settings->value('alive');
+
+    my $address = "127.0.0.1";
+    if ($settings->value("address") eq "address_extIface")
+    {
+        my $network = EBox::Global->modInstance('network');
+        foreach my $if (@{$network->ExternalIfaces()}) {
+            if ($network->ifaceIsExternal($if)) {
+                $address = $network->ifaceAddress($if);
+            }
+        }
+    }
+    else
+    {
+        $address = $settings->value("address");
+    }
+
+    # ----------------------------
+    # Back End
+    # ----------------------------
+
     my $services = $self->model('PoundServices');
 
     # Iterate over table
     my @paramsArray = ();
+    #my %domainHash = ();
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
@@ -138,7 +166,12 @@ sub _setConf
             httpToHttpsValue => $httpToHttpsValue,
             httpsPortValue => $httpsPortValue,
         });
+
     }
+
+    # ----------------------------
+    # 轉址
+    # ----------------------------
 
     my $redirect = $self->model('Redirect');
 
@@ -161,24 +194,9 @@ sub _setConf
         });
     }
 
-    my $settings = $self->model('Settings');
-    my $port = $settings->value('port');
-    my $alive = $settings->value('alive');
-
-    my $address = "127.0.0.1";
-    if ($settings->value("address") eq "address_extIface")
-    {
-        my $network = EBox::Global->modInstance('network');
-        foreach my $if (@{$network->ExternalIfaces()}) {
-            if ($network->ifaceIsExternal($if)) {
-                $address = $network->ifaceAddress($if);
-            }
-        }
-    }
-    else
-    {
-        $address = $settings->value("address");
-    }
+    # ----------------------------
+    # 準備把值傳送到設定檔去
+    # ----------------------------
 
     my @servicesParams = ();
     push(@servicesParams, 'address' => $address);
@@ -186,6 +204,7 @@ sub _setConf
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'redir' => \@redirArray);
+    #push(@servicesParams, 'domainHash' => %domainHash);
 
     $self->writeConfFile(
         $CONFFILE,

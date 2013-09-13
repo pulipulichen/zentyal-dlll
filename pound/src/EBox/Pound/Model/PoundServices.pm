@@ -47,7 +47,8 @@ sub _table
             fieldName => 'domainName',
             printableName => __('Domain Name'),
             editable => 1,
-            'unique' => 1,
+            # 因為要允許同一個Domain Name指向多個Back End，所以這部份要做些調整
+            #'unique' => 1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
             #'help' => get($domainNameHelpURL) . 'Format Help: <a href="'.$domainNameHelpURL.'" target="_blank">'.$domainNameHelpURL.'</a>',
