@@ -100,19 +100,19 @@ sub _table
               default => 30,
               help => __("Check backend every X secs"),
              ),
-          new EBox::Types::Text(
-                fieldName => 'helpURL',
-                printableName => __('Set Help Link'),
-                editable => 1,
-                defaultValue=> "https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help",
-                optional => 0,
-            ),
-        new EBox::Types::HTML(
-            fieldName => 'helpLink',
-            printableName => __('Help Link'),
-            editable => 0,
-            defaultValue => '<a href="https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help" target="_blank">https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help</a>',
-        ),
+#          new EBox::Types::Text(
+#                fieldName => 'helpURL',
+#                printableName => __('Set Help Link'),
+#                editable => 1,
+#                defaultValue=> "https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help",
+#                optional => 0,
+#            ),
+#        new EBox::Types::HTML(
+#            fieldName => 'helpLink',
+#            printableName => __('Help Link'),
+#            editable => 0,
+#            defaultValue => '<a href="https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help" target="_blank">https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help</a>',
+#        ),
           new EBox::Types::HTML(
             fieldName => 'portForwarding',
             printableName => __('Port Forwarding Setup'),
@@ -156,9 +156,9 @@ sub updatedRowNotify
         $self->addFilter();
     }
 
-    my $url  = $self->value('helpURL');
-    $url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
-    $self->setValue('helpLink', $url);
+    #my $url  = $self->value('helpURL');
+    #$url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
+    #$self->setValue('helpLink', $url);
 }
 
 # --------------------------
