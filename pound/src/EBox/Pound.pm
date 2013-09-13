@@ -170,21 +170,19 @@ sub _setConf
         # ---------
         # 開始Hash
 
-        my %backEnd = (
-            ipaddrValue => $ipaddrValue,
-            portValue => $portValue,
-            descriptionValue => $descriptionValue,
-            httpToHttpsValue => $httpToHttpsValue,
-            httpsPortValue => $httpsPortValue,
-        );
-
         my @backEndArray = ();
         if ( exists $domainHash->{$domainNameValue}  ) {
             # 如果Hash已經有了這個Domain Name
             @backEndArray = $domainHash->{$domainNameValue};
         }
         
-        push(@backEndArray, %backEnd);
+        push(@backEndArray, {
+            ipaddrValue => $ipaddrValue,
+            portValue => $portValue,
+            descriptionValue => $descriptionValue,
+            httpToHttpsValue => $httpToHttpsValue,
+            httpsPortValue => $httpsPortValue,
+        });
 
         $domainHash->{$domainNameValue} = \@backEndArray;
     }

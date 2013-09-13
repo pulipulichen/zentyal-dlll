@@ -85,14 +85,53 @@ ListenHTTP
 	End
 % } #foreach my $service (@{$services}) {
 
+% while (my ($domainNameValue, @backEndArray) = each ($domainHash)) {  	
+
+        Service
+                HeadRequire "Host: test.<% $domainNameValue %>.*"
+
+% my $backEndCount = $#backEndArray+1;
+% if ( $backEndCount == 1 ) {
+%   # 照以前的處理方法
+
+%   #foreach my $service (\@backEndArray) {
+%       my %service = $backEndArray[0];
+%       my $domainNameValue = $service{'domainNameValue'};
+%       my $ipaddrValue = $service{'ipaddrValue'};
+%       my $portValue = $service{'portValue'};
+%       my $httpToHttpsValue = $service{'httpToHttpsValue'};
+%       my $httpsPortValue = $service{'httpsPortValue'};
+
+%       if ($httpToHttpsValue) {
+                redirect "https://<% $domainNameValue %>:<% $httpsPortValue %>/"
+%       }   #if ($httpToHttpsValue) {
+%       else {
+		BackEnd
+			Address	<% $ipaddrValue %>
+			Port	<% $portValue %>
+		End
+%       }   #else {
+%   #} # foreach my $service (@{$backEndArray}) {
+% } # if ( $backEndCount == 1 ) {
+% else {
+                BackEnd
+                        Address 192.168.1.31
+                        Port    <% $backEndCount %>
+                End
+% } # else {
+
+        End
+% } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
+
+% print "# -----------------------------------------\n";
+% print "# Redirect\n";
+% print "# -----------------------------------------\n";
+
 % print "#        Service\n";
 % print "#                HeadRequire \"Host: test-redir.dlll.nccu.edu.tw.*\"\n";
 % print "#                Redirect \"http://dlll.nccu.edu.tw\"\n";
 % print "#        End\n";
 
-% print "# -----------------------------------------\n";
-% print "# Redirect\n";
-% print "# -----------------------------------------\n";
 
 % foreach my $r (@{$redir}) {
 %   my $domainNameValue = $r->{'domainNameValue'};
