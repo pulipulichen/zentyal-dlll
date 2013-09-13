@@ -142,8 +142,7 @@ sub _setConf
 
     # Iterate over table
     my @paramsArray = ();
-    my @domainHash = (
-    );
+    my $domainHash = ();
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
@@ -171,23 +170,23 @@ sub _setConf
         # ---------
         # 開始Hash
 
-#        my %backEnd = (
-#            ipaddrValue => $ipaddrValue,
-#            portValue => $portValue,
-#            descriptionValue => $descriptionValue,
-#            httpToHttpsValue => $httpToHttpsValue,
-#            httpsPortValue => $httpsPortValue,
-#        );
-#
-#        my @backEndArray = ();
-#        if ( defined( $domainHash{$domainNameValue} ) ) {
-#            # 如果Hash已經有了這個Domain Name
-#            @backEndArray = $domainHash{$domainNameValue};
-#        }
-#        
-#        push(@backEndArray, %backEnd);
-#
-#        $domainHash{$domainNameValue} = \@backEndArray;
+        my %backEnd = (
+            ipaddrValue => $ipaddrValue,
+            portValue => $portValue,
+            descriptionValue => $descriptionValue,
+            httpToHttpsValue => $httpToHttpsValue,
+            httpsPortValue => $httpsPortValue,
+        );
+
+        my @backEndArray = ();
+        if ( exists $domainHash->{$domainNameValue}  ) {
+            # 如果Hash已經有了這個Domain Name
+            @backEndArray = $domainHash->{$domainNameValue};
+        }
+        
+        push(@backEndArray, %backEnd);
+
+        $domainHash->{$domainNameValue} = \@backEndArray;
     }
 
     # ----------------------------
@@ -225,7 +224,7 @@ sub _setConf
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'redir' => \@redirArray);
-    push(@servicesParams, 'domainHash' => \@domainHash);
+    push(@servicesParams, 'domainHash' => $domainHash);
 
     $self->writeConfFile(
         $CONFFILE,
