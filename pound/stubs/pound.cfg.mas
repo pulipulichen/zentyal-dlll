@@ -46,6 +46,10 @@ ListenHTTP
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		0
 
+% print "# -----------------------------------------\n";
+% print "# Back End\n";
+% print "# -----------------------------------------\n";
+
 % print "#        Service\n";
 % print "#                HeadRequire \"Host: dlll.nccu.edu.tw.*\"\n";
 % print "#                BackEnd\n";
@@ -85,6 +89,10 @@ ListenHTTP
 % print "#                HeadRequire \"Host: test-redir.dlll.nccu.edu.tw.*\"\n";
 % print "#                Redirect \"http://dlll.nccu.edu.tw\"\n";
 % print "#        End\n";
+
+% print "# -----------------------------------------\n";
+% print "# Redirect\n";
+% print "# -----------------------------------------\n";
 
 % foreach my $r (@{$redir}) {
 %   my $domainNameValue = $r->{'domainNameValue'};
