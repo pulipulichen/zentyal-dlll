@@ -61,7 +61,7 @@ sub menu
     $folder->add(new EBox::Menu::Item('url' => 'Pound/View/Settings',
                                       'text' => __('Settings')));
     $folder->add(new EBox::Menu::Item('url' => 'Pound/View/PoundServices',
-                                      'text' => __('Pound')));
+                                      'text' => __('Back End')));
     $folder->add(new EBox::Menu::Item('url' => 'Pound/View/Redirect',
                                       'text' => __('Redirect')));
     $folder->add(new EBox::Menu::Item('url' => 'Pound/View/DNS',

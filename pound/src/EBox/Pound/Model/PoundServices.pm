@@ -409,12 +409,12 @@ sub _table
     {
         tableName => 'PoundServices',
 
-        'pageTitle' => __('Pound'),
-        printableTableName => __('Pound Services'),
+        'pageTitle' => __('Back End'),
+        printableTableName => __('Back End'),
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
         modelDomain => 'Pound',
         tableDescription => \@fields,
-        printableRowName => __('Pound Service'),
+        printableRowName => __('Back End'),
         #sortedBy => 'updateDate',
         'HTTPUrlView'=> 'Pound/View/PoundServices',
         'enableProperty' => 1,
