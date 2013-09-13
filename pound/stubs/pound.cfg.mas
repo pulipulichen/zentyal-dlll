@@ -4,6 +4,7 @@
     $alive
     $services
     $redir
+    $domainHash
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
