@@ -85,41 +85,59 @@ ListenHTTP
 	End
 % } #foreach my $service (@{$services}) {
 
-% while (my ($domainNameValue, @backEndArray) = each ($domainHash)) {  	
-
+% while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
+%
         Service
-                HeadRequire "Host: test.<% $domainNameValue %>.*"
-
+                HeadRequire "Host: <% $domainNameValue %>.*"
+% my @backEndArray = @{$backEndArray};
 % my $backEndCount = $#backEndArray+1;
+%
+% #-----------------------------------------------
+%
 % if ( $backEndCount == 1 ) {
 %   # 照以前的處理方法
-
-%   #foreach my $service (\@backEndArray) {
-%       my %service = $backEndArray[0];
-%       my $domainNameValue = $service{'domainNameValue'};
-%       my $ipaddrValue = $service{'ipaddrValue'};
-%       my $portValue = $service{'portValue'};
-%       my $httpToHttpsValue = $service{'httpToHttpsValue'};
-%       my $httpsPortValue = $service{'httpsPortValue'};
-
-%       if ($httpToHttpsValue) {
+%
+%   for(my $i=0; $i<=$#backEndArray; $i++) {
+%       my $service = $backEndArray[$i];
+%       my $ipaddrValue = $service->{'ipaddrValue'};
+%       my $portValue = $service->{'portValue'};
+%       my $httpToHttpsValue = $service->{'httpToHttpsValue'};
+%       my $httpsPortValue = $service->{'httpsPortValue'};
+%
+%   if ($httpToHttpsValue) {
+%
                 redirect "https://<% $domainNameValue %>:<% $httpsPortValue %>/"
-%       }   #if ($httpToHttpsValue) {
-%       else {
+%
+%   }   #if ($httpToHttpsValue) {
+%   else {
+%
 		BackEnd
 			Address	<% $ipaddrValue %>
 			Port	<% $portValue %>
 		End
-%       }   #else {
-%   #} # foreach my $service (@{$backEndArray}) {
+%
+%   }   #else {
+%
+%   } # for(my $i=0; $i<=$#backEndArray; $i++) {
+%
+%
+% #-----------------------------------------------
+%
 % } # if ( $backEndCount == 1 ) {
 % else {
-                BackEnd
-                        Address 192.168.1.31
-                        Port    <% $backEndCount %>
-                End
+%   # 新的處理方式，只有BackEnd
+%
+%   for(my $i=0; $i<=$#backEndArray; $i++) {
+%       my $service = $backEndArray[$i];
+%       my $ipaddrValue = $service->{'ipaddrValue'};
+%       my $portValue = $service->{'portValue'};
+		BackEnd
+			Address	<% $ipaddrValue %>
+			Port	<% $portValue %>
+		End
+%   } # for(my $i=0; $i<=$#backEndArray; $i++) {
 % } # else {
-
+%
         End
 % } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
 

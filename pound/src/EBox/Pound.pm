@@ -143,6 +143,7 @@ sub _setConf
     # Iterate over table
     my @paramsArray = ();
     my $domainHash = ();
+    my $i = 0;
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
@@ -170,21 +171,26 @@ sub _setConf
         # ---------
         # 開始Hash
 
-        my @backEndArray = ();
+        my @backEndArray;
         if ( exists $domainHash->{$domainNameValue}  ) {
             # 如果Hash已經有了這個Domain Name
-            @backEndArray = $domainHash->{$domainNameValue};
+            @backEndArray = @{$domainHash->{$domainNameValue}};
         }
-        
-        push(@backEndArray, {
-            ipaddrValue => $ipaddrValue,
-            portValue => $portValue,
-            descriptionValue => $descriptionValue,
-            httpToHttpsValue => $httpToHttpsValue,
-            httpsPortValue => $httpsPortValue,
-        });
+
+        my $backEnd = ();
+        $backEnd->{ipaddrValue} = $ipaddrValue;
+        $backEnd->{portValue} = $portValue;
+        $backEnd->{descriptionValue} = $descriptionValue;
+        $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
+        $backEnd->{httpsPortValue} = $httpsPortValue;
+
+        $backEndArray[$#backEndArray+1] = $backEnd;
 
         $domainHash->{$domainNameValue} = \@backEndArray;
+
+        # ----------
+        $i++;
+
     }
 
     # ----------------------------
