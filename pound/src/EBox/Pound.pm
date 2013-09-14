@@ -122,9 +122,9 @@ sub _setConf
     my $alive = $settings->value('alive');
     my $enableError = $settings->value('enableError');
     my $errorURL = $settings->value('error');
-    #my $file = "/etc/pound/error.html";
-    #my $fileTemp = "/tmp/error.html";
-    my $file = "/tmp/error.html";
+    my $file = "/etc/pound/error.html";
+    my $fileTemp = "/tmp/error.html";
+    #my $file = "/tmp/error.html";
 
     my $address = "127.0.0.1";
     if ($settings->value("address") eq "address_extIface")
@@ -141,9 +141,25 @@ sub _setConf
         $address = $settings->value("address");
     }
      if ($enableError == 1) {
-        system('wget ' . $errorURL . ' -O '.$file);
+        system('wget ' . $errorURL . ' -O '.$fileTemp);
 
         # 讀取
+        #my $errorPage = system('cat '.$fileTemp);
+        open FILE, "<".$fileTemp;
+        my $errorPage = do { local $/; <FILE> };
+        
+        # 寫入
+        my @errorPageParams = ();
+        push(@errorPageParams, 'errorPage' => $errorPage);
+
+        $self->writeConfFile(
+            '/etc/pound/error.html',
+            "pound/error.html.mas",
+            \@errorPageParams,
+            { uid => '0', gid => '0', mode => '740' }
+        );
+
+        unlink $fileTemp;
     }
     # ----------------------------
     # Back End
