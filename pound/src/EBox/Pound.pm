@@ -121,8 +121,10 @@ sub _setConf
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
     my $enableError = $settings->value('enableError');
-    my $error = $settings->value('error');
-    my $file = "/etc/pound/error.html";
+    my $errorURL = $settings->value('error');
+    #my $file = "/etc/pound/error.html";
+    #my $fileTemp = "/tmp/error.html";
+    my $file = "/tmp/error.html";
 
     my $address = "127.0.0.1";
     if ($settings->value("address") eq "address_extIface")
@@ -139,10 +141,9 @@ sub _setConf
         $address = $settings->value("address");
     }
      if ($enableError == 1) {
-        my $file = "/etc/pound/error.html";
-        exec('rm -f '.$file);
-        exec('wget ' . $error . ' -O '.$file);
-        exec('date > /home/test.log');
+        system('wget ' . $error . ' -O '.$file);
+
+        # 讀取
     }
     # ----------------------------
     # Back End

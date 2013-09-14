@@ -53,16 +53,12 @@ ListenHTTP
 
 % if ($enableError == 1) {
 %
-%        my $file = "/etc/pound/error.html";
-%        exec('rm -f '.$file);
-%        exec('wget ' . $error . ' -O '.$file);
-%        exec('date > /root/test.log');
+        Err414 "<% $file %>"
+        Err500 "<% $file %>"
+        Err501 "<% $file %>"
+        Err503 "<% $file %>"
 %
-        Err414 "/etc/pound/error.html"
-        Err500 "/etc/pound/error.html"
-        Err501 "/etc/pound/error.html"
-        Err503 "/etc/pound/error.html"
-% } //if ($enableError == 1) {
+% } # if ($enableError == 1) {
 % print "# -----------------------------------------\n";
 % print "# Back End\n";
 % print "# -----------------------------------------\n";
