@@ -118,6 +118,7 @@ sub _setConf
     my $settings = $self->model('Settings');
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
+    my $error = $settings->value('error');
 
     my $address = "127.0.0.1";
     if ($settings->value("address") eq "address_extIface")
@@ -226,9 +227,13 @@ sub _setConf
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'alive' => $alive);
+    push(@servicesParams, 'error' => $error);
+
     push(@servicesParams, 'services' => \@paramsArray);
-    push(@servicesParams, 'redir' => \@redirArray);
     push(@servicesParams, 'domainHash' => $domainHash);
+
+    push(@servicesParams, 'redir' => \@redirArray);
+    
 
     $self->writeConfFile(
         $CONFFILE,

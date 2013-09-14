@@ -2,9 +2,12 @@
     $address
     $port
     $alive
+    $error
+
     $services
-    $redir
     $domainHash
+
+    $redir
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
@@ -46,6 +49,10 @@ ListenHTTP
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		0
 
+        Err414 "<% $error %>"
+        Err500 "<% $error %>"
+        Err501 "<% $error %>"
+        Err503 "<% $error %>"
 % print "# -----------------------------------------\n";
 % print "# Back End\n";
 % print "# -----------------------------------------\n";

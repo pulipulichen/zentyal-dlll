@@ -14,6 +14,8 @@ use EBox::Types::Link;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
 use EBox::Types::HTML;
+use EBox::Types::File;
+use EBox::Types::Boolean;
 
 use EBox::Network;
 
@@ -113,6 +115,20 @@ sub _table
 #            editable => 0,
 #            defaultValue => '<a href="https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help" target="_blank">https://github.com/pulipulichen/zentyal-dlll/wiki/domain-name-help</a>',
 #        ),
+        new EBox::Types::Boolean(
+              fieldName     => 'enableError',
+              printableName => __('Enable Custom Error Message'),
+              defaultValue => 0,
+              editable      => 1,
+              optional => 0,
+             ),
+        new EBox::Types::File(
+              fieldName     => 'error',
+              printableName => __('Error Message'),
+              editable      => 1,
+              optional => 1,
+              help => __('HTML format. Example: '),
+             ),
           new EBox::Types::HTML(
             fieldName => 'portForwarding',
             printableName => __('Port Forwarding Setup'),
