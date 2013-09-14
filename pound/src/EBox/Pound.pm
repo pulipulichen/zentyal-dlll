@@ -9,6 +9,8 @@ use EBox::Global;
 use EBox::Gettext;
 use EBox::Sudo;
 
+use LWP::Simple;
+
 my $CONFFILE = '/etc/pound/pound.cfg';
 
 # Method: _create
@@ -118,6 +120,7 @@ sub _setConf
     my $settings = $self->model('Settings');
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
+    my $enableError = $settings->value('enableError');
     my $error = $settings->value('error');
 
     my $address = "127.0.0.1";
@@ -133,6 +136,10 @@ sub _setConf
     else
     {
         $address = $settings->value("address");
+    }
+
+    if ($enableError == 1) {
+        #getstore($error, "/etc/pound/error.html");
     }
 
     # ----------------------------
@@ -227,7 +234,7 @@ sub _setConf
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'alive' => $alive);
-    push(@servicesParams, 'error' => $error);
+    push(@servicesParams, 'enableError' => $enableError);
 
     push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'domainHash' => $domainHash);

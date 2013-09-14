@@ -14,7 +14,7 @@ use EBox::Types::Link;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
 use EBox::Types::HTML;
-use EBox::Types::File;
+use EBox::Types::Link;
 use EBox::Types::Boolean;
 
 use EBox::Network;
@@ -118,16 +118,16 @@ sub _table
         new EBox::Types::Boolean(
               fieldName     => 'enableError',
               printableName => __('Enable Custom Error Message'),
-              defaultValue => 0,
+              defaultValue => 1,
               editable      => 1,
               optional => 0,
              ),
-        new EBox::Types::File(
+        new EBox::Types::Text(
               fieldName     => 'error',
-              printableName => __('Error Message'),
+              printableName => __('Error Page Link'),
               editable      => 1,
               optional => 1,
-              help => __('HTML format. Example: '),
+              help => __('HTML format. Don't use HTTPS. Example: http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html'),
              ),
           new EBox::Types::HTML(
             fieldName => 'portForwarding',
