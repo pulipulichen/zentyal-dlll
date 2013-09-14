@@ -9,7 +9,7 @@ use EBox::Global;
 use EBox::Gettext;
 use EBox::Sudo;
 
-use LWP::Simple;
+#use LWP::Simple;
 
 my $CONFFILE = '/etc/pound/pound.cfg';
 
@@ -140,6 +140,9 @@ sub _setConf
 
     if ($enableError == 1) {
         #getstore($error, "/etc/pound/error.html");
+        my $file = "/etc/pound/error.html";
+        my $output = qx/rm $file/;
+        $output = qx/wget $error -O $file/;
     }
 
     # ----------------------------

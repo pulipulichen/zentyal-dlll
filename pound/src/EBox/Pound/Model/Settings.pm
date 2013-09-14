@@ -127,7 +127,7 @@ sub _table
               printableName => __('Error Page Link'),
               editable      => 1,
               optional => 1,
-              help => __('HTML format. Don't use HTTPS. Example: http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html'),
+              help => __('HTML format. Don\'t use HTTPS. Example: http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html'),
              ),
           new EBox::Types::HTML(
             fieldName => 'portForwarding',
