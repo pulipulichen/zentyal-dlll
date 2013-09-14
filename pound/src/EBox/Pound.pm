@@ -141,7 +141,7 @@ sub _setConf
         $address = $settings->value("address");
     }
      if ($enableError == 1) {
-        system('wget ' . $error . ' -O '.$file);
+        system('wget ' . $errorURL . ' -O '.$file);
 
         # 讀取
     }
@@ -238,7 +238,7 @@ sub _setConf
     push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'enableError' => $enableError);
-    push(@servicesParams, 'error' => $error);
+    push(@servicesParams, 'errorURL' => $errorURL);
     push(@servicesParams, 'file' => $file);
 
     push(@servicesParams, 'services' => \@paramsArray);
