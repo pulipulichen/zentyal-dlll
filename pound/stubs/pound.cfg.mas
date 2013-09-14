@@ -52,17 +52,17 @@ ListenHTTP
 	xHTTP		0
 
 % if ($enableError == 1) {
+%
 %        my $file = "/etc/pound/error.html";
-%        system('rm -f '.$file);
-%        system('wget ' . $error . ' -O '.$file);
-         system('date > /root/test.log');
-%    }
-% if ($enableError == 1) {
+%        exec('rm -f '.$file);
+%        exec('wget ' . $error . ' -O '.$file);
+%        exec('date > /root/test.log');
+%
         Err414 "/etc/pound/error.html"
         Err500 "/etc/pound/error.html"
         Err501 "/etc/pound/error.html"
         Err503 "/etc/pound/error.html"
-% }
+% } //if ($enableError == 1) {
 % print "# -----------------------------------------\n";
 % print "# Back End\n";
 % print "# -----------------------------------------\n";

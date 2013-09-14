@@ -140,9 +140,9 @@ sub _setConf
     }
      if ($enableError == 1) {
         my $file = "/etc/pound/error.html";
-        system('rm -f '.$file);
-        system('wget ' . $error . ' -O '.$file);
-         system('date > /home/test.log');
+        exec('rm -f '.$file);
+        exec('wget ' . $error . ' -O '.$file);
+        exec('date > /home/test.log');
     }
     # ----------------------------
     # Back End
