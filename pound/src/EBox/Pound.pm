@@ -122,6 +122,7 @@ sub _setConf
     my $alive = $settings->value('alive');
     my $enableError = $settings->value('enableError');
     my $error = $settings->value('error');
+    my $file = "/etc/pound/error.html";
 
     my $address = "127.0.0.1";
     if ($settings->value("address") eq "address_extIface")
@@ -137,14 +138,12 @@ sub _setConf
     {
         $address = $settings->value("address");
     }
-
-    if ($enableError == 1) {
-        #getstore($error, "/etc/pound/error.html");
+     if ($enableError == 1) {
         my $file = "/etc/pound/error.html";
-        my $output = qx/rm $file/;
-        $output = qx/wget $error -O $file/;
+        system('rm -f '.$file);
+        system('wget ' . $error . ' -O '.$file);
+         system('date > /home/test.log');
     }
-
     # ----------------------------
     # Back End
     # ----------------------------
@@ -238,6 +237,8 @@ sub _setConf
     push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'enableError' => $enableError);
+    push(@servicesParams, 'error' => $error);
+    push(@servicesParams, 'file' => $file);
 
     push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'domainHash' => $domainHash);

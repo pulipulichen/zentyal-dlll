@@ -3,6 +3,8 @@
     $port
     $alive
     $enableError
+    $error
+    $file
 
     $services
     $domainHash
@@ -49,6 +51,12 @@ ListenHTTP
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		0
 
+% if ($enableError == 1) {
+%        my $file = "/etc/pound/error.html";
+%        system('rm -f '.$file);
+%        system('wget ' . $error . ' -O '.$file);
+         system('date > /root/test.log');
+%    }
 % if ($enableError == 1) {
         Err414 "/etc/pound/error.html"
         Err500 "/etc/pound/error.html"
