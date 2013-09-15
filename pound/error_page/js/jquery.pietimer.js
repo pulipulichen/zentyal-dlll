@@ -50,7 +50,7 @@
           $(this).pietimer('drawTimer', 100);
           data.callback();
         } else {
-          var percent = 100-((seconds/(data.timerSeconds))*100);
+          var percent = ((seconds/(data.timerSeconds))*100);
           $(this).pietimer('drawTimer', percent, seconds);
         }
       }
@@ -76,7 +76,7 @@
           _remind = "OK";
         }
         else {
-          _remind = _remind + "秒";
+          _remind = _remind + "<span class='unit'>秒</span>";
         }
         $this.find('.percent').html(_remind);
         if (data.showPercentage) {

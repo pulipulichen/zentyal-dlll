@@ -37,6 +37,9 @@
     text-align:center;
     display: none;
 }
+.pietimer > .percent .unit {
+    font-size: 0.2em;
+}
 .pietimer > .slice {
     position:absolute;
     width:1em;
@@ -84,9 +87,15 @@
           fill: false,
           showPercentage: true,
           callback: function() {
-              location.reload(true);
+              //location.reload(true);
           }
       });
+      
+      var _url = location.href;
+      var _url_a = '<a href="'+_url+'">'+_url+'</a>';
+      $(".ori-url").html(_url_a);
+      $(".this-page").attr('href', _url);
+          
     });
 </script>
         
@@ -118,7 +127,7 @@
 
 					
 					<!-- ERROR CODE HERE -->
-					<h1 style="font-size: 75px">SYSTEM<span>Error</span></h1>
+					<h1 style="font-size: 75px;cursor: default;">SYSTEM<span>Error</span></h1>
 				</div><!-- end div #leftColumn -->
 				<!-- END LEFT COLUMN -->
 				
@@ -126,14 +135,14 @@
 				<div id="rightColumn">
 					<h2>糟糕！系統發生錯誤了...</h2>
                                          
-                                         <p>距離系統重新啟動完成還有……</p>
-                                         <div id="timer"></div> 
-                                       <br />
-                                       <p style="clear:both;">現在系統內部發生了錯誤，這個網頁暫時無法連結。現在系統正在嘗試重新啟動，如果重新啟動之後網頁依然無法運作，請<a href="mailto:pudding@nccu.edu.tw">聯絡網管人員</a>來協助您處理這個問題。</p>
+                                         <div id="timer" style="float:right;"></div> <p>系統重新啟動中。距離啟動完成還有……</p>
+                                         
+                                         <p>啟動完成之後，您將會重新移動到原本造訪的網頁：<span class="ori-url"></span></p>
+                                       <p style="clear:both;">如果重新啟動之後網頁依然無法運作，請<a href="mailto:pudding@nccu.edu.tw">聯絡網管人員</a>來協助您處理這個問題。</p>
                     
 					<h4 class="regular"><strong>不知道該怎麼辦嗎？我們建議您……</strong></h4>
 					<ol>
-						<li><span>可能是短期內系統負荷過大，稍候一陣子再進入這個網址看看。</span></li>
+						<li><span>可能是短期內系統負荷過大，稍候一陣子再進入<a href="#" class="this-page">本網頁</a>看看。</span></li>
 
 						<li><span>請<a href="mailto:pudding@nccu.edu.tw">聯絡網管人員</a>來協助您處理這個問題。</span></li>
 						<li><span>從左邊連結來查看<a href="http://dlll.nccu.edu.tw/">實驗室網站</a>。</span></li>
