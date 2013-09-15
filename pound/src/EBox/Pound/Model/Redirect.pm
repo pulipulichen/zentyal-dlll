@@ -129,6 +129,14 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+        new EBox::Types::Text(
+            fieldName => 'createDateField',
+            printableName => __('Create Date'),
+            editable => 1,
+            optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 1,
+        ),
         new EBox::Types::HTML(
             fieldName => 'updateDate',
             printableName => __('Last Update Date'),
@@ -187,6 +195,7 @@ sub updatedRowNotify
         $self->deletedDomainName($oldRow);
 
         $self->setLink($row);
+        $self->setCreateDate($row);
         $self->setUpdateDate($row);
         $self->setContactLink($row);
         $self->addDomainName($row);
@@ -294,7 +303,7 @@ sub setUpdateDate
 {
     my ($self, $row) = @_;
 
-    my $date = strftime "%Y/%m/%d", localtime;
+    my $date = strftime "%Y/%m/%d %H:%M:%S", localtime;
 
     $row->elementByName('updateDate')->setValue('<span>'.$date."</span>");
     #$row->store();
@@ -304,9 +313,16 @@ sub setCreateDate
 {
     my ($self, $row) = @_;
 
-    my $date = strftime "%Y/%m/%d", localtime;
-
-    $row->elementByName('createDate')->setValue('<span>'.$date."</span>");
+    my $date = $row->valueByName("createDateField");
+    if (defined($date) == 0) {
+        $date = strftime "%Y/%m/%d %H:%M:%S", localtime;
+        $row->elementByName('createDate')->setValue('<span>'.$date."</span>");
+        $row->elementByName('createDateField')->setValue($date);
+    }
+    else {
+        $row->elementByName('createDate')->setValue('<span>'.$date."</span>");
+    }
+    
     #$row->store();
 }
 

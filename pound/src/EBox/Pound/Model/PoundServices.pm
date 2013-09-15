@@ -381,6 +381,14 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+        new EBox::Types::Text(
+            fieldName => 'createDateField',
+            printableName => __('Create Date'),
+            editable => 1,
+            optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 1,
+        ),
         new EBox::Types::HTML(
             fieldName => 'updateDate',
             printableName => __('Last Update Date'),
@@ -493,7 +501,7 @@ sub updatedRowNotify
     
         $self->updateRedirectPorts($row);
 
-        #$self->parentModule()->model("Redirect")->setCreateDate($row);
+        $self->parentModule()->model("Redirect")->setCreateDate($row);
         $self->parentModule()->model("Redirect")->setUpdateDate($row);
 
         $self->parentModule()->model("Redirect")->setContactLink($row);
