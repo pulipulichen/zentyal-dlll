@@ -1,3 +1,6 @@
+<?php
+
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -95,7 +98,6 @@
       var _url_a = '<a href="'+_url+'">'+_url+'</a>';
       $(".ori-url").html(_url_a);
       $(".this-page").attr('href', _url);
-          
     });
 </script>
         

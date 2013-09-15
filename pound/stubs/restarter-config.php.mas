@@ -1,7 +1,9 @@
 <%args>
     $vmHash
+    $notifyEmail
 </%args>
 <?php
+$CONFIG["NOTIFY_EMAIL"] = "<% $notifyEmail %>";
 % while (my ($domain, $vmidConfig) = each ($vmHash)) { 
 $POUND["<% $domain %>"] = array(<% $vmidConfig %>);
 % } #while (my ($domain, $vmidConfig) = each ($vmHash)) { 

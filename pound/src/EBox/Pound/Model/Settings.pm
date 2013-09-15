@@ -135,6 +135,25 @@ sub _table
             editable => 0,
             defaultValue => '<a href="/Firewall/View/RedirectsTable" target="_blank">'.__('Custom Port Forwarding').'</a>',
         ),
+        new EBox::Types::IPAddr(
+            fieldName => 'restarterIP',
+            printableName => __('Restarter IP'),
+            editable => 1,
+            optional => 0,
+        ),
+        new EBox::Types::Port(
+            fieldName => 'restarterPort',
+            printableName => __('Restarter Port'),
+            editable => 1,
+            defaultValue => 80,
+            optional => 0,
+        ),
+        new EBox::Types::Text(
+            fieldName => 'notifyEmail',
+            printableName => __('Notify E-MAIL Address'),
+            editable => 1,
+            optional => 0,
+        ),
       );
 
     my $dataTable =

@@ -6,6 +6,9 @@
     $errorURL
     $file
 
+    $restarterIP
+    $restarterPort
+
     $services
     $domainHash
 
@@ -113,16 +116,27 @@ ListenHTTP
 % } # if ( $backEndCount == 1 ) {
 % else {
 %   # 新的處理方式，只有BackEnd
-%
+%   my $emergencyEnable = 0;
 %   for(my $i=0; $i<=$#backEndArray; $i++) {
 %       my $service = $backEndArray[$i];
 %       my $ipaddrValue = $service->{'ipaddrValue'};
 %       my $portValue = $service->{'portValue'};
+%       if ($service->{'emergencyValue'} == 1) {
+%           $emergencyEnable = 1;
+%       }
 		BackEnd
 			Address	<% $ipaddrValue %>
 			Port	<% $portValue %>
 		End
 %   } # for(my $i=0; $i<=$#backEndArray; $i++) {
+%   
+%   if ($emergencyEnable == 1) {
+                Emergency
+			Address	<% $restarterIP %>
+			Port	<% $restarterPort %>
+		End
+%   }
+%
 % } # else {
 %
         End

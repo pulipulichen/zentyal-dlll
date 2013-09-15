@@ -161,6 +161,11 @@ sub _setConf
 
         unlink $fileTemp;
     }
+
+    my $restarterIP = $settings->value('restarterIP');
+    my $restarterPort = $settings->value('restarterPort');
+    my $notifyEmail = $settings->value('notifyEmail');
+
     # ----------------------------
     # Back End
     # ----------------------------
@@ -186,6 +191,8 @@ sub _setConf
         my $portValue = $row->valueByName('port');
         my $httpToHttpsValue = $row->valueByName('httpToHttps');
         my $httpsPortValue = $services->getHTTPSextPort($row);
+        
+        my $emergencyValue = $row->valueByName('emergencyEnable');
 
         push (@paramsArray, {
             domainNameValue => $domainNameValue,
@@ -194,6 +201,7 @@ sub _setConf
             descriptionValue => $descriptionValue,
             httpToHttpsValue => $httpToHttpsValue,
             httpsPortValue => $httpsPortValue,
+            emergencyValue => $emergencyValue,
         });
 
         # ---------
@@ -213,6 +221,7 @@ sub _setConf
         $backEnd->{descriptionValue} = $descriptionValue;
         $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
         $backEnd->{httpsPortValue} = $httpsPortValue;
+        $backEnd->{emergencyValue} = $emergencyValue;
 
         $backEndArray[$#backEndArray+1] = $backEnd;
 
@@ -261,6 +270,9 @@ sub _setConf
     push(@servicesParams, 'errorURL' => $errorURL);
     push(@servicesParams, 'file' => $file);
 
+    push(@servicesParams, 'restarterIP' => $restarterIP);
+    push(@servicesParams, 'restarterPort' => $restarterPort);
+
     push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'domainHash' => $domainHash);
 
@@ -292,9 +304,10 @@ sub _setConf
 
     my @vmParams = ();
     push(@vmParams, 'vmHash' => $vmHash);
+    push(@vmParams, 'notifyEmail' => $notifyEmail);
     $self->writeConfFile(
-        '/etc/pound/pound-vmid.php',
-        "pound/pound-vmid.php.mas",
+        '/etc/pound/restart-config.php',
+        "pound/restarter-config.php.mas",
         \@vmParams,
         { uid => '0', gid => '0', mode => '740' }
     );

@@ -107,6 +107,15 @@ sub _table
             hiddenOnViewer => 1,
         ),
         new EBox::Types::Boolean(
+            fieldName => 'emergencyEnable',
+            printableName => __('Enable Emergency Restarter'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Boolean(
             fieldName => 'httpToHttps',
             printableName => __('HTTP Redirect to HTTPS'),
             editable => 1,
