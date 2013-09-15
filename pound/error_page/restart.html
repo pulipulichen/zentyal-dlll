@@ -14,9 +14,82 @@
 			DD_belatedPNG.fix('#bg-top, #bg-bottom, #logo, #nav ul, #contentWrap, #content, #leftColumn');
 		</script>
 	<![endif]-->
-
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.pietimer.js"></script>
+        <style type="text/css">
+#timer {
+    margin: 10px;
+    width: 80px;
+}
+ 
+.pietimer {
+    position:relative;
+    font-size: 200px;
+    width:1em;
+    height:1em;
+}
+.pietimer > .percent {
+    position: absolute;
+    top: 1.35em;
+    left: 0;
+    width: 3.33em;
+    font-size: 0.3em;
+    text-align:center;
+    display: none;
+}
+.pietimer > .slice {
+    position:absolute;
+    width:1em;
+    height:1em;
+    clip:rect(0px,1em,1em,0.5em);
+}
+.pietimer > .slice.gt50 {
+    clip:rect(auto, auto, auto, auto);
+}
+.pietimer > .slice > .pie {
+    border: 0.1em solid #c0c0c0;
+    position:absolute;
+    width:0.8em; /* 1 - (2 * border width) */
+    height:0.8em; /* 1 - (2 * border width) */
+    clip:rect(0em,0.5em,1em,0em);
+    -moz-border-radius:0.5em;
+    -webkit-border-radius:0.5em;
+    border-radius:0.5em;
+}
+.pietimer > .slice > .pie.fill {
+    -moz-transform:rotate(180deg) !important;
+    -webkit-transform:rotate(180deg) !important;
+    -o-transform:rotate(180deg) !important;
+    transform:rotate(180deg) !important;
+}
+.pietimer.fill > .percent {
+    display: none;
+}
+.pietimer.fill > .slice > .pie {
+    border: transparent;
+    background-color: #c0c0c0;
+    width:1em;
+    height:1em;
+}
+        </style>
     </head>
     <body>
+        
+
+<script type="text/javascript">
+    $(function() {
+      $('#timer').pietimer({
+          timerSeconds: 300,
+          color: '#188ECE',
+          fill: false,
+          showPercentage: true,
+          callback: function() {
+              location.reload(true);
+          }
+      });
+    });
+</script>
+        
 	<div id="wrapper">
 
 		<div id="bg-top"></div>
@@ -45,20 +118,19 @@
 
 					
 					<!-- ERROR CODE HERE -->
-					<h1>PAGE<span>Not Found</span></h1>
+					<h1 style="font-size: 75px">SYSTEM<span>Error</span></h1>
 				</div><!-- end div #leftColumn -->
 				<!-- END LEFT COLUMN -->
 				
 				<!-- BEGIN RIGHT COLUMN -->
 				<div id="rightColumn">
 					<h2>糟糕！系統發生錯誤了...</h2>
-
-					<p>很抱歉，現在系統內部發生了錯誤。這個網頁暫時無法連結，請稍候再嘗試登入。
-                                            請<a href="mailto:pudding@nccu.edu.tw">聯絡網管人員</a>來協助您處理這個問題。</p>
+                                         
+                                         <p>距離系統重新啟動完成還有……</p>
+                                         <div id="timer"></div> 
+                                       <br />
+                                       <p style="clear:both;">現在系統內部發生了錯誤，這個網頁暫時無法連結。現在系統正在嘗試重新啟動，如果重新啟動之後網頁依然無法運作，請<a href="mailto:pudding@nccu.edu.tw">聯絡網管人員</a>來協助您處理這個問題。</p>
                     
-					<br>
-					<br>
-					<br>
 					<h4 class="regular"><strong>不知道該怎麼辦嗎？我們建議您……</strong></h4>
 					<ol>
 						<li><span>可能是短期內系統負荷過大，稍候一陣子再進入這個網址看看。</span></li>
