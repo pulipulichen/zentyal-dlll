@@ -170,6 +170,7 @@ sub _setConf
     # Iterate over table
     my @paramsArray = ();
     my $domainHash = ();
+    my $vmHash = ();
     my $i = 0;
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
@@ -199,9 +200,11 @@ sub _setConf
         # 開始Hash
 
         my @backEndArray;
+        my $vmidConfig = $self->ipaddrToVMID($ipaddrValue);
         if ( exists $domainHash->{$domainNameValue}  ) {
             # 如果Hash已經有了這個Domain Name
             @backEndArray = @{$domainHash->{$domainNameValue}};
+            $vmidConfig = $vmidConfig.",".$vmHash->{$domainNameValue};
         }
 
         my $backEnd = ();
@@ -214,6 +217,7 @@ sub _setConf
         $backEndArray[$#backEndArray+1] = $backEnd;
 
         $domainHash->{$domainNameValue} = \@backEndArray;
+        $vmHash->{$domainNameValue} = $vmidConfig;
 
         # ----------
         $i++;
@@ -285,6 +289,38 @@ sub _setConf
         \@nullParams,
         { uid => '0', gid => '0', mode => '740' }
     );
+
+    my @vmParams = ();
+    push(@vmParams, 'vmHash' => $vmHash);
+    $self->writeConfFile(
+        '/etc/pound/pound-vmid.php',
+        "pound/pound-vmid.php.mas",
+        \@vmParams,
+        { uid => '0', gid => '0', mode => '740' }
+    );
+}
+
+sub ipaddrToVMID
+{
+    my ($self, $ipaddr) = @_;
+
+    # 變成ID前幾碼
+    my @parts = split('\.', $ipaddr);
+    my $partC = $parts[2];
+    my $partD = $parts[3];
+    
+    # 重新組合
+        $partC = substr($partC, -1);
+    
+        if (length($partD) == 1) {
+            $partD = "0" . $partD;
+        }
+        else {
+            $partC = substr($partC, -2);
+        }
+     my $portHeader = $partC.$partD;
+     
+     return $portHeader;
 }
 
 1;

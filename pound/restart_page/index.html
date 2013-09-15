@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>404 Page Not Found - AJAX Example</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	
+	<link href="css/reset.css" rel="stylesheet" type="text/css">	
+	<link href="css/styles.css" rel="stylesheet" type="text/css">
+	<!--[if LTE IE 8]>
+		<link href="css/ie.css" rel="stylesheet" type="text/css">
+	<![endif]-->
+	<!--[if IE 6]>
+		<script type="text/javascript" src="js/DD_belatedPNG_0.0.8a-min.js"></script>
+		<script type="text/javascript">
+			DD_belatedPNG.fix('#bg-top, #bg-bottom, #logo, #nav ul, #contentWrap, #content, #leftColumn');
+		</script>
+	<![endif]-->
+
+	<link  href="css/ajax-pages.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.tools.min.js"></script>
+					<script type="text/javascript">
+					$(function() {
+						$("#overlay").overlay({api:true, finish: { top: 0, left: "center" } }).load();
+					});
+					</script>	
+</head>
+<body>
+	<div class="overlay" id="overlay"> 
+		<div id="result" class="wrap"><div id="ajaxWrap">
+	<div id="wrapper">
+
+		<div id="bg-top"></div>
+		<div id="contentWrap">
+			<div id="content">
+				
+				<!-- BEGIN LEFT COLUMN -->
+				<div id="leftColumn">
+				
+					<!-- YOUR LOGO GOES HERE -->
+					<a href="index.html"><img id="logo" src="images/template/logo.png" alt="Logo Sample" width="222" height="100"/></a>
+					
+					<!-- BEGIN MENU -->
+					<div id="nav">
+
+						<span>menu</span>
+						<ul>
+							<li class="home"><a href="#">Home</a></li>
+							<li class="about"><a href="#">About Us</a></li>
+							<li class="contact"><a href="#">Conact Us</a></li>
+						</ul>
+					</div><!-- end div #nav -->
+
+					
+					<!-- ERROR CODE HERE -->
+					<h1>404<span>Not Found</span></h1>
+				</div><!-- end div #leftColumn -->
+				<!-- END LEFT COLUMN -->
+				
+				<!-- BEGIN RIGHT COLUMN -->
+				<div id="rightColumn">
+					<h2>Oops! Page not found...</h2>
+
+					<p>Sorry, Evidently the document you were looking for has either been moved or no longer exists. Please use the navigational links to the right to locate additional resources and information.</p>
+                    
+					<br>
+					<br>
+					<br>
+					<h4 class="regular"><strong>Lost? We suggest...</strong></h4>
+					<ol>
+						<li><span>checking the web address for typos.</span></li>
+
+						<li><span>visiting the home page (link to the left).</span></li>
+						<li><span>visiting our full website <a href="#">sitemap here</a>.</span></li>
+						<li><span>using our site search below.</span></li>
+					</ol>
+					
+					<!-- BEGIN SEARCH FORM - EDIT YOUR DOMAIN BELOW -->
+					<form method="get" action="http://www.google.com/search">
+
+						<div>
+							<input type="text" name="search" maxlength="255" value="search...">
+							<!--[if IE 6]><input type="submit" value="Go"><![endif]-->
+							<!--[if !IE 6]><!--><input type="submit" value=""><!--<![endif]-->
+							<input type="hidden" name="sitesearch" value="YOUR-DOMAIN.com">
+						</div>
+					</form>
+					<!-- END SEARCH FORM -->
+					
+					<a id="close" href="javascript:void();">close</a>
+
+					
+				</div><!-- end div #rightColumn -->
+				<!-- END RIGHT COLUMN -->
+				
+				<div class="clear"></div>
+			</div><!-- end div #content -->
+		</div><!-- end div #contentWrap -->
+		<div id="bg-bottom"></div>
+	</div><!-- end div #wrapper -->
+</div><!-- end div #ajaxWrap -->
+<script type="text/javascript" src="js/ajax-pages.js"></script></div>
+
+	</div>
+</body>
+</html>
