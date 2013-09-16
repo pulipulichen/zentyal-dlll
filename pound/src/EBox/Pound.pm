@@ -313,9 +313,10 @@ sub _setConf
     push(@vmParams, 'senderEmail' => $senderEmail);
     $self->writeConfFile(
         '/etc/pound/vmid-config.php',
+        #'/var/www/vmid-config.php',
         "pound/vmid-config.php.mas",
         \@vmParams,
-        { uid => '0', gid => '0', mode => '740' }
+        { uid => '0', gid => '0', mode => '770' }
     );
 }
 
