@@ -97,6 +97,8 @@ sub _table
             optional=>0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+            help => __('Please using EMAIL-KM to create a host post and input URL in this field. ') . '<a href="http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]">Create link</a>.',
+            #help => __('Please using EMAIL-KM to create a host post and input URL in this field.'),
         ),
         new EBox::Types::Text(
             fieldName => 'expiry',
@@ -114,6 +116,7 @@ sub _table
             defaultValue => 1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+            help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
         ),
         new EBox::Types::Boolean(
             fieldName => 'httpToHttps',

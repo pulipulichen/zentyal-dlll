@@ -105,6 +105,15 @@ ListenHTTP
 			Address	<% $ipaddrValue %>
 			Port	<% $portValue %>
 		End
+%   
+%   my $emergencyEnable = $service->{'emergencyValue'};
+%   my $redirHTTP_enable = $service'->{'redirHTTP_enable'};
+%   if ( $emergencyEnable == 1 && $redirHTTP_enable == 1 ) {
+                Emergency
+			Address	<% $restarterIP %>
+			Port	<% $restarterPort %>
+		End
+%   }
 %
 %   }   #else {
 %

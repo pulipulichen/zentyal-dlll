@@ -135,7 +135,7 @@ sub _table
             editable => 0,
             defaultValue => '<a href="/Firewall/View/RedirectsTable" target="_blank">'.__('Custom Port Forwarding').'</a>',
         ),
-        new EBox::Types::IPAddr(
+        new EBox::Types::HostIP(
             fieldName => 'restarterIP',
             printableName => __('Restarter IP'),
             editable => 1,

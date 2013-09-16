@@ -193,6 +193,7 @@ sub _setConf
         my $httpsPortValue = $services->getHTTPSextPort($row);
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
+        my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
 
         push (@paramsArray, {
             domainNameValue => $domainNameValue,
@@ -202,6 +203,7 @@ sub _setConf
             httpToHttpsValue => $httpToHttpsValue,
             httpsPortValue => $httpsPortValue,
             emergencyValue => $emergencyValue,
+            redirHTTP_enable => $redirHTTP_enable,
         });
 
         # ---------
@@ -221,7 +223,9 @@ sub _setConf
         $backEnd->{descriptionValue} = $descriptionValue;
         $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
         $backEnd->{httpsPortValue} = $httpsPortValue;
+
         $backEnd->{emergencyValue} = $emergencyValue;
+        $backEnd->{redirHTTP_enable} = $redirHTTP_enable;
 
         $backEndArray[$#backEndArray+1] = $backEnd;
 
