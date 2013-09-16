@@ -1,4 +1,72 @@
 <?php
+include('restater_config.php');
+$pdo = new PDO("sqlite:restarter.s3db");
+$domain_name = $_SERVER['HTTP_HOST'];
+$vmidAry = $POUND[$domain_name];
+
+$lock_internal = 5 * 60;
+
+$pdoStatement = $pdo->prepare('SELECT timestamp FROM restart_log where domain_name="'.$domain_name.'" limit 0,1');
+$pdoStatement->execute();
+$locked = true;
+while($row = $pdoStatement->fetch(PDO::FETCH_ASSOC) ) {
+        //print_r($row);
+        $last_timestamp = $row['TIMESTAMP'];
+        $last_timestamp = strtotime($last_timestamp);
+        //echo $last_timestamp;
+        //echo strtotime($last_timestamp);
+        $now_time = time();
+        //echo $now_time;
+        $int_time =  ($now_time - $last_timestamp);
+        if ($int_time > $lock_internal) {
+            //echo 'unlock';
+            $locked = false;
+        }   
+}
+//echo $locked;
+
+//exit();
+//
+//$locked = true;
+
+
+if ($locked === FALSE) {
+    // 插入
+    $sql = "INSERT INTO 'restart_log' ('domain_name' )
+                    VALUES( :domain_name )";
+    $pdoStatement = $pdo->prepare($sql);
+
+    /*
+    // [TODO]
+    $count = $pdoStatement->execute(
+            array(
+                    ':domain_name' => $domain_name
+            )
+    );
+     */
+    
+    // 載入資訊
+    foreach ($vmidAry as $vmid) {
+        $command = $CONFIG["restart_commend"];
+        $command = str_replace("[VMID]", $vmid, $command);
+        //echo $command;
+        
+        // [TODO]
+        exec($command);
+    }
+    
+    // 寄出EMAIL
+    $subject = $CONFIG["mail"]["subject"];
+        $subject = str_replace("[DOMAIN]", $domain_name, $subject);
+    $body = $CONFIG["mail"]["body"];
+        $body = str_replace("[DOMAIN]", $domain_name, $body);
+        $body = str_replace("[VMID_LIST]", implode(", ", $vmidAry), $body);
+    $to = $CONFIG["NOTIFY_EMAIL"];
+    $headers = $CONFIG["SENDER_EMAIL"];
+    
+    // [TODO]
+    //mail($to, $subject, $body, $headers);
+}
 
 ?>
 <!DOCTYPE html>
@@ -18,7 +86,7 @@
 		</script>
 	<![endif]-->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script type="text/javascript" src="js/jquery.pietimer.js"></script>
+        <script type="text/javascript" src="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/js/jquery.pietimer.js"></script>
         <style type="text/css">
 #timer {
     margin: 10px;
@@ -129,7 +197,7 @@
 
 					
 					<!-- ERROR CODE HERE -->
-					<h1 style="font-size: 75px;cursor: default;">SYSTEM<span>Error</span></h1>
+					<h1 style="font-size: 60px;cursor: default;">SYSTEM<span>Error</span></h1>
 				</div><!-- end div #leftColumn -->
 				<!-- END LEFT COLUMN -->
 				

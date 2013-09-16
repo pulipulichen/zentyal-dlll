@@ -107,7 +107,7 @@ ListenHTTP
 		End
 %   
 %   my $emergencyEnable = $service->{'emergencyValue'};
-%   my $redirHTTP_enable = $service'->{'redirHTTP_enable'};
+%   my $redirHTTP_enable = $service->{'redirHTTP_enable'};
 %   if ( $emergencyEnable == 1 && $redirHTTP_enable == 1 ) {
                 Emergency
 			Address	<% $restarterIP %>
@@ -139,7 +139,7 @@ ListenHTTP
 		End
 %   } # for(my $i=0; $i<=$#backEndArray; $i++) {
 %   
-%   if ($emergencyEnable == 1) {
+%   if ($emergencyEnable == 1 && $redirHTTP_enable == 1 ) {
                 Emergency
 			Address	<% $restarterIP %>
 			Port	<% $restarterPort %>

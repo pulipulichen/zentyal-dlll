@@ -1,0 +1,61 @@
+Revised Todo (July 25, 2008):
+ 
+ - Error checking for adding database aliases. How should general error handling work?
+
+ - Add row adding/editing/deleting. (We have a basic implimentation currently.)
+ 
+ - When displaying the phpsqliteadmin version, it should display the number within the configuration table of the phpsla.sqlite database.
+
+ - (?) Reorganization of the main page: Main area should display phpsqliteadmin version, sqlite version, list all of the databases, have a database creation form/alias configuration links.
+ 
+ - Newer layout... use something like $pg['content'] .= "content" to update content rather than using print. That way we only need one layout file, and a layout inclusion at the end of every page. The sidebar should have that phpsqliteadmin logo as well.
+
+ - Better icons!
+
+ - Feel free to add more. I was unsure of a few of entries in the old todo's.
+
+ - Privilege checks for databases?
+ 
+Old Todo:
+
+- "browse" should have navigation buttons
+
+- display of indexes fails sometimes
+
+- display of table structure fails when columns are typeless (problem in the class)
+
+- ui to create triggers
+
+- ui to create views
+
+- create a way to alter tables
+
+- you name it! still many many stuff to do...
+
+- add a warning if magic_quotes_gpc is ON
+
+- finish "hoster-mode", which must play nicely with login
+
+- make it xhtml 1.0 Transitional:
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+- add multi-language support
+
+- add ui to manager user accounts
+
+
+
+
+THERE IS A BUG:
+
+when you change the path to the file in an alias, the cookie gets not updated, and you still point to the
+old database file!!!
+Changing to another alias and coming back helps.
+
+
+Notes about Steves branch:
+------------------------------------------------------------------------------------------------
+
+dbaction.php: this should go away:
+$object = $_GET['object'];
+$action = $_GET['action'];

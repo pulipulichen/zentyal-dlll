@@ -1,0 +1,36 @@
+phpSQLiteAdmin changelog ( see http://phpsqliteadmin.sourceforge.net/ for more details)
+
+0.3 (xx.xx.2008)
+
+- Icons have been added (no longer embedded). (chale)
+- An error will be returned if the alias name or path is not specified. (chale)
+- An error will be returned when trying to delete the phpsla.sqlite alias. (chale)
+- Added really basic multiquery support with the query page. This allows one to copy&paste a sql file and execute it in one go. (chale)
+- The query page now displays "x rows affected/returned". Before there was not sort of confirmation when doing non SELECT queries. (chale)
+- Fixed query page's inconsistency in that it was not using htmlspecialchars. (chale)
+- Added initial implimentation of a table exporter. (chale)
+- Added initial support for row adding/editing/deleting. The table must have a primary key in order to edit/delete. (chale)
+- Added some icons. phpsla.css has been edited so that images have no border by default. (chale)
+- Fixed magic quotes issue with query page. (chale)
+- Removed (commented out) function at in includes file around line 192 as it caused an error. (chale)
+- Added login
+- Fixed session problem concerning database names
+- Added field names on browse
+- Converted from html 4.01 to xhtml 1.0 transitional
+- Fixed the alias configurator to return always to the mainframe window and not the "_top" window
+
+0.2 (05.03.2004)
+
+- Implemented an alias-system which allows you to add the databases you want to administer via phpSQLiteAdmin. No need to edit config.php anymore
+- Introduced a system database which stores these aliases and their metadata. It will hold more configuration data in the future
+- The schema of the database can be displayed
+- More detailed information about the database file is displayed
+- Support for creating tables
+- Support for dropping databases
+- Some user interface improvements
+- Use a session to store runtime configuration data
+- Make use of a modified version of the Simple Power SQLite class for nearly all database operations
+
+0.1 (23.08.2003)
+
+- first release.

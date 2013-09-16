@@ -112,6 +112,8 @@ sub _table
             optional=>0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+            help => __('Please using EMAIL-KM to create a host post and input URL in this field. ') . '<a href="http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]">Create link</a>.',
+            #help => __('Please using EMAIL-KM to create a host post and input URL in this field.'),
         ),
         new EBox::Types::Text(
             fieldName => 'expiry',
@@ -330,11 +332,18 @@ sub setContactLink
 {
     my ($self, $row) = @_;
 
+    my $link = '';
+
+    my $desc = $row->valueByName('description');
+    if ($desc =~ m/^(http)/i) {
+        $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">EMAIL-KM</a>]';
+    };
+
     my $name = $row->valueByName('contactName');
     my $email = $row->valueByName('contactEmail');
     my $expiry = $row->valueByName('expiry');
 
-    my $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
+    $link = $link.'<br /><a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
 
     my $date = strftime "%Y/%m/%d", localtime;
     $link = $link."<br />[Update] ".$date;

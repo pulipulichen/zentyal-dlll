@@ -165,6 +165,7 @@ sub _setConf
     my $restarterIP = $settings->value('restarterIP');
     my $restarterPort = $settings->value('restarterPort');
     my $notifyEmail = $settings->value('notifyEmail');
+    my $senderEmail = $settings->value('senderEmail');
 
     # ----------------------------
     # Back End
@@ -309,9 +310,10 @@ sub _setConf
     my @vmParams = ();
     push(@vmParams, 'vmHash' => $vmHash);
     push(@vmParams, 'notifyEmail' => $notifyEmail);
+    push(@vmParams, 'senderEmail' => $senderEmail);
     $self->writeConfFile(
-        '/etc/pound/restart-config.php',
-        "pound/restarter-config.php.mas",
+        '/etc/pound/vmid-config.php',
+        "pound/vmid-config.php.mas",
         \@vmParams,
         { uid => '0', gid => '0', mode => '740' }
     );
