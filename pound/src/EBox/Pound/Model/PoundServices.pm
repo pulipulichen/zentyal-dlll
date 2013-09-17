@@ -51,7 +51,6 @@ sub _table
             #'unique' => 1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            #'help' => get($domainNameHelpURL) . 'Format Help: <a href="'.$domainNameHelpURL.'" target="_blank">'.$domainNameHelpURL.'</a>',
         ),
         new EBox::Types::HTML(
             fieldName => 'domainNameLink',
@@ -97,8 +96,11 @@ sub _table
             optional=>0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            help => __('Please using EMAIL-KM to create a host post and input URL in this field. ') . '<a href="http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]" target="emailkm">Create link</a>.',
-            #help => __('Please using EMAIL-KM to create a host post and input URL in this field.'),
+            help => 
+                '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\')">'
+                . __('Create New Post') 
+                . '</button><br />'
+                . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
         ),
         new EBox::Types::Text(
             fieldName => 'expiry',
