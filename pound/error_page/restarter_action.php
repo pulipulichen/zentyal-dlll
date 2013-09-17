@@ -13,7 +13,7 @@ if (isset($POUND[$domain_name])) {
 
 //print_r($vmidAry);
 
-$lock_internal = 5 * 60;    //
+$lock_internal = 6 * 60;    //故意比設定的多一分鐘，這樣就不會被無限迴圈重新啟動
 
 //SELECT timestamp FROM restart_log where domain_name="localhost" limit 0,1 order by timestamp DESC
 $pdoStatement = $pdo->prepare('SELECT timestamp as t FROM restart_log where domain_name="'.$domain_name.'" order by timestamp desc limit 0,1');
@@ -47,7 +47,7 @@ while($row = $pdoStatement->fetch(PDO::FETCH_ASSOC) ) {
         $int_time =  ($now_time - $last_timestamp);
         //echo ' (N:'.$now_time.'; L:'.$last_timestamp.'; I:'.$int_time.'; L:'.$lock_internal.')';
         if ($int_time > $lock_internal) {
-            echo 'unlock';
+            echo 'unlock'."<br />";
             $locked = false;
         }   
 }
@@ -80,11 +80,11 @@ if ($locked === FALSE || $hasRow == FALSE) {
     foreach ($vmidAry as $vmid) {
         $command = $CONFIG["restart_commend"];
         $command = str_replace("[VMID]", $vmid, $command);
-        //echo $command;
+        echo $command."<br />";
         
         // [TODO]
         if ($DEBUG !== TRUE) {
-            exec($command);
+            pclose(popen($command,"r"));
         }
         
     }

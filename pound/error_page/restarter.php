@@ -80,6 +80,7 @@
         
 
 <script type="text/javascript">
+    var DO_REFRESH = true;
     $(function() {
       $('#timer').pietimer({
           timerSeconds: 300,
@@ -87,7 +88,9 @@
           fill: false,
           showPercentage: true,
           callback: function() {
-              location.reload(true);
+              if (DO_REFRESH) {
+                location.reload(true);
+              }
           }
       });
       
@@ -99,6 +102,12 @@
       // 送出訊息
       $.get( "restarter_action.php" );
     });
+
+    function cancel_refresh() {
+      DO_REFRESH = false;
+      $('#timer').hide();
+      $('#cancelButton').hide();
+    }
 </script>
         
 	<div id="wrapper">
@@ -140,6 +149,7 @@
                                          <div id="timer" style="float:right;"></div> <p>系統重新啟動中。距離啟動完成還有……</p>
                                          
                                          <p>啟動完成之後，您將會重新移動到原本造訪的網頁：<span class="ori-url"></span></p>
+                                         <button id="cancelButton" onclick="cancel_refresh()">取消自動跳轉</button>
                                        <p style="clear:both;">如果重新啟動之後網頁依然無法運作，請<a href="mailto:pudding@nccu.edu.tw">聯絡網管人員</a>來協助您處理這個問題。</p>
                     
 					<h4 class="regular"><strong>不知道該怎麼辦嗎？我們建議您……</strong></h4>

@@ -139,13 +139,17 @@ ListenHTTP
 		End
 %   } # for(my $i=0; $i<=$#backEndArray; $i++) {
 %   
-%   if ($emergencyEnable == 1 && $redirHTTP_enable == 1 ) {
+%   if ($emergencyEnable == 1) {
                 Emergency
 			Address	<% $restarterIP %>
 			Port	<% $restarterPort %>
 		End
 %   }
 %
+           Session
+  	   	Type IP
+		TTL 300
+  	   End
 % } # else {
 %
         End

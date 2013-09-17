@@ -6,7 +6,6 @@
 //exec("wget http://10.0.0.254:64480/vmid-config.txt -O ./vmid-config.php");
 exec("scp -P 64422 root@10.0.0.254:/etc/pound/vmid-config.php ./");
 include("vmid-config.php");
-exit();
 // 重新啟動的指令，[VMID]表示要重新啟動的VMID
 $CONFIG["restart_commend"] = 'ssh root@10.0.0.1 "/root/scripts/restart-vm.sh [VMID]"';
 
