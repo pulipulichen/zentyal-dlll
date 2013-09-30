@@ -346,7 +346,15 @@ sub setContactLink
     my $email = $row->valueByName('contactEmail');
     my $expiry = $row->valueByName('expiry');
 
-    $link = $link.'<br /><a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
+    if ($email eq "") {
+        $link = $link.'<br />'.$name;
+    }
+    elsif ($email =~ m/(@)/i) {
+        $link = $link.'<br /><a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
+    }
+    else {
+        $link = $link.'<br />'.$name.'<br />('.$email.')';
+    }
 
     my $date = strftime "%Y/%m/%d", localtime;
     $link = $link."<br />[Update] ".$date;
@@ -354,6 +362,7 @@ sub setContactLink
     $link = "<span>".$link."</span>";
 
     $row->elementByName('contactLink')->setValue($link);
+
     #$row->store();
 }
 

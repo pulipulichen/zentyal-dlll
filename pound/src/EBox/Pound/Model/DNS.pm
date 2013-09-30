@@ -74,7 +74,7 @@ sub _table
             fieldName => 'contactEmail',
             printableName => __('Contact Email'),
             editable => 1,
-            optional=>1,
+            optional=>0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),

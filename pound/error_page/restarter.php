@@ -100,7 +100,7 @@
       $(".this-page").attr('href', _url);
       
       // 送出訊息
-      $.get( "restarter_action.php" );
+      $.get( "/restarter_action.php" );
     });
 
     function cancel_refresh() {
