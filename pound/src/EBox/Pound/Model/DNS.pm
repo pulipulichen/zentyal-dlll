@@ -221,9 +221,21 @@ sub addDomainName
         my $id = $domModel->findId(domain => $domainName);
         if (defined($id) == 0) 
         {
-            $domModel->addDomain({
+            $id = $domModel->addDomain({
                 'domain_name' => $domainName,
             });
+
+            # 刪掉多餘的IP
+            my $ipTable = $domModel->subModel("DomainIpTable");
+
+            for my $subId (@{$ipTable>ids()}) {
+                $ipTable->removeRow($subId);
+            }
+            
+            my $ip = $row->valueByName('ipaddr');
+            $ipTable->addRow(
+                ip => , $ip
+            );
         }
 }
 
