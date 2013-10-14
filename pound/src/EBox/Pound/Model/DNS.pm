@@ -220,16 +220,26 @@ sub addDomainName
         my $domModel = $dns->model('DomainTable');
         my $id = $domModel->findId(domain => $domainName);
         if (defined($id) == 0) {
-
-            my $ipaddr = $row->valueByName('ipaddr');
-
             $domModel->addDomain({
                 'domain_name' => $domainName,
-                'hostnames' => [{
-                    'name'     => 'localhost',
-                    'ipAddresses' => [$ipaddr],
-                }],
             });
+            $id = $domModel->findId(domain => $domainName);
+
+            # 刪掉多餘的IP
+            my $domainRow = $domModel->row($id);
+            my $ipTable = $domainRow->subModel("ipAddresses");
+
+            $ipTable->removeAll();
+#            foreach my $subip (@{$params->{ipAddresses}}) {
+#                $ipModel->removeRow(subip);
+#            }
+
+            my $ipaddr = $row->valueByName('ipaddr');
+            $ipTable->addRow(
+                ip => , $ipaddr
+            );
+
+ #           my $subId = @{$ipTable>ids()};
 
         }   # if (defined($id) == 0) 
 }
