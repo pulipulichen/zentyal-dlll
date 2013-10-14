@@ -553,6 +553,18 @@ sub addDomainName
             $domModel->addDomain({
                 'domain_name' => $domainName,
             });
+            $id = $domModel->findId(domain => $domainName);
+
+            my $domainRow = $domModel->row($id);
+            my $ipTable = $domainRow->subModel("ipAddresses");
+
+            $ipTable->removeAll();
+
+            my $ipaddr = $self->getExternalIpaddr();
+            $ipTable->addRow(
+                ip => , $ipaddr
+            );
+
         }
     }
 }

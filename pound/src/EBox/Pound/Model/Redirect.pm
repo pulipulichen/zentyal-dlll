@@ -339,7 +339,7 @@ sub setContactLink
 
     my $desc = $row->valueByName('description');
     if ($desc =~ m/^(http)/i) {
-        $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">EMAIL-KM</a>]';
+        $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">EMAIL-KM</a>]'.'<br />';
     };
 
     my $name = $row->valueByName('contactName');
@@ -347,13 +347,13 @@ sub setContactLink
     my $expiry = $row->valueByName('expiry');
 
     if ($email eq "") {
-        $link = $link.'<br />'.$name;
+        $link = $link.$name;
     }
     elsif ($email =~ m/(@)/i) {
-        $link = $link.'<br /><a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
+        $link = $link.'<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="mailto:'.$email.'">'.$name.'</a>';
     }
     else {
-        $link = $link.'<br />'.$name.'<br />('.$email.')';
+        $link = $link.$name.'<br />('.$email.')';
     }
 
     my $date = strftime "%Y/%m/%d", localtime;

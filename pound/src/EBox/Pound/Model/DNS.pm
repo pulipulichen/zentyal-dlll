@@ -230,16 +230,11 @@ sub addDomainName
             my $ipTable = $domainRow->subModel("ipAddresses");
 
             $ipTable->removeAll();
-#            foreach my $subip (@{$params->{ipAddresses}}) {
-#                $ipModel->removeRow(subip);
-#            }
 
             my $ipaddr = $row->valueByName('ipaddr');
             $ipTable->addRow(
                 ip => , $ipaddr
             );
-
- #           my $subId = @{$ipTable>ids()};
 
         }   # if (defined($id) == 0) 
 }
