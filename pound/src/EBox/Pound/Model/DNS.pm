@@ -86,7 +86,7 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
             help => 
-                '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\')">'
+                '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\');return false;">'
                 . __('Create New Post') 
                 . '</button><br />'
                 . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
@@ -219,24 +219,19 @@ sub addDomainName
         my $dns = $gl->modInstance('dns');
         my $domModel = $dns->model('DomainTable');
         my $id = $domModel->findId(domain => $domainName);
-        if (defined($id) == 0) 
-        {
-            $id = $domModel->addDomain({
+        if (defined($id) == 0) {
+
+            my $ipaddr = $row->valueByName('ipaddr');
+
+            $domModel->addDomain({
                 'domain_name' => $domainName,
+                'hostnames' => [{
+                    'name'     => 'localhost',
+                    'ipAddresses' => [$ipaddr],
+                }],
             });
 
-            # 刪掉多餘的IP
-            my $ipTable = $domModel->subModel("DomainIpTable");
-
-            for my $subId (@{$ipTable>ids()}) {
-                $ipTable->removeRow($subId);
-            }
-            
-            my $ip = $row->valueByName('ipaddr');
-            $ipTable->addRow(
-                ip => , $ip
-            );
-        }
+        }   # if (defined($id) == 0) 
 }
 
 
