@@ -227,12 +227,26 @@ sub addDomainName
 
             # 刪掉多餘的IP
             my $domainRow = $domModel->row($id);
-            my $ipTable = $domainRow->subModel("ipAddresses");
 
+            my $ipTable = $domainRow->subModel("ipAddresses");
             $ipTable->removeAll();
 
+            # 刪掉多餘的Hostname
+            my $hostnameTable = $domainRow->subModel("hostnames");
+            my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+            my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+            my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+            $zentyalIpTable->removeAll();
+
             my $ipaddr = $row->valueByName('ipaddr');
+
+            # 幫ipTable加上指定的IP
             $ipTable->addRow(
+                ip => , $ipaddr
+            );
+
+            # 幫zentyalIpTalbe加上指定的IP
+            $zentyalIpTable->addRow(
                 ip => , $ipaddr
             );
 
