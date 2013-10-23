@@ -548,8 +548,9 @@ sub addDomainName
         my $dns = $gl->modInstance('dns');
         my $domModel = $dns->model('DomainTable');
         my $id = $domModel->findId(domain => $domainName);
-        if (defined($id) == 0) 
-        {
+        if (defined($id)) {
+            $domModel->removeRow($id);
+        }
             $domModel->addDomain({
                 'domain_name' => $domainName,
             });
@@ -579,8 +580,6 @@ sub addDomainName
             $zentyalIpTable->addRow(
                 ip => , $ipaddr
             );
-
-        }
     }
 }
 
