@@ -35,6 +35,7 @@ LogLevel	1
 
 % print "## check backend every X secs:\n";
 Alive		<% $alive %>
+TimeOut		<% $alive %>
 
 % print "## use hardware-accelleration card supported by openssl(1):\n";
 % print "#SSLEngine	\"<hw>\"\n";
