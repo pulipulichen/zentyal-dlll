@@ -184,6 +184,16 @@ sub _table
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         ),
+        
+        new EBox::Types::Text(
+            fieldName => 'redirHTTP_note',
+            printableName => __('HTTP Note'),
+            editable => 1,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            help => ( 'Login account / password, or using this port for other usage'),
+        ),
         # ----------------------
         new EBox::Types::Boolean(
             fieldName => 'redirHTTPS_enable',
@@ -238,6 +248,15 @@ sub _table
             ],
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
+        ),
+        new EBox::Types::Text(
+            fieldName => 'redirHTTPS_note',
+            printableName => __('HTTPS Note'),
+            editable => 1,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            help => ( 'Login account / password, or using this port for other usage'),
         ),
         # --------------------------------
         new EBox::Types::Boolean(
@@ -294,6 +313,15 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+        new EBox::Types::Text(
+            fieldName => 'redirSSH_note',
+            printableName => __('SSH Note'),
+            editable => 1,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            help => ( 'Login account / password, or using this port for other usage'),
+        ),
         # --------------------------------
         new EBox::Types::Boolean(
             fieldName => 'redirRDP_enable',
@@ -349,7 +377,15 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
-
+        new EBox::Types::Text(
+            fieldName => 'redirRDP_note',
+            printableName => __('RDP Note'),
+            editable => 1,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            help => ( 'Login account / password, or using this port for other usage'),
+        ),
         # --------------------------------
 
         new EBox::Types::HTML(
