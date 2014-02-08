@@ -219,7 +219,8 @@ sub createFieldRedirectToHTTPS
 
             # 20140207 Pulipuli Chen
             # 加上說明
-            help => __('If you want to enable redirect to HTTPS, be sure setting Internal Port to HTTPS port, like 443.'),
+            help => __('If you want to enable redirect to HTTPS, be sure setting Internal Port to HTTPS port, like 443. <br />' 
+                . 'Example: http://demo.url/ will be redirected to https://demo.url:13743/'),
         );
 
     return $field;
