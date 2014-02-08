@@ -9,7 +9,7 @@ depends:
 models:
     - Settings
     - PoundLibrary
-    - BackEnd
+    - PoundServices
     - PortRedirect
     - URLRedirect
     - DNS

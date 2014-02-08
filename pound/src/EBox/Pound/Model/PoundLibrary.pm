@@ -25,8 +25,10 @@ use EBox::DNS::Model::DomainTable;
 
 use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
+use EBox::Exceptions::DataExists;
 
 use LWP::Simple;
+use POSIX qw(strftime);
 
 sub createFieldDomainName
 {
@@ -93,6 +95,8 @@ sub createFieldInternalPort
             printableName => __('Internal Port'),
             defaultValue => 80,
             editable => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
 
     return $field;
@@ -158,6 +162,24 @@ sub createFieldExpiryDate
             # 20140207 Pulipuli Chen
             # 加上說明
             help => __('Example: NEVER or 2015/1/1'),
+        );
+
+    return $field;
+}
+
+sub createFieldExpiryDateWithHR
+{
+    my $field = new EBox::Types::Text(
+            fieldName => 'expiry',
+            printableName => __('Expiry Date'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+
+            # 20140207 Pulipuli Chen
+            # 加上說明
+            help => __('Example: NEVER or 2015/1/1 <br /> <hr />'),
         );
 
     return $field;
@@ -272,11 +294,11 @@ sub createFieldProtocolOnlyForLAN
 
 sub createFieldProtocolExternalPort
 {
-    my ($self, $protocol) = @_;
+    my ($self, $protocol, $unique) = @_;
     my $field = new EBox::Types::Union(
             'fieldName' => 'redir'.$protocol.'_extPort',
             'printableName' => __($protocol.' External Port'),
-            'unique' => 1,
+            'unique' => $unique,
             'subtypes' =>
             [
             new EBox::Types::Union::Text(
@@ -356,7 +378,7 @@ sub createFieldHTTPOnlyForLAN
 sub createFieldHTTPExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("HTTP");
+    my $field = $self->createFieldProtocolExternalPort("HTTP", 0);
     return $field;
 }
 
@@ -401,7 +423,7 @@ sub createFieldHTTPSOnlyForLAN
 sub createFieldHTTPSExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("HTTPS");
+    my $field = $self->createFieldProtocolExternalPort("HTTPS", 1);
     return $field;
 }
 
@@ -440,7 +462,7 @@ sub createFieldSSHOnlyForLAN
 sub createFieldSSHExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("SSH");
+    my $field = $self->createFieldProtocolExternalPort("SSH", 1);
     return $field;
 }
 
@@ -478,7 +500,7 @@ sub createFieldRDPOnlyForLAN
 sub createFieldRDPExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("RDP");
+    my $field = $self->createFieldProtocolExternalPort("RDP", 1);
     return $field;
 }
 
@@ -609,6 +631,27 @@ sub createFieldDisplayContactLink
 # -----------------------------------
 # Domain Name
 
+# 20140208 Pulipuli Chen
+# 這是舊式的寫法，應禁止使用
+#sub addDomainName
+#{
+#    my ($self, $row) = @_;
+#
+#    if ($row->valueByName('boundLocalDns')) {
+#        my $domainName = $row->valueByName('domainName');
+#        my $gl = EBox::Global->getInstance();
+#        my $dns = $gl->modInstance('dns');
+#        my $domModel = $dns->model('DomainTable');
+#        my $id = $domModel->findId(domain => $domainName);
+#        if (defined($id) == 0) 
+#        {
+#            $dns->addDomain({
+#                domain_name => $domainName,
+#            });
+#        }
+#    }
+#}
+
 sub addDomainName
 {
     my ($self, $row) = @_;
@@ -619,12 +662,38 @@ sub addDomainName
         my $dns = $gl->modInstance('dns');
         my $domModel = $dns->model('DomainTable');
         my $id = $domModel->findId(domain => $domainName);
-        if (defined($id) == 0) 
-        {
-            $dns->addDomain({
-                domain_name => $domainName,
-            });
+        if (defined($id)) {
+            $domModel->removeRow($id);
         }
+        $domModel->addDomain({
+            'domain_name' => $domainName,
+        });
+
+        $id = $domModel->findId(domain => $domainName);
+        my $domainRow = $domModel->row($id);
+
+        # 刪掉多餘的IP
+        my $ipTable = $domainRow->subModel("ipAddresses");
+        $ipTable->removeAll();
+
+        # 刪掉多餘的Hostname
+        my $hostnameTable = $domainRow->subModel("hostnames");
+        my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+        my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+        my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+        $zentyalIpTable->removeAll();
+
+        my $ipaddr = $self->getExternalIpaddr();
+
+        # 幫ipTable加上指定的IP
+        $ipTable->addRow(
+            ip => , $ipaddr
+        );
+
+        # 幫zentyalIpTalbe加上指定的IP
+        $zentyalIpTable->addRow(
+            ip => , $ipaddr
+        );
     }
 }
 
@@ -691,12 +760,50 @@ sub domainNameToLink
         $link = "http://" . $link . "/";
     }
 
-    $url = $self->parentModule()->model("BackEnd")->breakUrl($url);
+    $url = $self->breakUrl($url);
 
     $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
 
     return $link;
 }
+
+
+sub updateDomainNameLink
+{
+    my ($self, $row) = @_;
+    
+    my $domainName = $row->valueByName("domainName");
+    my $port = $self->parentModule()->model("Settings")->value("port");
+
+    if ($port == 80) {
+        $port = "";
+    }
+    else {
+        $port = ":" . $port;
+    }
+    my $link = "http\://" . $domainName . $port . "/";
+
+    $domainName = $self->breakUrl($domainName);
+
+    $link = '<a href="'.$link.'" ' 
+        . 'target="_blank" ' 
+        . 'style="background: none;text-decoration: underline;color: #A3BD5B;">' 
+        . $domainName 
+        . '</a>';
+    $row->elementByName("domainNameLink")->setValue($link);
+
+    #$row->store();
+}
+
+sub breakUrl
+{
+    my ($self, $url) = @_;
+
+     my $result = index($url, ".");
+    $url = substr($url, 0, $result) . "<br />" . substr($url, $result);
+    return $url;
+}
+
 
 # ------------------------------------------------
 # Date Setter
@@ -778,39 +885,50 @@ sub setContactLink
 }
 
 # ---------------------------------------
+# External Network
 
-sub updateDomainNameLink
+# 20140208 Pulipuli Chen
+# 好像沒有用到，作廢吧？
+#sub getExternalIpaddrs
+#{
+#    my $network = EBox::Global->modInstance('network');
+#    my $address = "127.0.0.1";
+#    foreach my $if (@{$network->ExternalIfaces()}) {
+#        if ($network->ifaceIsExternal($if)) {
+#            $address = $network->ifaceAddress($if);
+#            last;
+#        }
+#    }
+#    my @ipaddr=($address);
+#    return \@ipaddr;
+#}
+
+sub getExternalIpaddr
 {
-    my ($self, $row) = @_;
-    
-    my $domainName = $row->valueByName("domainName");
-    my $port = $self->parentModule()->model("Settings")->value("port");
-
-    if ($port == 80) 
-    {
-        $port = "";
+    my $network = EBox::Global->modInstance('network');
+    my $address = "127.0.0.1";
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $address = $network->ifaceAddress($if);
+            last;
+        }
     }
-    else 
-    {
-        $port = ":" . $port;
-    }
-    my $link = "http\://" . $domainName . $port . "/";
-
-    $domainName = $self->breakUrl($domainName);
-
-    $link = '<a href="'.$link.'" target="_blank" style="background: none;text-decoration: underline;color: #A3BD5B;">'.$domainName.'</a>';
-    $row->elementByName("domainNameLink")->setValue($link);
-
-    #$row->store();
+    return $address;
 }
 
-sub breakUrl
+sub getExternalIface
 {
-    my ($self, $url) = @_;
-
-     my $result = index($url, ".");
-    $url = substr($url, 0, $result) . "<br />" . substr($url, $result);
-    return $url;
+    my $network = EBox::Global->modInstance('network');
+    my $iface = "eth0";
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $iface = $if;
+            last;
+        }
+    }
+    return $iface;
 }
+
+# ----------------------------
 
 1;

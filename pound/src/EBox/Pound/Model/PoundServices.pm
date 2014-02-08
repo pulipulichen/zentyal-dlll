@@ -1,4 +1,4 @@
-package EBox::Pound::Model::BackEnd;
+package EBox::Pound::Model::PoundServices;
 
 use base 'EBox::Model::DataTable';
 
@@ -27,6 +27,7 @@ use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 
 use LWP::Simple;
+use Try::Tiny;
 
 sub _table
 {
@@ -36,19 +37,21 @@ sub _table
     my @fields = (
         $fieldsFactory->createFieldDomainName(),
         $fieldsFactory->createFieldDomainNameLink(),
+        $fieldsFactory->createFieldBoundLocalDNS(),
         $fieldsFactory->createFieldInternalIPAddress(),
+
         $fieldsFactory->createFieldInternalPort(),
+        $fieldsFactory->createFieldRedirectToHTTPS(),
+        $fieldsFactory->createFieldEmergencyRestarter(),
+
         $fieldsFactory->createFieldContactName(),
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDescription(),
-        $fieldsFactory->createFieldExpiryDate(),
-        $fieldsFactory->createFieldEmergencyRestarter(),
-        $fieldsFactory->createFieldBoundLocalDNSwithHR(),
+        $fieldsFactory->createFieldExpiryDateWithHR(),
         
         # --------------------------
         # HTTP Redirect Fields 
         $fieldsFactory->createFieldHTTPRedirect(),
-        $fieldsFactory->createFieldRedirectToHTTPS(),
         $fieldsFactory->createFieldHTTPOnlyForLAN(),
         $fieldsFactory->createFieldHTTPExternalPort(),
         $fieldsFactory->createFieldHTTPInternalPort(),
@@ -101,7 +104,7 @@ sub _table
 
     my $dataTable =
     {
-        tableName => 'BackEnd',
+        tableName => 'PoundServices',
 
         'pageTitle' => __('Back End'),
         printableTableName => __('Back End'),
@@ -110,7 +113,7 @@ sub _table
         tableDescription => \@fields,
         printableRowName => __('Back End'),
         #sortedBy => 'updateDate',
-        'HTTPUrlView'=> 'Pound/View/BackEnd',
+        'HTTPUrlView'=> 'Pound/View/PoundServices',
         'enableProperty' => 1,
         defaultEnabledValue => 1,
         'order' => 1,
@@ -146,7 +149,7 @@ sub addedRowNotify
 
     $lib->setContactLink($row);
 
-    $self->addDomainName($row);
+    $lib->addDomainName($row);
     $self->addRedirects($row);
 
     $row->store();
@@ -156,13 +159,17 @@ sub addedRowNotify
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
-    $self->deletedDomainName($row);
+
+    my $lib = $self->getLibrary();
+    $lib->deletedDomainName($row);
     $self->deletedRedirects($row);
 }
 
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
+
+    try {
 
     if ($ROW_NEED_UPDATE == 0) {
 
@@ -171,17 +178,16 @@ sub updatedRowNotify
         my $lib = $self->getLibrary();
 
         $self->deletedRowNotify($oldRow);
-        
         $lib->updateDomainNameLink($row);
     
         $self->updateRedirectPorts($row);
-
+        
         $lib->setCreateDate($row);
         $lib->setUpdateDate($row);
 
         $lib->setContactLink($row);
 
-        $self->addDomainName($row);
+        $lib->addDomainName($row);
         $self->addRedirects($row);
 
         for my $subId (@{$row->subModel('redirOther')->ids()}) {
@@ -195,71 +201,13 @@ sub updatedRowNotify
         $row->store();
         $ROW_NEED_UPDATE = 0;
     }
+
+    } catch {
+        $self->test($_);
+    };
 }
 
 # ---------------------------------------
-
-sub addDomainName
-{
-    my ($self, $row) = @_;
-
-    if ($row->valueByName('boundLocalDns')) {
-        my $domainName = $row->valueByName('domainName');
-        my $gl = EBox::Global->getInstance();
-        my $dns = $gl->modInstance('dns');
-        my $domModel = $dns->model('DomainTable');
-        my $id = $domModel->findId(domain => $domainName);
-        if (defined($id)) {
-            $domModel->removeRow($id);
-        }
-            $domModel->addDomain({
-                'domain_name' => $domainName,
-            });
-
-            $id = $domModel->findId(domain => $domainName);
-            my $domainRow = $domModel->row($id);
-
-            # 刪掉多餘的IP
-            my $ipTable = $domainRow->subModel("ipAddresses");
-            $ipTable->removeAll();
-
-            # 刪掉多餘的Hostname
-            my $hostnameTable = $domainRow->subModel("hostnames");
-            my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
-            my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
-            my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-            $zentyalIpTable->removeAll();
-
-            my $ipaddr = $self->getExternalIpaddr();
-            
-            # 幫ipTable加上指定的IP
-            $ipTable->addRow(
-                ip => , $ipaddr
-            );
-
-            # 幫zentyalIpTalbe加上指定的IP
-            $zentyalIpTable->addRow(
-                ip => , $ipaddr
-            );
-    }
-}
-
-sub deletedDomainName
-{
-    my ($self, $row) = @_;
-    my $domainName = $row->valueByName('domainName');
-
-    my $gl = EBox::Global->getInstance();
-    my $dns = $gl->modInstance('dns');
-    my $domModel = $dns->model('DomainTable');
-    my $id = $domModel->findId(domain => $domainName);
-    if (defined($id)) 
-    {
-        $domModel->removeRow($id);
-    }
-}
-
-# -----------------------------
 
 sub addRedirects
 {
@@ -300,8 +248,16 @@ sub deletedRedirects
 {
     my ($self, $row) = @_;
 
-    my %param = $self->getRedirectParamHTTP($row);
+    my %param;
+    #try {
+        #%param = $self->getRedirectParamHTTP($row);
+    #} catch {
+        #$self->test($_);
+    #};
+
+    %param = $self->getRedirectParamHTTP($row);
     $self->deleteRedirectRow(%param);
+
 
     %param = $self->getRedirectParamHTTPS($row);
     $self->deleteRedirectRow(%param);
@@ -321,53 +277,15 @@ sub deletedRedirects
 
 # -----------------------------
 
-sub populateHTTP
-{
-    my @opts = ();
-    push (@opts, { value => 'redirHTTP_default', printableValue => 'Use Internal Port' });
-    push (@opts, { value => 'redirHTTP_disable', printableValue => 'Disable' });
-    return \@opts;
-}
-
-sub getExternalIpaddrs
-{
-    my $network = EBox::Global->modInstance('network');
-    my $address = "127.0.0.1";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $address = $network->ifaceAddress($if);
-            last;
-        }
-    }
-    my @ipaddr=($address);
-    return \@ipaddr;
-}
-
-sub getExternalIpaddr
-{
-    my $network = EBox::Global->modInstance('network');
-    my $address = "127.0.0.1";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $address = $network->ifaceAddress($if);
-            last;
-        }
-    }
-    return $address;
-}
-
-sub getExternalIface
-{
-    my $network = EBox::Global->modInstance('network');
-    my $iface = "eth0";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $iface = $if;
-            last;
-        }
-    }
-    return $iface;
-}
+# 20140208 Pulipuli Chen
+# 似乎沒有用到，廢棄
+#sub populateHTTP
+#{
+#    my @opts = ();
+#    push (@opts, { value => 'redirHTTP_default', printableValue => 'Use Internal Port' });
+#    push (@opts, { value => 'redirHTTP_disable', printableValue => 'Disable' });
+#    return \@opts;
+#}
 
 sub getPortHeader 
 {
@@ -399,147 +317,140 @@ sub getPortHeader
      return $portHeader;
 }
 
+# -------------------------------
+# HTTP Redirect Param
 
 sub getRedirectParamHTTP
 {
     my ($self, $row) = @_;
-
-    my $extPort = $self->getHTTPextPort($row);
-    #my $portHeader = $self->getPortHeader($row);
-    #my $extPort = $portHeader . '80';
-
-    my $intPort = $row->valueByName('port');
-
-    if ($row->valueByName('redirHTTP_secure') == 1)
-    {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "HTTP");
-    }
-    else
-    {
-        return $self->getRedirectParameter($row, $extPort, $intPort, "HTTP");
-    }
+    return $self->getProtocolRedirectParam($row, 'HTTP');
 }
 
 sub getHTTPextPort
 {
     my ($self, $row) = @_;
-
-    my $extPort = $row->valueByName('redirHTTP_extPort');
-    if ($row->valueByName('redirHTTP_extPort') eq 'redirHTTP_extPort_default')
-    {
-        my $portHeader = $self->getPortHeader($row);    
-        $extPort = $portHeader . '80';
-    }
-
-    return $extPort;
+    return $self->getProtocolExtPort($row, 'HTTP');
 }
 
-sub getOtherExtPort
-{
-    my ($self, $row, $redirRow) = @_;
-
-    my $extPort = $redirRow->valueByName('extPort');
-    if ($extPort < 10) {
-        $extPort = "0" . $extPort;
-    }
-    my $portHeader = $self->getPortHeader($row);
-
-    $extPort = $portHeader . $extPort;
-
-    return $extPort;
-}
+# -------------------------------
+# HTTPS Redirect Param
 
 sub getRedirectParamHTTPS
 {
     my ($self, $row) = @_;
-
-    my $extPort = $self->getHTTPSextPort($row);
-    
-    #my $portHeader = $self->getPortHeader($row);
-    #my $extPort = $portHeader."43";
-
-    my $intPort = $row->valueByName('redirHTTPS_intPort');
-
-    if ($row->valueByName('redirHTTPS_secure') == 1)
-    {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "HTTPS");
-    }
-    else
-    {
-        return $self->getRedirectParameter($row, $extPort, $intPort, "HTTPS");
-    }
-    
+    return $self->getProtocolRedirectParam($row, 'HTTPS');
 }
 
 sub getHTTPSextPort
 {
     my ($self, $row) = @_;
-    
-    my $extPort = $row->valueByName('redirHTTPS_extPort');
-    if ($row->valueByName('redirHTTPS_extPort') eq 'redirHTTPS_extPort_default')
-    {
-        my $portHeader = $self->getPortHeader($row);    
-        $extPort = $portHeader . '43';
-    }
-
-    return $extPort;
+    return $self->getProtocolExtPort($row, 'HTTPS');
 }
+
+# -------------------------------
+# RDP Redirect Param
 
 sub getRedirectParamSSH
 {
     my ($self, $row) = @_;
-
-    my $extPort = $self->getSSHextPort($row);
-    
-    #my $portHeader = $self->getPortHeader($row);
-    #my $extPort = $portHeader.'22';
-
-    my $intPort = $row->valueByName('redirSSH_intPort');
-
-    if ($row->valueByName('redirSSH_secure') == 1)
-    {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "SSH");
-    }
-    else
-    {
-        return $self->getRedirectParameter($row, $extPort, $intPort, "SSH");
-    }
+    return $self->getProtocolRedirectParam($row, 'SSH');
 }
 
 sub getSSHextPort
 {
     my ($self, $row) = @_;
+    return $self->getProtocolExtPort($row, 'SSH');
+}
 
-    my $extPort = $row->valueByName('redirSSH_extPort');
-    if ($row->valueByName('redirSSH_extPort') eq 'redirSSH_extPort_default')
+# -------------------------------
+# RDP Redirect Param
+
+sub getRedirectParamRDP
+{
+    my ($self, $row) = @_;
+    return $self->getProtocolRedirectParam($row, 'RDP');
+}
+
+sub getRDPextPort
+{
+    my ($self, $row) = @_;
+    return $self->getProtocolExtPort($row, 'RDP');
+}
+
+# --------------------------------------
+# protocol Redirect Param
+
+sub getProtocolDefaultExtPort 
+{
+    my ($self, $protocol) = @_;
+
+    if ($protocol eq 'HTTP') {
+        return 80;
+    }
+    elsif ($protocol eq 'HTTPS') {
+        return 43;
+    }
+    elsif ($protocol eq 'SSH') {
+        return 22;
+    }
+    elsif ($protocol eq 'RDP') {
+        return 89;
+    }
+    else {
+        return 80;
+    }
+}
+
+sub getProtocolRedirectParam
+{   
+    my ($self, $row, $protocol) = @_;
+
+    my $extPort = $self->getProtocolExtPort($row, $protocol);
+    my $intPort = $self->getProtocolIntPort($row, $protocol);
+
+    if ($row->valueByName('redir'.$protocol.'_secure') == 1)
+    {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $protocol);
+    }
+    else
+    {
+        return $self->getRedirectParameter($row, $extPort, $intPort, $protocol);
+    }
+}
+
+sub getProtocolIntPort 
+{
+    my ($self, $row, $protocol) = @_;
+
+    my $fieldName = 'redir'.$protocol.'_intPort';
+    if ($protocol eq 'HTTP') {
+        $fieldName = 'port';
+    }
+    my $intPort = $row->valueByName($fieldName);
+
+    return $intPort;
+}
+
+sub getProtocolExtPort
+{
+    my ($self, $row, $protocol) = @_;
+
+    my $extPort = $row->valueByName('redir'.$protocol.'_extPort');
+    
+    if ($extPort 
+        eq 'redir'.$protocol.'_extPort_default')
     {
         my $portHeader = $self->getPortHeader($row);    
-        $extPort = $portHeader . '22';
+
+        my $port = $self->getProtocolDefaultExtPort($protocol);
+        $extPort = $portHeader . $port;
     }
 
     return $extPort;
 }
 
-sub getRedirectParamRDP
-{
-    my ($self, $row) = @_;
-
-    my $extPort = $self->getRDPextPort($row);
-    
-    #my $portHeader = $self->getPortHeader($row);
-    #my $extPort = $portHeader.'89';
-
-    my $intPort = $row->valueByName('redirRDP_intPort');
-
-    if ($row->valueByName('redirRDP_secure') == 1)
-    {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, "RDP");
-    }
-    else
-    {
-        return $self->getRedirectParameter($row, $extPort, $intPort, "RDP");
-    }
-}
+# --------------------------------------
+# Other Port Redirect
 
 sub getRedirectParamOther
 {
@@ -564,26 +475,31 @@ sub getRedirectParamOther
     }
 }
 
-sub getRDPextPort
+sub getOtherExtPort
 {
-    my ($self, $row) = @_;
+    my ($self, $row, $redirRow) = @_;
 
-    my $extPort = $row->valueByName('redirRDP_extPort');
-    if ($row->valueByName('redirRDP_extPort') eq 'redirRDP_extPort_default')
-    {
-        my $portHeader = $self->getPortHeader($row);    
-        $extPort = $portHeader . '89';
+    my $extPort = $redirRow->valueByName('extPort');
+    if ($extPort < 10) {
+        $extPort = "0" . $extPort;
     }
+    my $portHeader = $self->getPortHeader($row);
+
+    $extPort = $portHeader . $extPort;
 
     return $extPort;
 }
+
+# --------------------------------------
 
 sub getRedirectParameter
 {
     my ($self, $row, $extPort, $intPort, $desc) = @_;
 
+    my $lib = $self->getLibrary();
+
     my $domainName = $row->valueByName("domainName");
-    my $iface = $self->getExternalIface();
+    my $iface = $lib->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
     return (
@@ -606,8 +522,10 @@ sub getRedirectParameterSecure
 {
     my ($self, $row, $extPort, $intPort, $desc) = @_;
 
+    my $lib = $self->getLibrary();
+
     my $domainName = $row->valueByName("domainName");
-    my $iface = $self->getExternalIface();
+    my $iface = $lib->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
     my $sourceIp = '192.168.11.0';
@@ -673,8 +591,10 @@ sub getRedirectParameterFind
 {
     my ($self, $row) = @_;
 
+    my $lib = $self->getLibrary();
+
     my $domainName = $row->valueByName("domainName");
-    my $iface = $self->getExternalIface();
+    my $iface = $lib->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
     return (
@@ -727,94 +647,140 @@ sub updateRedirectPorts
 {
     my ($self, $row) = @_;
 
+    my $lib = $self->getLibrary();
+
     my $hint = '';
-        
-        my $ipaddr = $self->getExternalIpaddr();
+    my $protocol = '';
 
-        my $portHeader = $self->getPortHeader($row);
-        # 加入HTTP
-        if ($row->valueByName('redirHTTP_enable') == 1) {
-            
-            my $extPort = $self->getHTTPextPort($row); 
-            #my $extPort = $portHeader.80;
-            my $intPort = $row->valueByName('port');
-            my $url = "http\://" . $ipaddr . "\:".$extPort."/";
-            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTP</strong>: <br />" . $extPort ." &gt; " . $intPort."</a></li>";  
+    my $ipaddr = $lib->getExternalIpaddr();
+
+    my $portHeader = $self->getPortHeader($row);
+
+    # 加入HTTP
+    $protocol = "HTTP";
+    if ($self->isProtocolEnable($row, $protocol)) {
+        if ($hint ne ''){
+            $hint = $hint . "<br />";
         }
+        $hint = $hint. $self->getProtocolHint($row, $protocol);
+    }
 
-        # 加入HTTPS
-        if ($row->valueByName('redirHTTPS_enable') == 1) {
-        
-            my $extPort = $self->getHTTPSextPort($row);
-            #my $extPort = $portHeader.43;
-            my $intPort = $row->valueByName('redirHTTPS_intPort');
-            my $url = "https\://" . $ipaddr . "\:".$extPort."/";
-            $hint = $hint . "<li><a style='background: none;text-decoration: underline;color: #A3BD5B;' href=\"".$url."\" target=\"_blank\"><strong>HTTPS</strong>: <br />" . $extPort ." &gt; " . $intPort."</a></li>";  
+    # 加入HTTPS
+    $protocol = "HTTPS";
+    if ($self->isProtocolEnable($row, $protocol)) {
+        if ($hint ne ''){
+            $hint = $hint . "<br />";
         }
+        $hint = $hint. $self->getProtocolHint($row, $protocol);
+    }
 
-        
-        # 加入SSH
-        if ($row->valueByName('redirSSH_enable') == 1) {
-        
-            my $extPort = $self->getSSHextPort($row);
-            #my $extPort = $portHeader.22;
-            my $intPort = $row->valueByName('redirSSH_intPort');
-            $hint = $hint . "<li><strong>SSH</strong>: <br />" . $extPort ." &gt; " . $intPort."</li>";   
+
+    # 加入SSH
+    $protocol = "SSH";
+    if ($self->isProtocolEnable($row, $protocol)) {
+        if ($hint ne ''){
+            $hint = $hint . "<br />";
         }
+        $hint = $hint. $self->getProtocolHint($row, $protocol);
+    }
 
-        
-        # 加入RDP
-        if ($row->valueByName('redirRDP_enable') == 1) {
-        
-            my $extPort = $self->getRDPextPort($row);
-            #my $extPort = $portHeader.89;
-            my $intPort = $row->valueByName('redirRDP_intPort');
-            $hint = $hint . "<li><strong>RDP</strong>: <br />" . $extPort ." &gt; " . $intPort."</li>";  
-        }
-
-        for my $subId (@{$row->subModel('redirOther')->ids()}) {
-                my $redirRow = $row->subModel('redirOther')->row($subId);
-                #my %param = $self->getRedirectParamOther($row, $redirRow);
-                #my $extPort = $redirRow->valueByName('extPort');
-                #my $portHeader = $self->getPortHeader($row);
-                #$extPort = $portHeader . $extPort;
-                my $extPort = $self->getOtherExtPort($row, $redirRow);
-                my $intPort = $redirRow->valueByName('intPort');
-                my $desc = $redirRow->valueByName('description');
-
-                $hint = $hint . "<li><strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."</li>";   
-        }
-
-        # 最後結尾
+    # 加入RDP
+    $protocol = "RDP";
+    if ($self->isProtocolEnable($row, $protocol)) {
         if ($hint ne '')
         {
-            $hint = "<ul style='text-align:left;'>". $hint . "</ul>";
+            $hint = $hint . "<br />";
         }
-        else
+        $hint = $hint . $self->getProtocolHint($row, $protocol);  
+    }
+
+    for my $subId (@{$row->subModel('redirOther')->ids()}) {
+        my $redirRow = $row->subModel('redirOther')->row($subId);
+        #my %param = $self->getRedirectParamOther($row, $redirRow);
+        #my $extPort = $redirRow->valueByName('extPort');
+        #my $portHeader = $self->getPortHeader($row);
+        #$extPort = $portHeader . $extPort;
+        my $extPort = $self->getOtherExtPort($row, $redirRow);
+        my $intPort = $redirRow->valueByName('intPort');
+        my $desc = $redirRow->valueByName('description');
+
+        if ($hint ne '')
         {
-            $hint = "<span>-</span>";
+            $hint = $hint . "<br />";
         }
+        $hint = $hint . "<strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."";   
+    }
 
-        $row->elementByName('redirPorts')->setValue($hint);
-        #$row->store();
+    # 最後結尾
+    if ($hint ne '')
+    {
+        #$hint = "<ul style='text-align:left;'>". $hint . "</ul>";
+        $hint = "<div style='text-align:left;'>". $hint . "</div>";
+    }
+    else
+    {
+        $hint = "<span>-</span>";
+    }
 
+    $row->elementByName('redirPorts')->setValue($hint);
+    #$row->store();
 }
 
-# 找尋row用
-#sub hostDomainChangedDonepa
-#{
-#    my ($self, $oldDomainName, $newDomainName) = @_;
-#
-#    my $domainModel = $self->model('DomainTable');
-#    my $row = $domainModel->find(domain => $oldDomainName);
-#    if (defined $row) {
-#        $row->elementByName('domain')->setValue($newDomainName);
-#        $row->store();
-#    }
-#}
+sub isProtocolEnable 
+{
+    my ($self, $row, $protocol) = @_;
 
-# 新增row用
-#    for my $mod (@modsToAdd) {
-#        $self->add( module => $mod, enabled => 1 );
-#    }
+    return ($row->valueByName('redir'.$protocol.'_enable') == 1);
+}
+
+sub getProtocolHint
+{
+    my ($self, $row, $protocol) = @_;
+    my $lib = $self->getLibrary();
+
+    my $hint = "";
+
+    my $extPort = $self->getProtocolExtPort($row, $protocol);
+
+    my $intPort = $self->getProtocolIntPort($row, $protocol);
+    my $note = $row->valueByName('redir'.$protocol.'_note');
+
+
+    my $protocolTitle = $protocol;
+    if ($note ne '') {
+        $protocolTitle = $protocolTitle . '*';
+    }
+
+    $hint = "<strong>".$protocolTitle."</strong>: "
+        . "<br />" 
+        . $extPort ." &gt; " . $intPort."";
+    
+    if ( ($protocol eq 'HTTP') || ($protocol eq 'HTTPS') ) {
+        
+        my $ipaddr = $lib->getExternalIpaddr();
+
+        my $url = "http\://" . $ipaddr . "\:".$extPort."/";
+        if ($protocol eq 'HTTPS') {
+            $url = "https\://" . $ipaddr . "\:".$extPort."/";
+        }
+        $hint = "<a "
+            . "style='background: none;text-decoration: underline;color: #A3BD5B;' "
+            . "href=\"".$url."\" target=\"_blank\">"
+            . $hint
+            . "</a>";  
+    }
+
+    if ($note ne '') {
+        $hint = '<em title="'.$note.'">'.$hint.'</em>';
+    }
+
+    return $hint;
+}
+
+sub test
+{
+    my ($self, $message) = @_;
+    throw EBox::Exceptions::External($message);
+}
+
 1;
