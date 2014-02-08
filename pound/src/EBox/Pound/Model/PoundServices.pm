@@ -109,13 +109,21 @@ sub _table
             optional=>0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+
+            # 20140207 Pulipuli Chen
+            # 加上說明
+            help => __('Example: NEVER or 2015/1/1'),
         ),
         new EBox::Types::Boolean(
             fieldName => 'emergencyEnable',
             printableName => __('Enable Emergency Restarter'),
             editable => 1,
             optional => 0,
-            defaultValue => 1,
+
+            # 20140207 Pulipuli Chen
+            # 預設改成false，這是因為一開始建置時都是在測試中，連線失誤是很正常的。當設定穩定之後再手動調整成true
+            defaultValue => 0,
+
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
             help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
@@ -128,6 +136,10 @@ sub _table
             defaultValue => 0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+
+            # 20140207 Pulipuli Chen
+            # 加上說明
+            help => __('If you want to enable redirect to HTTPS, be sure setting Internal Port to HTTPS port, like 443.'),
         ),
         new EBox::Types::Boolean(
             fieldName => 'boundLocalDns',

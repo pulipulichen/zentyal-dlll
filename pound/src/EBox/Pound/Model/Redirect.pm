@@ -340,7 +340,18 @@ sub setContactLink
     my $desc = $row->valueByName('description');
     if ($desc =~ m/^(http)/i) {
         $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">EMAIL-KM</a>]'.'<br />';
-    };
+    }
+    else {
+        # 20140207 Pulipuli Chen
+        # 如果不是網址，則顯示額外訊息
+        my $short_desc = $desc;
+        if (length($short_desc) > 10) {
+            $short_desc = substr($short_desc, 0, 10) . "...";
+            $short_desc = "<span title=\"".$desc."\">".$short_desc."</span>"
+        }
+
+        $link = $link.$short_desc.'<br />';
+    }
 
     my $name = $row->valueByName('contactName');
     my $email = $row->valueByName('contactEmail');
