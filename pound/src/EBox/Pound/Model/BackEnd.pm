@@ -1,4 +1,4 @@
-package EBox::Pound::Model::PoundServices;
+package EBox::Pound::Model::BackEnd;
 
 use base 'EBox::Model::DataTable';
 
@@ -28,456 +28,80 @@ use EBox::Exceptions::External;
 
 use LWP::Simple;
 
-# 20130812 Pulipuli Chen
-# 想要寫出切換功能，可是失敗了。
-#use EBox::Validate qw(:all);
-
-# Method: _table
-#
-# Overrides:
-#
-#       <EBox::Model::DataTable::_table>
-#
 sub _table
 {
     my ($self) = @_;
+    my $fieldsFactory = $self->getLibrary();
 
     my @fields = (
-        new EBox::Types::DomainName(
-            fieldName => 'domainName',
-            printableName => __('Domain Name'),
-            editable => 1,
-            # 因為要允許同一個Domain Name指向多個Back End，所以這部份要做些調整
-            #'unique' => 1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
-        new EBox::Types::HTML(
-            fieldName => 'domainNameLink',
-            printableName => __('Domain Name'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
-        ),
-        new EBox::Types::HostIP(
-            fieldName => 'ipaddr',
-            printableName => __('Internal IP Address'),
-            editable => 1,
-            #'unique' => 1,
-            help => __('The third part should be between 1~5, and the forth part should be between 1~99'),
-        ),
-        new EBox::Types::Port(
-            fieldName => 'port',
-            printableName => __('Internal Port'),
-            defaultValue => 80,
-            editable => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'contactName',
-            printableName => __('Contact Name'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'contactEmail',
-            printableName => __('Contact Email'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'description',
-            printableName => __('Description'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => 
-                '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\');return false;">'
-                . __('Create New Post') 
-                . '</button><br />'
-                . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
-        ),
-        new EBox::Types::Text(
-            fieldName => 'expiry',
-            printableName => __('Expiry Date'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-
-            # 20140207 Pulipuli Chen
-            # 加上說明
-            help => __('Example: NEVER or 2015/1/1'),
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'emergencyEnable',
-            printableName => __('Enable Emergency Restarter'),
-            editable => 1,
-            optional => 0,
-
-            # 20140207 Pulipuli Chen
-            # 預設改成false，這是因為一開始建置時都是在測試中，連線失誤是很正常的。當設定穩定之後再手動調整成true
-            defaultValue => 0,
-
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'httpToHttps',
-            printableName => __('HTTP Redirect to HTTPS'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-
-            # 20140207 Pulipuli Chen
-            # 加上說明
-            help => __('If you want to enable redirect to HTTPS, be sure setting Internal Port to HTTPS port, like 443.'),
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'boundLocalDns',
-            printableName => __('Bound Local DNS'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
+        $fieldsFactory->createFieldDomainName(),
+        $fieldsFactory->createFieldDomainNameLink(),
+        $fieldsFactory->createFieldInternalIPAddress(),
+        $fieldsFactory->createFieldInternalPort(),
+        $fieldsFactory->createFieldContactName(),
+        $fieldsFactory->createFieldContactEmail(),
+        $fieldsFactory->createFieldDescription(),
+        $fieldsFactory->createFieldExpiryDate(),
+        $fieldsFactory->createFieldEmergencyRestarter(),
+        $fieldsFactory->createFieldBoundLocalDNSwithHR(),
         
+        # --------------------------
+        # HTTP Redirect Fields 
+        $fieldsFactory->createFieldHTTPRedirect(),
+        $fieldsFactory->createFieldRedirectToHTTPS(),
+        $fieldsFactory->createFieldHTTPOnlyForLAN(),
+        $fieldsFactory->createFieldHTTPExternalPort(),
+        $fieldsFactory->createFieldHTTPInternalPort(),
+        $fieldsFactory->createFieldHTTPNote(),
 
-        new EBox::Types::Boolean(
-            fieldName => 'redirHTTP_enable',
-            printableName => __('Enable HTTP Redirect'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'redirHTTP_secure',
-            printableName => __('Only For LAN'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 0,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Union(
-            'fieldName' => 'redirHTTP_extPort',
-            'printableName' => __('HTTP External Port'),
-            #'unique' => 1,
-            'subtypes' =>
-            [
-            new EBox::Types::Union::Text(
-                'fieldName' => 'redirHTTP_extPort_default',
-                'printableName' => __('Default: Based on IP address.')),
-            new EBox::Types::Port(
-                'fieldName' => 'redirHTTP_extPort_other',
-                'printableName' => __('Other'),
-                'editable' => 1,),
-            ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            'fieldName' => 'redirHTTP_intPort',
-            'printableName' => __('HTTP Internal Port'),
-            'editable' => 0,
-            'defaultValue' => "Use reverse proxy internal port",
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
-        
-        new EBox::Types::Text(
-            fieldName => 'redirHTTP_note',
-            printableName => __('HTTP Note'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => ( 'Login account / password, or using this port for other usage'),
-        ),
         # ----------------------
-        new EBox::Types::Boolean(
-            fieldName => 'redirHTTPS_enable',
-            printableName => __('Enable HTTPS Redirect'),
-             editable => 1,
-            optional => 0,
-            defaultValue => 1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'redirHTTPS_secure',
-            printableName => __('Only For LAN'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 0,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Union(
-            'fieldName' => 'redirHTTPS_extPort',
-            'printableName' => __('HTTPS External Port'),
-            'unique' => 1,
-            'subtypes' =>
-            [
-            new EBox::Types::Union::Text(
-                'fieldName' => 'redirHTTPS_extPort_default',
-                'printableName' => __('Default: Based on IP address.')),
-            new EBox::Types::Port(
-                'fieldName' => 'redirHTTPS_extPort_other',
-                'printableName' => __('Other'),
-                'editable' => 1,),
-            ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Union(
-            'fieldName' => 'redirHTTPS_intPort',
-            'printableName' => __('HTTPS Redirect'),
-            'subtypes' =>
-            [
-            new EBox::Types::Port(
-                'fieldName' => 'redirHTTPS_default',
-                'printableName' => __('Default HTTPS port (443)'),
-                'defaultValue' => 443,
-                'hidden' => 1,
-                'editable' => 0,),
-            new EBox::Types::Port(
-                'fieldName' => 'redirHTTPS_other',
-                'printableName' => __('Other'),
-                'editable' => 1,),
-            ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'redirHTTPS_note',
-            printableName => __('HTTPS Note'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => ( 'Login account / password, or using this port for other usage'),
-        ),
+        # HTTPS Redirect Fields
+        $fieldsFactory->createFieldHTTPSRedirect(),
+        $fieldsFactory->createFieldHTTPSOnlyForLAN(),
+        $fieldsFactory->createFieldHTTPSExternalPort(),
+        $fieldsFactory->createFieldHTTPSInternalPort(),
+        $fieldsFactory->createFieldHTTPSNote(),
+        
         # --------------------------------
-        new EBox::Types::Boolean(
-            fieldName => 'redirSSH_enable',
-            printableName => __('Enable SSH Redirect'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'redirSSH_secure',
-            printableName => __('Only For LAN'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Union(
-            'fieldName' => 'redirSSH_extPort',
-            'printableName' => __('SSH External Port'),
-            'unique' => 1,
-            'subtypes' =>
-            [
-            new EBox::Types::Union::Text(
-                'fieldName' => 'redirSSH_extPort_default',
-                'printableName' => __('Default: Based on IP address.')),
-            new EBox::Types::Port(
-                'fieldName' => 'redirSSH_extPort_other',
-                'printableName' => __('Other'),
-                'editable' => 1,),
-            ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Union(
-            'fieldName' => 'redirSSH_intPort',
-            'printableName' => __('SSH Redirect'),
-            'subtypes' =>
-            [
-            new EBox::Types::Port(
-                'fieldName' => 'redirSSH_default',
-                'printableName' => __('Default SSH port (22)'),
-                'defaultValue' => 22,
-                'hidden' => 1,
-                'editable' => 0,),
-            new EBox::Types::Port(
-                'fieldName' => 'redirSSH_other',
-                'printableName' => __('Other'),
-                'editable' => 1,),
-            ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'redirSSH_note',
-            printableName => __('SSH Note'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => ( 'Login account / password, or using this port for other usage'),
-        ),
-        # --------------------------------
-        new EBox::Types::Boolean(
-            fieldName => 'redirRDP_enable',
-            printableName => __('Enable RDP Redirect'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'redirRDP_secure',
-            printableName => __('Only For LAN'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Union(
-            'fieldName' => 'redirRDP_extPort',
-            'printableName' => __('RDP External Port'),
-            'unique' => 1,
-            'subtypes' =>
-            [
-            new EBox::Types::Union::Text(
-                'fieldName' => 'redirRDP_extPort_default',
-                'printableName' => __('Default: Based on IP address.')),
-            new EBox::Types::Port(
-                'fieldName' => 'redirRDP_extPort_other',
-                'printableName' => __('Other'),
-                'editable' => 1,),
-            ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Union(
-            'fieldName' => 'redirRDP_intPort',
-            'printableName' => __('RDP Redirect'),
-            'subtypes' =>
-            [
-            new EBox::Types::Port(
-                'fieldName' => 'redirRDP_default',
-                'printableName' => __('Default RDP port (3389)'),
-                'defaultValue' => 3389,
-                'hidden' => 1,
-                'editable' => 0,),
-            new EBox::Types::Port(
-                'fieldName' => 'redirRDP_other',
-                'printableName' => __('Other'),
-                'editable' => 1,),
-            ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'redirRDP_note',
-            printableName => __('RDP Note'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => ( 'Login account / password, or using this port for other usage'),
-        ),
-        # --------------------------------
+        # SSH Redirect Fields
+        $fieldsFactory->createFieldSSHRedirect(),
+        $fieldsFactory->createFieldSSHOnlyForLAN(),
+        $fieldsFactory->createFieldSSHExternalPort(),
+        $fieldsFactory->createFieldSSHInternalPort(),
+        $fieldsFactory->createFieldSSHNote(),
 
-        new EBox::Types::HTML(
-            fieldName => 'redirPorts',
-            printableName => __('Redirect Ports'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
-        ),
+        # --------------------------------
+        # RDP Redirect Fields
+        $fieldsFactory->createFieldRDPRedirect(),
+        $fieldsFactory->createFieldRDPOnlyForLAN(),
+        $fieldsFactory->createFieldRDPExternalPort(),
+        $fieldsFactory->createFieldRDPInternalPort(),
+        $fieldsFactory->createFieldRDPNote(),
 
         # --------------------------------
 
-        new EBox::Types::HasMany(
-            'fieldName' => 'redirOther',
-            'printableName' => __('Other Redirect Ports'),
-            'foreignModel' => 'Redirections',
-            'view' => '/Pound/View/Redirections',
-            'backView' => '/Pound/View/PoundServices',
-            'size' => '1',
-            #optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
-       ),
-       new EBox::Types::Text(
-            fieldName => 'redirOtherHelp',
-            printableName => __('Other Redirect Ports'),
-            defaultValue => __('You can configure other redirection at following table. You have to add this row first.'),
-            editable => 0,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
+        $fieldsFactory->createFieldDisplayRedirectPorts(),
 
         # --------------------------------
+        # Other Redirect Ports
 
+        $fieldsFactory->createFieldOtherRedirectPortsDisplay(),
+        $fieldsFactory->createFieldOtherRedirectPortsHint(),
 
-        new EBox::Types::HTML(
-            fieldName => 'createDate',
-            printableName => __('Create Date'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'createDateField',
-            printableName => __('Create Date'),
-            editable => 1,
-            optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::HTML(
-            fieldName => 'updateDate',
-            printableName => __('Last Update Date'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
+        # --------------------------------
+        # Date Display
 
-        new EBox::Types::HTML(
-            fieldName => 'contactLink',
-            printableName => __('Contact & Last Update Date'),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
-        ),
+        $fieldsFactory->createFieldCreateDateDisplay(),
+        $fieldsFactory->createFieldCreateDateData(),
+        $fieldsFactory->createFieldDisplayLastUpdateDate(),
+        $fieldsFactory->createFieldDisplayContactLink(),
 
         # ----------------------------------
-
-        
-
     );
 
     my $dataTable =
     {
-        tableName => 'PoundServices',
+        tableName => 'BackEnd',
 
         'pageTitle' => __('Back End'),
         printableTableName => __('Back End'),
@@ -486,7 +110,7 @@ sub _table
         tableDescription => \@fields,
         printableRowName => __('Back End'),
         #sortedBy => 'updateDate',
-        'HTTPUrlView'=> 'Pound/View/PoundServices',
+        'HTTPUrlView'=> 'Pound/View/BackEnd',
         'enableProperty' => 1,
         defaultEnabledValue => 1,
         'order' => 1,
@@ -495,28 +119,11 @@ sub _table
     return $dataTable;
 }
 
-# --------------------------------------
-# 20130812 Pulipuli Chen
-# 想要寫出切換功能，可是失敗了。
-
-#sub viewCustomizer
-#{
-#    my ($self) = @_;
-#
-#    my $customizer = $self->SUPER::viewCustomizer();
-#
-#    # disable port selection in protless protocols
-#    my $httpFields = [qw(redirHTTP_secure)];
-#    $customizer->setOnChangeActions({
-#        redirHTTPS_enable => {
-#            1 => {show => $httpFields},
-#            0 => {hide => $httpFields},
-#        }
-#    });
-#
-#    return $customizer;
-#}
-
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("PoundLibrary");
+}
 
 # ---------------------------------------
 
@@ -528,14 +135,16 @@ sub addedRowNotify
 
     $ROW_NEED_UPDATE = 1;
     
-    $self->updateDomainNameLink($row);
+    my $lib = $self->getLibrary();
+
+    $lib->updateDomainNameLink($row);
     
     $self->updateRedirectPorts($row);
 
-    $self->parentModule()->model("Redirect")->setCreateDate($row);
-    $self->parentModule()->model("Redirect")->setUpdateDate($row);
+    $lib->setCreateDate($row);
+    $lib->setUpdateDate($row);
 
-    $self->parentModule()->model("Redirect")->setContactLink($row);
+    $lib->setContactLink($row);
 
     $self->addDomainName($row);
     $self->addRedirects($row);
@@ -556,17 +165,21 @@ sub updatedRowNotify
     my ($self, $row, $oldRow) = @_;
 
     if ($ROW_NEED_UPDATE == 0) {
+
         $ROW_NEED_UPDATE = 1;
+        
+        my $lib = $self->getLibrary();
+
         $self->deletedRowNotify($oldRow);
         
-        $self->updateDomainNameLink($row);
+        $lib->updateDomainNameLink($row);
     
         $self->updateRedirectPorts($row);
 
-        $self->parentModule()->model("Redirect")->setCreateDate($row);
-        $self->parentModule()->model("Redirect")->setUpdateDate($row);
+        $lib->setCreateDate($row);
+        $lib->setUpdateDate($row);
 
-        $self->parentModule()->model("Redirect")->setContactLink($row);
+        $lib->setContactLink($row);
 
         $self->addDomainName($row);
         $self->addRedirects($row);
@@ -1185,40 +798,6 @@ sub updateRedirectPorts
         $row->elementByName('redirPorts')->setValue($hint);
         #$row->store();
 
-}
-
-sub updateDomainNameLink
-{
-    my ($self, $row) = @_;
-    
-    my $domainName = $row->valueByName("domainName");
-    my $port = $self->parentModule()->model("Settings")->value("port");
-
-    if ($port == 80) 
-    {
-        $port = "";
-    }
-    else 
-    {
-        $port = ":" . $port;
-    }
-    my $link = "http\://" . $domainName . $port . "/";
-
-    $domainName = $self->breakUrl($domainName);
-
-    $link = '<a href="'.$link.'" target="_blank" style="background: none;text-decoration: underline;color: #A3BD5B;">'.$domainName.'</a>';
-    $row->elementByName("domainNameLink")->setValue($link);
-
-    #$row->store();
-}
-
-sub breakUrl
-{
-    my ($self, $url) = @_;
-
-     my $result = index($url, ".");
-    $url = substr($url, 0, $result) . "<br />" . substr($url, $result);
-    return $url;
 }
 
 # 找尋row用

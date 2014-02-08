@@ -8,11 +8,12 @@ depends:
 
 models:
     - Settings
-    - PoundServices
-    - Redirections
-    - Redirect
+    - PoundLibrary
+    - BackEnd
+    - PortRedirect
+    - URLRedirect
     - DNS
 
 composites:
-    Global: [Settings, Redirect]
+    Global: [Settings, URLRedirect]
     

@@ -62,10 +62,10 @@ sub menu
 
     $folder->add(new EBox::Menu::Item('url' => 'Pound/View/Settings',
                                       'text' => __('Settings')));
-    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/PoundServices',
+    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/BackEnd',
                                       'text' => __('Back End')));
-    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/Redirect',
-                                      'text' => __('Redirect')));
+    $folder->add(new EBox::Menu::Item('url' => 'Pound/View/URLRedirect',
+                                      'text' => __('URL Redirect')));
     $folder->add(new EBox::Menu::Item('url' => 'Pound/View/DNS',
                                       'text' => __('DNS')));
     
@@ -171,7 +171,7 @@ sub _setConf
     # Back End
     # ----------------------------
 
-    my $services = $self->model('PoundServices');
+    my $services = $self->model('BackEnd');
 
     # Iterate over table
     my @paramsArray = ();

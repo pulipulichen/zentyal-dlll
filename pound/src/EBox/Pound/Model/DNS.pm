@@ -28,6 +28,12 @@ use EBox::Exceptions::External;
 
 use LWP::Simple;
 
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("PoundLibrary");
+}
+
 # Method: _table
 #
 # Overrides:
@@ -37,102 +43,27 @@ use LWP::Simple;
 sub _table
 {
     my ($self) = @_;
+    my $fieldsFactory = $self->getLibrary();
 
     my @fields = (
-        new EBox::Types::DomainName(
-            fieldName => 'domainName',
-            printableName => __('Domain Name'),
-            editable => 1,
-            'unique' => 1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            #'help' => get($domainNameHelpURL) . 'Format Help: <a href="'.$domainNameHelpURL.'" target="_blank">'.$domainNameHelpURL.'</a>',
-        ),
-        new EBox::Types::HTML(
-            fieldName => 'domainNameLink',
-            printableName => __('Domain Name'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
-        ),
+        $fieldsFactory->createFieldDomainNameUnique(),
+        $fieldsFactory->createFieldDomainNameLink(),
         new EBox::Types::HostIP(
             fieldName => 'ipaddr',
             printableName => __('IP Address'),
             editable => 1,
         ),
         
-        new EBox::Types::Text(
-            fieldName => 'contactName',
-            printableName => __('Contact Name'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'contactEmail',
-            printableName => __('Contact Email'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'description',
-            printableName => __('Description'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => 
-                '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\');return false;">'
-                . __('Create New Post') 
-                . '</button><br />'
-                . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
-        ),
-        new EBox::Types::Text(
-            fieldName => 'expiry',
-            printableName => __('Expiry Date'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),       
+        $fieldsFactory->createFieldContactName(),
+        $fieldsFactory->createFieldContactEmail(),
+        $fieldsFactory->createFieldDescription(),
+        $fieldsFactory->createFieldExpiryDate(),
 
-        new EBox::Types::HTML(
-            fieldName => 'createDate',
-            printableName => __('Create Date'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'createDateField',
-            printableName => __('Create Date'),
-            editable => 1,
-            optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 1,
-        ),
-        new EBox::Types::HTML(
-            fieldName => 'updateDate',
-            printableName => __('Last Update Date'),
-            editable => 0,
-            optional=>1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        ),
+        $fieldsFactory->createFieldCreateDateDisplay(),
+        $fieldsFactory->createFieldCreateDateData(),
+        $fieldsFactory->createFieldDisplayLastUpdateDate(),
 
-        new EBox::Types::HTML(
-            fieldName => 'contactLink',
-            printableName => __('Contact & Last Update Date'),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
-        ),
+        $fieldsFactory->createFieldDisplayContactLink(),
 
         # ----------------------------------
     );
@@ -166,15 +97,17 @@ sub addedRowNotify
     my ($self, $row) = @_;
 
     $ROW_NEED_UPDATE = 1;
+
+    my $lib = $self->getLibrary();
     
-    $self->updateDomainNameLink($row);
+    $lib->updateDomainNameLink($row);
 
-    $self->parentModule()->model("Redirect")->setCreateDate($row);
-    $self->parentModule()->model("Redirect")->setUpdateDate($row);
+    $lib->setCreateDate($row);
+    $lib->setUpdateDate($row);
 
-    $self->parentModule()->model("Redirect")->setContactLink($row);
+    $lib->setContactLink($row);
 
-    $self->addDomainName($row);
+    $lib->addDomainName($row);
 
     $row->store();
     $ROW_NEED_UPDATE = 0;
@@ -192,14 +125,17 @@ sub updatedRowNotify
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
+
+        my $lib = $self->getLibrary();
+
         $self->deletedRowNotify($oldRow);
         
-        $self->updateDomainNameLink($row);
+        $lib->updateDomainNameLink($row);
     
-        $self->parentModule()->model("Redirect")->setCreateDate($row);
-        $self->parentModule()->model("Redirect")->setUpdateDate($row);
+        $lib->setCreateDate($row);
+        $lib->setUpdateDate($row);
 
-        $self->parentModule()->model("Redirect")->setContactLink($row);
+        $lib->setContactLink($row);
 
         $self->addDomainName($row);
 
@@ -748,55 +684,4 @@ sub updateRedirectPorts
 
 }
 
-sub updateDomainNameLink
-{
-    my ($self, $row) = @_;
-    
-    my $domainName = $row->valueByName("domainName");
-    my $port = $self->parentModule()->model("Settings")->value("port");
-
-    if ($port == 80) 
-    {
-        $port = "";
-    }
-    else 
-    {
-        $port = ":" . $port;
-    }
-    my $link = "http\://" . $domainName . $port . "/";
-
-    $domainName = $self->breakUrl($domainName);
-
-    $link = '<a href="'.$link.'" target="_blank" style="background: none;text-decoration: underline;color: #A3BD5B;">'.$domainName.'</a>';
-    $row->elementByName("domainNameLink")->setValue($link);
-
-    #$row->store();
-}
-
-sub breakUrl
-{
-    my ($self, $url) = @_;
-
-     my $result = index($url, ".");
-    $url = substr($url, 0, $result) . "<br />" . substr($url, $result);
-    return $url;
-}
-
-# 找尋row用
-#sub hostDomainChangedDonepa
-#{
-#    my ($self, $oldDomainName, $newDomainName) = @_;
-#
-#    my $domainModel = $self->model('DomainTable');
-#    my $row = $domainModel->find(domain => $oldDomainName);
-#    if (defined $row) {
-#        $row->elementByName('domain')->setValue($newDomainName);
-#        $row->store();
-#    }
-#}
-
-# 新增row用
-#    for my $mod (@modsToAdd) {
-#        $self->add( module => $mod, enabled => 1 );
-#    }
 1;

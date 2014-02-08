@@ -1,4 +1,4 @@
-package EBox::Pound::Model::Redirections;
+package EBox::Pound::Model::PortRedirect;
 
 use base 'EBox::Model::DataTable';
 
@@ -33,6 +33,12 @@ use EBox::Types::HTML;
 #
 #    return $self;
 #}
+
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("PoundLibrary");
+}
 
 sub pageTitle
 {
@@ -98,13 +104,13 @@ sub _table
 
     my $dataTable =
     {
-        'tableName' => 'Redirections',
+        'tableName' => 'PortRedirect',
         'printableTableName' => __('Port Redirect'),
         'printableRowName' => __('Port Redirect'),
         'pageTitle' => $self->pageTitle(),
         'modelDomain' => 'Pound',
         automaticRemove => 1,
-        defaultController => '/Pound/Controller/Redirections',
+        defaultController => '/Pound/Controller/PortRedirect',
         'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
         'tableDescription' => \@fields,
         'sortedBy' => 'extPort',
@@ -178,7 +184,7 @@ sub addRedirect
 
     if ($row ne undef)
     {
-        my $poundModel = $self->parentModule()->model("PoundServices");
+        my $poundModel = $self->parentModule()->model("BackEnd");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         $poundModel->addRedirectRow(%param);
     }
@@ -192,7 +198,7 @@ sub deleteRedirect
 
     if ($row ne undef)
     {
-        my $poundModel = $self->parentModule()->model("PoundServices");
+        my $poundModel = $self->parentModule()->model("BackEnd");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         $poundModel->deleteRedirectRow(%param);
     
@@ -210,7 +216,7 @@ sub updateRedirectPorts
     {
         $self->addRedirect($row, $redirRow);
 
-        $self->parentModule()->model("PoundServices")->updateRedirectPorts($row);
+        $self->parentModule()->model("BackEnd")->updateRedirectPorts($row);
         $row->store();
     }
 }
@@ -234,7 +240,7 @@ sub updateExtPortHTML
 
     if ($row ne undef)
     {
-        my $poundModel = $self->parentModule()->model("PoundServices");
+        my $poundModel = $self->parentModule()->model("BackEnd");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         
         my $extPort = $param{external_port_single_port};
