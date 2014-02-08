@@ -82,7 +82,8 @@ sub createFieldInternalIPAddress
             printableName => __('Internal IP Address'),
             editable => 1,
             #'unique' => 1,
-            help => __('The third part should be between 1~5, and the forth part should be between 1~99'),
+            help => __('The third part should be between 1~5, and the forth part should be between 1~99. <br />'
+                . 'Example: 10.9.1.51'),
         );
 
     return $field;

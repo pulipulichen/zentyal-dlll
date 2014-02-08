@@ -242,7 +242,7 @@ sub _setConf
     # 轉址
     # ----------------------------
 
-    my $redirect = $self->model('Redirect');
+    my $redirect = $self->model('URLRedirect');
 
     # Iterate over table
     my @redirArray = ();
