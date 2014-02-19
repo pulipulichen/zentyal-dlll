@@ -284,11 +284,29 @@ sub createFieldProtocolOnlyForLAN
     my $field = new EBox::Types::Boolean(
             fieldName => 'redir'.$protocol.'_secure',
             printableName => __('Only For LAN'),
+            help => __('Only for local lan, like 140.119.61.0/24.'),
             editable => 1,
             optional => 0,
             defaultValue => $enable,
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
+        );
+
+    return $field;
+}
+
+sub createFieldProtocolLog
+{
+    my ($self, $protocol, $enable) = @_;
+    my $field = new EBox::Types::Boolean(
+            fieldName => 'redir'.$protocol.'_log',
+            printableName => __('Enable Zentyal Log'),
+            #help => __('Only for local lan, like 140.119.61.0/24.'),
+            editable => 1,
+            optional => 0,
+            defaultValue => $enable,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
 
     return $field;
@@ -377,6 +395,13 @@ sub createFieldHTTPOnlyForLAN
     return $field;
 }
 
+sub createFieldHTTPLog
+{
+    my ($self) = @_;
+    my $field = $self->createFieldProtocolLog("HTTP", 0);
+    return $field;
+}
+
 sub createFieldHTTPExternalPort
 {
     my ($self) = @_;
@@ -418,7 +443,14 @@ sub createFieldHTTPSRedirect
 sub createFieldHTTPSOnlyForLAN
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolOnlyForLAN("HTTPS", 0);
+    my $field = $self->createFieldProtocolOnlyForLAN("HTTPS", 1);
+    return $field;
+}
+
+sub createFieldHTTPSLog
+{
+    my ($self) = @_;
+    my $field = $self->createFieldProtocolLog("HTTPS", 1);
     return $field;
 }
 
@@ -461,6 +493,13 @@ sub createFieldSSHOnlyForLAN
     return $field;
 }
 
+sub createFieldSSHLog
+{
+    my ($self) = @_;
+    my $field = $self->createFieldProtocolLog("SSH", 1);
+    return $field;
+}
+
 sub createFieldSSHExternalPort
 {
     my ($self) = @_;
@@ -496,6 +535,13 @@ sub createFieldRDPOnlyForLAN
 {
     my ($self) = @_;
     my $field = $self->createFieldProtocolOnlyForLAN("RDP", 1);
+    return $field;
+}
+
+sub createFieldRDPLog
+{
+    my ($self) = @_;
+    my $field = $self->createFieldProtocolLog("RDP", 1);
     return $field;
 }
 
@@ -544,7 +590,7 @@ sub createFieldOtherRedirectPortsDisplay
     my ($self) = @_;
     my $field = new EBox::Types::HasMany(
             'fieldName' => 'redirOther',
-            'printableName' => __('Other Redirect Ports'),
+            'printableName' => __('Other <br />Redirect <br />Ports'),
             'foreignModel' => 'PortRedirect',
             'view' => '/Pound/View/PortRedirect',
             'backView' => '/Pound/View/PoundServices',
@@ -561,8 +607,8 @@ sub createFieldOtherRedirectPortsHint
     my ($self) = @_;
     my $field = new EBox::Types::Text(
             fieldName => 'redirOtherHelp',
-            printableName => __('OtherRedirectPorts'),
-            defaultValue => __('You can configure other redirection at following table. You have to add this row first.'),
+            printableName => __('Other Redirect Ports'),
+            defaultValue => __('<u>You can configure other redirection at following table. You have to add this row first.</u>'),
             editable => 0,
             optional=>0,
             hiddenOnSetter => 0,
@@ -704,14 +750,44 @@ sub deletedDomainName
     my ($self, $row) = @_;
     my $domainName = $row->valueByName('domainName');
 
-    my $gl = EBox::Global->getInstance();
-    my $dns = $gl->modInstance('dns');
-    my $domModel = $dns->model('DomainTable');
-    my $id = $domModel->findId(domain => $domainName);
-    if (defined($id)) 
+    # 先找找看有沒有
+    my $hasDomainName = 0;
+
+    if ($hasDomainName == 0) 
     {
-        $domModel->removeRow($id);
+        $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
     }
+
+    if ($hasDomainName == 0) 
+    {
+        $hasDomainName = $self->modelHasDomainName('URLRedirect', $domainName);
+    }
+    
+    if ($hasDomainName == 0) 
+    {
+        $hasDomainName = $self->modelHasDomainName('DNS', $domainName);
+    }
+
+    if ($hasDomainName == 0) 
+    {
+        my $gl = EBox::Global->getInstance();
+        my $dns = $gl->modInstance('dns');
+        my $domModel = $dns->model('DomainTable');
+        my $id = $domModel->findId(domain => $domainName);
+        if (defined($id)) 
+        {
+            $domModel->removeRow($id);
+        }
+    }
+}
+
+sub modelHasDomainName
+{
+    my ($self, $modelName, $domainName) = @_;
+
+    my $model = $self->parentModule()->model($modelName);
+    my $domainNameId = $model->findId('domainName' => $domainName);
+    return defined($domainNameId);
 }
 
 # -----------------------------------

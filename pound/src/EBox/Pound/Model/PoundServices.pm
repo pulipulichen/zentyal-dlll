@@ -53,6 +53,7 @@ sub _table
         # HTTP Redirect Fields 
         $fieldsFactory->createFieldHTTPRedirect(),
         $fieldsFactory->createFieldHTTPOnlyForLAN(),
+        $fieldsFactory->createFieldHTTPLog(),
         $fieldsFactory->createFieldHTTPExternalPort(),
         $fieldsFactory->createFieldHTTPInternalPort(),
         $fieldsFactory->createFieldHTTPNote(),
@@ -61,6 +62,7 @@ sub _table
         # HTTPS Redirect Fields
         $fieldsFactory->createFieldHTTPSRedirect(),
         $fieldsFactory->createFieldHTTPSOnlyForLAN(),
+        $fieldsFactory->createFieldHTTPSLog(),
         $fieldsFactory->createFieldHTTPSExternalPort(),
         $fieldsFactory->createFieldHTTPSInternalPort(),
         $fieldsFactory->createFieldHTTPSNote(),
@@ -69,6 +71,7 @@ sub _table
         # SSH Redirect Fields
         $fieldsFactory->createFieldSSHRedirect(),
         $fieldsFactory->createFieldSSHOnlyForLAN(),
+        $fieldsFactory->createFieldSSHLog(),
         $fieldsFactory->createFieldSSHExternalPort(),
         $fieldsFactory->createFieldSSHInternalPort(),
         $fieldsFactory->createFieldSSHNote(),
@@ -77,6 +80,7 @@ sub _table
         # RDP Redirect Fields
         $fieldsFactory->createFieldRDPRedirect(),
         $fieldsFactory->createFieldRDPOnlyForLAN(),
+        $fieldsFactory->createFieldRDPLog(),
         $fieldsFactory->createFieldRDPExternalPort(),
         $fieldsFactory->createFieldRDPInternalPort(),
         $fieldsFactory->createFieldRDPNote(),
@@ -407,14 +411,15 @@ sub getProtocolRedirectParam
 
     my $extPort = $self->getProtocolExtPort($row, $protocol);
     my $intPort = $self->getProtocolIntPort($row, $protocol);
+    my $log = $self->getProtocolLog($row, $protocol);
 
     if ($row->valueByName('redir'.$protocol.'_secure') == 1)
     {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $protocol);
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $protocol, $log);
     }
     else
     {
-        return $self->getRedirectParameter($row, $extPort, $intPort, $protocol);
+        return $self->getRedirectParameter($row, $extPort, $intPort, $protocol, $log);
     }
 }
 
@@ -447,6 +452,16 @@ sub getProtocolExtPort
     }
 
     return $extPort;
+}
+
+sub getProtocolLog
+{
+    my ($self, $row, $protocol) = @_;
+
+    my $fieldName = 'redir'.$protocol.'_log';
+    my $value = $row->valueByName($fieldName);
+
+    return $value;
 }
 
 # --------------------------------------
@@ -494,7 +509,7 @@ sub getOtherExtPort
 
 sub getRedirectParameter
 {
-    my ($self, $row, $extPort, $intPort, $desc) = @_;
+    my ($self, $row, $extPort, $intPort, $desc, $log) = @_;
 
     my $lib = $self->getLibrary();
 
@@ -513,14 +528,14 @@ sub getRedirectParameter
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
         description => $domainName. " (" . $localIpaddr . "): " . $desc,
-        snat => 1,
-        log => 0,
+        snat => 0,
+        log => $log,
     );
 }
 
 sub getRedirectParameterSecure
 {
-    my ($self, $row, $extPort, $intPort, $desc) = @_;
+    my ($self, $row, $extPort, $intPort, $desc, $log) = @_;
 
     my $lib = $self->getLibrary();
 
@@ -582,8 +597,8 @@ sub getRedirectParameterSecure
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
         description => $domainName. " (" . $localIpaddr . "): " . $desc,
-        snat => 1,
-        log => 0,
+        snat => 0,
+        log => $log,
     );
 }
 
@@ -745,10 +760,14 @@ sub getProtocolHint
     my $intPort = $self->getProtocolIntPort($row, $protocol);
     my $note = $row->valueByName('redir'.$protocol.'_note');
 
-
     my $protocolTitle = $protocol;
     if ($note ne '') {
         $protocolTitle = $protocolTitle . '*';
+    }
+
+    my $secure = $row->valueByName('redir'.$protocol.'_secure');
+    if ($secure == 1) {
+        $protocolTitle = '[' .$protocolTitle . ']';
     }
 
     $hint = "<strong>".$protocolTitle."</strong>: "

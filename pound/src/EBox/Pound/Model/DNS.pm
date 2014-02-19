@@ -47,6 +47,7 @@ sub _table
 
     my @fields = (
         $fieldsFactory->createFieldDomainNameUnique(),
+        $fieldsFactory->createFieldBoundLocalDNS(),
         $fieldsFactory->createFieldDomainNameLink(),
         new EBox::Types::HostIP(
             fieldName => 'ipaddr',
