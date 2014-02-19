@@ -608,7 +608,7 @@ sub createFieldOtherRedirectPortsHint
     my $field = new EBox::Types::Text(
             fieldName => 'redirOtherHelp',
             printableName => __('Other Redirect Ports'),
-            defaultValue => __('<u>You can configure other redirection at following table. You have to add this row first.</u>'),
+            defaultValue => __('You can configure other redirection at following table. You have to add this row first.'),
             editable => 0,
             optional=>0,
             hiddenOnSetter => 0,
