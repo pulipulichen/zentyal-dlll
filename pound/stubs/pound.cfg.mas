@@ -92,12 +92,21 @@ ListenHTTP
 %       my $service = $backEndArray[$i];
 %       my $ipaddrValue = $service->{'ipaddrValue'};
 %       my $portValue = $service->{'portValue'};
+%
 %       my $httpToHttpsValue = $service->{'httpToHttpsValue'};
 %       my $httpsPortValue = $service->{'httpsPortValue'};
+%
+%       my $httpSecurityValue = $service->{'httpSecurityValue'};
+%       my $httpPortValue = $service->{'httpPortValue'};
 %
 %   if ($httpToHttpsValue) {
 %
                 redirect "https://<% $domainNameValue %>:<% $httpsPortValue %>/"
+%
+%   }   #if ($httpToHttpsValue) {
+%   elsif ($httpSecurityValue) {
+%
+                redirect "http://<% $domainNameValue %>:<% $httpPortValue %>/"
 %
 %   }   #if ($httpToHttpsValue) {
 %   else {

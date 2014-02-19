@@ -195,6 +195,9 @@ sub _setConf
         my $portValue = $row->valueByName('port');
         my $httpToHttpsValue = $row->valueByName('httpToHttps');
         my $httpsPortValue = $services->getHTTPSextPort($row);
+
+        my $httpSecurityValue = $row->valueByName('redirHTTP_secure');
+        my $httpPortValue = $services->getHTTPextPort($row);
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
@@ -204,8 +207,13 @@ sub _setConf
             ipaddrValue => $ipaddrValue,
             portValue => $portValue,
             descriptionValue => $descriptionValue,
+            
             httpToHttpsValue => $httpToHttpsValue,
             httpsPortValue => $httpsPortValue,
+
+            httpSecurityValue => $httpSecurityValue,
+            httpPortValue => $httpPortValue,
+
             emergencyValue => $emergencyValue,
             redirHTTP_enable => $redirHTTP_enable,
         });
@@ -227,6 +235,9 @@ sub _setConf
         $backEnd->{descriptionValue} = $descriptionValue;
         $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
         $backEnd->{httpsPortValue} = $httpsPortValue;
+
+        $backEnd->{httpSecurityValue} = $httpSecurityValue;
+        $backEnd->{httpPortValue} = $httpPortValue;
 
         $backEnd->{emergencyValue} = $emergencyValue;
         $backEnd->{redirHTTP_enable} = $redirHTTP_enable;

@@ -129,12 +129,6 @@ sub _table
               optional => 1,
               help => __('HTML format. Don\'t use HTTPS. Example: ').'<a href="http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html" target="error_example">http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html</a>',
              ),
-          new EBox::Types::HTML(
-            fieldName => 'portForwarding',
-            printableName => __('Port Forwarding Setup'),
-            editable => 0,
-            defaultValue => '<a href="/Firewall/View/RedirectsTable" target="_blank">'.__('Custom Port Forwarding').'</a>',
-        ),
         new EBox::Types::HostIP(
             fieldName => 'restarterIP',
             printableName => __('Restarter IP'),
@@ -157,8 +151,32 @@ sub _table
         new EBox::Types::Text(
             fieldName => 'senderEmail',
             printableName => __('Sender E-MAIL Address'),
+            help => __('<hr /><br />'
+                . '<strong>Zentyal Configuration Link</strong>'),
             editable => 1,
             optional => 0,
+        ),
+        
+        # --------------------------------
+        # External Link
+
+        new EBox::Types::HTML(
+            fieldName => 'portForwarding',
+            printableName => __('Port Forwarding'),
+            editable => 0,
+            defaultValue => '<a href="/Firewall/View/RedirectsTable" target="port_forwarding">'.__('LINK').'</a>',
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'firewallLog',
+            printableName => __('Firewall Log'),
+            editable => 0,
+            defaultValue => '<a href="/Logs/Index?selected=firewall&refresh=1" target="firewall_log">'.__('LINK').'</a>',
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'externalNetworksToZentyal',
+            printableName => __('External networks to Zentyal'),
+            editable => 0,
+            defaultValue => '<a href="/Firewall/View/ExternalToEBoxRuleTable" target="ext_net_to_zentyal">'.__('LINK').'</a>',
         ),
       );
 
