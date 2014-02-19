@@ -35,6 +35,7 @@ sub _table
     my $fieldsFactory = $self->getLibrary();
 
     my @fields = (
+        $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainName(),
         $fieldsFactory->createFieldDomainNameLink(),
         $fieldsFactory->createFieldBoundLocalDNS(),
@@ -118,8 +119,11 @@ sub _table
         printableRowName => __('Back End'),
         #sortedBy => 'updateDate',
         'HTTPUrlView'=> 'Pound/View/PoundServices',
-        'enableProperty' => 1,
-        defaultEnabledValue => 1,
+
+        # 20140219 Pulipuli Chen
+        # 關閉enable選項，改成自製的
+        #'enableProperty' => 0,
+        #defaultEnabledValue => 1,
         'order' => 1,
     };
 
@@ -165,8 +169,8 @@ sub deletedRowNotify
     my ($self, $row) = @_;
 
     my $lib = $self->getLibrary();
-    $lib->deletedDomainName($row);
-    $self->deletedRedirects($row);
+    $lib->deleteDomainName($row, 'PoundServices');
+    $self->deleteRedirects($row);
 }
 
 sub updatedRowNotify
@@ -207,7 +211,8 @@ sub updatedRowNotify
     }
 
     } catch {
-        $self->test($_);
+        my $lib = $self->getLibrary();
+        $lib->show_exceptions($_);
     };
 }
 
@@ -248,7 +253,7 @@ sub addRedirects
     }
 }
 
-sub deletedRedirects
+sub deleteRedirects
 {
     my ($self, $row) = @_;
 
@@ -794,12 +799,6 @@ sub getProtocolHint
     }
 
     return $hint;
-}
-
-sub test
-{
-    my ($self, $message) = @_;
-    throw EBox::Exceptions::External($message);
 }
 
 1;

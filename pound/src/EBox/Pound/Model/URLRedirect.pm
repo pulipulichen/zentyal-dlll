@@ -20,6 +20,7 @@ use EBox::Types::Boolean;
 use EBox::Types::Text;
 
 use POSIX qw(strftime);
+use Try::Tiny;
 
 # Group: Public methods
 
@@ -41,6 +42,7 @@ sub _table
     my $fieldsFactory = $self->getLibrary();
     
     my @fields = (
+        $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainNameUnique(),
         new EBox::Types::Text(
             'fieldName' => 'url',
@@ -82,8 +84,11 @@ sub _table
         'tableDescription' => \@fields,
         #'sortedBy' => 'domainName',
         class => 'dataTable',
-        'enableProperty' => 1,
-        defaultEnabledValue => 1,
+
+        # 20140219 Pulipuli Chen
+        # 關閉enable選項，改成自製的
+        #'enableProperty' => 0,
+        #defaultEnabledValue => 1,
         'order' => 1,
     };
 
@@ -127,9 +132,11 @@ sub updatedRowNotify
 
         $lib->setLink($row);
 
-        $lib->deletedDomainName($oldRow);
+        $lib->deleteDomainName($oldRow, 'URLRedirect');
 
         $lib->setLink($row);
+        $self->setLink($row);
+        
         $lib->setCreateDate($row);
         $lib->setUpdateDate($row);
         $lib->setContactLink($row);
@@ -145,7 +152,44 @@ sub deletedRowNotify
     my ($self, $row) = @_;
 
     my $lib = $self->getLibrary();
-    $lib->deletedDomainName($row);
+    $lib->deleteDomainName($row, 'URLRedirect');
+}
+
+sub setLink
+{
+    my ($self, $row) = @_;
+
+    my $lib = $self->getLibrary();
+
+    my $domainName = $row->valueByName('domainName');
+    my $url = $row->valueByName('url');
+    my $enable = $lib->isEnable($row);
+
+    my $urlLink = $self->urlToLink($url);
+
+    $row->elementByName('urlLink')->setValue($urlLink);
+
+    #$row->store();
+}
+
+
+sub urlToLink
+{
+    my ($self, $url) = @_;
+
+    my $link = $url;
+    if ( (substr($link, 0, 7) ne 'http://') &&  (substr($link, 0, 8) ne 'https://')) {
+        $link = "http://" . $link . "/";
+    }
+
+    if (length($url) > 20) 
+    {
+        $url = substr($url, 0, 20) . "...";
+    }
+
+    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
+
+    return $link;
 }
 
 1

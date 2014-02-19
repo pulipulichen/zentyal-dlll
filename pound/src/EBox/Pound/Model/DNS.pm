@@ -27,12 +27,7 @@ use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 
 use LWP::Simple;
-
-sub getLibrary
-{
-    my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
-}
+use Try::Tiny;
 
 # Method: _table
 #
@@ -46,6 +41,7 @@ sub _table
     my $fieldsFactory = $self->getLibrary();
 
     my @fields = (
+        $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainNameUnique(),
         $fieldsFactory->createFieldBoundLocalDNS(),
         $fieldsFactory->createFieldDomainNameLink(),
@@ -81,13 +77,23 @@ sub _table
         printableRowName => __('DNS'),
         #sortedBy => 'domainName',
         'HTTPUrlView'=> 'Pound/View/DNS',
-        'enableProperty' => 1,
-        defaultEnabledValue => 1,
+        
+        # 20140219 Pulipuli Chen
+        # 關閉enable選項，改成自製的
+        #'enableProperty' => 0,
+        #defaultEnabledValue => 1,
         'order' => 1,
     };
 
     return $dataTable;
 }
+
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("PoundLibrary");
+}
+
 
 # ---------------------------------------
 
@@ -119,13 +125,12 @@ sub deletedRowNotify
     my ($self, $row) = @_;
 
     my $lib = $self->getLibrary();
-    $lib->deletedDomainName($row);
+    $lib->deleteDomainName($row, 'DNS');
 }
 
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
-
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
 
@@ -139,8 +144,20 @@ sub updatedRowNotify
         $lib->setUpdateDate($row);
 
         $lib->setContactLink($row);
-
-        $lib->addDomainName($row);
+        
+        try 
+        {
+            if ($row->valueByName("configEnable")) {
+                $lib->addDomainName($row);
+            }
+            else {
+                $lib->deleteDomainName($row, 'DNS');
+            }
+        } catch {
+            my $lib = $self->getLibrary();
+            $lib->show_exceptions($_);
+        };
+        
 
         $row->store();
         $ROW_NEED_UPDATE = 0;

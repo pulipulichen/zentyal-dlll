@@ -113,6 +113,8 @@ sub _setConf
 {
     my ($self) = @_;
 
+    my $lib = $self->getLibrary();
+
     # ----------------------------
     # 設定
     # ----------------------------
@@ -181,7 +183,8 @@ sub _setConf
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
-        if ($row->valueByName('enabled') == 0)
+        #if ($row->valueByName('enabled') == 0)
+        if ($lib->isEnable($row) == 0)
         {
             next;
         }
@@ -249,7 +252,8 @@ sub _setConf
     for my $id (@{$redirect->ids()}) {
         my $row = $redirect->row($id);
 
-        if ($row->valueByName('enabled') == 0)
+        #if ($row->valueByName('enabled') == 0)
+        if ($lib->isEnable($row) == 0)
         {
             next;
         }
@@ -318,6 +322,12 @@ sub _setConf
         \@vmParams,
         { uid => '0', gid => '0', mode => '770' }
     );
+}
+
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->model("PoundLibrary");
 }
 
 sub ipaddrToVMID

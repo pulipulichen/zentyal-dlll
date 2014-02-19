@@ -29,6 +29,27 @@ use EBox::Exceptions::DataExists;
 
 use LWP::Simple;
 use POSIX qw(strftime);
+use Try::Tiny;
+
+sub createFieldConfigEnable
+{
+    my $field = new EBox::Types::Boolean(
+            fieldName => 'configEnable',
+            printableName => __('Enabled'),
+            editable => 1,
+            optional => 0,
+
+            # 20140207 Pulipuli Chen
+            # 預設改成false，這是因為一開始建置時都是在測試中，連線失誤是很正常的。當設定穩定之後再手動調整成true
+            defaultValue => 1,
+
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 0,
+            #help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
+        );
+
+    return $field;
+}
 
 sub createFieldDomainName
 {
@@ -98,6 +119,7 @@ sub createFieldInternalPort
             editable => 1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+            help => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
         );
 
     return $field;
@@ -210,7 +232,7 @@ sub createFieldRedirectToHTTPS
 {
     my $field = new EBox::Types::Boolean(
             fieldName => 'httpToHttps',
-            printableName => __('HTTP Redirect to HTTPS'),
+            printableName => __('Redirect HTTP to HTTPS port forwarding'),
             editable => 1,
             optional => 0,
             defaultValue => 0,
@@ -219,8 +241,11 @@ sub createFieldRedirectToHTTPS
 
             # 20140207 Pulipuli Chen
             # 加上說明
-            help => __('If you want to enable redirect to HTTPS, be sure setting Internal Port to HTTPS port, like 443. <br />' 
-                . 'Example: http://demo.url/ will be redirected to https://demo.url:13743/'),
+            #help => __('If you want to enable redirect to HTTPS, be sure setting Internal Port to HTTPS port, like 443. <br />' 
+            #    . 'Example: http://demo.url/ will be redirected to https://demo.url:13743/'),
+            help => __('If this option enabled, link to HTTP will be redirect to HTTPS\'s port forwarding. <br />' 
+                . 'For example, test.dlll.nccu.edu.tw had enabled HTTPS, port forwarding is 10543. <br />'
+                . 'So link to test.dlll.nccu.edu.tw will be redirect to test.dlll.nccu.edu.tw:10543.'),
         );
 
     return $field;
@@ -745,25 +770,27 @@ sub addDomainName
     }
 }
 
-sub deletedDomainName
+sub deleteDomainName
 {
-    my ($self, $row) = @_;
+    my ($self, $row, $excludeModel) = @_;
     my $domainName = $row->valueByName('domainName');
+
+    try {
 
     # 先找找看有沒有
     my $hasDomainName = 0;
 
-    if ($hasDomainName == 0) 
+    if ($hasDomainName == 0 && $excludeModel ne 'PoundServices') 
     {
         $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
     }
 
-    if ($hasDomainName == 0) 
+    if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') 
     {
         $hasDomainName = $self->modelHasDomainName('URLRedirect', $domainName);
     }
     
-    if ($hasDomainName == 0) 
+    if ($hasDomainName == 0 && $excludeModel ne 'DNS') 
     {
         $hasDomainName = $self->modelHasDomainName('DNS', $domainName);
     }
@@ -779,6 +806,10 @@ sub deletedDomainName
             $domModel->removeRow($id);
         }
     }
+
+    } catch {
+        $self->show_exceptions($_);
+    };
 }
 
 sub modelHasDomainName
@@ -786,7 +817,9 @@ sub modelHasDomainName
     my ($self, $modelName, $domainName) = @_;
 
     my $model = $self->parentModule()->model($modelName);
-    my $domainNameId = $model->findId('domainName' => $domainName);
+    my $domainNameId = $model->findId(
+        'domainName' => $domainName
+    );
     return defined($domainNameId);
 }
 
@@ -799,8 +832,9 @@ sub setLink
 
     my $domainName = $row->valueByName('domainName');
     my $url = $row->valueByName('url');
+    my $enable = $self->isEnable($row);
 
-    my $domainNameLink = $self->domainNameToLink($domainName);
+    my $domainNameLink = $self->domainNameToLink($domainName, $enable);
     my $urlLink = $self->urlToLink($url);
 
     $row->elementByName('domainNameLink')->setValue($domainNameLink);
@@ -809,29 +843,9 @@ sub setLink
     #$row->store();
 }
 
-
-sub urlToLink
-{
-    my ($self, $url) = @_;
-
-    my $link = $url;
-    if ( (substr($link, 0, 7) ne 'http://') &&  (substr($link, 0, 8) ne 'https://')) {
-        $link = "http://" . $link . "/";
-    }
-
-    if (length($url) > 20) 
-    {
-        $url = substr($url, 0, 20) . "...";
-    }
-
-    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
-
-    return $link;
-}
-
 sub domainNameToLink
 {
-    my ($self, $url) = @_;
+    my ($self, $url, $enable) = @_;
 
     my $link = $url;
     if ( (substr($link, 0, 7) ne 'http://') &&  (substr($link, 0, 8) ne 'https://')) {
@@ -840,7 +854,12 @@ sub domainNameToLink
 
     $url = $self->breakUrl($url);
 
-    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
+    my $textDecoration = "underline";
+    if ($enable == 0) {
+        $textDecoration = "line-through";
+    }
+
+    $link = '<a style="background: none;text-decoration: '.$textDecoration.';color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
 
     return $link;
 }
@@ -863,9 +882,15 @@ sub updateDomainNameLink
 
     $domainName = $self->breakUrl($domainName);
 
+    my $enable = $self->isEnable($row);
+    my $textDecoration = "underline";
+    if ($enable == 0) {
+        $textDecoration = "line-through";
+    }
+
     $link = '<a href="'.$link.'" ' 
         . 'target="_blank" ' 
-        . 'style="background: none;text-decoration: underline;color: #A3BD5B;">' 
+        . 'style="background: none;text-decoration: '.$textDecoration.';color: #A3BD5B;">' 
         . $domainName 
         . '</a>';
     $row->elementByName("domainNameLink")->setValue($link);
@@ -1008,5 +1033,17 @@ sub getExternalIface
 }
 
 # ----------------------------
+
+sub show_exceptions
+{
+    my ($self, $message) = @_;
+    throw EBox::Exceptions::External($message);
+}
+
+sub isEnable
+{
+    my ($self, $row) = @_;
+    return $row->valueByName('configEnable');
+}
 
 1;
