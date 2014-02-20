@@ -63,6 +63,8 @@ sub _table
         }
     }
 
+    my $lib = $self->getLibrary();
+
     my @tableDesc =
       (
 #          new EBox::Types::HostIP(
@@ -159,24 +161,40 @@ sub _table
         
         # --------------------------------
         # External Link
+        
+        $lib->createFieldLink(
+            'portForwarding',
+            'Port Forwarding',
+            "/Firewall/View/RedirectsTable",
+            'LINK'
+        ),
 
-        new EBox::Types::HTML(
-            fieldName => 'portForwarding',
-            printableName => __('Port Forwarding'),
-            editable => 0,
-            defaultValue => '<a href="/Firewall/View/RedirectsTable" target="port_forwarding">'.__('LINK').'</a>',
+        $lib->createFieldLink(
+            'firewallLog',
+            'Firewall Log',
+            "/Logs/Index?selected=firewall&refresh=1",
+            'LINK'
         ),
-        new EBox::Types::HTML(
-            fieldName => 'firewallLog',
-            printableName => __('Firewall Log'),
-            editable => 0,
-            defaultValue => '<a href="/Logs/Index?selected=firewall&refresh=1" target="firewall_log">'.__('LINK').'</a>',
+        
+        $lib->createFieldLink(
+            'managementMember',
+            'Management Member',
+            "/Objects/View/MemberTable?directory=ObjectTable/keys/objc6/members&backview=/Objects/View/MemberTable",
+            'LINK'
         ),
-        new EBox::Types::HTML(
-            fieldName => 'externalNetworksToZentyal',
-            printableName => __('External networks to Zentyal'),
-            editable => 0,
-            defaultValue => '<a href="/Firewall/View/ExternalToEBoxRuleTable" target="ext_net_to_zentyal">'.__('LINK').'</a>',
+
+        $lib->createFieldLink(
+            'denyAnyConnectMember',
+            'Deny Any Connect Member',
+            "/Objects/View/MemberTable?directory=ObjectTable/keys/objc5/members&backview=/Objects/View/MemberTable",
+            'LINK'
+        ),
+
+        $lib->createFieldLink(
+            'denyUDPMember',
+            'Deny UDP Member',
+            "/Objects/View/MemberTable?directory=ObjectTable/keys/objc4/members&backview=/Objects/View/MemberTable",
+            'LINK'
         ),
       );
 
@@ -192,6 +210,12 @@ sub _table
         };
 
     return $dataTable;
+}
+
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("PoundLibrary");
 }
 
 # -----------------------

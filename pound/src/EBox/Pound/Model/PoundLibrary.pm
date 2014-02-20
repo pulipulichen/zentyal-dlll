@@ -702,6 +702,20 @@ sub createFieldDisplayContactLink
 }
 
 # -----------------------------------
+
+sub createFieldLink
+{
+    my ($self, $fieldName, $printableName, $url, $text) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => $fieldName,
+            printableName => __($printableName),
+            editable => 0,
+            defaultValue => '<a href="'.$url.'" target="'.$fieldName.'">'.__($text).'</a>',
+        );
+    return $field;
+}
+
+# -----------------------------------
 # Domain Name
 
 # 20140208 Pulipuli Chen
