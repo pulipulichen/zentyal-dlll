@@ -113,6 +113,14 @@ sub _table
             'editable' => 1,
             optional=>0,
         ),
+        new EBox::Types::Boolean(
+            fieldName => 'log',
+            printableName => __('Enable Zentyal Log'),
+            #help => __('Only for local lan, like 140.119.61.0/24.'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+        ),
     );
 
     my $dataTable =

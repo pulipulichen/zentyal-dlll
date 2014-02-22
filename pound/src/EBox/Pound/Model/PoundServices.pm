@@ -484,14 +484,15 @@ sub getRedirectParamOther
     my $intPort = $redirRow->valueByName('intPort');
     my $desc = $redirRow->valueByName('description');
     $desc = "Other (".$desc.")";
+    my $log = $redirRow->valueByName('log');
 
     if ($redirRow->valueByName('secure') == 1)
     {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc);
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log);
     }
     else
     {
-        return $self->getRedirectParameter($row, $extPort, $intPort, $desc);
+        return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
     }
 }
 
