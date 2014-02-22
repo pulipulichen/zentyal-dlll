@@ -714,6 +714,7 @@ sub updateRedirectPorts
         $hint = $hint . $self->getProtocolHint($row, $protocol);  
     }
 
+    # 取得Other Redirect Ports
     for my $subId (@{$row->subModel('redirOther')->ids()}) {
         my $redirRow = $row->subModel('redirOther')->row($subId);
         #my %param = $self->getRedirectParamOther($row, $redirRow);
@@ -723,11 +724,17 @@ sub updateRedirectPorts
         my $extPort = $self->getOtherExtPort($row, $redirRow);
         my $intPort = $redirRow->valueByName('intPort');
         my $desc = $redirRow->valueByName('description');
+        my $secure = $redirRow->valueByName('secure');
+
+        if ($secure) {
+            $desc = '[' . $desc . ']';
+        }
 
         if ($hint ne '')
         {
             $hint = $hint . "<br />";
         }
+        
         $hint = $hint . "<strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."";   
     }
 

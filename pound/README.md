@@ -16,3 +16,7 @@ Zentyal模組相關的路徑記錄
 ===============
 Stubs 設定檔樣板檔案 /usr/share/zentyal/stubs/pound
 Zentyal 模組檔案 /usr/share/perl5/EBox
+
+Zenrtyal動手做模組的介紹
+===============
+請看這篇：[Zentyal 3.0動手做模組入門](http://pulipuli.blogspot.tw/2013/07/zentyal-30.html)

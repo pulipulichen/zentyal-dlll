@@ -21,6 +21,8 @@ use EBox::Types::Union;
 use EBox::Types::Union::Text;
 use EBox::Types::HTML;
 
+use Try::Tiny;
+
 # Group: Public methods
 
 #sub new
@@ -34,20 +36,26 @@ use EBox::Types::HTML;
 #    return $self;
 #}
 
-sub getLibrary
+sub new
 {
-    my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
+    my $class = shift;
+    my %parms = @_;
+
+    my $self = $class->SUPER::new(@_);
+    bless ($self, $class);
+
+    return $self;
 }
 
 sub pageTitle
 {
     my ($self) = @_;
     my $row = $self->parentRow();
+    
     if ($row ne undef)
     {
-        my $domainName = $self->parentRow()->printableValueByName('domainName');
-        my $ip = $self->parentRow()->printableValueByName('ipaddr');
+        my $domainName = $row->printableValueByName('domainName');
+        my $ip = $row->printableValueByName('ipaddr');
         return $domainName . " (" . $ip . ")";
     }
     else {
@@ -59,8 +67,10 @@ sub _table
 {
 
     my ($self) = @_;  
-
+    
+    my $fieldsFactory = $self->getLibrary();
     my @fields = (
+        $fieldsFactory->createFieldConfigEnable(),
         new EBox::Types::Text(
             fieldName => 'description',
             printableName => __('Description'),
@@ -68,6 +78,7 @@ sub _table
             optional=>0,
             'unique'=>1,
         ),
+        
         new EBox::Types::Port(
             'fieldName' => 'extPort',
             'printableName' => __('External Port Last 2 Numbers'),
@@ -79,6 +90,7 @@ sub _table
                 hiddenOnSetter => 0,
                 hiddenOnViewer => 1,
         ),
+
         new EBox::Types::HTML(
             fieldName => 'extPortHTML',
             printableName => __('External Port'),
@@ -97,6 +109,7 @@ sub _table
         new EBox::Types::Boolean(
             'fieldName' => 'secure',
             'printableName' => __('Only for LAN'),
+            help => __('Only for local lan, like 140.119.61.0/24.'),
             'editable' => 1,
             optional=>0,
         ),
@@ -115,14 +128,23 @@ sub _table
         'tableDescription' => \@fields,
         'sortedBy' => 'extPort',
         class => 'dataTable',
-        'enableProperty' => 1,
-        defaultEnabledValue => 1,
+        
+        # 20140219 Pulipuli Chen
+        # 關閉enable選項，改成自製的
+        #'enableProperty' => 0,
+        #defaultEnabledValue => 1,
     };
 
     return $dataTable;
 }
 
 # --------------------------------
+
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("PoundLibrary");
+}
 
 my $ROW_NEED_UPDATE = 0;
 
@@ -158,6 +180,7 @@ sub updatedRowNotify
 {
     my ($self, $redirRow, $oldRedirRow) = @_;
 
+    
 
     $self->checkExternalPort($redirRow);
     my $row = $self->parentRow();
@@ -211,6 +234,7 @@ sub updateRedirectPorts
     my ($self, $redirRow) = @_;
 
     my $row = $self->parentRow();
+    #my $row = $redirRow->parentRow();
 
     if ($row ne undef)
     {
@@ -236,6 +260,15 @@ sub updateExtPortHTML
 {
     my ($self, $row, $redirRow) = @_;
 
+    #throw EBox::Exceptions::External($redirRow->parentRow()->id());
+    #try {
+    #    my $id = $redirRow->parentRow()->id();
+    #}
+    #catch {
+    #    throw EBox::Exceptions::External($_);
+    #};
+    
+
     #my $row = $self->parentRow();
 
     if ($row ne undef)
@@ -243,7 +276,13 @@ sub updateExtPortHTML
         my $poundModel = $self->parentModule()->model("PoundServices");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         
+        my $secure = $redirRow->valueByName("secure");
+        #my $description = $redirRow->valueByName("description");
+
         my $extPort = $param{external_port_single_port};
+        if ($secure) {
+            $extPort = '[' . $extPort . ']';
+        }
         $extPort = "<span>".$extPort."</span>";
 
         $redirRow->elementByName('extPortHTML')->setValue($extPort);

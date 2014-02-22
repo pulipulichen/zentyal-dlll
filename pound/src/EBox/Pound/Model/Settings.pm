@@ -178,7 +178,7 @@ sub _table
         
         $lib->createFieldLink(
             'managementMember',
-            'Management Member',
+            'Administrator',
             "/Objects/View/MemberTable?directory=ObjectTable/keys/objc6/members&backview=/Objects/View/MemberTable",
             'LINK'
         ),

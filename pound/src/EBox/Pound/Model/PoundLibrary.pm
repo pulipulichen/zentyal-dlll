@@ -309,7 +309,7 @@ sub createFieldProtocolOnlyForLAN
     my $field = new EBox::Types::Boolean(
             fieldName => 'redir'.$protocol.'_secure',
             printableName => __('Only For LAN'),
-            help => __('Only for local lan, like 140.119.61.0/24.'),
+            help => __('Only for local LAN, like 140.119.61.0/24.'),
             editable => 1,
             optional => 0,
             defaultValue => $enable,
@@ -621,8 +621,8 @@ sub createFieldOtherRedirectPortsDisplay
             'backView' => '/Pound/View/PoundServices',
             'size' => '1',
             #optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
        );
     return $field;
 }
@@ -711,6 +711,7 @@ sub createFieldLink
             printableName => __($printableName),
             editable => 0,
             defaultValue => '<a href="'.$url.'" target="'.$fieldName.'">'.__($text).'</a>',
+            #optional=>1,
         );
     return $field;
 }
