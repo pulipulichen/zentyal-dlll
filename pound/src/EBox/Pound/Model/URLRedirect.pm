@@ -39,7 +39,7 @@ sub _table
 {
 
     my ($self) = @_;
-    my $fieldsFactory = $self->getLibrary();
+    my $fieldsFactory = $self->loadLibrary('LibraryFields');
     
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
@@ -101,6 +101,17 @@ sub getLibrary
     return $self->parentModule()->model("PoundLibrary");
 }
 
+##
+# 讀取指定的Model
+#
+# 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
+# @author 20140312 Pulipuli Chen
+sub loadLibrary
+{
+    my ($self, $library) = @_;
+    return $self->parentModule()->model($library);
+}
+
 my $ROW_NEED_UPDATE = 0;
 
 sub addedRowNotify
@@ -110,13 +121,15 @@ sub addedRowNotify
     $ROW_NEED_UPDATE = 1;
 
     my $lib = $self->getLibrary();
+    my $libDN = $self->loadLibrary('LibraryDomainName');
+    my $libCT = $self->loadLibrary('LibraryContact');
 
-    $lib->setLink($row);
+    $libDN->setLink($row);
 
-    $lib->setCreateDate($row);
-    $lib->setUpdateDate($row);
-    $lib->setContactLink($row);
-    $lib->addDomainName($row);
+    $libCT->setCreateDate($row);
+    $libCT->setUpdateDate($row);
+    $libCT->setContactLink($row);
+    $libDN->addDomainName($row);
 
     $row->store();
     $ROW_NEED_UPDATE = 0;
@@ -129,18 +142,20 @@ sub updatedRowNotify
         $ROW_NEED_UPDATE = 1;
 
         my $lib = $self->getLibrary();
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        my $libCT = $self->loadLibrary('LibraryContact');
 
-        $lib->setLink($row);
+        $libDN->setLink($row);
 
-        $lib->deleteDomainName($oldRow, 'URLRedirect');
+        $libDN->deleteDomainName($oldRow, 'URLRedirect');
 
-        $lib->setLink($row);
-        $self->setLink($row);
+        $libDN->setLink($row);
+        #$self->setLink($row);
         
-        $lib->setCreateDate($row);
-        $lib->setUpdateDate($row);
-        $lib->setContactLink($row);
-        $lib->addDomainName($row);
+        $libCT->setCreateDate($row);
+        $libCT->setUpdateDate($row);
+        $libCT->setContactLink($row);
+        $libDN->addDomainName($row);
 
         $row->store();
         $ROW_NEED_UPDATE = 0;
@@ -151,45 +166,8 @@ sub deletedRowNotify
 {
     my ($self, $row) = @_;
 
-    my $lib = $self->getLibrary();
-    $lib->deleteDomainName($row, 'URLRedirect');
-}
-
-sub setLink
-{
-    my ($self, $row) = @_;
-
-    my $lib = $self->getLibrary();
-
-    my $domainName = $row->valueByName('domainName');
-    my $url = $row->valueByName('url');
-    my $enable = $lib->isEnable($row);
-
-    my $urlLink = $self->urlToLink($url);
-
-    $row->elementByName('urlLink')->setValue($urlLink);
-
-    #$row->store();
-}
-
-
-sub urlToLink
-{
-    my ($self, $url) = @_;
-
-    my $link = $url;
-    if ( (substr($link, 0, 7) ne 'http://') &&  (substr($link, 0, 8) ne 'https://')) {
-        $link = "http://" . $link . "/";
-    }
-
-    if (length($url) > 20) 
-    {
-        $url = substr($url, 0, 20) . "...";
-    }
-
-    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
-
-    return $link;
+    my $libDN = $self->loadLibrary('LibraryDomainName');
+    $libDN->deleteDomainName($row, 'URLRedirect');
 }
 
 1

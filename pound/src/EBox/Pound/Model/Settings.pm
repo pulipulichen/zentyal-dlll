@@ -64,6 +64,7 @@ sub _table
     }
 
     my $lib = $self->getLibrary();
+    my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @tableDesc =
       (
@@ -162,35 +163,35 @@ sub _table
         # --------------------------------
         # External Link
         
-        $lib->createFieldLink(
+        $fieldsFactory->createFieldLink(
             'portForwarding',
             'Port Forwarding',
             "/Firewall/View/RedirectsTable",
             'LINK'
         ),
 
-        $lib->createFieldLink(
+        $fieldsFactory->createFieldLink(
             'firewallLog',
             'Firewall Log',
             "/Logs/Index?selected=firewall&refresh=1",
             'LINK'
         ),
         
-        $lib->createFieldLink(
+        $fieldsFactory->createFieldLink(
             'managementMember',
             'Administrator',
             "/Objects/View/MemberTable?directory=ObjectTable/keys/objc6/members&backview=/Objects/View/MemberTable",
             'LINK'
         ),
 
-        $lib->createFieldLink(
+        $fieldsFactory->createFieldLink(
             'denyAnyConnectMember',
             'Deny Any Connect Member',
             "/Objects/View/MemberTable?directory=ObjectTable/keys/objc5/members&backview=/Objects/View/MemberTable",
             'LINK'
         ),
 
-        $lib->createFieldLink(
+        $fieldsFactory->createFieldLink(
             'denyUDPMember',
             'Deny UDP Member',
             "/Objects/View/MemberTable?directory=ObjectTable/keys/objc4/members&backview=/Objects/View/MemberTable",
@@ -217,6 +218,18 @@ sub getLibrary
     my ($self) = @_;
     return $self->parentModule()->model("PoundLibrary");
 }
+
+##
+# 讀取指定的Model
+#
+# 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
+# @author 20140312 Pulipuli Chen
+sub loadLibrary
+{
+    my ($self, $library) = @_;
+    return $self->parentModule()->model($library);
+}
+
 
 # -----------------------
 

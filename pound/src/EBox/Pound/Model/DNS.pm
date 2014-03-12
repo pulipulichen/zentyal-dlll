@@ -38,7 +38,7 @@ use Try::Tiny;
 sub _table
 {
     my ($self) = @_;
-    my $fieldsFactory = $self->getLibrary();
+    my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
@@ -88,10 +88,25 @@ sub _table
     return $dataTable;
 }
 
+##
+# 讀取PoundLibrary
+# @author Pulipuli Chen
+##
 sub getLibrary
 {
     my ($self) = @_;
     return $self->parentModule()->model("PoundLibrary");
+}
+
+##
+# 讀取指定的Model
+#
+# 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
+# @author 20140312 Pulipuli Chen
+sub loadLibrary
+{
+    my ($self, $library) = @_;
+    return $self->parentModule()->model($library);
 }
 
 
@@ -106,15 +121,17 @@ sub addedRowNotify
     $ROW_NEED_UPDATE = 1;
 
     my $lib = $self->getLibrary();
+    my $libDN = $self->loadLibrary('LibraryDomainName');
+    my $libCT = $self->loadLibrary('LibraryContact');
     
-    $lib->updateDomainNameLink($row);
+    $libDN->updateDomainNameLink($row);
 
-    $lib->setCreateDate($row);
-    $lib->setUpdateDate($row);
+    $libCT->setCreateDate($row);
+    $libCT->setUpdateDate($row);
 
-    $lib->setContactLink($row);
+    $libCT->setContactLink($row);
 
-    $lib->addDomainName($row);
+    $libDN->addDomainName($row);
 
     $row->store();
     $ROW_NEED_UPDATE = 0;
@@ -124,8 +141,9 @@ sub deletedRowNotify
 {
     my ($self, $row) = @_;
 
-    my $lib = $self->getLibrary();
-    $lib->deleteDomainName($row, 'DNS');
+    my $libDN = $self->loadLibrary('LibraryDomainName');
+
+    $libDN->deleteDomainName($row, 'DNS');
 }
 
 sub updatedRowNotify
@@ -135,23 +153,25 @@ sub updatedRowNotify
         $ROW_NEED_UPDATE = 1;
 
         my $lib = $self->getLibrary();
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        my $libCT = $self->loadLibrary('LibraryContact');
 
         $self->deletedRowNotify($oldRow);
         
-        $lib->updateDomainNameLink($row);
+        $libDN->updateDomainNameLink($row);
     
-        $lib->setCreateDate($row);
-        $lib->setUpdateDate($row);
+        $libCT->setCreateDate($row);
+        $libCT->setUpdateDate($row);
 
-        $lib->setContactLink($row);
+        $libCT->setContactLink($row);
         
         try 
         {
             if ($row->valueByName("configEnable")) {
-                $lib->addDomainName($row);
+                $libDN->addDomainName($row);
             }
             else {
-                $lib->deleteDomainName($row, 'DNS');
+                $libDN->deleteDomainName($row, 'DNS');
             }
         } catch {
             my $lib = $self->getLibrary();

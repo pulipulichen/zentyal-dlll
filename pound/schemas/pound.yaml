@@ -15,6 +15,12 @@ models:
     - PortRedirect
     - URLRedirect
     - DNS
+    - LibraryMAC
+    - LibraryFields
+    - LibraryDomainName
+    - LibraryNetwork
+    - LibraryContact
+    - LibraryRedirect
 
 composites:
     Global: [Settings, URLRedirect]

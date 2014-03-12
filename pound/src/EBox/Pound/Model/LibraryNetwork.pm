@@ -1,4 +1,4 @@
-package EBox::Pound::Model::PoundLibrary;
+package EBox::Pound::Model::LibraryNetwork;
 
 use base 'EBox::Model::DataTable';
 
@@ -6,18 +6,6 @@ use strict;
 use warnings;
 
 use EBox::Gettext;
-
-use EBox::Types::DomainName;
-use EBox::Types::HostIP;
-use EBox::Types::Port;
-use EBox::Types::MACAddr;
-use EBox::Types::Text;
-use EBox::Types::HTML;
-use EBox::Types::Boolean;
-use EBox::Types::Union;
-use EBox::Types::Union::Text;
-use EBox::Types::Select;
-use EBox::Types::HasMany;
 
 use EBox::Global;
 use EBox::DNS;
@@ -53,20 +41,32 @@ sub loadLibrary
     return $self->parentModule()->model($library);
 }
 
-# ----------------------------
+# ------------------------------
 
-sub show_exceptions
+sub getExternalIpaddr
 {
-    my ($self, $message) = @_;
-    throw EBox::Exceptions::External($message);
+    my $network = EBox::Global->modInstance('network');
+    my $address = "127.0.0.1";
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $address = $network->ifaceAddress($if);
+            last;
+        }
+    }
+    return $address;
 }
 
-sub isEnable
+sub getExternalIface
 {
-    my ($self, $row) = @_;
-    return $row->valueByName('configEnable');
+    my $network = EBox::Global->modInstance('network');
+    my $iface = "eth0";
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $iface = $if;
+            last;
+        }
+    }
+    return $iface;
 }
-
-# ----------------------------
 
 1;
