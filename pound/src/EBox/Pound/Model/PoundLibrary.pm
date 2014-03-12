@@ -1009,8 +1009,11 @@ sub setContactLink
     my $link = '';
 
     my $desc = $row->valueByName('description');
-    if ($desc =~ m/^(http)/i) {
+    if ($desc =~ m/^(http\:\/\/email\-km\.dlll\.nccu\.edu\.tw)/i) {
         $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">EMAIL-KM</a>]'.'<br />';
+    }
+    elsif ($desc =~ m/^(http)/i) {
+        $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">LINK</a>]'.'<br />';
     }
     else {
         # 20140207 Pulipuli Chen
