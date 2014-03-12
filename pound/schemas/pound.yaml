@@ -19,8 +19,8 @@ models:
     - LibraryFields
     - LibraryDomainName
     - LibraryNetwork
-    - LibraryContact
     - LibraryRedirect
+    - LibraryContact
 
 composites:
     Global: [Settings, URLRedirect]
