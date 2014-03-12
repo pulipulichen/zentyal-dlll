@@ -39,7 +39,10 @@ sub _table
         $fieldsFactory->createFieldDomainName(),
         $fieldsFactory->createFieldDomainNameLink(),
         $fieldsFactory->createFieldBoundLocalDNS(),
-        $fieldsFactory->createFieldInternalIPAddress(),
+        $fieldsFactory->createFieldInternalIPAddressHideView(),
+
+        $fieldsFactory->createFieldMACAddr(),
+        $fieldsFactory->createFieldNetworkDisplay(),
 
         $fieldsFactory->createFieldInternalPort(),
         $fieldsFactory->createFieldRedirectToHTTPS(),
@@ -140,6 +143,9 @@ sub getLibrary
 
 my $ROW_NEED_UPDATE = 0;
 
+##
+# 設定新增時的動作
+##
 sub addedRowNotify
 {
     my ($self, $row) = @_;
@@ -160,6 +166,9 @@ sub addedRowNotify
     $lib->addDomainName($row);
     $self->addRedirects($row);
 
+    $lib->updateNetworkDisplay($row);
+    $lib->addDHCPfixedIPMember($row);
+
     $row->store();
     $ROW_NEED_UPDATE = 0;
 }
@@ -171,6 +180,8 @@ sub deletedRowNotify
     my $lib = $self->getLibrary();
     $lib->deleteDomainName($row, 'PoundServices');
     $self->deleteRedirects($row);
+
+    $lib->removeDHCPfixedIPMember($row);
 }
 
 sub updatedRowNotify
@@ -197,6 +208,10 @@ sub updatedRowNotify
 
         $lib->addDomainName($row);
         $self->addRedirects($row);
+
+        $lib->updateNetworkDisplay($row);
+        $lib->removeDHCPfixedIPMember($oldRow);
+        $lib->addDHCPfixedIPMember($row);
 
         for my $subId (@{$row->subModel('redirOther')->ids()}) {
             my $redirRow = $row->subModel('redirOther')->row($subId);

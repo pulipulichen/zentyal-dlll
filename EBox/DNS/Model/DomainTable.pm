@@ -633,7 +633,7 @@ sub _table
             'HTTPUrlView'=> 'DNS/Composite/Global',
             'defaultActions' => ['add', 'del', 'editField',  'changeView' ],
             'tableDescription' => \@tableHead,
-            'class' => 'dataTable test',
+            'class' => 'dataTable',
             'printableRowName' => __('domain'),
             'sortedBy' => 'domain',
             'help' => __('Here you can add the domains for this DNS server. '
