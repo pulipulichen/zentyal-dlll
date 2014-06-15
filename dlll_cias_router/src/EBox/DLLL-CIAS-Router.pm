@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router;
+package EBox::DLLL_CIAS_Router;
 
 use base qw(EBox::Module::Service);
 

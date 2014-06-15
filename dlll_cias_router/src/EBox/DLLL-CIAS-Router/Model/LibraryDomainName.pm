@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router::Model::LibraryDomainName;
+package EBox::DLLL_CIAS_Router::Model::LibraryDomainName;
 
 use base 'EBox::Model::DataTable';
 

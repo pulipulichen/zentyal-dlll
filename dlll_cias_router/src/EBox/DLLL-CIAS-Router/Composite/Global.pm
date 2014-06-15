@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router::Composite::Global;
+package EBox::DLLL_CIAS_Router::Composite::Global;
 
 use base 'EBox::Model::Composite';
 

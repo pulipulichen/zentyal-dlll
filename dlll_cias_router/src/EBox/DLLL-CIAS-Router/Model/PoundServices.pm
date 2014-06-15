@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router::Model::PoundServices;
+package EBox::DLLL_CIAS_Router::Model::PoundServices;
 
 use base 'EBox::Model::DataTable';
 

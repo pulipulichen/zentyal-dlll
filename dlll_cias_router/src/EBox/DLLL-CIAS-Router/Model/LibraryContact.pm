@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router::Model::LibraryContact;
+package EBox::DLLL_CIAS_Router::Model::LibraryContact;
 
 use base 'EBox::Model::DataTable';
 

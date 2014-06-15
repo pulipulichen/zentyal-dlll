@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router::Model::URLRedirect;
+package EBox::DLLL_CIAS_Router::Model::URLRedirect;
 
 use base 'EBox::Model::DataTable';
 

@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router::Model::Settings;
+package EBox::DLLL_CIAS_Router::Model::Settings;
 
 use base 'EBox::Model::DataForm';
 

@@ -1,4 +1,4 @@
-package EBox::DLLL-CIAS-Router::Model::DNS;
+package EBox::DLLL_CIAS_Router::Model::DNS;
 
 use base 'EBox::Model::DataTable';
 
