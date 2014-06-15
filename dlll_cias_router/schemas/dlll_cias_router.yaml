@@ -1,4 +1,27 @@
 class: EBox::DLLL-CIAS-Router
 
+depends:
+    - network
+    - objects
+    - dns
+    - firewall
+    - services
+    - dhcp
+
 models:
     - Settings
+    - PoundLibrary
+    - PoundServices
+    - PortRedirect
+    - URLRedirect
+    - DNS
+    - LibraryMAC
+    - LibraryFields
+    - LibraryDomainName
+    - LibraryNetwork
+    - LibraryRedirect
+    - LibraryContact
+
+composites:
+    Global: [Settings, URLRedirect]
+    
