@@ -1,4 +1,4 @@
-package EBox::DLLL_CIAS_Router::Model::URLRedirect;
+package EBox::dlll_cias_router::Model::URLRedirect;
 
 use base 'EBox::Model::DataTable';
 
@@ -78,8 +78,8 @@ sub _table
         'printableTableName' => __('URL Redirect'),
         'printableRowName' => __('URL Redirect'),
         'pageTitle' => __('URL Redirect'),
-        'modelDomain' => 'DLLL-CIAS-Router',
-        defaultController => '/DLLL-CIAS-Router/Controller/URLRedirect',
+        'modelDomain' => 'dlll_cias_router',
+        defaultController => '/dlll_cias_router/Controller/URLRedirect',
         'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
         'tableDescription' => \@fields,
         #'sortedBy' => 'domainName',

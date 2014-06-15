@@ -1,4 +1,4 @@
-package EBox::DLLL_CIAS_Router::Model::PortRedirect;
+package EBox::dlll_cias_router::Model::PortRedirect;
 
 use base 'EBox::Model::DataTable';
 
@@ -129,9 +129,9 @@ sub _table
         'printableTableName' => __('Port Redirect'),
         'printableRowName' => __('Port Redirect'),
         'pageTitle' => $self->pageTitle(),
-        'modelDomain' => 'DLLL-CIAS-Router',
+        'modelDomain' => 'dlll_cias_router',
         automaticRemove => 1,
-        defaultController => '/DLLL-CIAS-Router/Controller/PortRedirect',
+        defaultController => '/dlll_cias_router/Controller/PortRedirect',
         'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
         'tableDescription' => \@fields,
         'sortedBy' => 'extPort',

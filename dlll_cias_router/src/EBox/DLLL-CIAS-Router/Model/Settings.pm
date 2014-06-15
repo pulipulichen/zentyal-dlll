@@ -1,4 +1,4 @@
-package EBox::DLLL_CIAS_Router::Model::Settings;
+package EBox::dlll_cias_router::Model::Settings;
 
 use base 'EBox::Model::DataForm';
 
@@ -204,10 +204,10 @@ sub _table
             tableName => 'Settings',
             'pageTitle' => __('Settings'),
             printableTableName => __('Settings'),
-            modelDomain     => 'DLLL-CIAS-Router',
+            modelDomain     => 'dlll_cias_router',
             defaultActions => [ 'editField',  'changeView' ],
             tableDescription => \@tableDesc,
-            'HTTPUrlView'=> 'DLLL-CIAS-Router/Composite/Global',
+            'HTTPUrlView'=> 'dlll_cias_router/Composite/Global',
         };
 
     return $dataTable;

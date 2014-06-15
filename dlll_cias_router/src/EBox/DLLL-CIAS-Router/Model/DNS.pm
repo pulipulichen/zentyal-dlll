@@ -1,4 +1,4 @@
-package EBox::DLLL_CIAS_Router::Model::DNS;
+package EBox::dlll_cias_router::Model::DNS;
 
 use base 'EBox::Model::DataTable';
 
@@ -70,13 +70,13 @@ sub _table
         tableName => 'DNS',
         printableTableName => __('DNS'),
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
-        modelDomain => 'DLLL-CIAS-Router',
+        modelDomain => 'dlll_cias_router',
         tableDescription => \@fields,
 
         'pageTitle' => __('DNS'),
         printableRowName => __('DNS'),
         #sortedBy => 'domainName',
-        'HTTPUrlView'=> 'DLLL-CIAS-Router/View/DNS',
+        'HTTPUrlView'=> 'dlll_cias_router/View/DNS',
         
         # 20140219 Pulipuli Chen
         # 關閉enable選項，改成自製的

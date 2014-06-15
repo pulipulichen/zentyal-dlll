@@ -1,4 +1,4 @@
-package EBox::DLLL_CIAS_Router::Composite::Global;
+package EBox::dlll_cias_router::Composite::Global;
 
 use base 'EBox::Model::Composite';
 
@@ -26,7 +26,7 @@ sub _description
        name            => 'Global',
        pageTitle       => $pageTitle,
        printableName   => $pageTitle,
-       compositeDomain => 'DLLL-CIAS-Router',
+       compositeDomain => 'dlll_cias_router',
       };
 
     return $description;

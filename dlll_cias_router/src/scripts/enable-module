@@ -3,6 +3,5 @@
 set -e
 
 ### Actions to be executed when enabling the module ###
-/etc/init.d/pound start
 
 exit 0

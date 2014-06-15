@@ -1,4 +1,4 @@
-package EBox::DLLL_CIAS_Router::Model::PoundServices;
+package EBox::dlll_cias_router::Model::PoundServices;
 
 use base 'EBox::Model::DataTable';
 
@@ -117,11 +117,11 @@ sub _table
         'pageTitle' => __('Back End'),
         printableTableName => __('Back End'),
         defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
-        modelDomain => 'DLLL-CIAS-Router',
+        modelDomain => 'dlll_cias_router',
         tableDescription => \@fields,
         printableRowName => __('Back End'),
         #sortedBy => 'updateDate',
-        'HTTPUrlView'=> 'DLLL-CIAS-Router/View/PoundServices',
+        'HTTPUrlView'=> 'dlll_cias_router/View/PoundServices',
 
         # 20140219 Pulipuli Chen
         # 關閉enable選項，改成自製的

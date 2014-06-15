@@ -1,0 +1,7 @@
+<%args>
+    $boolean
+    $text
+</%args>
+
+boolean = <% $boolean %>
+text = "<% $text %>"

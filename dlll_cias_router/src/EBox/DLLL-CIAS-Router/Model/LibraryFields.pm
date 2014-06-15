@@ -1,4 +1,4 @@
-package EBox::DLLL_CIAS_Router::Model::LibraryFields;
+package EBox::dlll_cias_router::Model::LibraryFields;
 
 use base 'EBox::Model::DataTable';
 
@@ -689,8 +689,8 @@ sub createFieldOtherRedirectPortsDisplay
             'fieldName' => 'redirOther',
             'printableName' => __('Other <br />Redirect <br />Ports'),
             'foreignModel' => 'PortRedirect',
-            'view' => '/DLLL-CIAS-Router/View/PortRedirect',
-            'backView' => '/DLLL-CIAS-Router/View/PoundServices',
+            'view' => '/dlll_cias_router/View/PortRedirect',
+            'backView' => '/dlll_cias_router/View/PoundServices',
             'size' => '1',
             #optional=>1,
             hiddenOnSetter => 1,
