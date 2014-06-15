@@ -6,7 +6,7 @@ if (_ZENTYAL_UTIL === undefined) {
 
     var _ZENTYAL_UTIL = {
         config: {
-            field: '.field',
+            field: 'td',
             hint: '.hint'
         },
         init: function() {

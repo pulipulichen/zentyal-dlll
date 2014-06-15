@@ -205,7 +205,7 @@ sub createFieldContactEmail
     return $field;
 }
 
-sub createFieldDescription
+sub createFieldEmailKMDescription
 {
     my $field = new EBox::Types::Text(
             fieldName => 'description',
@@ -219,6 +219,26 @@ sub createFieldDescription
                 . __('Create New Post') 
                 . '</button><br />'
                 . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
+        );
+
+    return $field;
+}
+
+sub createFieldDescription
+{
+    # https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js
+    my $field = new EBox::Types::Text(
+            fieldName => 'description',
+            printableName => __('Description'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            help => 
+                '<div class="html-editor">'
+                   . '<div class="html-editor-view"></div>'
+                .'</div>'
+                . '<script type="text/javascript" src="https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js"></script>',
         );
 
     return $field;
