@@ -1,4 +1,4 @@
-package EBox::dlll_cias_router;
+package EBox::dlllciasrouter;
 
 use base qw(EBox::Module::Service);
 
@@ -55,18 +55,18 @@ sub menu
 
     my ($self, $root) = @_;
 
-    my $folder = new EBox::Menu::Folder('name' => 'dlll_cias_router',
+    my $folder = new EBox::Menu::Folder('name' => 'dlllciasrouter',
                                         'text' => $self->printableName(),
                                         #'separator' => 'Virtual Router',
                                         'order' => 0);
 
-    $folder->add(new EBox::Menu::Item('url' => 'dlll_cias_router/View/Settings',
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
                                       'text' => __('Settings')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlll_cias_router/View/PoundServices',
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',
                                       'text' => __('Back End')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlll_cias_router/View/URLRedirect',
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/URLRedirect',
                                       'text' => __('URL Redirect')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlll_cias_router/View/DNS',
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/DNS',
                                       'text' => __('DNS')));
     
     # 不要Port Forwarding了，留給Pound去設定就好                                  
