@@ -121,7 +121,7 @@ sub _table
         new EBox::Types::Boolean(
               fieldName     => 'enableError',
               printableName => __('Enable Custom Error Message'),
-              defaultValue => 1,
+              defaultValue => 0,
               editable      => 1,
               optional => 0,
              ),

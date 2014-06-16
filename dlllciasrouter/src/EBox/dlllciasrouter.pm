@@ -143,7 +143,7 @@ sub _setConf
         $address = $settings->value("address");
     }
 
-     if ($enableError == 1) {
+     if ($enableError == 1 && defined $errorURL) {
         system('wget ' . $errorURL . ' -O '.$fileTemp);
 
         # 讀取
