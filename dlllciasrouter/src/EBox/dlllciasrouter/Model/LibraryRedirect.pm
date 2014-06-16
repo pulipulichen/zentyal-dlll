@@ -609,13 +609,7 @@ sub getProtocolHint
     my $note = $row->valueByName('redir'.$protocol.'_note');
 
     my $protocolTitle = $protocol;
-    try {
-        if ($note ne '') {
-            $protocolTitle = $protocolTitle . '*';
-        }
-    }
-    catch {
-    }
+
 
     my $secure = $row->valueByName('redir'.$protocol.'_secure');
     if ($secure == 1) {
@@ -639,14 +633,6 @@ sub getProtocolHint
             . "href=\"".$url."\" target=\"_blank\">"
             . $hint
             . "</a>";  
-    }
-    
-    try {
-        if ($note ne '') {
-            $hint = '<em title="'.$note.'">'.$hint.'</em>';
-        }
-    }
-    catch {
     }
 
     return $hint;
