@@ -45,28 +45,39 @@ sub loadLibrary
 
 sub getExternalIpaddr
 {
+    my ($self) = @_;
     my $network = EBox::Global->modInstance('network');
     my $address = "127.0.0.1";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $address = $network->ifaceAddress($if);
-            last;
-        }
-    }
+#    foreach my $if (@{$network->ExternalIfaces()}) {
+#        if ($network->ifaceIsExternal($if)) {
+#            $address = $network->ifaceAddress($if);
+#            last;
+#        }
+#    }
+    my $iface = $self->getExternalIface();
+    $address = $network->ifaceAddress($iface);
     return $address;
 }
 
 sub getExternalIface
 {
     my $network = EBox::Global->modInstance('network');
-    my $iface = "eth9";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $iface = $if;
-            last;
+#    my $iface = "eth9";
+#    foreach my $if (@{$network->ExternalIfaces()}) {
+#        if ($network->ifaceIsExternal($if)) {
+#            $iface = $if;
+#            last;
+#        }
+#    }
+    my $iface = "eth0";
+    for (my $i = 0; $i < 20; $i++) {
+        $iface = "eth".$i;
+        if ($network->ifaceExists($iface) && $network->ifaceIsExternal($iface)) {
+            return $iface;
         }
     }
-    return $iface;
+    
+    throw EBox::Exceptions::External("No external (WAN) network interface found. <a href='/Network/Ifaces'>Please set an external (wan) network interface</a>.");
 }
 
 1;

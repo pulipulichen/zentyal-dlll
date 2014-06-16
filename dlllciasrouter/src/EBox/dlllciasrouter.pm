@@ -25,7 +25,7 @@ sub _create
 
     my $self = $class->SUPER::_create(
         name => 'dlllciasrouter',
-        printableName => __('Router'),
+        printableName => __('DLLL-CIAS Router'),
         @_
     );
 
@@ -56,7 +56,7 @@ sub menu
     my ($self, $root) = @_;
 
     my $folder = new EBox::Menu::Folder('name' => 'dlllciasrouter',
-                                        'text' => $self->printableName(),
+                                        'text' => "Router",
                                         'separator' => 'DLLL-CIAS',
                                         'order' => 0);
 
