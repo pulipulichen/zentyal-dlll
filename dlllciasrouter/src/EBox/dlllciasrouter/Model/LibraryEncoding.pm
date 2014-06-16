@@ -20,6 +20,12 @@ use LWP::Simple;
 use POSIX qw(strftime);
 use Try::Tiny;
 
+use URI::Escape;
+
+use HTML::Entities;
+
+#use HTML::Strip;
+
 ##
 # 讀取PoundLibrary
 # @author Pulipuli Chen
@@ -177,6 +183,21 @@ sub unescapeFromUtf16 {
     
     $str = $self->convertUtf16CodesToString(@utf16_codes);
     #$str = 'aaaa';
+
+    $str=~s/\n//g;
+    return $str;
+}
+
+sub stripsHtmlTags {
+    my ($self, $str) = @_;
+
+#    my $hs = HTML::Strip->new();
+#    my $clean_text = $hs->parse( $str );
+    $str=~s/<.*?>//g;
+    #$str = encode_entities( $str );
+    #$str = uri_escape_utf8($str);
+    #$str =~ s/([A-Za-z])\%20\;([A-Za-z])/$1$2/g;
+
     return $str;
 }
 
