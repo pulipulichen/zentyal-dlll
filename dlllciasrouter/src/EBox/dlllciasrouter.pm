@@ -121,8 +121,17 @@ sub _setConf
 
     my $settings = $self->model('Settings');
     my $port = $settings->value('port');
+    if (!defined $port) {
+        $port = 80;
+    }
     my $alive = $settings->value('alive');
+    if (!defined $alive) {
+        $alive = 30;
+    }
     my $enableError = $settings->value('enableError');
+    if (!defined $enableError) {
+        $enableError = 0;
+    }
     my $errorURL = $settings->value('error');
     my $file = "/etc/pound/error.html";
     my $fileTemp = "/tmp/error.html";

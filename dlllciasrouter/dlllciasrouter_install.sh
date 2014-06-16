@@ -1,5 +1,8 @@
 # https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/dlllciasrouter_install.sh
-# http://goo.gl/P3qFIS
+
+# wget http://goo.gl/P3qFIS -O dlllciasrouter_install.sh
+# chmod 777 dlllciasrouter_install.sh
+# ./dlllciasrouter_install.sh
 
 cd ~
 sudo apt-get update
