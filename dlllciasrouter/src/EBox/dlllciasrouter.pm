@@ -142,6 +142,7 @@ sub _setConf
     {
         $address = $settings->value("address");
     }
+
      if ($enableError == 1) {
         system('wget ' . $errorURL . ' -O '.$fileTemp);
 
@@ -174,6 +175,7 @@ sub _setConf
     # ----------------------------
 
     my $services = $self->model('PoundServices');
+    my $libRedir = $self->model('LibraryRedirect');
 
     # Iterate over table
     my @paramsArray = ();
@@ -194,10 +196,10 @@ sub _setConf
         my $descriptionValue = $row->valueByName('description');
         my $portValue = $row->valueByName('port');
         my $httpToHttpsValue = $row->valueByName('httpToHttps');
-        my $httpsPortValue = $services->getHTTPSextPort($row);
+        my $httpsPortValue = $libRedir->getHTTPSextPort($row);
 
         my $httpSecurityValue = $row->valueByName('redirHTTP_secure');
-        my $httpPortValue = $services->getHTTPextPort($row);
+        my $httpPortValue = $libRedir->getHTTPextPort($row);
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
