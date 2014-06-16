@@ -51,6 +51,7 @@ sub _table
         $fieldsFactory->createFieldContactName(),
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDescription(),
+        $fieldsFactory->createFieldDescriptionHTML(),
         $fieldsFactory->createFieldExpiryDateWithHR(),
         
         # --------------------------
@@ -176,6 +177,7 @@ sub addedRowNotify
     $libCT->setUpdateDate($row);
 
     $libCT->setContactLink($row);
+    $libCT->setDescriptionHTML($row);
 
     $libDN->addDomainName($row);
     $libREDIR->addRedirects($row);
@@ -225,6 +227,7 @@ sub updatedRowNotify
         $libCT->setUpdateDate($row);
 
         $libCT->setContactLink($row);
+        $libCT->setDescriptionHTML($row);
 
         $libDN->addDomainName($row);
         $libREDIR->addRedirects($row);

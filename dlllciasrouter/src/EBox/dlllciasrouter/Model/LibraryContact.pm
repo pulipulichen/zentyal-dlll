@@ -129,4 +129,21 @@ sub setContactLink
     #$row->store();
 }
 
+sub setDescriptionHTML
+{
+    my ($self, $row) = @_;
+
+    my $desc = $row->valueByName('description');
+
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    $desc = $libEnc->unescapeFromUtf16($desc);
+    $desc = $libEnc->stripsHtmlTags($desc);
+    
+    $desc = "<span>".$desc."</span>";
+
+    $row->elementByName('descriptionHTML')->setValue($desc);
+
+    #$row->store();
+}
+
 1;
