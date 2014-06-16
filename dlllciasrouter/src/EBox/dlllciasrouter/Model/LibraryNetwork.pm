@@ -59,7 +59,7 @@ sub getExternalIpaddr
 sub getExternalIface
 {
     my $network = EBox::Global->modInstance('network');
-    my $iface = "eth0";
+    my $iface = "eth9";
     foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
             $iface = $if;
