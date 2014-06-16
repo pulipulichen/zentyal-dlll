@@ -28,8 +28,6 @@ use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 use EBox::Exceptions::DataExists;
 
-use EBox::dlllciasrouter::Model::DescriptionText;
-
 use LWP::Simple;
 use POSIX qw(strftime);
 use Try::Tiny;
@@ -239,11 +237,10 @@ sub createFieldDescription
             hiddenOnViewer => 1,
             #size => 100,
             #type => "html",
-            #help => 
-            #    '<div class="html-editor">'
-            #       . '<div class="html-editor-view"></div>'
-            #    .'</div><button type="button" class="init-button" onclick="this.className=\'init-button trigger\';var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\'https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js\';document.getElementsByTagName(\'body\')[0].appendChild(_script);">EDIT</button>',
-                #. '<script type="text/javascript" src="https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js"></script>',
+            help => 
+                '<div class="html-editor">'
+                   . '<div class="html-editor-view"></div>'
+                .'</div><button type="button" class="init-button" onclick="this.className=\'init-button trigger\';var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\'https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js\';document.getElementsByTagName(\'body\')[0].appendChild(_script);">EDIT</button>',
         );
 
     return $field;

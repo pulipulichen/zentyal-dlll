@@ -609,8 +609,12 @@ sub getProtocolHint
     my $note = $row->valueByName('redir'.$protocol.'_note');
 
     my $protocolTitle = $protocol;
-    if ($note ne '') {
-        $protocolTitle = $protocolTitle . '*';
+    try {
+        if ($note ne '') {
+            $protocolTitle = $protocolTitle . '*';
+        }
+    }
+    catch {
     }
 
     my $secure = $row->valueByName('redir'.$protocol.'_secure');
@@ -636,9 +640,13 @@ sub getProtocolHint
             . $hint
             . "</a>";  
     }
-
-    if ($note ne '') {
-        $hint = '<em title="'.$note.'">'.$hint.'</em>';
+    
+    try {
+        if ($note ne '') {
+            $hint = '<em title="'.$note.'">'.$hint.'</em>';
+        }
+    }
+    catch {
     }
 
     return $hint;
