@@ -132,11 +132,17 @@ sub _table
               optional => 1,
               help => __('HTML format. Don\'t use HTTPS. Example: ').'<a href="http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html" target="error_example">http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html</a>',
              ),
+
+# ------------------------------
         new EBox::Types::HostIP(
             fieldName => 'restarterIP',
             printableName => __('Restarter IP'),
             editable => 1,
             optional => 0,
+            # 20140616 Pulipuli Chen
+            # 沒有辦法順利運作，此欄位暫時不使用
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 1,
         ),
         new EBox::Types::Port(
             fieldName => 'restarterPort',
@@ -144,12 +150,20 @@ sub _table
             editable => 1,
             defaultValue => 80,
             optional => 0,
+            # 20140616 Pulipuli Chen
+            # 沒有辦法順利運作，此欄位暫時不使用
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 1,
         ),
         new EBox::Types::Text(
             fieldName => 'notifyEmail',
             printableName => __('Notify E-MAIL Address'),
             editable => 1,
             optional => 0,
+            # 20140616 Pulipuli Chen
+            # 沒有辦法順利運作，此欄位暫時不使用
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 1,
         ),
         new EBox::Types::Text(
             fieldName => 'senderEmail',
@@ -158,6 +172,10 @@ sub _table
                 . '<strong>Zentyal Configuration Link</strong>'),
             editable => 1,
             optional => 0,
+            # 20140616 Pulipuli Chen
+            # 沒有辦法順利運作，此欄位暫時不使用
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 1,
         ),
         
         # --------------------------------

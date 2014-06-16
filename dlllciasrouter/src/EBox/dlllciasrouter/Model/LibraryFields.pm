@@ -96,8 +96,8 @@ sub createFieldDomainNameLink
             printableName => __('Domain Name'),
             editable => 0,
             optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         );
 
     return $field;
@@ -240,9 +240,9 @@ sub createFieldDescription
             help => 
                 '<div class="html-editor">'
                    . '<div class="html-editor-view"></div>'
-                .'</div><button type="button" class="init-button" '
+                .'</div><span class="init-span"><button type="button" class="init-button" '
                     . 'onclick="this.className=\'init-button trigger\';this.style.display=\'none\';if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\'https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js\';document.getElementsByTagName(\'body\')[0].appendChild(_script);} else {_ZENTYAL_UTIL.init()}" '
-                    . '>EDIT</button>',
+                    . '>EDIT</button> Please click this button to initialize description. </span>',
                 #. '<script type="text/javascript" src="https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js"></script>',
         );
 
@@ -311,7 +311,9 @@ sub createFieldEmergencyRestarter
             # 預設改成false，這是因為一開始建置時都是在測試中，連線失誤是很正常的。當設定穩定之後再手動調整成true
             defaultValue => 0,
 
-            hiddenOnSetter => 0,
+            # 20140616 Pulipuli Chen
+            # 沒有辦法順利運作，此欄位暫時不使用
+            hiddenOnSetter => 1,
             hiddenOnViewer => 1,
             help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
         );

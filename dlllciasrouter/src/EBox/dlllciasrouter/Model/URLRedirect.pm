@@ -125,7 +125,8 @@ sub addedRowNotify
     my $libDN = $self->loadLibrary('LibraryDomainName');
     my $libCT = $self->loadLibrary('LibraryContact');
 
-    $libDN->setLink($row);
+    #$libDN->setLink($row);
+    $libDN->updateDomainNameLink($row);
 
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
@@ -149,7 +150,8 @@ sub updatedRowNotify
         my $libDN = $self->loadLibrary('LibraryDomainName');
         my $libCT = $self->loadLibrary('LibraryContact');
 
-        $libDN->setLink($row);
+        #$libDN->setLink($row);
+        $libDN->updateDomainNameLink($row);
 
         $libDN->deleteDomainName($oldRow, 'URLRedirect');
 
