@@ -22,6 +22,7 @@ if (_ZENTYAL_UTIL === undefined) {
                         var _edit_button = _trigger.parents(_.config.field + ":first").find("button.edit");
 
                         jQuery(".init-button:visible").remove();
+                        jQuery(".init-span:visible").remove();
 
                         _edit_button.click();
 
@@ -67,7 +68,11 @@ if (_ZENTYAL_UTIL === undefined) {
                 _hint.prepend(_btn);
                 
                 var _field_container = _hint.parents(_.config.field + ':first');
-                var _input = _field_container.find('input:text:first');
+
+                //alert(_field_container.contents().length);
+                _field_container.contents().eq(2).remove();
+
+                var _input = _field_container.find('input:first');
                 _input.hide();
                 var _view = _field_container.find('.html-editor .html-editor-view');
                 
@@ -263,7 +268,7 @@ if (_ZENTYAL_UTIL === undefined) {
 
             //var _field = _overlay.parents(this.config.field + ':first');
             //alert(['input:text:first', _overlay.length, _field.length]);
-            var _html = _field.find('input:text:first').val();
+            var _html = _field.find('input:first').val();
 
             //alert(["html", _html]);
             _html = this.decode(_html);
@@ -349,7 +354,7 @@ if (_ZENTYAL_UTIL === undefined) {
             var _ori_html = _html;
             _html = this.encode(_html);
             var _field = _overlay.parents(this.config.field + ':first');
-            _field.find('input:text:first').val(_html);
+            _field.find('input:first').val(_html);
             
             var _view = _field.find('.html-editor .html-editor-view:first');
             if (_view.length === 1) {

@@ -51,7 +51,7 @@ sub createFieldConfigEnable
             defaultValue => 1,
 
             hiddenOnSetter => 0,
-            hiddenOnViewer => 0,
+            hiddenOnViewer => 1,
             #help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
         );
 
@@ -231,10 +231,11 @@ sub createFieldDescription
     #my $field = new EBox::dlllciasrouter::Model::DescriptionText(
             fieldName => 'description',
             printableName => __('Description'),
-            editable => 1,
+            editable => 0,
             optional=>0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+            defaultValue => __(''),
             #size => 100,
             #type => "html",
             help => 

@@ -52,19 +52,23 @@ sub _table
 {
     my ($self) = @_;
 
-    my $network = EBox::Global->modInstance('network');
-    my $address = "127.0.0.1";
-    my $external_iface = "eth0";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $external_iface = $if;
-            $address = $network->ifaceAddress($if);
-            last;
-        }
-    }
+#    my $network = EBox::Global->modInstance('network');
+#    my $address = "127.0.0.1";
+#    my $external_iface = "eth0";
+#    foreach my $if (@{$network->ExternalIfaces()}) {
+#        if ($network->ifaceIsExternal($if)) {
+#            $external_iface = $if;
+#            $address = $network->ifaceAddress($if);
+#            last;
+#        }
+#    }
 
     my $lib = $self->getLibrary();
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
+
+    my $libNet = $self->loadLibrary('LibraryNetwork');
+    my $external_iface = $libNet->getExternalIface();
+    my $address = $libNet->getExternalIpaddr();
 
     my @tableDesc =
       (
