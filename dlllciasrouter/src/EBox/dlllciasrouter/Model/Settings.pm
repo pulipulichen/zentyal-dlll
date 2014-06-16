@@ -283,10 +283,10 @@ sub getServiceParam
 
     return (
         # 寫入參數
-        'internal' => 'dlllciasrouter',
-        'name' => 'dlllciasrouter',
-        'printableName' => 'dlllciasrouter',
-        'description' => 'For DLLL-CIAS Router use.',
+        'internal' => 'pound',
+        'name' => 'pound',
+        'printableName' => 'pound',
+        'description' => 'For Reverse Proxy use.',
     );
 }
 

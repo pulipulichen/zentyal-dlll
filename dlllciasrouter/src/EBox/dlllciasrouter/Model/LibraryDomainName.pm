@@ -51,46 +51,57 @@ sub loadLibrary
 sub addDomainName
 {
     my ($self, $row) = @_;
+    
 
     if ($row->valueByName('boundLocalDns')) {
-        my $domainName = $row->valueByName('domainName');
-        my $gl = EBox::Global->getInstance();
-        my $dns = $gl->modInstance('dns');
-        my $domModel = $dns->model('DomainTable');
-        my $id = $domModel->findId(domain => $domainName);
-        if (defined($id)) {
-            $domModel->removeRow($id);
-        }
-        $domModel->addDomain({
-            'domain_name' => $domainName,
-        });
 
-        $id = $domModel->findId(domain => $domainName);
-        my $domainRow = $domModel->row($id);
+        try {
+            my $domainName = $row->valueByName('domainName');
+            my $gl = EBox::Global->getInstance();
+            my $dns = $gl->modInstance('dns');
+            my $domModel = $dns->model('DomainTable');
+            my $id = $domModel->findId(domain => $domainName);
+            if (defined($id)) {
+                $domModel->removeRow($id);
+            }
+            $domModel->addDomain({
+                'domain_name' => $domainName,
+            });
 
-        # 刪掉多餘的IP
-        my $ipTable = $domainRow->subModel("ipAddresses");
-        $ipTable->removeAll();
+            $id = $domModel->findId(domain => $domainName);
+            my $domainRow = $domModel->row($id);
 
-        # 刪掉多餘的Hostname
-        my $hostnameTable = $domainRow->subModel("hostnames");
-        my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
-        my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
-        my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-        $zentyalIpTable->removeAll();
+            # 刪掉多餘的IP
+            my $ipTable = $domainRow->subModel("ipAddresses");
+            $ipTable->removeAll();
 
-        my $libNetwork = $self->loadLibrary('LibraryNetwork');
-        my $ipaddr = $libNetwork->getExternalIpaddr();
+            # 刪掉多餘的Hostname
+            my $hostnameTable = $domainRow->subModel("hostnames");
+            my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+            my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+            if (defined $zentyalRow) {
+                my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+                $zentyalIpTable->removeAll();
 
-        # 幫ipTable加上指定的IP
-        $ipTable->addRow(
-            ip => , $ipaddr
-        );
+                my $libNetwork = $self->loadLibrary('LibraryNetwork');
+                my $ipaddr = $libNetwork->getExternalIpaddr();
 
-        # 幫zentyalIpTalbe加上指定的IP
-        $zentyalIpTable->addRow(
-            ip => , $ipaddr
-        );
+                # 幫ipTable加上指定的IP
+                $ipTable->addRow(
+                    ip => , $ipaddr
+                );
+
+                # 幫zentyalIpTalbe加上指定的IP
+                $zentyalIpTable->addRow(
+                    ip => , $ipaddr
+                );
+            }
+
+        }   # try {
+        catch {
+            my $lib = $self->getLibrary();
+            $lib->show_exceptions($_);
+        }   # catch {
     }
 }
 

@@ -21,7 +21,6 @@ models:
     - LibraryNetwork
     - LibraryRedirect
     - LibraryContact
-    - DescriptionText
 
 composites:
     Global: [Settings, URLRedirect]

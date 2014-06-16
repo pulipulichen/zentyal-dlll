@@ -171,18 +171,18 @@ sub addedRowNotify
     $libDN->updateDomainNameLink($row);
     
     $libREDIR->updateRedirectPorts($row);
-#
-#    $libCT->setCreateDate($row);
-#    $libCT->setUpdateDate($row);
-#
-#    $libCT->setContactLink($row);
-#
-#    $libDN->addDomainName($row);
-#    $libREDIR->addRedirects($row);
-#
-#    my $libMAC = $self->loadLibrary('LibraryMAC');
-#    $libMAC->updateNetworkDisplay($row);
-#    $libMAC->addDHCPfixedIPMember($row);
+
+    $libCT->setCreateDate($row);
+    $libCT->setUpdateDate($row);
+
+    $libCT->setContactLink($row);
+
+    $libDN->addDomainName($row);
+    $libREDIR->addRedirects($row);
+
+    my $libMAC = $self->loadLibrary('LibraryMAC');
+    $libMAC->updateNetworkDisplay($row);
+    $libMAC->addDHCPfixedIPMember($row);
 
     $row->store();
     $ROW_NEED_UPDATE = 0;

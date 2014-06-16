@@ -75,8 +75,6 @@ ListenHTTP
 % print "#                End\n";
 % print "#        End\n";
 %
-% my $size = keys %{$domainHash};
-% if ($size > 0) {
 % while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
 %
         Service
@@ -166,7 +164,6 @@ ListenHTTP
 %
         End
 % } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
-% } # if ($size > 0) {
 
 % print "# -----------------------------------------\n";
 % print "# Redirect\n";

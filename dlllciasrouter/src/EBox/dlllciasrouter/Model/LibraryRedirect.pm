@@ -576,7 +576,6 @@ sub updateRedirectPorts
     # 最後結尾
     if ($hint ne '')
     {
-        #$hint = "<ul style='text-align:left;'>". $hint . "</ul>";
         $hint = "<div style='text-align:left;'>". $hint . "</div>";
     }
     else
@@ -598,18 +597,25 @@ sub isProtocolEnable
 sub getProtocolHint
 {
     my ($self, $row, $protocol) = @_;
+
+    my $hint = "";
+
+    try {
     my $lib = $self->getLibrary();
     my $libNET = $self->loadLibrary('LibraryNetwork');
 
-    my $hint = "";
 
     my $extPort = $self->getProtocolExtPort($row, $protocol);
 
     my $intPort = $self->getProtocolIntPort($row, $protocol);
-    my $note = $row->valueByName('redir'.$protocol.'_note');
+    my $note = "";
+    $note = $row->valueByName('redir'.$protocol.'_note');
 
     my $protocolTitle = $protocol;
-
+    if (defined $note && $note ne '') {
+        $protocolTitle = $protocolTitle . '*';
+    }
+    
 
     my $secure = $row->valueByName('redir'.$protocol.'_secure');
     if ($secure == 1) {
@@ -635,6 +641,15 @@ sub getProtocolHint
             . "</a>";  
     }
 
+    if (defined $note && $note ne '') {
+        $hint = '<em title="'.$note.'">'.$hint.'</em>';
+    }
+
+    }   # try {
+    catch {
+        my $lib = $self->getLibrary();
+        $lib->show_exceptions($_);
+    }   # catch {
     return $hint;
 }
 

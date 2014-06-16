@@ -52,7 +52,7 @@ sub pageTitle
     my ($self) = @_;
     my $row = $self->parentRow();
     
-    if ($row ne undef)
+    if (defined $row && $row ne undef)
     {
         my $domainName = $row->printableValueByName('domainName');
         my $ip = $row->printableValueByName('ipaddr');
