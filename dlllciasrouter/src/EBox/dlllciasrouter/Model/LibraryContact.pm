@@ -81,6 +81,10 @@ sub setContactLink
     my $link = '';
 
     my $desc = $row->valueByName('description');
+
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    $desc = $libEnc->unescapeFromUtf16($desc);
+
     if ($desc =~ m/^(http\:\/\/email\-km\.dlll\.nccu\.edu\.tw)/i) {
         $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">EMAIL-KM</a>]'.'<br />';
     }

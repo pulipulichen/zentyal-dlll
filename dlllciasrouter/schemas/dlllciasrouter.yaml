@@ -21,6 +21,7 @@ models:
     - LibraryNetwork
     - LibraryRedirect
     - LibraryContact
+    - LibraryEncoding
 
 composites:
     Global: [Settings, URLRedirect]

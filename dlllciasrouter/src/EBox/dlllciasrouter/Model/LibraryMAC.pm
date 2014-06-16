@@ -23,7 +23,7 @@ sub updateNetworkDisplay
 
     my $ipaddr = $row->valueByName('ipaddr');
     my $macaddr = $row->valueByName('macaddr');
-    if ($macaddr ne '') {
+    if (defined $macaddr && $macaddr ne '') {
         $ipaddr = $ipaddr . ' <br /> (' . $macaddr . ')';
     }
     
@@ -76,7 +76,7 @@ sub addDHCPfixedIPMember
     my $ipaddr = $row->valueByName('ipaddr');
     my $macaddr = $row->valueByName('macaddr');
 
-    if ($macaddr eq '') {
+    if (!defined $macaddr || $macaddr eq '') {
         return;
     }
 
