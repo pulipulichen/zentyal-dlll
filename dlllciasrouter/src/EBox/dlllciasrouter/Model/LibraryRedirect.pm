@@ -600,7 +600,6 @@ sub getProtocolHint
 
     my $hint = "";
 
-    try {
     my $lib = $self->getLibrary();
     my $libNET = $self->loadLibrary('LibraryNetwork');
 
@@ -609,47 +608,51 @@ sub getProtocolHint
 
     my $intPort = $self->getProtocolIntPort($row, $protocol);
     my $note = "";
+
     $note = $row->valueByName('redir'.$protocol.'_note');
 
     my $protocolTitle = $protocol;
+
     if (defined $note && $note ne '') {
         $protocolTitle = $protocolTitle . '*';
     }
-    
 
-    my $secure = $row->valueByName('redir'.$protocol.'_secure');
-    if ($secure == 1) {
-        $protocolTitle = '[' .$protocolTitle . ']';
-    }
-
-    $hint = "<strong>".$protocolTitle."</strong>: "
-        . "<br />" 
-        . $extPort ." &gt; " . $intPort."";
-    
-    if ( ($protocol eq 'HTTP') || ($protocol eq 'HTTPS') ) {
-        
-        my $ipaddr = $libNET->getExternalIpaddr();
-
-        my $url = "http\://" . $ipaddr . "\:".$extPort."/";
-        if ($protocol eq 'HTTPS') {
-            $url = "https\://" . $ipaddr . "\:".$extPort."/";
+        my $secure = $row->valueByName('redir'.$protocol.'_secure');
+        if ($secure == 1) {
+            $protocolTitle = '[' .$protocolTitle . ']';
         }
-        $hint = "<a "
-            . "style='background: none;text-decoration: underline;color: #A3BD5B;' "
-            . "href=\"".$url."\" target=\"_blank\">"
-            . $hint
-            . "</a>";  
-    }
 
-    if (defined $note && $note ne '') {
-        $hint = '<em title="'.$note.'">'.$hint.'</em>';
-    }
+        $hint = "<strong>".$protocolTitle."</strong>: "
+            . "<br />" 
+            . $extPort ." &gt; " . $intPort."";
 
-    }   # try {
-    catch {
-        my $lib = $self->getLibrary();
-        $lib->show_exceptions($_);
-    }   # catch {
+        if ( ($protocol eq 'HTTP') || ($protocol eq 'HTTPS') ) {
+
+            my $ipaddr = $libNET->getExternalIpaddr();
+
+            my $url = "http\://" . $ipaddr . "\:".$extPort."/";
+            if ($protocol eq 'HTTPS') {
+                $url = "https\://" . $ipaddr . "\:".$extPort."/";
+            }
+            $hint = "<a "
+                . "style='background: none;text-decoration: underline;color: #A3BD5B;' "
+                . "href=\"".$url."\" target=\"_blank\">"
+                . $hint
+                . "</a>";  
+        }
+
+        if (defined $note && $note ne '') {
+            $hint = '<em title="'.$note.'">'.$hint.'</em>';
+        }
+
+#    try {
+#
+#    }   # try {
+#    catch {
+#        my $lib = $self->getLibrary();
+#        $lib->show_exceptions($_);
+#    }   # catch {
+
     return $hint;
 }
 
