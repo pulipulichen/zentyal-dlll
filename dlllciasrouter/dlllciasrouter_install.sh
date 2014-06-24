@@ -4,6 +4,8 @@
 # chmod 777 dlllciasrouter_install.sh
 # ./dlllciasrouter_install.sh
 
+# wget http://goo.gl/P3qFIS -O d.sh;chmod +x d.sh;./d.sh
+
 cd ~
 sudo apt-get update
 sudo apt-get install -y pound
