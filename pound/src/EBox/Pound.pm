@@ -122,6 +122,7 @@ sub _setConf
     my $settings = $self->model('Settings');
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
+    my $timeout = $settings->value('timeout');
     my $enableError = $settings->value('enableError');
     my $errorURL = $settings->value('error');
     my $file = "/etc/pound/error.html";
@@ -174,6 +175,7 @@ sub _setConf
     # ----------------------------
 
     my $services = $self->model('PoundServices');
+    my $libRedir = $self->model('LibraryRedirect');
 
     # Iterate over table
     my @paramsArray = ();
@@ -194,10 +196,10 @@ sub _setConf
         my $descriptionValue = $row->valueByName('description');
         my $portValue = $row->valueByName('port');
         my $httpToHttpsValue = $row->valueByName('httpToHttps');
-        my $httpsPortValue = $services->getHTTPSextPort($row);
+        my $httpsPortValue = $libRedir->getHTTPSextPort($row);
 
         my $httpSecurityValue = $row->valueByName('redirHTTP_secure');
-        my $httpPortValue = $services->getHTTPextPort($row);
+        my $httpPortValue = $libRedir->getHTTPextPort($row);
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
@@ -286,6 +288,7 @@ sub _setConf
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'alive' => $alive);
+    push(@servicesParams, 'timeout' => $timeout);
     push(@servicesParams, 'enableError' => $enableError);
     push(@servicesParams, 'errorURL' => $errorURL);
     push(@servicesParams, 'file' => $file);

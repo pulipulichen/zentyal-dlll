@@ -105,6 +105,14 @@ sub _table
               default => 30,
               help => __("Check backend every X secs"),
              ),
+          new EBox::Types::Text(
+              fieldName     => 'timeout',
+              printableName => __('TimeOut'),
+              editable      => 1,
+              unique        => 0,
+              default => 30,
+              help => __("Wait for response X secs"),
+             ),
 #          new EBox::Types::Text(
 #                fieldName => 'helpURL',
 #                printableName => __('Set Help Link'),

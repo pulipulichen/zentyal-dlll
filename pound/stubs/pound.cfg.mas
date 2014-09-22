@@ -2,6 +2,7 @@
     $address
     $port
     $alive
+    $timeout
     $enableError
     $errorURL
     $file
@@ -35,7 +36,7 @@ LogLevel	1
 
 % print "## check backend every X secs:\n";
 Alive		<% $alive %>
-TimeOut		<% $alive %>
+TimeOut		<% $timeout %>
 
 % print "## use hardware-accelleration card supported by openssl(1):\n";
 % print "#SSLEngine	\"<hw>\"\n";
