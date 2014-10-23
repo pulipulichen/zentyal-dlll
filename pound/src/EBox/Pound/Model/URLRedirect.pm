@@ -80,7 +80,7 @@ sub _table
         'pageTitle' => __('URL Redirect'),
         'modelDomain' => 'Pound',
         defaultController => '/Pound/Controller/URLRedirect',
-        'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
+        'defaultActions' => ['add', 'del', 'editField', 'clone', 'changeView' ],
         'tableDescription' => \@fields,
         #'sortedBy' => 'domainName',
         class => 'dataTable',

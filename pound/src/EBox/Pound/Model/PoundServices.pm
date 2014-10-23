@@ -116,7 +116,7 @@ sub _table
 
         'pageTitle' => __('Back End'),
         printableTableName => __('Back End'),
-        defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
+        defaultActions => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
         modelDomain => 'Pound',
         tableDescription => \@fields,
         printableRowName => __('Back End'),

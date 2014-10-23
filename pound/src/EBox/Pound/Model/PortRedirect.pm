@@ -132,7 +132,7 @@ sub _table
         'modelDomain' => 'Pound',
         automaticRemove => 1,
         defaultController => '/Pound/Controller/PortRedirect',
-        'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
+        'defaultActions' => ['add', 'del', 'editField', 'clone', 'changeView'],
         'tableDescription' => \@fields,
         'sortedBy' => 'extPort',
         class => 'dataTable',

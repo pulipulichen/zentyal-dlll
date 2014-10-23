@@ -69,7 +69,7 @@ sub _table
     {
         tableName => 'DNS',
         printableTableName => __('DNS'),
-        defaultActions => [ 'add', 'del', 'editField', 'changeView' ],
+        defaultActions => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
         modelDomain => 'Pound',
         tableDescription => \@fields,
 

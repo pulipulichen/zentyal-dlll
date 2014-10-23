@@ -213,7 +213,7 @@ sub _table
             'pageTitle' => __('Settings'),
             printableTableName => __('Settings'),
             modelDomain     => 'Pound',
-            defaultActions => [ 'editField',  'changeView' ],
+            defaultActions => [ 'editField' ],
             tableDescription => \@tableDesc,
             'HTTPUrlView'=> 'Pound/Composite/Global',
         };
