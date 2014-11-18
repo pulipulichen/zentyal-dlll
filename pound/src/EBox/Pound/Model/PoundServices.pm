@@ -60,6 +60,7 @@ sub _table
         $fieldsFactory->createFieldHTTPLog(),
         $fieldsFactory->createFieldHTTPExternalPort(),
         $fieldsFactory->createFieldHTTPInternalPort(),
+        $fieldsFactory->createFieldProtocolScheme("HTTP", 0, "http"),
         $fieldsFactory->createFieldHTTPNote(),
 
         # ----------------------
@@ -69,6 +70,7 @@ sub _table
         $fieldsFactory->createFieldHTTPSLog(),
         $fieldsFactory->createFieldHTTPSExternalPort(),
         $fieldsFactory->createFieldHTTPSInternalPort(),
+        $fieldsFactory->createFieldProtocolScheme("HTTPS", 0, "https"),
         $fieldsFactory->createFieldHTTPSNote(),
         
         # --------------------------------
@@ -78,6 +80,7 @@ sub _table
         $fieldsFactory->createFieldSSHLog(),
         $fieldsFactory->createFieldSSHExternalPort(),
         $fieldsFactory->createFieldSSHInternalPort(),
+        $fieldsFactory->createFieldProtocolScheme("SSH", 0, "none"),
         $fieldsFactory->createFieldSSHNote(),
 
         # --------------------------------
@@ -87,6 +90,7 @@ sub _table
         $fieldsFactory->createFieldRDPLog(),
         $fieldsFactory->createFieldRDPExternalPort(),
         $fieldsFactory->createFieldRDPInternalPort(),
+        $fieldsFactory->createFieldProtocolScheme("RDP", 0, "none"),
         $fieldsFactory->createFieldRDPNote(),
 
         # --------------------------------

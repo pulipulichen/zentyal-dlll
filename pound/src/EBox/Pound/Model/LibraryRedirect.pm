@@ -622,12 +622,14 @@ sub getProtocolHint
         . "<br />" 
         . $extPort ." &gt; " . $intPort."";
     
-    if ( ($protocol eq 'HTTP') || ($protocol eq 'HTTPS') ) {
+    # 加入連結的部分
+    my $scheme = $row->valueByName('redir'.$protocol.'_scheme');
+    if ( ($scheme eq 'http') || ($scheme eq 'https') ) {
         
         my $ipaddr = $libNET->getExternalIpaddr();
 
         my $url = "http\://" . $ipaddr . "\:".$extPort."/";
-        if ($protocol eq 'HTTPS') {
+        if ($scheme eq 'https') {
             $url = "https\://" . $ipaddr . "\:".$extPort."/";
         }
         $hint = "<a "

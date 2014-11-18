@@ -439,6 +439,69 @@ sub createFieldProtocolInternalPort
     return $field;
 }
 
+sub createFieldProtocolScheme
+{
+    my ($self, $protocol, $unique, $defaultValue) = @_;
+
+#    my %http_type = {
+#            value => 'http',
+#            printableValue => __('HTTP (http://)'),
+#        };
+
+#    my %https_type = {
+#            value => 'https',
+#            printableValue => __('HTTPS (https://)'),
+#        };
+
+#    my %none_type = {
+#            value => 'none',
+#            printableValue => __('NONE'),
+#        };
+
+#    my $subtypes;
+#    if ($defaultValue eq "http") {
+#        $subtypes = [$http_type, $https_type, $none_type];
+#    }
+#    elsif ($defaultValue eq "https") {
+#        $subtypes = [$https_type, $http_type, $none_type];
+#    }
+#    else {
+#        $subtypes = [$none_type, $http_type, $https_type];
+#    }
+
+    my $field = new EBox::Types::Select(
+            'fieldName' => 'redir'.$protocol.'_scheme',
+            'printableName' => __($protocol.' Scheme'),
+            'unique' => $unique,
+            'populate' => \&_populateFieldProtocolScheme,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+            'defaultValue' => $defaultValue,
+            'editable' => 1
+        );
+
+    return $field;
+}
+
+sub _populateFieldProtocolScheme
+{
+    # life time values must be in hours
+    return  [
+                {
+                    value => 'http',
+                    printableValue => __('HTTP (http://)'),
+                },
+                {
+                    value => 'https',
+                    printableValue => __('HTTPS (https://)'),
+                },
+                {
+                    value => 'none',
+                    printableValue => __('Not a link'),
+                },
+            ];
+}
+
 sub createFieldProtocolNote
 {
     my ($self, $protocol) = @_;
