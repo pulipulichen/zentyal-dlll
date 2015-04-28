@@ -1,4 +1,4 @@
-cd ~/zentyal-dlll/dlll-cias-router
+cd ~/zentyal-dlll/dlllciasrouter
 sh h_check.sh
 echo "Check completed. Wait for 3 sec and start to compile...3..."
 sleep 1

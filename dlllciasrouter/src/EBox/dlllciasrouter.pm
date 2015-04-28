@@ -24,8 +24,8 @@ sub _create
     my $class = shift;
 
     my $self = $class->SUPER::_create(
-        name => 'pound',
-        printableName => __('Reverse Proxy'),
+        name => 'dlllciasrouter',
+        printableName => __('DLLL-CIAS Router'),
         @_
     );
 

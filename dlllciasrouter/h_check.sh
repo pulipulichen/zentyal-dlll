@@ -1,4 +1,4 @@
-cd ~/zentyal-dlll/dlll-cias-router
+cd ~/zentyal-dlll/dlllciasrouter
 #perl -c src/EBox/*.pm
 #perl -c src/EBox/*/Model/*.pm
 #perl -c src/EBox/*/Composite/*.pm
