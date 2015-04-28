@@ -1,1 +1,0 @@
-tail /var/log/zentyal/zentyal.log

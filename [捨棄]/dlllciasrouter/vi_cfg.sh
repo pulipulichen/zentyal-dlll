@@ -1,1 +1,0 @@
-vi /etc/pound/pound.cfg

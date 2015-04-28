@@ -1,1 +1,0 @@
-vi /var/log/zentyal/zentyal.log

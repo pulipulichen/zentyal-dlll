@@ -1,4 +1,0 @@
-<%args>
-    $errorPage
-</%args>
-<% $errorPage %>
