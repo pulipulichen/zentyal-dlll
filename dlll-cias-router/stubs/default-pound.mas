@@ -1,0 +1,9 @@
+<%args>
+</%args>
+% print "# Defaults for pound initscript\n";
+% print "# sourced by /etc/init.d/pound\n";
+% print "# installed at /etc/default/pound by the maintainer scripts\n";
+
+% print "# prevent startup with default configuration\n";
+% print "# set the below varible to 1 in order to allow pound to start\n";
+startup=1

@@ -1,0 +1,25 @@
+<%args>
+</%args>
+% print "# If you just change the port or add more ports here, you will likely also\n";
+% print "# have to change the VirtualHost statement in\n";
+% print "# /etc/apache2/sites-enabled/000-default\n";
+% print "# This is also true if you have upgraded from before 2.2.9-3 (i.e. from\n";
+% print "# Debian etch). See /usr/share/doc/apache2.2-common/NEWS.Debian.gz and\n";
+% print "# README.Debian.gz\n";
+
+NameVirtualHost *:64480
+Listen 64480
+
+<IfModule mod_ssl.c>
+% print "    # If you add NameVirtualHost *:443 here, you will also have to change\n";
+% print "    # the VirtualHost statement in /etc/apache2/sites-available/default-ssl\n";
+% print "    # to <VirtualHost *:443>\n";
+% print "    # Server Name Indication for SSL named virtual hosts is currently not\n";
+% print "    # supported by MSIE on Windows XP.\n";
+    Listen 443
+</IfModule>
+
+<IfModule mod_gnutls.c>
+    Listen 443
+</IfModule>
+

@@ -6,4 +6,4 @@ echo "2..."
 sleep 1
 echo "1..."
 zentyal-package
-sudo dpkg -i debs-ppa/zentyal-*_3.0_all.deb
+sudo dpkg -i debs-ppa/zentyal-*_all.deb
