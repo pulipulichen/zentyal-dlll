@@ -1,4 +1,4 @@
-Source: zentyal-pound
+Source: zentyal-dlll-cias-router
 Section: web
 Priority: optional
 Maintainer: Zentyal Packaging Maintainers <pkg-team@zentyal.com>
@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 7.0.0), cdbs
 Standards-Version: 3.9.1
 Homepage: http://www.zentyal.org/
 
-Package: zentyal-pound
+Package: zentyal-dlll-cias-router
 Architecture: all
 Depends: zentyal-core (>= 3.0), ${misc:Depends}
 Description: Zentyal - DLLL_CIAS_Router module

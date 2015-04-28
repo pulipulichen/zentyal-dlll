@@ -9,7 +9,7 @@ case "$1" in
         dpkg-trigger --no-await zentyal-core
     ;;
     purge)
-        /usr/share/zentyal/purge-module pound
+        /usr/share/zentyal/purge-module dlll-cias-router
     ;;
 esac
 
