@@ -1,1 +1,0 @@
-vim /etc/pound/pound.cfg
