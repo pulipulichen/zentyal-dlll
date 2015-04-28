@@ -1,0 +1,4 @@
+class: EBox::DLLL_CIAS_Router
+
+models:
+    - Settings
