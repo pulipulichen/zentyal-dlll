@@ -258,6 +258,32 @@ sub _setConf
 
     }
 
+    # ----------------------------
+    # 轉址
+    # ----------------------------
+
+    my $redirect = $self->model('URLRedirect');
+
+    # Iterate over table
+    my @redirArray = ();
+    for my $id (@{$redirect->ids()}) {
+        my $row = $redirect->row($id);
+
+        #if ($row->valueByName('enabled') == 0)
+        if ($lib->isEnable($row) == 0)
+        {
+            next;
+        }
+
+        my $domainNameValue = $row->valueByName('domainName');
+        my $urlValue = $row->valueByName('url');
+
+        push (@redirArray, {
+            domainNameValue => $domainNameValue,
+            urlValue => $urlValue,
+        });
+    }
+
 }
 
 sub getLibrary
