@@ -42,22 +42,11 @@ sub _create
 #
 sub menu
 {
-#    my ($self, $root) = @_;
-
-#   my $item = new EBox::Menu::Item(
-#        url => 'dlllciasrouter/Composite/Global',
-#        text => $self->printableName(),
-#        separator => 'Virtual Router',
-#        order => 0
-#    );
-
-    #$root->add($item);
-
     my ($self, $root) = @_;
 
     my $folder = new EBox::Menu::Folder('name' => 'dlllciasrouter',
                                         'text' => $self->printableName(),
-                                        'separator' => 'Virtual Router',
+                                        'separator' => 'DLLL-CIAS Router',
                                         'order' => 0);
 
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
@@ -69,10 +58,6 @@ sub menu
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/DNS',
                                       'text' => __('DNS')));
     
-    # 不要Port Forwarding了，留給dlllciasrouter去設定就好                                  
-    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PortForwarding',
-    #                                  'text' => __('Port Forwarding')));
-
     $root->add($folder);
 }
 
@@ -185,7 +170,7 @@ sub _setConf
 
     # Iterate over table
     my @paramsArray = ();
-    my $domainHash = (); #####
+    my $domainHash = (); 
     my $vmHash = ();
     my $i = 0;
     for my $id (@{$services->ids()}) {

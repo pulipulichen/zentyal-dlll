@@ -1,1 +1,1 @@
-tail /var/log/zentyal/zentyal.log
+cat /var/log/zentyal/zentyal.log

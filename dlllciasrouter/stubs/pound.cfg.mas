@@ -75,8 +75,9 @@ ListenHTTP
 % print "#                        Port    80\n";
 % print "#                End\n";
 % print "#        End\n";
-%##
-% while ($domainHash && my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
+%
+% if (length($domainHash)) {
+%   while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
 %
         Service
                 HeadRequire "Host: <% $domainNameValue %>.*"
@@ -164,7 +165,8 @@ ListenHTTP
 % } # else {
 %
         End
-% } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
+%   } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
+% } # if (length($domainHash)) {
 
 % print "# -----------------------------------------\n";
 % print "# Redirect\n";
