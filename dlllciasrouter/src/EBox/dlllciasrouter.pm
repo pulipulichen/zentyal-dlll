@@ -148,7 +148,9 @@ sub _setConf
         $address = $settings->value("address");
     }
      if ($enableError == 1) {
-        system('wget ' . $errorURL . ' -O '.$fileTemp);
+        unless (-e $fileTemp) {
+            system('wget ' . $errorURL . ' -O '.$fileTemp);
+        }
 
         # 讀取
         #my $errorPage = system('cat '.$fileTemp);
@@ -313,8 +315,29 @@ sub _setConf
         { uid => '0', gid => '0', mode => '644' }
     );
 
-     # 可能是會出錯的以下位置
+    $self->writeConfFile(
+        '/etc/default/pound',
+        "dlllciasrouter/default-pound.mas",
+        \@nullParams,
+        { uid => '0', gid => '0', mode => '740' }
+    );
 
+    my @vmParams = ();
+    push(@vmParams, 'vmHash' => $vmHash);
+    push(@vmParams, 'notifyEmail' => $notifyEmail);
+    push(@vmParams, 'senderEmail' => $senderEmail);
+    $self->writeConfFile(
+        '/etc/pound/vmid-config.php',
+        #'/var/www/vmid-config.php',
+        "dlllciasrouter/vmid-config.php.mas",
+        \@vmParams,
+        { uid => '0', gid => '0', mode => '770' }
+    );
+
+
+    # ----------------------------
+    # 設定apache
+    # ----------------------------
     my @nullParams = ();
 
     $self->writeConfFile(
@@ -323,6 +346,7 @@ sub _setConf
         \@nullParams,
         { uid => '0', gid => '0', mode => '644' }
     );
+
 
 }
 
