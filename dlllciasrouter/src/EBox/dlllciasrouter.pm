@@ -313,6 +313,8 @@ sub _setConf
         { uid => '0', gid => '0', mode => '644' }
     );
 
+     # 可能是會出錯的以下位置
+
     my @nullParams = ();
 
     $self->writeConfFile(
@@ -322,14 +324,6 @@ sub _setConf
         { uid => '0', gid => '0', mode => '644' }
     );
 
-    $self->writeConfFile(
-        '/etc/default/pound',
-        "dlllciasrouter/default-pound.mas",
-        \@nullParams,
-        { uid => '0', gid => '0', mode => '740' }
-    );
-
-    
 }
 
 sub getLibrary
