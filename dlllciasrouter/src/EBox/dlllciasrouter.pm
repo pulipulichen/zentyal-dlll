@@ -185,7 +185,7 @@ sub _setConf
 
     # Iterate over table
     my @paramsArray = ();
-    my $domainHash = (); ##
+    my $domainHash = (); #####
     my $vmHash = ();
     my $i = 0;
     for my $id (@{$services->ids()}) {
