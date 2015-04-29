@@ -8,3 +8,5 @@ echo "1..."
 rm -rf debs-ppa/*
 zentyal-package
 sudo dpkg -i debs-ppa/zentyal-*_all.deb
+
+sudo /etc/init.d/zentyal dlllciasrouter start

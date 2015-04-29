@@ -157,7 +157,7 @@ sub _setConf
 
         $self->writeConfFile(
             '/etc/pound/error.html',
-            "pound/error.html.mas",
+            "dlllciasrouter/error.html.mas",
             \@errorPageParams,
             { uid => '0', gid => '0', mode => '740' }
         );
