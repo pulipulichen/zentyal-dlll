@@ -733,7 +733,7 @@ sub createFieldOtherRedirectPortsDisplay
             'printableName' => __('Other <br />Redirect <br />Ports'),
             'foreignModel' => 'PortRedirect',
             'view' => '/dlllciasrouter/View/PortRedirect',
-            'backView' => '/dlllciasrouter/View/dlllciasrouterServices',
+            'backView' => '/dlllciasrouter/View/PoundServices',
             'size' => '1',
             #optional=>1,
             hiddenOnSetter => 1,

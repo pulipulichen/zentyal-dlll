@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::dlllciasrouterServices;
+package EBox::dlllciasrouter::Model::PoundServices;
 
 use base 'EBox::Model::DataTable';
 
@@ -116,7 +116,7 @@ sub _table
 
     my $dataTable =
     {
-        tableName => 'dlllciasrouterServices',
+        tableName => 'PoundServices',
 
         'pageTitle' => __('Back End'),
         printableTableName => __('Back End'),
@@ -125,7 +125,7 @@ sub _table
         tableDescription => \@fields,
         printableRowName => __('Back End'),
         #sortedBy => 'updateDate',
-        'HTTPUrlView'=> 'dlllciasrouter/View/dlllciasrouterServices',
+        'HTTPUrlView'=> 'dlllciasrouter/View/PoundServices',
 
         # 20140219 Pulipuli Chen
         # 關閉enable選項，改成自製的
@@ -198,7 +198,7 @@ sub deletedRowNotify
 
     my $libREDIR = $self->loadLibrary('LibraryRedirect');
     my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->deleteDomainName($row, 'dlllciasrouterServices');
+    $libDN->deleteDomainName($row, 'PoundServices');
     $libREDIR->deleteRedirects($row);
 
     my $libMAC = $self->loadLibrary('LibraryMAC');

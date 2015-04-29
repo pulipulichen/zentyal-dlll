@@ -227,7 +227,7 @@ sub addRedirect
 
     if ($row ne undef)
     {
-        my $poundModel = $self->parentModule()->model("dlllciasrouterServices");
+        my $poundModel = $self->parentModule()->model("PoundServices");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         $poundModel->addRedirectRow(%param);
     }
@@ -241,7 +241,7 @@ sub deleteRedirect
 
     if ($row ne undef)
     {
-        my $poundModel = $self->parentModule()->model("dlllciasrouterServices");
+        my $poundModel = $self->parentModule()->model("PoundServices");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         $poundModel->deleteRedirectRow(%param);
     
@@ -260,7 +260,7 @@ sub updateRedirectPorts
     {
         $self->addRedirect($row, $redirRow);
 
-        $self->parentModule()->model("dlllciasrouterServices")->updateRedirectPorts($row);
+        $self->parentModule()->model("PoundServices")->updateRedirectPorts($row);
         $row->store();
     }
 }
@@ -293,7 +293,7 @@ sub updateExtPortHTML
 
     if ($row ne undef)
     {
-        my $poundModel = $self->parentModule()->model("dlllciasrouterServices");
+        my $poundModel = $self->parentModule()->model("PoundServices");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         
         my $secure = $redirRow->valueByName("secure");

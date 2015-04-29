@@ -104,9 +104,9 @@ sub deleteDomainName
     # 先找找看有沒有
     my $hasDomainName = 0;
 
-    if ($hasDomainName == 0 && $excludeModel ne 'dlllciasrouterServices') 
+    if ($hasDomainName == 0 && $excludeModel ne 'PoundServices') 
     {
-        $hasDomainName = $self->modelHasDomainName('dlllciasrouterServices', $domainName);
+        $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
     }
 
     if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') 
