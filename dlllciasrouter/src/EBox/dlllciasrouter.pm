@@ -341,7 +341,7 @@ sub _setConf
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->model("dlllciasrouterLibrary");
+    return $self->model("PoundLibrary");
 }
 
 sub ipaddrToVMID

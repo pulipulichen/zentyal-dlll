@@ -21,13 +21,13 @@ use POSIX qw(strftime);
 use Try::Tiny;
 
 ##
-# 讀取dlllciasrouterLibrary
+# 讀取PoundLibrary
 # @author Pulipuli Chen
 ##
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("dlllciasrouterLibrary");
+    return $self->parentModule()->model("PoundLibrary");
 }
 
 ##

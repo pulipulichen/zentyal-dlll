@@ -140,7 +140,7 @@ sub _table
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("dlllciasrouterLibrary");
+    return $self->parentModule()->model("PoundLibrary");
 }
 
 ##

@@ -89,13 +89,13 @@ sub _table
 }
 
 ##
-# 讀取dlllciasrouterLibrary
+# 讀取PoundLibrary
 # @author Pulipuli Chen
 ##
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("dlllciasrouterLibrary");
+    return $self->parentModule()->model("PoundLibrary");
 }
 
 ##
