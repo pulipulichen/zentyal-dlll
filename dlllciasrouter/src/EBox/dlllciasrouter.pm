@@ -327,26 +327,6 @@ sub _setConf
     );
 
 
-    # ----------------------------
-    # 設定pound自動啟動以及apache
-    # ----------------------------
-
-    my @nullParams = ();
-
-
-    $self->writeConfFile(
-        '/etc/default/pound',
-        "dlllciasrouter/default-pound.mas",
-        \@nullParams,
-        { uid => '0', gid => '0', mode => '740' }
-    );
-
-    $self->writeConfFile(
-        '/etc/apache2/ports.conf',
-        "dlllciasrouter/ports.conf.mas",
-        \@nullParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
 
 
 }
