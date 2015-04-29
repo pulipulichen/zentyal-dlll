@@ -329,17 +329,7 @@ sub _setConf
         { uid => '0', gid => '0', mode => '740' }
     );
 
-    my @vmParams = ();
-    push(@vmParams, 'vmHash' => $vmHash);
-    push(@vmParams, 'notifyEmail' => $notifyEmail);
-    push(@vmParams, 'senderEmail' => $senderEmail);
-    $self->writeConfFile(
-        '/etc/pound/vmid-config.php',
-        #'/var/www/vmid-config.php',
-        "dlllciasrouter/vmid-config.php.mas",
-        \@vmParams,
-        { uid => '0', gid => '0', mode => '770' }
-    );
+    
 }
 
 sub getLibrary
