@@ -127,7 +127,7 @@ sub _setConf
     my $errorURL = $settings->value('error');
     if ($errorURL eq "") 
     {
-        $errorURL = "";
+        $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
     }
     my $file = "/etc/pound/error.html";
     my $fileTemp = "/tmp/error.html";
