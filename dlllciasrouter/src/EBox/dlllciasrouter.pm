@@ -284,6 +284,62 @@ sub _setConf
         });
     }
 
+    # ----------------------------
+    # 準備把值傳送到設定檔去
+    # ----------------------------
+
+    my @servicesParams = ();
+    push(@servicesParams, 'address' => $address);
+    push(@servicesParams, 'port' => $port);
+    push(@servicesParams, 'alive' => $alive);
+    push(@servicesParams, 'timeout' => $timeout);
+    push(@servicesParams, 'enableError' => $enableError);
+    push(@servicesParams, 'errorURL' => $errorURL);
+    push(@servicesParams, 'file' => $file);
+
+    push(@servicesParams, 'restarterIP' => $restarterIP);
+    push(@servicesParams, 'restarterPort' => $restarterPort);
+
+    push(@servicesParams, 'services' => \@paramsArray);
+    push(@servicesParams, 'domainHash' => $domainHash);
+
+    push(@servicesParams, 'redir' => \@redirArray);
+    
+
+    $self->writeConfFile(
+        $CONFFILE,
+        "dlllciasrouter/pound.cfg.mas",
+        \@servicesParams,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    my @nullParams = ();
+
+    $self->writeConfFile(
+        '/etc/apache2/ports.conf',
+        "dlllciasrouter/ports.conf.mas",
+        \@nullParams,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    $self->writeConfFile(
+        '/etc/default/pound',
+        "dlllciasrouter/default-pound.mas",
+        \@nullParams,
+        { uid => '0', gid => '0', mode => '740' }
+    );
+
+    my @vmParams = ();
+    push(@vmParams, 'vmHash' => $vmHash);
+    push(@vmParams, 'notifyEmail' => $notifyEmail);
+    push(@vmParams, 'senderEmail' => $senderEmail);
+    $self->writeConfFile(
+        '/etc/pound/vmid-config.php',
+        #'/var/www/vmid-config.php',
+        "dlllciasrouter/vmid-config.php.mas",
+        \@vmParams,
+        { uid => '0', gid => '0', mode => '770' }
+    );
 }
 
 sub getLibrary
