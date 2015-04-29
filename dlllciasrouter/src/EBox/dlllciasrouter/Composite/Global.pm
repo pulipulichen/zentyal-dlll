@@ -18,7 +18,7 @@ use EBox::Global;
 #
 sub _description
 {
-    my $pageTitle = 'Reverse Proxy (dlllciasrouter)';
+    my $pageTitle = 'Reverse Proxy (DLLL-CIAS Router)';
 
     my $description =
       {

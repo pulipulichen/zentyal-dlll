@@ -62,7 +62,7 @@ sub menu
 
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
                                       'text' => __('Settings')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/dlllciasrouterServices',
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',
                                       'text' => __('Back End')));
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/URLRedirect',
                                       'text' => __('URL Redirect')));
@@ -174,7 +174,7 @@ sub _setConf
     # Back End
     # ----------------------------
 
-    my $services = $self->model('dlllciasrouterServices');
+    my $services = $self->model('PoundServices');
     my $libRedir = $self->model('LibraryRedirect');
 
     # Iterate over table
