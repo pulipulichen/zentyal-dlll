@@ -65,6 +65,7 @@ sub _table
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDisplayContactLink(),
         $fieldsFactory->createFieldDescription(),
+        $fieldsFactory->createFieldDescriptionHTML(),
         $fieldsFactory->createFieldExpiryDate(),
         
         $fieldsFactory->createFieldCreateDateDisplay(),
@@ -128,7 +129,10 @@ sub addedRowNotify
 
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
+
     $libCT->setContactLink($row);
+    $libCT->setDescriptionHTML($row);
+
     $libDN->addDomainName($row);
 
     $row->store();

@@ -211,7 +211,7 @@ sub createFieldContactEmail
     return $field;
 }
 
-sub createFieldDescription
+sub createFieldEmailKMDescription
 {
     my $field = new EBox::Types::Text(
             fieldName => 'description',
@@ -229,6 +229,47 @@ sub createFieldDescription
 
     return $field;
 }
+
+sub createFieldDescription
+{
+    # https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js
+    my $field = new EBox::Types::Text(
+    #my $field = new EBox::dlllciasrouter::Model::DescriptionText(
+            fieldName => 'description',
+            printableName => __('Description'),
+            editable => 0,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            defaultValue => __(''),
+            #size => 100,
+            #type => "html",
+            help => 
+                '<div class="html-editor">'
+                   . '<div class="html-editor-view"></div>'
+                .'</div><span class="init-span"><button type="button" class="init-button" '
+                    . 'onclick="this.className=\'init-button trigger\';this.style.display=\'none\';if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\'https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js\';document.getElementsByTagName(\'body\')[0].appendChild(_script);} else {_ZENTYAL_UTIL.init()}" '
+                    . '>EDIT</button> Please click this button to initialize description. </span>',
+                #. '<script type="text/javascript" src="https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js"></script>',
+        );
+
+    return $field;
+}
+
+sub createFieldDescriptionHTML
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => 'descriptionHTML',
+            printableName => __('Description HTML'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
 
 sub createFieldExpiryDate
 {

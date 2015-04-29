@@ -317,9 +317,6 @@ sub getRedirectParamOther
 {
     my ($self, $row, $redirRow) = @_;
 
-    #my $extPort = $redirRow->valueByName('extPort');
-    #my $portHeader = $self->getPortHeader($row);
-    #$extPort = $portHeader . $extPort;
     my $extPort = $self->getOtherExtPort($row, $redirRow);
 
     my $intPort = $redirRow->valueByName('intPort');
@@ -342,9 +339,6 @@ sub getOtherExtPort
     my ($self, $row, $redirRow) = @_;
 
     my $extPort = $redirRow->valueByName('extPort');
-    #if ($extPort < 10) {
-    #    $extPort = "0" . $extPort;
-    #}
     my $portHeader = $self->getPortHeader($row);
 
     $extPort = $portHeader . $extPort;
@@ -563,10 +557,6 @@ sub updateRedirectPorts
     # 取得Other Redirect Ports
     for my $subId (@{$row->subModel('redirOther')->ids()}) {
         my $redirRow = $row->subModel('redirOther')->row($subId);
-        #my %param = $self->getRedirectParamOther($row, $redirRow);
-        #my $extPort = $redirRow->valueByName('extPort');
-        #my $portHeader = $self->getPortHeader($row);
-        #$extPort = $portHeader . $extPort;
         my $extPort = $self->getOtherExtPort($row, $redirRow);
         my $intPort = $redirRow->valueByName('intPort');
         my $desc = $redirRow->valueByName('description');

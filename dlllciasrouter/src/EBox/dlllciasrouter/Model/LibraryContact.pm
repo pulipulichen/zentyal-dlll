@@ -81,6 +81,12 @@ sub setContactLink
     my $link = '';
 
     my $desc = $row->valueByName('description');
+
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    $desc = $libEnc->unescapeFromUtf16($desc);
+    $desc = $libEnc->stripsHtmlTags($desc);
+    #$desc = "如 何.,";
+
     if ($desc =~ m/^(http\:\/\/email\-km\.dlll\.nccu\.edu\.tw)/i) {
         $link = $link.'[<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$desc.'" target="_blank">EMAIL-KM</a>]'.'<br />';
     }
@@ -98,6 +104,7 @@ sub setContactLink
 
         $link = $link.$short_desc.'<br />';
     }
+
 
     my $name = $row->valueByName('contactName');
     my $email = $row->valueByName('contactEmail');
@@ -119,6 +126,23 @@ sub setContactLink
     $link = "<span>".$link."</span>";
 
     $row->elementByName('contactLink')->setValue($link);
+
+    #$row->store();
+}
+
+sub setDescriptionHTML
+{
+    my ($self, $row) = @_;
+
+    my $desc = $row->valueByName('description');
+
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    $desc = $libEnc->unescapeFromUtf16($desc);
+    $desc = $libEnc->stripsHtmlTags($desc);
+    
+    $desc = "<span>".$desc."</span>";
+
+    $row->elementByName('descriptionHTML')->setValue($desc);
 
     #$row->store();
 }

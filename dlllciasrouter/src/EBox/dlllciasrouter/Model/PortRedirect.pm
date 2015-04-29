@@ -222,7 +222,6 @@ sub addRedirect
 {
     my ($self, $row, $redirRow) = @_;
 
-    #my $row = $self->parentRow();
 
     if ($row ne undef)
     {
@@ -244,7 +243,7 @@ sub deleteRedirect
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         $poundModel->deleteRedirectRow(%param);
     
-    #    throw EBox::Exceptions::External("Try to delete redirect: " .  $param{description});
+        # throw EBox::Exceptions::External("Try to delete redirect: " .  $param{description});
     }
 }
 
