@@ -125,7 +125,7 @@ sub _setConf
     my $timeout = $settings->value('timeout');
     my $enableError = $settings->value('enableError');
     my $errorURL = $settings->value('error');
-    if ($errorURL eq "") 
+    if (defined $errorURL && $errorURL eq "") 
     {
         $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
     }
