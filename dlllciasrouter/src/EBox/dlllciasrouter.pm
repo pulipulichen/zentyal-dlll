@@ -314,13 +314,6 @@ sub _setConf
         { uid => '0', gid => '0', mode => '644' }
     );
 
-    $self->writeConfFile(
-        '/etc/default/pound',
-        "dlllciasrouter/default-pound.mas",
-        \@nullParams,
-        { uid => '0', gid => '0', mode => '740' }
-    );
-
     my @vmParams = ();
     push(@vmParams, 'vmHash' => $vmHash);
     push(@vmParams, 'notifyEmail' => $notifyEmail);
@@ -335,7 +328,7 @@ sub _setConf
 
 
     # ----------------------------
-    # 設定apache
+    # 設定pound自動啟動跟apache
     # ----------------------------
     my @nullParams = ();
 
@@ -346,6 +339,13 @@ sub _setConf
         { uid => '0', gid => '0', mode => '644' }
     );
 
+
+    $self->writeConfFile(
+        '/etc/default/pound',
+        "dlllciasrouter/default-pound.mas",
+        \@nullParams,
+        { uid => '0', gid => '0', mode => '740' }
+    );
 
 }
 
