@@ -125,6 +125,10 @@ sub _setConf
     my $timeout = $settings->value('timeout');
     my $enableError = $settings->value('enableError');
     my $errorURL = $settings->value('error');
+    if ($errorURL eq "") 
+    {
+        $errorURL = "";
+    }
     my $file = "/etc/pound/error.html";
     my $fileTemp = "/tmp/error.html";
     #my $file = "/tmp/error.html";
