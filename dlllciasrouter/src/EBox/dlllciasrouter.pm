@@ -115,6 +115,65 @@ sub _setConf
 
     my $lib = $self->getLibrary();
 
+    # ----------------------------
+    # 設定
+    # ----------------------------
+
+    my $settings = $self->model('Settings');
+    my $port = $settings->value('port');
+    my $alive = $settings->value('alive');
+    my $timeout = $settings->value('timeout');
+    my $enableError = $settings->value('enableError');
+    my $errorURL = $settings->value('error');
+    if ($errorURL eq "") 
+    {
+        $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
+    }
+    my $file = "/etc/pound/error.html";
+    my $fileTemp = "/tmp/error.html";
+    #my $file = "/tmp/error.html";
+
+    my $address = "127.0.0.1";
+    if ($settings->value("address") eq "address_extIface")
+    {
+        my $network = EBox::Global->modInstance('network');
+        foreach my $if (@{$network->ExternalIfaces()}) {
+            if ($network->ifaceIsExternal($if)) {
+                $address = $network->ifaceAddress($if);
+            }
+        }
+    }
+    else
+    {
+        $address = $settings->value("address");
+    }
+     if ($enableError == 1) {
+        system('wget ' . $errorURL . ' -O '.$fileTemp);
+
+        # 讀取
+        #my $errorPage = system('cat '.$fileTemp);
+        open FILE, "<".$fileTemp;
+        my $errorPage = do { local $/; <FILE> };
+        
+        # 寫入
+        my @errorPageParams = ();
+        push(@errorPageParams, 'errorPage' => $errorPage);
+
+        $self->writeConfFile(
+            '/etc/pound/error.html',
+            "dlllciasrouter/error.html.mas",
+            \@errorPageParams,
+            { uid => '0', gid => '0', mode => '740' }
+        );
+
+        unlink $fileTemp;
+    }
+
+    my $restarterIP = $settings->value('restarterIP');
+    my $restarterPort = $settings->value('restarterPort');
+    my $notifyEmail = $settings->value('notifyEmail');
+    my $senderEmail = $settings->value('senderEmail');
+
 }
 
 sub getLibrary
