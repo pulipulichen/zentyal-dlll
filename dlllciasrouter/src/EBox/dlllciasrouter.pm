@@ -174,6 +174,90 @@ sub _setConf
     my $notifyEmail = $settings->value('notifyEmail');
     my $senderEmail = $settings->value('senderEmail');
 
+    # ----------------------------
+    # Back End
+    # ----------------------------
+
+    my $services = $self->model('PoundServices');
+    my $libRedir = $self->model('LibraryRedirect');
+
+    # Iterate over table
+    my @paramsArray = ();
+    my $domainHash = ();
+    my $vmHash = ();
+    my $i = 0;
+    for my $id (@{$services->ids()}) {
+        my $row = $services->row($id);
+        
+        #if ($row->valueByName('enabled') == 0)
+        if ($lib->isEnable($row) == 0)
+        {
+            next;
+        }
+
+        my $domainNameValue = $row->valueByName('domainName');
+        my $ipaddrValue = $row->valueByName('ipaddr');
+        my $descriptionValue = $row->valueByName('description');
+        my $portValue = $row->valueByName('port');
+        my $httpToHttpsValue = $row->valueByName('httpToHttps');
+        my $httpsPortValue = $libRedir->getHTTPSextPort($row);
+
+        my $httpSecurityValue = $row->valueByName('redirHTTP_secure');
+        my $httpPortValue = $libRedir->getHTTPextPort($row);
+        
+        my $emergencyValue = $row->valueByName('emergencyEnable');
+        my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
+
+        push (@paramsArray, {
+            domainNameValue => $domainNameValue,
+            ipaddrValue => $ipaddrValue,
+            portValue => $portValue,
+            descriptionValue => $descriptionValue,
+            
+            httpToHttpsValue => $httpToHttpsValue,
+            httpsPortValue => $httpsPortValue,
+
+            httpSecurityValue => $httpSecurityValue,
+            httpPortValue => $httpPortValue,
+
+            emergencyValue => $emergencyValue,
+            redirHTTP_enable => $redirHTTP_enable,
+        });
+
+        # ---------
+        # 開始Hash
+
+        my @backEndArray;
+        my $vmidConfig = $self->ipaddrToVMID($ipaddrValue);
+        if ( exists $domainHash->{$domainNameValue}  ) {
+            # 如果Hash已經有了這個Domain Name
+            @backEndArray = @{$domainHash->{$domainNameValue}};
+            $vmidConfig = $vmidConfig.",".$vmHash->{$domainNameValue};
+        }
+
+        my $backEnd = ();
+        $backEnd->{ipaddrValue} = $ipaddrValue;
+        $backEnd->{portValue} = $portValue;
+        $backEnd->{descriptionValue} = $descriptionValue;
+        $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
+        $backEnd->{httpsPortValue} = $httpsPortValue;
+
+        $backEnd->{httpSecurityValue} = $httpSecurityValue;
+        $backEnd->{httpPortValue} = $httpPortValue;
+
+        $backEnd->{emergencyValue} = $emergencyValue;
+        $backEnd->{redirHTTP_enable} = $redirHTTP_enable;
+
+        $backEndArray[$#backEndArray+1] = $backEnd;
+
+        $domainHash->{$domainNameValue} = \@backEndArray;
+        $vmHash->{$domainNameValue} = $vmidConfig;
+
+        # ----------
+        $i++;
+
+    }
+
 }
 
 sub getLibrary
