@@ -308,7 +308,7 @@ sub _setConf
 
     $self->writeConfFile(
         $CONFFILE,
-        "pound/pound.cfg.mas",
+        "dlllciasrouter/pound.cfg.mas",
         \@servicesParams,
         { uid => '0', gid => '0', mode => '644' }
     );
@@ -317,14 +317,14 @@ sub _setConf
 
     $self->writeConfFile(
         '/etc/apache2/ports.conf',
-        "pound/ports.conf.mas",
+        "dlllciasrouter/ports.conf.mas",
         \@nullParams,
         { uid => '0', gid => '0', mode => '644' }
     );
 
     $self->writeConfFile(
         '/etc/default/pound',
-        "pound/default-pound.mas",
+        "dlllciasrouter/default-pound.mas",
         \@nullParams,
         { uid => '0', gid => '0', mode => '740' }
     );
@@ -336,7 +336,7 @@ sub _setConf
     $self->writeConfFile(
         '/etc/pound/vmid-config.php',
         #'/var/www/vmid-config.php',
-        "pound/vmid-config.php.mas",
+        "dlllciasrouter/vmid-config.php.mas",
         \@vmParams,
         { uid => '0', gid => '0', mode => '770' }
     );
