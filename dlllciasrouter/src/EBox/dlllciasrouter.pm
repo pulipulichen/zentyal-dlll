@@ -9,8 +9,6 @@ use EBox::Global;
 use EBox::Gettext;
 use EBox::Sudo;
 
-#use LWP::Simple;
-
 my $CONFFILE = '/etc/pound/pound.cfg';
 
 # Method: _create
@@ -34,12 +32,6 @@ sub _create
     return $self;
 }
 
-# Method: menu
-#
-# Overrides:
-#
-#       <EBox::Module::menu>
-#
 sub menu
 {
     my ($self, $root) = @_;
@@ -50,9 +42,9 @@ sub menu
                                         'order' => 0);
 
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
-                                      'text' => __('Settings')));
+                                      'text' => __('Pound Settings')));
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',
-                                      'text' => __('Back End')));
+                                      'text' => __('Pound Back End')));
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/URLRedirect',
                                       'text' => __('URL Redirect')));
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/DNS',
@@ -61,12 +53,6 @@ sub menu
     $root->add($folder);
 }
 
-# Method: _daemons
-#
-# Overrides:
-#
-#       <EBox::Module::Service::_daemons>
-#
 sub _daemons
 {
     my $daemons = [

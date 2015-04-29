@@ -81,14 +81,13 @@ sub _table
         
         new EBox::Types::Port(
             'fieldName' => 'extPort',
-            'printableName' => __('External Port Last 2 Numbers'),
+            'printableName' => __('External Port Last 1 Numbers'),
             'unique' => 1,
             'editable' => 1,
             optional=>0,
-            help => "Please enter external port last 2 number, from 0 to 99. For example, 64 means ***64. *** is based on internal IP address.",
-            
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
+            help => "Please enter external port last 1 number, from 0 to 9. For example, 4 means ****4. **** is based on internal IP address.",
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         ),
 
         new EBox::Types::HTML(
@@ -96,8 +95,8 @@ sub _table
             printableName => __('External Port'),
             editable => 0,
             optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         ),
         new EBox::Types::Port(
             'fieldName' => 'intPort',

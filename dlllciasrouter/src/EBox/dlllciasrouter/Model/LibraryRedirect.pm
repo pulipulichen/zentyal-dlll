@@ -116,15 +116,17 @@ sub deleteRedirects
 
 # -----------------------------
 
-# 20140208 Pulipuli Chen
-# 似乎沒有用到，廢棄
-#sub populateHTTP
-#{
-#    my @opts = ();
-#    push (@opts, { value => 'redirHTTP_default', printableValue => 'Use Internal Port' });
-#    push (@opts, { value => 'redirHTTP_disable', printableValue => 'Disable' });
-#    return \@opts;
-#}
+#Zentyal: 10.0.0.254
+#Proxmox VE: 10.6.0.{1..99} 最多99臺PVE
+#- 對外連線的PVE為 10.6.0.254
+#- 連接埠轉遞：10.6.0.1 > 60013 (HTTPS 443)
+#NAS: 10.6.1.{1..99} 最多99臺NAS
+#- 連接埠轉遞：10.6.1.1 > 61013
+#虛擬機器: 10.{1..5}.{0..9}.{1..99}
+#- VMID 1001: 10.1.0.1 > 1 0 01 8 [最小] (HTTP 80)
+#- VMID 2132: 10.2.1.32 > 2 1 32 8
+#- VMID 5999: 10.5.9.99 > 5 9 998 [最大]
+#- 總共可供 4950 臺虛擬機器運作
 
 sub getPortHeader 
 {
@@ -133,25 +135,34 @@ sub getPortHeader
     # 變成ID前幾碼
     my $ipaddr = $row->valueByName('ipaddr');
     my @parts = split('\.', $ipaddr);
+    my $partA = $parts[0];
+    my $partB = $parts[1];
     my $partC = $parts[2];
     my $partD = $parts[3];
 
     # 檢查
-    if ( !($partC > 0 && $partC < 6)
+    if ( !($partA == 10)
+        || !($partB > 0 && $partB < 6)
+        || !($partC < 9)
         || !($partD > 0 && $partD < 100) ) {
-        throw EBox::Exceptions::External("Error IP address format (".$ipaddr."). The third part should be between 1~5, and the forth part should be between 1~99");
+        throw EBox::Exceptions::External("Error IP address format (".$ipaddr."). " 
+            . "For example: 10.1.0.1. <br />"
+            . "The 1st part shout be 10, <br />"
+            . "the 2nd part should be between 1~5, <br />"
+            . "the 3rd part should be between 0~9, and <br />"
+            . "the 4th part should be between 1~99");
     }
     
     # 重新組合
-        $partC = substr($partC, -1);
+        $partB = substr($partB, -1);
     
         if (length($partD) == 1) {
             $partD = "0" . $partD;
         }
         else {
-            $partC = substr($partC, -2);
+            $partB = substr($partB, -2);
         }
-     my $portHeader = $partC.$partD;
+     my $portHeader = $partB.$partC.$partD;
      
      return $portHeader;
 }
@@ -224,19 +235,19 @@ sub getProtocolDefaultExtPort
     my ($self, $protocol) = @_;
 
     if ($protocol eq 'HTTP') {
-        return 80;
+        return 8;
     }
     elsif ($protocol eq 'HTTPS') {
-        return 43;
+        return 3;
     }
     elsif ($protocol eq 'SSH') {
-        return 22;
+        return 2;
     }
     elsif ($protocol eq 'RDP') {
-        return 89;
+        return 9;
     }
     else {
-        return 80;
+        return 8;
     }
 }
 
@@ -331,9 +342,9 @@ sub getOtherExtPort
     my ($self, $row, $redirRow) = @_;
 
     my $extPort = $redirRow->valueByName('extPort');
-    if ($extPort < 10) {
-        $extPort = "0" . $extPort;
-    }
+    #if ($extPort < 10) {
+    #    $extPort = "0" . $extPort;
+    #}
     my $portHeader = $self->getPortHeader($row);
 
     $extPort = $portHeader . $extPort;

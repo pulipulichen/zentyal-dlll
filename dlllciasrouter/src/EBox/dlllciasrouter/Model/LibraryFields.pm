@@ -110,8 +110,11 @@ sub createFieldInternalIPAddress
             printableName => __('Internal IP Address'),
             editable => 1,
             #'unique' => 1,
-            help => __('The third part should be between 1~5, and the forth part should be between 1~99. <br />'
-                . 'Example: 10.9.1.51'),
+            help => __('The 1st part should be 10, <br />'
+                . 'the 2nd part should be 1~5, <br />'
+                . 'the 3rd part should be 0~9, and <br />'
+                . 'the 4th part should be between 1~99. <br />'
+                . 'Example: 10.1.0.51'),
         );
 
     return $field;
@@ -124,8 +127,11 @@ sub createFieldInternalIPAddressHideView
             printableName => __('Internal IP Address'),
             editable => 1,
             #'unique' => 1,
-            help => __('The third part should be between 1~5, and the forth part should be between 1~99. <br />'
-                . 'Example: 10.9.1.51'),
+            help => __('The 1st part should be 10, <br />'
+                . 'the 2nd part should be 1~5, <br />'
+                . 'the 3rd part should be 0~9, and <br />'
+                . 'the 4th part should be between 1~99. <br />'
+                . 'Example: 10.1.0.51'),
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         );
@@ -391,7 +397,7 @@ sub createFieldProtocolLog
 
 sub createFieldProtocolExternalPort
 {
-    my ($self, $protocol, $unique) = @_;
+    my ($self, $protocol, $unique, $extPort) = @_;
     my $field = new EBox::Types::Union(
             'fieldName' => 'redir'.$protocol.'_extPort',
             'printableName' => __($protocol.' External Port'),
@@ -400,7 +406,7 @@ sub createFieldProtocolExternalPort
             [
             new EBox::Types::Union::Text(
                 'fieldName' => 'redir'.$protocol.'_extPort_default',
-                'printableName' => __('Default: Based on IP address.')),
+                'printableName' => __('Default: Based on IP address. (****'. $extPort  . ')')),
             new EBox::Types::Port(
                 'fieldName' => 'redir'.$protocol.'_extPort_other',
                 'printableName' => __('Other'),
@@ -545,7 +551,7 @@ sub createFieldHTTPLog
 sub createFieldHTTPExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("HTTP", 0);
+    my $field = $self->createFieldProtocolExternalPort("HTTP", 0, 8);
     return $field;
 }
 
@@ -597,7 +603,7 @@ sub createFieldHTTPSLog
 sub createFieldHTTPSExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("HTTPS", 1);
+    my $field = $self->createFieldProtocolExternalPort("HTTPS", 1, 3);
     return $field;
 }
 
@@ -643,7 +649,7 @@ sub createFieldSSHLog
 sub createFieldSSHExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("SSH", 1);
+    my $field = $self->createFieldProtocolExternalPort("SSH", 1, 2);
     return $field;
 }
 
@@ -688,7 +694,7 @@ sub createFieldRDPLog
 sub createFieldRDPExternalPort
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolExternalPort("RDP", 1);
+    my $field = $self->createFieldProtocolExternalPort("RDP", 1, 9);
     return $field;
 }
 

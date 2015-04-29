@@ -118,19 +118,15 @@ sub _table
     {
         tableName => 'PoundServices',
 
-        'pageTitle' => __('Back End'),
-        printableTableName => __('Back End'),
+        'pageTitle' => __('Pound Back End'),
+        printableTableName => __('Pound Back End'),
         defaultActions => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
         modelDomain => 'dlllciasrouter',
         tableDescription => \@fields,
-        printableRowName => __('Back End'),
+        printableRowName => __('Pound Back End'),
         #sortedBy => 'updateDate',
         'HTTPUrlView'=> 'dlllciasrouter/View/PoundServices',
 
-        # 20140219 Pulipuli Chen
-        # 關閉enable選項，改成自製的
-        #'enableProperty' => 0,
-        #defaultEnabledValue => 1,
         'order' => 1,
     };
 
