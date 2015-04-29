@@ -76,6 +76,7 @@ ListenHTTP
 % print "#                End\n";
 % print "#        End\n";
 %
+% try {
 % while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
 %
         Service
@@ -165,6 +166,7 @@ ListenHTTP
 %
         End
 % } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
+% } catch {};
 
 % print "# -----------------------------------------\n";
 % print "# Redirect\n";
