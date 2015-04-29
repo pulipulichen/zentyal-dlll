@@ -76,7 +76,7 @@ ListenHTTP
 % print "#                End\n";
 % print "#        End\n";
 %
-% while ($domainHash != () && my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
+% while (%domainHash && my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
 %
         Service
                 HeadRequire "Host: <% $domainNameValue %>.*"
