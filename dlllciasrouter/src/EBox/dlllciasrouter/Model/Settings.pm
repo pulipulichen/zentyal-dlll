@@ -87,22 +87,26 @@ sub _table
               printableName => __('External Port'),
               editable      => 1,
               unique        => 1,
+              defaultValue => 80,
+              optional => 0,
              ),
           new EBox::Types::Text(
               fieldName     => 'alive',
               printableName => __('Alive Time'),
               editable      => 1,
               unique        => 0,
-              default => 30,
-              help => __("Check backend every X secs"),
+              defaultValue => 30,
+              optional => 0,
+              help => __("Check backend every X secs. Default is 30 sec."),
              ),
           new EBox::Types::Text(
               fieldName     => 'timeout',
               printableName => __('TimeOut'),
               editable      => 1,
               unique        => 0,
-              default => 30,
-              help => __("Wait for response X secs"),
+              defaultValue => 30,
+              optional => 0,
+              help => __("Wait for response X secs. Default is 30 sec."),
              ),
         new EBox::Types::Boolean(
               fieldName     => 'enableError',
@@ -115,27 +119,29 @@ sub _table
               fieldName     => 'error',
               printableName => __('Error Page Link'),
               editable      => 1,
-              optional => 1,
-              help => __('HTML format. Don\'t use HTTPS. Example: ').'<a href="http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html" target="error_example">http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html</a>',
+              defalutValue => 'https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html',
+              optional => 0,
+              help => __('HTML format. Don\'t use HTTPS. Example: ')
+                .'<a href="https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html" target="error_example">http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html</a>'
+                . '<br /> <hr />',
              ),
         new EBox::Types::HostIP(
             fieldName => 'restarterIP',
             printableName => __('Restarter IP'),
             editable => 1,
-            optional => 0,
+            optional => 1,
         ),
         new EBox::Types::Port(
             fieldName => 'restarterPort',
             printableName => __('Restarter Port'),
             editable => 1,
             defaultValue => 80,
-            optional => 0,
         ),
         new EBox::Types::Text(
             fieldName => 'notifyEmail',
             printableName => __('Notify E-MAIL Address'),
             editable => 1,
-            optional => 0,
+            optional => 1,
         ),
         new EBox::Types::Text(
             fieldName => 'senderEmail',
@@ -143,7 +149,7 @@ sub _table
             help => __('<hr /><br />'
                 . '<strong>Zentyal Configuration Link</strong>'),
             editable => 1,
-            optional => 0,
+            optional => 1,
         ),
         
         # --------------------------------

@@ -763,8 +763,8 @@ sub createFieldDisplayRedirectPorts
             printableName => __('Redirect Ports'),
             editable => 0,
             optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         );
     return $field;
 }

@@ -234,6 +234,10 @@ sub updateDomainNameLink
     my $domainName = $row->valueByName("domainName");
     my $port = $self->parentModule()->model("Settings")->value("port");
 
+    if (!defined($port)) {
+        throw EBox::Exceptions::External("Port is not set. Go to <a href='dlllciasrouter/View/Settings'>Settings</a>");
+    }
+
     if ($port == 80) {
         $port = "";
     }

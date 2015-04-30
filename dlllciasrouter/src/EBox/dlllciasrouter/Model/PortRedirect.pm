@@ -52,7 +52,7 @@ sub pageTitle
     my ($self) = @_;
     my $row = $self->parentRow();
     
-    if ($row ne undef)
+    if (defined($row))
     {
         my $domainName = $row->printableValueByName('domainName');
         my $ip = $row->printableValueByName('ipaddr');
@@ -171,38 +171,71 @@ sub addedRowNotify
 {
     my ($self, $redirRow) = @_;
 
-    $ROW_NEED_UPDATE = 1;
-
-    $self->checkExternalPort($redirRow);
-
-    $self->updateRedirectPorts($redirRow);
-    
     my $row = $self->parentRow();
 
-    $self->addRedirect($row, $redirRow);
+    try {
 
+    $ROW_NEED_UPDATE = 1;
+    } catch {
+        $self->getLibrary()->show_exceptions(1 . $_);
+    };
+    try {
+    $self->checkExternalPort($redirRow);
+    } catch {
+        $self->getLibrary()->show_exceptions(2 . $_);
+    };
+    try {
+    $self->updateRedirectPorts($redirRow);
+    } catch {
+        $self->getLibrary()->show_exceptions(3 . $_);
+    };
+    try {
+    
+    } catch {
+        $self->getLibrary()->show_exceptions(4 . $_);
+    };
+    try {
+    $self->addRedirect($row, $redirRow);
+    } catch {
+        $self->getLibrary()->show_exceptions(5 . $_);
+    };
+    try {
     $self->updateExtPortHTML($row, $redirRow);
 
     $ROW_NEED_UPDATE = 0;
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 sub deletedRowNotify
 {
     my ($self, $redirRow) = @_;
     
+    try {
+
     $self->updateRedirectPorts($redirRow);
 
     my $row = $self->parentRow();
     $self->deleteRedirect($row, $redirRow);
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 
 sub updatedRowNotify
 {
     my ($self, $redirRow, $oldRedirRow) = @_;
 
-    
+    try {
 
     $self->checkExternalPort($redirRow);
     my $row = $self->parentRow();
+
+    if (!defined($row)) {
+        $self->getLibrary()->show_exceptions("row is not defined");
+    }
 
     $self->deleteRedirect($row, $oldRedirRow);
     $self->addRedirect($row, $redirRow);
@@ -214,6 +247,10 @@ sub updatedRowNotify
         $self->updateExtPortHTML($row, $redirRow);
         $ROW_NEED_UPDATE = 0;
     }
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 
 # --------------------------------
@@ -222,13 +259,27 @@ sub addRedirect
 {
     my ($self, $row, $redirRow) = @_;
 
+    #throw EBox::Exceptions::External("Try to add redirect", defined($row));
 
-    if ($row ne undef)
-    {
-        my $poundModel = $self->parentModule()->model("PoundServices");
-        my %param = $poundModel->getRedirectParamOther($row, $redirRow);
-        $poundModel->addRedirectRow(%param);
-    }
+    my $poundModel;
+    my $param;
+    
+    try {
+    $poundModel = $self->parentModule()->model("LibraryRedirect");
+    } catch {
+        $self->getLibrary()->show_exceptions(51 . $_);
+    };
+    try {
+    $param = $poundModel->getRedirectParamOther($row, $redirRow);
+    } catch {
+        $self->getLibrary()->show_exceptions(52 . $_);
+    };
+    try {
+    #$poundModel->addRedirectRow(%param);
+    } catch {
+        $self->getLibrary()->show_exceptions(53 . $_);
+    };
+    
 }
 
 sub deleteRedirect
@@ -237,9 +288,9 @@ sub deleteRedirect
 
     #my $row = $self->parentRow();
 
-    if ($row ne undef)
+    if (defined($row))
     {
-        my $poundModel = $self->parentModule()->model("PoundServices");
+        my $poundModel = $self->parentModule()->model("LibraryRedirect");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         $poundModel->deleteRedirectRow(%param);
     
@@ -254,11 +305,11 @@ sub updateRedirectPorts
     my $row = $self->parentRow();
     #my $row = $redirRow->parentRow();
 
-    if ($row ne undef)
+    if (defined($row))
     {
         $self->addRedirect($row, $redirRow);
 
-        $self->parentModule()->model("PoundServices")->updateRedirectPorts($row);
+        $self->parentModule()->model("LibraryRedirect")->updateRedirectPorts($row);
         $row->store();
     }
 }
@@ -269,8 +320,12 @@ sub checkExternalPort
 
     my $extPort = $redirRow->valueByName("extPort");
 
-    if ( $extPort > 99 ) {
-        throw EBox::Exceptions::External("Error External Port Last 2 Numbers format (".$extPort."). Please enter 0~99");
+    if ( $extPort > 9 
+        ||  $extPort == 2
+        ||  $extPort == 3
+        ||  $extPort == 8
+        ||  $extPort == 9) {
+        throw EBox::Exceptions::External("Error External Port Last 1 Numbers format (".$extPort."). Only allow 0,1,4,5,6, or 7");
     }
 }
 
@@ -289,9 +344,9 @@ sub updateExtPortHTML
 
     #my $row = $self->parentRow();
 
-    if ($row ne undef)
+    if (defined($row))
     {
-        my $poundModel = $self->parentModule()->model("PoundServices");
+        my $poundModel = $self->parentModule()->model("LibraryRedirect");
         my %param = $poundModel->getRedirectParamOther($row, $redirRow);
         
         my $secure = $redirRow->valueByName("secure");

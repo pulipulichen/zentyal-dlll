@@ -162,6 +162,7 @@ sub addedRowNotify
 {
     my ($self, $row) = @_;
 
+    try {
     $ROW_NEED_UPDATE = 1;
     
     my $lib = $self->getLibrary();
@@ -188,11 +189,17 @@ sub addedRowNotify
 
     $row->store();
     $ROW_NEED_UPDATE = 0;
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
+
+    try {
 
     my $libREDIR = $self->loadLibrary('LibraryRedirect');
     my $libDN = $self->loadLibrary('LibraryDomainName');
@@ -201,6 +208,9 @@ sub deletedRowNotify
 
     my $libMAC = $self->loadLibrary('LibraryMAC');
     $libMAC->removeDHCPfixedIPMember($row);
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 
 sub updatedRowNotify

@@ -76,10 +76,13 @@ sub addRedirects
         $self->addRedirectRow(%param);
     }
 
-    for my $subId (@{$row->subModel('redirOther')->ids()}) {
-        my $redirRow = $row->subModel('redirOther')->row($subId);
-        my $redirModel = $row->subModel('redirOther');
-        $redirModel->addRedirect($row, $redirRow);
+    my $redirOther = $row->subModel('redirOther');
+    if (defined($redirOther)) {
+        for my $subId (@{$redirOther->ids()}) {
+            my $redirRow = $row->subModel('redirOther')->row($subId);
+            my $redirModel = $row->subModel('redirOther');
+            $redirModel->addRedirect($row, $redirRow);
+        }
     }
 }
 
@@ -107,10 +110,13 @@ sub deleteRedirects
     %param = $self->getRedirectParamRDP($row);
     $self->deleteRedirectRow(%param);
 
-    for my $subId (@{$row->subModel('redirOther')->ids()}) {
-        my $redirRow = $row->subModel('redirOther')->row($subId);
-        my $redirModel = $row->subModel('redirOther');
-        $redirModel->deleteRedirect($row, $redirRow);
+    my $redirOther = $row->subModel('redirOther');
+    if (defined($redirOther)) {
+        for my $subId (@{$row->subModel('redirOther')->ids()}) {
+            my $redirRow = $row->subModel('redirOther')->row($subId);
+            my $redirModel = $row->subModel('redirOther');
+            $redirModel->deleteRedirect($row, $redirRow);
+        }
     }
 }
 
@@ -317,20 +323,45 @@ sub getRedirectParamOther
 {
     my ($self, $row, $redirRow) = @_;
 
-    my $extPort = $self->getOtherExtPort($row, $redirRow);
+    my $extPort;
+    my $intPort;
+    my $desc;
+    my $log;
 
-    my $intPort = $redirRow->valueByName('intPort');
-    my $desc = $redirRow->valueByName('description');
+    try {
+        $extPort = $self->getOtherExtPort($row, $redirRow);
+    } catch {
+        $self->getLibrary()->show_exceptions(1 . $_);
+    };
+    try {
+    $intPort = $redirRow->valueByName('intPort');
+    } catch {
+        $self->getLibrary()->show_exceptions(2 . $_);
+    };
+    
+    try {
+    $desc = $redirRow->valueByName('description');
     $desc = "Other (".$desc.")";
-    my $log = $redirRow->valueByName('log');
+    $log = $redirRow->valueByName('log');
+    } catch {
+        $self->getLibrary()->show_exceptions(25 . $_);
+    };
 
     if ($redirRow->valueByName('secure') == 1)
     {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log);
+        try {
+            return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log);
+        } catch {
+            $self->getLibrary()->show_exceptions(3 . $_);
+        };
     }
     else
     {
-        return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
+        try {
+            return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
+        } catch {
+            $self->getLibrary()->show_exceptions(4 . $_);
+        };
     }
 }
 
@@ -473,6 +504,8 @@ sub addRedirectRow
 {
     my ($self, %params) = @_;
     
+    try {
+
     my $gl = EBox::Global->getInstance();
     my $firewall = $gl->modInstance('firewall');
     my $redirMod = $firewall->model('RedirectsTable');
@@ -484,12 +517,18 @@ sub addRedirectRow
     if (defined($id) == 0) {
         $redirMod->addRow(%params);
     }
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 
 sub deleteRedirectRow
 {
     my ($self, %param) = @_;
     
+    try {
+
     my $gl = EBox::Global->getInstance();
     my $firewall = $gl->modInstance('firewall');
     my $redirMod = $firewall->model('RedirectsTable');
@@ -500,11 +539,17 @@ sub deleteRedirectRow
     if (defined($id) == 1) {
         $redirMod->removeRow($id);
     }
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 
 sub updateRedirectPorts
 {
     my ($self, $row) = @_;
+
+    try {
 
     my $lib = $self->getLibrary();
     my $libNET = $self->loadLibrary('LibraryNetwork');
@@ -555,24 +600,27 @@ sub updateRedirectPorts
     }
 
     # 取得Other Redirect Ports
-    for my $subId (@{$row->subModel('redirOther')->ids()}) {
-        my $redirRow = $row->subModel('redirOther')->row($subId);
-        my $extPort = $self->getOtherExtPort($row, $redirRow);
-        my $intPort = $redirRow->valueByName('intPort');
-        my $desc = $redirRow->valueByName('description');
-        my $secure = $redirRow->valueByName('secure');
+    my $redirOther = $row->subModel('redirOther');
+    if (defined($redirOther)) {
+        for my $subId (@{$redirOther->ids()}) {
+            my $redirRow = $row->subModel('redirOther')->row($subId);
+            my $extPort = $self->getOtherExtPort($row, $redirRow);
+            my $intPort = $redirRow->valueByName('intPort');
+            my $desc = $redirRow->valueByName('description');
+            my $secure = $redirRow->valueByName('secure');
 
-        if ($secure) {
-            $desc = '[' . $desc . ']';
-        }
+            if ($secure) {
+                $desc = '[' . $desc . ']';
+            }
 
-        if ($hint ne '')
-        {
-            $hint = $hint . "<br />";
-        }
-        
-        $hint = $hint . "<strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."";   
-    }
+            if ($hint ne '')
+            {
+                $hint = $hint . "<br />";
+            }
+
+            $hint = $hint . "<strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."";   
+        }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
+    }   # if (defined($redirOther)) {
 
     # 最後結尾
     if ($hint ne '')
@@ -586,7 +634,12 @@ sub updateRedirectPorts
     }
 
     $row->elementByName('redirPorts')->setValue($hint);
+
     #$row->store();
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
 }
 
 sub isProtocolEnable 
@@ -610,7 +663,8 @@ sub getProtocolHint
     my $note = $row->valueByName('redir'.$protocol.'_note');
 
     my $protocolTitle = $protocol;
-    if ($note ne '') {
+    
+    if (defined($note) && $note ne '') {
         $protocolTitle = $protocolTitle . '*';
     }
 
@@ -640,7 +694,7 @@ sub getProtocolHint
             . "</a>";  
     }
 
-    if ($note ne '') {
+    if (defined($note) && $note ne '') {
         $hint = '<em title="'.$note.'">'.$hint.'</em>';
     }
 
