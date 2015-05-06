@@ -254,10 +254,15 @@ sub createFieldDescription
             fieldName => 'description',
             printableName => __('Description'),
             editable => 0,
-            optional=>0,
+
+            #optional => 0,
+            #defaultValue => __(''),
+
+            optional => 1,
+
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            defaultValue => __(''),
+            
             #size => 100,
             #type => "html",
             help => 
@@ -815,9 +820,8 @@ sub createFieldOtherRedirectPortsDisplay
             'view' => '/dlllciasrouter/View/PortRedirect',
             'backView' => '/dlllciasrouter/View/PoundServices',
             'size' => '1',
-            #optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 0,
        );
     return $field;
 }

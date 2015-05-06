@@ -102,7 +102,11 @@ sub setContactLink
             $short_desc = "<span title=\"".$desc."\">".$short_desc."</span>"
         }
 
-        $link = $link.$short_desc.'<br />';
+        if ($short_desc ne '') {
+            $short_desc = $short_desc . '<br />';
+        }
+
+        $link = $link.$short_desc;
     }
 
 

@@ -120,12 +120,11 @@ sub _table
         tableName => 'PoundServices',
 
         'pageTitle' => __('Pound Back End'),
-        printableTableName => __('Pound Back End'),
-        defaultActions => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
-        modelDomain => 'dlllciasrouter',
-        tableDescription => \@fields,
-        printableRowName => __('Pound Back End'),
-        #sortedBy => 'updateDate',
+        'printableTableName' => __('Pound Back End'),
+        'defaultActions' => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
+        'modelDomain' => 'dlllciasrouter',
+        'tableDescription' => \@fields,
+        'printableRowName' => __('Pound Back End'),
         'HTTPUrlView'=> 'dlllciasrouter/View/PoundServices',
 
         'order' => 1,

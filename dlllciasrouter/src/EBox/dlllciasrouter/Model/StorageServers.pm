@@ -44,11 +44,16 @@ sub _table
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
         
+        $fieldsFactory->createFieldDomainNameUnique(),
         $fieldsFactory->createFieldIpaddrLink(),
         $self->createFieldInternalIPAddressHideView(),
         $fieldsFactory->createFieldNetworkDisplay(),
         $fieldsFactory->createFieldInternalPort(),
+        $fieldsFactory->createFieldProtocolOnlyForLAN('Main', 1),
+
         $fieldsFactory->createFieldIsHTTPS(),
+
+        $self->createFieldOtherRedirectPortsDisplay(),
         
         $fieldsFactory->createFieldHardwareCPU(),
         $fieldsFactory->createFieldHardwareRAM(),
@@ -73,16 +78,10 @@ sub _table
         'printableRowName' => __('Storage Servers'),
         'pageTitle' => __('Storage Servers'),
         'modelDomain' => 'dlllciasrouter',
-        defaultController => '/dlllciasrouter/Controller/StorageServers',
+        'defaultController' => '/dlllciasrouter/Controller/StorageServers',
         'defaultActions' => ['add', 'del', 'editField', 'clone', 'changeView' ],
         'tableDescription' => \@fields,
-        #'sortedBy' => 'domainName',
-        class => 'dataTable',
-
-        # 20140219 Pulipuli Chen
-        # 關閉enable選項，改成自製的
-        #'enableProperty' => 0,
-        #defaultEnabledValue => 1,
+        'class' => 'dataTable',
         'order' => 1,
     };
 
@@ -121,11 +120,10 @@ sub addedRowNotify
     my $libDN = $self->loadLibrary('LibraryDomainName');
     my $libCT = $self->loadLibrary('LibraryContact');
 
-    $libDN->setPortForwardingLink($row);
+    $libDN->setServerMainLink($row);
 
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
-
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
     $libCT->setHardwareDisplay($row);
@@ -154,16 +152,15 @@ sub updatedRowNotify
         my $libDN = $self->loadLibrary('LibraryDomainName');
         my $libCT = $self->loadLibrary('LibraryContact');
 
-        $libDN->setLink($row);
+        $libDN->setServerMainLink($row);
 
-        #$libDN->deleteDomainName($oldRow, 'StorageServers');
-
-        $libDN->setLink($row);
-        #$self->setLink($row);
+        # 設定Netword的那一個
         
         $libCT->setCreateDate($row);
         $libCT->setUpdateDate($row);
         $libCT->setContactLink($row);
+        $libCT->setDescriptionHTML($row);
+        $libCT->setHardwareDisplay($row);
         
         #$libDN->addDomainName($row);
 
@@ -183,7 +180,7 @@ sub deletedRowNotify
     my $libDN = $self->loadLibrary('LibraryDomainName');
 
     try {
-        #$libDN->deleteDomainName($row, 'StorageServers');
+        # $libDN->deleteDomainName($row, 'StorageServers');
     } catch {
         $self->getLibrary()->show_exceptions($_);
     };
@@ -230,5 +227,25 @@ sub checkInternalIP
                     . 'Example: 10.6.1.1');
     }
 }
+
+# --------------------------------------
+# Other Redirect Ports
+
+sub createFieldOtherRedirectPortsDisplay
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::HasMany(
+            'fieldName' => 'redirOther',
+            'printableName' => __('Other <br />Redirect <br />Ports'),
+            'foreignModel' => 'ServerPortRedirect',
+            'view' => '/dlllciasrouter/View/StorageServers/PortRedirect',
+            'backView' => '/dlllciasrouter/View/StorageServers',
+            'size' => '1',
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 0,
+       );
+    return $field;
+}
+
 
 1

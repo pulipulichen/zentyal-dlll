@@ -203,7 +203,7 @@ sub urlToLink
     return $link;
 }
 
-sub setPortForwardingLink
+sub setServerMainLink
 {
     my ($self, $row) = @_;
 
