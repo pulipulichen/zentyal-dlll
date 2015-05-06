@@ -203,6 +203,35 @@ sub urlToLink
     return $link;
 }
 
+sub setPortForwardingLink
+{
+    my ($self, $row) = @_;
+
+    my $lib = $self->getLibrary();
+
+    my $ipaddr = $row->valueByName('ipaddr');
+    my $extPort = $self->loadLibrary('LibraryRedirect')->getServerMainPort($row);
+
+    my $url = $ipaddr . ':' . $extPort;
+
+    my $link = "https://";
+    if (!$row->valueByName('isHttps')) {
+        $link = "http://"
+    }     
+    $link = $link . $ipaddr . ':' . $extPort;
+    
+    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$ipaddr.'</a>';
+
+    $row->elementByName('ipaddrLink')->setValue($link);
+
+    #$row->store();
+}
+
+    
+
+    return $link;
+}
+
 ##
 # 廢棄不使用的方法
 #sub domainNameToLink
@@ -232,6 +261,13 @@ sub updateDomainNameLink
     my ($self, $row) = @_;
     
     my $domainName = $row->valueByName("domainName");
+    my $brokenDomainName = $self->breakUrl($domainName);
+
+    if (!defined($domainName)) {
+        $domainName = $row->valueByName('ipaddr');
+        $brokenDomainName = $domainName;
+    }
+
     my $port = $self->parentModule()->model("Settings")->value("port");
 
     if (!defined($port)) {
@@ -246,7 +282,7 @@ sub updateDomainNameLink
     }
     my $link = "http\://" . $domainName . $port . "/";
 
-    $domainName = $self->breakUrl($domainName);
+    #$domainName = $self->breakUrl($domainName);
 
     my $enable = $self->getLibrary()->isEnable($row);
     my $textDecoration = "underline";
@@ -257,7 +293,7 @@ sub updateDomainNameLink
     $link = '<a href="'.$link.'" ' 
         . 'target="_blank" ' 
         . 'style="background: none;text-decoration: '.$textDecoration.';color: #A3BD5B;">' 
-        . $domainName 
+        . $brokenDomainName 
         . '</a>';
     $row->elementByName("domainNameLink")->setValue($link);
 

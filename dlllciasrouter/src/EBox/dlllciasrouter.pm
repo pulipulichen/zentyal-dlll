@@ -41,6 +41,8 @@ sub menu
                                         'separator' => 'DLLL-CIAS Router',
                                         'order' => 0);
 
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/StorageServers',
+                                      'text' => __('Storage Servers')));
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
                                       'text' => __('Pound Settings')));
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',

@@ -173,6 +173,39 @@ sub getPortHeader
      return $portHeader;
 }
 
+sub getPortHeaderWithoutCheck 
+{
+    my ($self, $row) = @_;
+
+    # 變成ID前幾碼
+    my $ipaddr = $row->valueByName('ipaddr');
+    my @parts = split('\.', $ipaddr);
+    my $partA = $parts[0];
+    my $partB = $parts[1];
+    my $partC = $parts[2];
+    my $partD = $parts[3];
+
+    # 重新組合
+        $partB = substr($partB, -1);
+    
+        if (length($partD) == 1) {
+            $partD = "0" . $partD;
+        }
+        else {
+            $partB = substr($partB, -2);
+        }
+     my $portHeader = $partB.$partC.$partD;
+     
+     return $portHeader;
+}
+
+sub getServerMainPort
+{
+    my ($self, $row) = @_;
+    my $extPort = $self->getPortHeaderWithoutCheck($row) + '0';
+    return $extPort;
+} 
+
 # -------------------------------
 # HTTP Redirect Param
 

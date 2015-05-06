@@ -22,6 +22,7 @@ models:
     - LibraryNetwork
     - LibraryRedirect
     - LibraryContact
+    - StorageServers
     
 composites:
     Global: [Settings, URLRedirect]

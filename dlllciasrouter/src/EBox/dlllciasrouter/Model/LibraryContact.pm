@@ -108,7 +108,7 @@ sub setContactLink
 
     my $name = $row->valueByName('contactName');
     my $email = $row->valueByName('contactEmail');
-    my $expiry = $row->valueByName('expiry');
+    
 
     if ($email eq "") {
         $link = $link.$name;
@@ -122,7 +122,12 @@ sub setContactLink
 
     my $date = strftime "%Y/%m/%d", localtime;
     $link = $link."<br />[Update] ".$date;
-    $link = $link."<br />[Expiry] ".$expiry;
+    
+    if ($row->elementExists('expiry')) {
+        my $expiry = $row->valueByName('expiry');
+        $link = $link."<br />[Expiry] ".$expiry;
+    }
+
     $link = "<span>".$link."</span>";
 
     $row->elementByName('contactLink')->setValue($link);

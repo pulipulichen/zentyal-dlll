@@ -103,6 +103,22 @@ sub createFieldDomainNameLink
     return $field;
 }
 
+# 20150506 Pulipuli
+# 顯示時使用
+sub createFieldIpaddrLink
+{
+    my $field = new EBox::Types::HTML(
+            fieldName => 'ipaddrLink',
+            printableName => __('Link'),
+            editable => 0,
+            optional=>1,
+                hiddenOnSetter => 1,
+                hiddenOnViewer => 0,
+        );
+
+    return $field;
+}
+
 sub createFieldInternalIPAddress
 {
     my $field = new EBox::Types::HostIP(
@@ -345,6 +361,22 @@ sub createFieldRedirectToHTTPS
             help => __('If this option enabled, link to HTTP will be redirect to HTTPS\'s port forwarding. <br />' 
                 . 'For example, test.dlll.nccu.edu.tw had enabled HTTPS, port forwarding is 10543. <br />'
                 . 'So link to test.dlll.nccu.edu.tw will be redirect to test.dlll.nccu.edu.tw:10543.'),
+        );
+
+    return $field;
+}
+
+sub createFieldIsHTTPS
+{
+    my $field = new EBox::Types::Boolean(
+            fieldName => 'isHttps',
+            printableName => __('Is HTTPS'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+
         );
 
     return $field;
@@ -874,6 +906,87 @@ sub createFieldLink
             editable => 0,
             defaultValue => '<a href="'.$url.'" target="'.$fieldName.'">'.__($text).'</a>',
             #optional=>1,
+        );
+    return $field;
+}
+
+# ------------------------------------
+
+##
+# 20150506 Pulipuli Chen
+# 記錄伺服器CPU
+##
+sub createFieldHardwareCPU
+{
+    my ($self) = @_;
+
+    my $field = new EBox::Types::Text(
+            fieldName => 'hardwareCPU',
+            printableName => __('CPU'),
+            editable => 1,
+            defaultValue => '',
+            optional => 1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
+##
+# 20150506 Pulipuli Chen
+# 記錄伺服器RAM
+##
+sub createFieldHardwareRAM
+{
+    my ($self) = @_;
+
+    my $field = new EBox::Types::Text(
+            fieldName => 'hardwareRAM',
+            printableName => __('RAM'),
+            editable => 1,
+            defaultValue => '',
+            optional => 1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
+##
+# 20150506 Pulipuli Chen
+# 記錄伺服器Disk
+##
+sub createFieldHardwareDisk
+{
+    my ($self) = @_;
+
+    my $field = new EBox::Types::Text(
+            fieldName => 'hardwareDisk',
+            printableName => __('Disk'),
+            editable => 1,
+            defaultValue => '',
+            optional => 1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
+##
+# 20150506 Pulipuli Chen
+# 顯示硬體資訊
+##
+sub createFieldHardwareDisplay
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => 'hardware',
+            printableName => __('Hardware'),
+            editable => 0,
+            defaultValue => '',
+            #optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
     return $field;
 }
