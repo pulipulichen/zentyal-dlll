@@ -8,6 +8,14 @@ depends:
     - services
     - dhcp
 
+enabledepends:
+    - network
+    - objects
+    - dns
+    - firewall
+    - services
+    - dhcp
+
 models:
     - Settings
     - PoundLibrary
