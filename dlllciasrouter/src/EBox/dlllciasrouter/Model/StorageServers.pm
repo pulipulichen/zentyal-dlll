@@ -128,6 +128,7 @@ sub addedRowNotify
 
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
+    $libCT->setHardwareDisplay($row);
 
     #$libDN->addDomainName($row);
 

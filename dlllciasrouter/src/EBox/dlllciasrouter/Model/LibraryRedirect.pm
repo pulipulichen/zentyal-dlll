@@ -202,7 +202,7 @@ sub getPortHeaderWithoutCheck
 sub getServerMainPort
 {
     my ($self, $row) = @_;
-    my $extPort = $self->getPortHeaderWithoutCheck($row) + '0';
+    my $extPort = $self->getPortHeaderWithoutCheck($row) . '0';
     return $extPort;
 } 
 

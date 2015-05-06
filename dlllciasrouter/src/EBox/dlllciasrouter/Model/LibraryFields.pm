@@ -373,6 +373,7 @@ sub createFieldIsHTTPS
             printableName => __('Is HTTPS'),
             editable => 1,
             optional => 0,
+            help => ( '<hr />'),
             defaultValue => 1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
@@ -847,8 +848,8 @@ sub createFieldCreateDateDisplay
             printableName => __('Create Date'),
             editable => 0,
             optional=>1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
     return $field;
 }
@@ -861,8 +862,8 @@ sub createFieldCreateDateData
             printableName => __('Create Date'),
             editable => 1,
             optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 1,
         );
     return $field;
 }
@@ -875,8 +876,8 @@ sub createFieldDisplayLastUpdateDate
             printableName => __('Last Update Date'),
             editable => 0,
             optional=>1,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
     return $field;
 }
@@ -886,7 +887,7 @@ sub createFieldDisplayContactLink
     my ($self) = @_;
     my $field = new EBox::Types::HTML(
             fieldName => 'contactLink',
-            printableName => __('Contact & Last Update Date'),
+            printableName => __('Contact <br />& Details'),
             editable => 0,
             optional=>1,
             hiddenOnSetter => 1,
@@ -925,9 +926,8 @@ sub createFieldHardwareCPU
             printableName => __('CPU'),
             editable => 1,
             defaultValue => '',
-            optional => 1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
     return $field;
 }
@@ -945,9 +945,8 @@ sub createFieldHardwareRAM
             printableName => __('RAM'),
             editable => 1,
             defaultValue => '',
-            optional => 1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
     return $field;
 }
@@ -965,9 +964,9 @@ sub createFieldHardwareDisk
             printableName => __('Disk'),
             editable => 1,
             defaultValue => '',
-            optional => 1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            help => ( '<hr />'),
         );
     return $field;
 }
@@ -980,13 +979,13 @@ sub createFieldHardwareDisplay
 {
     my ($self) = @_;
     my $field = new EBox::Types::HTML(
-            fieldName => 'hardware',
+            fieldName => 'hardwareDisplay',
             printableName => __('Hardware'),
             editable => 0,
-            defaultValue => '',
+            defaultValue => '<span></span>',
             #optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         );
     return $field;
 }

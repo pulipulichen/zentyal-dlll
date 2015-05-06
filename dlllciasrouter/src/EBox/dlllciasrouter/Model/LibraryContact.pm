@@ -152,4 +152,30 @@ sub setDescriptionHTML
     #$row->store();
 }
 
+# ------------------------------------------------
+
+##
+# 20150506 Pulipuli Chen
+# 寫入硬體資訊
+##
+sub setHardwareDisplay
+{
+    my ($self, $row) = @_;
+
+    my $cpu = $row->valueByName('hardwareCPU');
+    my $ram = $row->valueByName('hardwareRAM');
+    my $disk = $row->valueByName('hardwareDisk');
+
+    my $link = '';
+    $link = $link . "CPU: " . $cpu . "<br />";
+    $link = $link . "RAM: " . $ram . "<br />";
+    $link = $link . "Disk: " . $disk;
+
+    $link = "<span>".$link."</span>";
+
+    $row->elementByName('hardwareDisplay')->setValue($link);
+
+    #$row->store();
+}
+
 1;

@@ -227,11 +227,6 @@ sub setPortForwardingLink
     #$row->store();
 }
 
-    
-
-    return $link;
-}
-
 ##
 # 廢棄不使用的方法
 #sub domainNameToLink
