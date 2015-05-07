@@ -15,6 +15,7 @@ enabledepends:
     - firewall
     - services
     - dhcp
+    - dlllciasrouter
 
 models:
     - Settings

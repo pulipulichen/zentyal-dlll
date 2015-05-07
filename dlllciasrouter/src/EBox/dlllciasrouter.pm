@@ -59,32 +59,30 @@ sub menu
 
 sub _daemons
 {
-    my $daemons = [{
-            name => 'pound',
-            type => 'init.d',
-            pidfiles => ['/var/run/pound.pid']
-        }];
 
-    #my $daemons = [];
+    try {
 
-    #try {
-
-    #$daemons->[0] = {
-    #        name => 'pound',
-    #        type => 'init.d',
-    #        pidfiles => ['/var/run/pound.pid']
-    #    };
-
-    #if (-e '/var/run/apache2.pid') {
-    #    $daemons->[1] = {
-    #            name => 'apache2',
-    #            type => 'init.d',
-    #            pidfiles => ['/var/run/apache2.pid']
-    #        }
-    #    ];
-    #} catch {
-    #    $self->getLibrary()->show_exceptions("apache" . $_);
-    #}
+    if (-e '/var/run/apache2.pid') {
+        my $daemons = [{
+                name => 'pound',
+                type => 'init.d',
+                pidfiles => ['/var/run/pound.pid']
+            }, 
+            {
+                name => 'apache2',
+                type => 'init.d',
+                pidfiles => ['/var/run/apache2.pid']
+            }];
+    }
+    else {
+        my $daemons = [{
+                name => 'pound',
+                type => 'init.d',
+                pidfiles => ['/var/run/pound.pid']
+            }];
+    } catch {
+        $self->getLibrary()->show_exceptions("apache" . $_);
+    }
     
     return $daemons;
 }

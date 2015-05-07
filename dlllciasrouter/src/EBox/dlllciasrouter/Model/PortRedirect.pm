@@ -71,12 +71,21 @@ sub _table
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
+
         new EBox::Types::Text(
             fieldName => 'description',
-            printableName => __('Description'),
+            printableName => __('Port Description'),
             editable => 1,
             optional=>0,
             'unique'=>1,
+        ),
+        new EBox::Types::HTML(
+            fieldName => 'descriptionDisplay',
+            printableName => __('Port Description'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         ),
         
         new EBox::Types::Port(
@@ -361,6 +370,11 @@ sub updateExtPortHTML
         $redirRow->elementByName('extPortHTML')->setValue($extPort);
         $redirRow->store();
     }
+}
+
+sub updateDescriptionDisplay
+{
+    my ($self, $row) = @_;
 }
 
 1;
