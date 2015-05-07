@@ -1,4 +1,38 @@
 class: EBox::dlllciasrouter
 
+depends:
+    - network
+    - objects
+    - dns
+    - firewall
+    - services
+    - dhcp
+
+enabledepends:
+    - network
+    - objects
+    - dns
+    - firewall
+    - services
+    - dhcp
+
 models:
     - Settings
+    - PoundLibrary
+    - PoundServices
+    - PortRedirect
+    - URLRedirect
+    - DNS
+    - LibraryMAC
+    - LibraryEncoding
+    - LibraryFields
+    - LibraryDomainName
+    - LibraryNetwork
+    - LibraryRedirect
+    - LibraryContact
+    - StorageServers
+    - ServerPortRedirect
+    
+composites:
+    Global: [Settings, URLRedirect]
+    
