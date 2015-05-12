@@ -41,19 +41,19 @@ sub loadLibrary
 sub createFieldConfigEnable
 {
     my $field = new EBox::Types::Boolean(
-            fieldName => 'configEnable',
-            printableName => __('Enabled'),
-            editable => 1,
-            optional => 0,
+        fieldName => 'configEnable',
+        printableName => __('Enabled'),
+        editable => 1,
+        optional => 0,
 
-            # 20140207 Pulipuli Chen
-            # 預設改成false，這是因為一開始建置時都是在測試中，連線失誤是很正常的。當設定穩定之後再手動調整成true
-            defaultValue => 1,
+        # 20140207 Pulipuli Chen
+        # 預設改成false，這是因為一開始建置時都是在測試中，連線失誤是很正常的。當設定穩定之後再手動調整成true
+        defaultValue => 1,
 
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 0,
-            #help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
-        );
+        hiddenOnSetter => 0,
+        hiddenOnViewer => 0,
+        #help => __('If you want to use emergency restarter, you have to enable HTTP redirect first.'),
+    );
 
     return $field;
 }
@@ -96,8 +96,8 @@ sub createFieldDomainNameLink
             printableName => __('Domain Name'),
             editable => 0,
             optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         );
 
     return $field;
@@ -112,8 +112,8 @@ sub createFieldIpaddrLink
             printableName => __('Link'),
             editable => 0,
             optional=>1,
-                hiddenOnSetter => 1,
-                hiddenOnViewer => 0,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         );
 
     return $field;
@@ -257,7 +257,7 @@ sub createFieldDescription
 
             #optional => 0,
             #defaultValue => __(''),
-
+ 
             optional => 1,
 
             hiddenOnSetter => 0,
@@ -450,8 +450,8 @@ sub createFieldProtocolOnlyForLAN
             editable => 1,
             optional => 0,
             defaultValue => $enable,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
 
     return $field;
@@ -1026,6 +1026,133 @@ sub createFieldHardwareDisplay
             #optional=>1,
             hiddenOnSetter => 1,
             hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# 連接埠輸入欄位
+##
+sub createFieldPortDescription
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::Text(
+            'fieldName' => 'description',
+            'printableName' => __('Port Description'),
+            'editable' => 1,
+            'optional' => 0,
+            'unique' => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# 連接埠顯示欄位
+##
+sub createFieldPortDescriptionDisplay
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => 'descriptionDisplay',
+            printableName => __('Port Description'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# 外接連接埠輸入欄位
+##
+sub createFieldPortExtPort
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::Port(
+            'fieldName' => 'extPort',
+            'printableName' => __('External Port Last 1 Numbers'),
+            'unique' => 1,
+            'editable' => 1,
+            optional=>0,
+            help => $help,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# 外接連接埠顯示欄位
+##
+sub createFieldPortExtPortDisplay
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => 'extPortHTML',
+            printableName => __('External Port'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# 內部連接埠欄位
+##
+sub createFieldPortIntPort
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::Port(
+            'fieldName' => 'intPort',
+            'printableName' => __('Internal Port'),
+            'unique' => 1,
+            'editable' => 1,
+            optional=>0,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# Only For LAN 顯示
+##
+sub createFieldPortOnlyForLan
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::Boolean(
+            'fieldName' => 'secure',
+            'printableName' => __('Only for LAN'),
+            help => __('Only for local lan, like 140.119.61.0/24.'),
+            'editable' => 1,
+            optional=>0,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# Only For LAN 顯示
+##
+sub createFieldPortEnableLog
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::Boolean(
+            fieldName => 'log',
+            printableName => __('Enable Zentyal Log'),
+            #help => __('Only for local lan, like 140.119.61.0/24.'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
         );
     return $field;
 }

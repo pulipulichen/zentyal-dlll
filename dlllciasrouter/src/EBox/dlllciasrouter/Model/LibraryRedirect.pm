@@ -631,24 +631,49 @@ sub updateRedirectPorts
     }
 
     # 取得Other Redirect Ports
+    my $domainName = $row->valueByName("domainName");
     my $redirOther = $row->subModel('redirOther');
     for my $subId (@{$redirOther->ids()}) {
+
         my $redirRow = $redirOther->row($subId);
+
         my $extPort = $self->getOtherExtPort($row, $redirRow);
         my $intPort = $redirRow->valueByName('intPort');
         my $desc = $redirRow->valueByName('description');
         my $secure = $redirRow->valueByName('secure');
 
+        my $portEnable = $self->getLibrary()->isEnable($redirRow);
+        my $schema = $redirRow->valueByName("redirOther_scheme");
+
         if ($secure) {
             $desc = '[' . $desc . ']';
         }
 
-        if ($hint ne '')
-        {
+        $desc = '<strong>' . $desc . "</strong>";
+        if ($portEnable == 0) {
+            next;
+        }
+        elsif ($schema ne 'none') {
+            my $link = $domainName . ":" . $extPort . "/";
+            if ($schema eq "http") {
+                $link = "http\://" . $link;
+            }
+            else {
+                $link = "https\://" . $link;
+            }
+            $link = '<a href="'.$link.'" ' 
+                . 'target="_blank" ' 
+                . 'style="background: none;text-decoration: underline;color: #A3BD5B;">' 
+                . $desc 
+                . '</a>';
+            $desc = $link;
+        }
+
+        if ($hint ne '') {
             $hint = $hint . "<br />";
         }
 
-        $hint = $hint . "<strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."";   
+        $hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort."";   
     }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
     
 

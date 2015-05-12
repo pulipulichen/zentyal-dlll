@@ -68,67 +68,23 @@ sub _table
 
     my ($self) = @_;  
     
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $libFactory = $self->parentModule()->model('LibraryFields');
+
     my @fields = (
-        $fieldsFactory->createFieldConfigEnable(),
+        $libFactory->createFieldConfigEnable(),
 
-        new EBox::Types::Text(
-            fieldName => 'description',
-            printableName => __('Port Description'),
-            editable => 1,
-            optional=>0,
-            'unique'=>1,
-        ),
-        new EBox::Types::HTML(
-            fieldName => 'descriptionDisplay',
-            printableName => __('Port Description'),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
-        ),
+        $libFactory->createFieldPortDescription(),
+        $libFactory->createFieldPortDescriptionDisplay(),
         
-        new EBox::Types::Port(
-            'fieldName' => 'extPort',
-            'printableName' => __('External Port Last 1 Numbers'),
-            'unique' => 1,
-            'editable' => 1,
-            optional=>0,
-            help => "Please enter external port last 1 number, from 0 to 9. For example, 4 means ****4. **** is based on internal IP address.",
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
+        $libFactory->createFieldPortExtPort("Please enter external port last 1 number, only allow 0,1,4,5,6, or 7. <br />For example, 4 means ****4. **** is based on internal IP address."),
+        $libFactory->createFieldPortExtPortDisplay(),
 
-        new EBox::Types::HTML(
-            fieldName => 'extPortHTML',
-            printableName => __('External Port'),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
-        ),
-        new EBox::Types::Port(
-            'fieldName' => 'intPort',
-            'printableName' => __('Internal Port'),
-            'unique' => 1,
-            'editable' => 1,
-            optional=>0,
-        ),
-        new EBox::Types::Boolean(
-            'fieldName' => 'secure',
-            'printableName' => __('Only for LAN'),
-            help => __('Only for local lan, like 140.119.61.0/24.'),
-            'editable' => 1,
-            optional=>0,
-        ),
-        new EBox::Types::Boolean(
-            fieldName => 'log',
-            printableName => __('Enable Zentyal Log'),
-            #help => __('Only for local lan, like 140.119.61.0/24.'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-        ),
+        $libFactory->createFieldPortIntPort(),
+
+        $libFactory->createFieldProtocolScheme('Other', 0, 'none'),
+
+        $libFactory->createFieldPortOnlyForLan(),
+        $libFactory->createFieldPortEnableLog(),
     );
 
     my $dataTable =
@@ -138,17 +94,12 @@ sub _table
         'printableRowName' => __('Port Redirect'),
         'pageTitle' => $self->pageTitle(),
         'modelDomain' => 'dlllciasrouter',
-        automaticRemove => 1,
-        defaultController => '/dlllciasrouter/Controller/PortRedirect',
+        'automaticRemove' => 1,
+        'defaultController' => '/dlllciasrouter/Controller/PortRedirect',
         'defaultActions' => ['add', 'del', 'editField', 'clone', 'changeView'],
         'tableDescription' => \@fields,
         'sortedBy' => 'extPort',
-        class => 'dataTable',
-        
-        # 20140219 Pulipuli Chen
-        # 關閉enable選項，改成自製的
-        #'enableProperty' => 0,
-        #defaultEnabledValue => 1,
+        'class' => 'dataTable',
     };
 
     return $dataTable;
@@ -182,40 +133,18 @@ sub addedRowNotify
 
     my $row = $self->parentRow();
 
-    try {
-
     $ROW_NEED_UPDATE = 1;
-    } catch {
-        $self->getLibrary()->show_exceptions(1 . $_);
-    };
-    try {
-    $self->checkExternalPort($redirRow);
-    } catch {
-        $self->getLibrary()->show_exceptions(2 . $_);
-    };
-    try {
-    $self->updateRedirectPorts($redirRow);
-    } catch {
-        $self->getLibrary()->show_exceptions(3 . $_);
-    };
-    try {
     
-    } catch {
-        $self->getLibrary()->show_exceptions(4 . $_);
-    };
-    try {
+    my $libDomainName = $self->loadLibrary('LibraryDomainName');
+    $libDomainName->updatePortDescription($row, $redirRow);
+
+    $self->checkExternalPort($redirRow);
+    $self->updateRedirectPorts($redirRow);
     $self->addRedirect($row, $redirRow);
-    } catch {
-        $self->getLibrary()->show_exceptions(5 . $_);
-    };
-    try {
     $self->updateExtPortHTML($row, $redirRow);
 
-    $ROW_NEED_UPDATE = 0;
 
-    } catch {
-        $self->getLibrary()->show_exceptions($_);
-    };
+    $ROW_NEED_UPDATE = 0;
 }
 sub deletedRowNotify
 {
@@ -253,6 +182,10 @@ sub updatedRowNotify
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
+
+        my $libDomainName = $self->loadLibrary('LibraryDomainName');
+        $libDomainName->updatePortDescription($row, $redirRow);
+
         $self->updateExtPortHTML($row, $redirRow);
         $ROW_NEED_UPDATE = 0;
     }
@@ -271,7 +204,7 @@ sub addRedirect
     #throw EBox::Exceptions::External("Try to add redirect", defined($row));
 
     my $poundModel;
-    my $param;
+    my %param;
     
     try {
     $poundModel = $self->parentModule()->model("LibraryRedirect");
@@ -279,12 +212,12 @@ sub addRedirect
         $self->getLibrary()->show_exceptions(51 . $_);
     };
     try {
-    $param = $poundModel->getRedirectParamOther($row, $redirRow);
+    %param = $poundModel->getRedirectParamOther($row, $redirRow);
     } catch {
         $self->getLibrary()->show_exceptions(52 . $_);
     };
     try {
-    #$poundModel->addRedirectRow(%param);
+    $poundModel->addRedirectRow(%param);
     } catch {
         $self->getLibrary()->show_exceptions(53 . $_);
     };
@@ -341,17 +274,6 @@ sub checkExternalPort
 sub updateExtPortHTML
 {
     my ($self, $row, $redirRow) = @_;
-
-    #throw EBox::Exceptions::External($redirRow->parentRow()->id());
-    #try {
-    #    my $id = $redirRow->parentRow()->id();
-    #}
-    #catch {
-    #    throw EBox::Exceptions::External($_);
-    #};
-    
-
-    #my $row = $self->parentRow();
 
     if (defined($row))
     {

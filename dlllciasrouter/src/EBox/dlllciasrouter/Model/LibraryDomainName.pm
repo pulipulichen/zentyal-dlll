@@ -70,23 +70,15 @@ sub addDomainName
 
         # 刪掉多餘的IP
         my $ipTable;
-        try {
-            $ipTable = $domainRow->subModel("ipAddresses");
-            $ipTable->removeAll();
-        } catch { }
+        $ipTable = $domainRow->subModel("ipAddresses");
+        $ipTable->removeAll();
 
         # 刪掉多餘的Hostname
-        my $hostnameTable;
-        my $zentyalHostnameID;
-        my $zentyalRow;
-        my $zentyalIpTable;
-        try {
-            $hostnameTable = $domainRow->subModel("hostnames");
-            $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
-            $zentyalRow = $hostnameTable->row($zentyalHostnameID);
-            $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-            $zentyalIpTable->removeAll();
-        } catch { }
+        my $hostnameTable = $domainRow->subModel("hostnames");
+        my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+        my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+        my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+        $zentyalIpTable->removeAll();
         
         my $libNetwork = $self->loadLibrary('LibraryNetwork');
         my $ipaddr = $libNetwork->getExternalIpaddr();
@@ -308,9 +300,64 @@ sub breakUrl
 {
     my ($self, $url) = @_;
 
-     my $result = index($url, ".");
+    my $result = index($url, ".");
     $url = substr($url, 0, $result) . "<br />" . substr($url, $result);
     return $url;
+}
+
+
+##
+# 20150512 Pulipuli Chen
+# 更新新增連接埠的說明
+##
+sub updatePortDescription
+{
+    my ($self, $row, $redirRow) = @_;
+
+    my $enable = $self->getLibrary()->isEnable($redirRow);
+    my $desc = $redirRow->valueByName("description");
+    my $secure = $redirRow->valueByName('secure');
+    if ($secure) {
+        $desc = '[' . $desc . ']';
+    }
+
+    my $schema = $redirRow->valueByName("redirOther_scheme");
+    my $link = $desc;
+    
+    if ($enable == 0) {
+        $link = '<span style="text-decoration: line-through">' . $desc . '</span>';
+    }   # if ($enable == 0) {
+    else {
+        if ($schema eq "none") {
+            $link = '<span>' . $desc . '</span>';
+        }   # if ($schema eq "none") {
+        else {
+            my $textDecoration = "underline";
+            if ($enable == 0) {
+                $textDecoration = "line-through";
+            }
+
+            my $extPort = $redirRow->valueByName("extPort");
+            $extPort = $self->loadLibrary('LibraryRedirect')->getOtherExtPort($row, $redirRow);
+
+            my $domainName = $row->valueByName("domainName");
+
+            $link = $domainName . ":" . $extPort . "/";
+            if ($schema eq "http") {
+                $link = "http\://" . $link;
+            }
+            else {
+                $link = "https\://" . $link;
+            }
+            $link = '<a href="'.$link.'" ' 
+                . 'target="_blank" ' 
+                . 'style="background: none;text-decoration: '.$textDecoration.';color: #A3BD5B;">' 
+                . $desc 
+                . '</a>';
+        }   # if ($schema ne "none") {
+    }   # else {
+
+    $redirRow->elementByName("descriptionDisplay")->setValue($link);
 }
 
 1;
