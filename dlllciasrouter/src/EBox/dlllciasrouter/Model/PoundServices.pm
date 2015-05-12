@@ -52,7 +52,9 @@ sub _table
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDescription(),
         $fieldsFactory->createFieldDescriptionHTML(),
-        $fieldsFactory->createFieldExpiryDateWithHR(),
+        #$fieldsFactory->createFieldExpiryDateWithHR(),
+        $fieldsFactory->createFieldExpiryDate(),
+        $fieldsFactory->createFieldHr('hr1'),
         
         # --------------------------
         # HTTP Redirect Fields 
@@ -63,6 +65,8 @@ sub _table
         $fieldsFactory->createFieldHTTPInternalPort(),
         $fieldsFactory->createFieldProtocolScheme("HTTP", 0, "http"),
         $fieldsFactory->createFieldHTTPNote(),
+        $fieldsFactory->createFieldHr('hr_http'),
+        
 
         # ----------------------
         # HTTPS Redirect Fields
@@ -73,6 +77,7 @@ sub _table
         $fieldsFactory->createFieldHTTPSInternalPort(),
         $fieldsFactory->createFieldProtocolScheme("HTTPS", 0, "https"),
         $fieldsFactory->createFieldHTTPSNote(),
+        $fieldsFactory->createFieldHr('hr_https'),
         
         # --------------------------------
         # SSH Redirect Fields
@@ -83,6 +88,7 @@ sub _table
         $fieldsFactory->createFieldSSHInternalPort(),
         $fieldsFactory->createFieldProtocolScheme("SSH", 0, "none"),
         $fieldsFactory->createFieldSSHNote(),
+        $fieldsFactory->createFieldHr('hr_ssh'),
 
         # --------------------------------
         # RDP Redirect Fields
@@ -93,6 +99,7 @@ sub _table
         $fieldsFactory->createFieldRDPInternalPort(),
         $fieldsFactory->createFieldProtocolScheme("RDP", 0, "none"),
         $fieldsFactory->createFieldRDPNote(),
+        $fieldsFactory->createFieldHr('hr_rdp'),
 
         # --------------------------------
 

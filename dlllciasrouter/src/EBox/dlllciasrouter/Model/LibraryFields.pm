@@ -597,6 +597,22 @@ sub createFieldProtocolNote
             optional=>1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+            help => ( 'Login account / password, or using this port for other usage'),
+        );
+
+    return $field;
+}
+
+sub createFieldProtocolNoteWithHr
+{
+    my ($self, $protocol) = @_;
+    my $field = new EBox::Types::Text(
+            fieldName => 'redir'.$protocol.'_note',
+            printableName => __($protocol.' Note'),
+            editable => 1,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
             help => ( 'Login account / password, or using this port for other usage <br /> <hr />'),
         );
 
@@ -951,6 +967,26 @@ sub createFieldHardwareRAM
             defaultValue => '',
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
+##
+# 20150512 Pulipuli Chen
+# 水平線
+##
+sub createFieldHr
+{
+    my ($self, $fieldName) = @_;
+
+    my $field = new EBox::Types::Text(
+            fieldName => $fieldName,
+            printableName => __(''),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+            help => ( '<hr />'),
         );
     return $field;
 }
