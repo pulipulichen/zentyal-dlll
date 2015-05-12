@@ -73,7 +73,7 @@ sub addDomainName
         try {
             $ipTable = $domainRow->subModel("ipAddresses");
             $ipTable->removeAll();
-        } catch {}
+        } catch { }
 
         # 刪掉多餘的Hostname
         my $hostnameTable;
@@ -86,7 +86,7 @@ sub addDomainName
             $zentyalRow = $hostnameTable->row($zentyalHostnameID);
             $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
             $zentyalIpTable->removeAll();
-        } catch {}
+        } catch { }
         
         my $libNetwork = $self->loadLibrary('LibraryNetwork');
         my $ipaddr = $libNetwork->getExternalIpaddr();

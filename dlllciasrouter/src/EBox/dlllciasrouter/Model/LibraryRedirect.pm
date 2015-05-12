@@ -83,7 +83,7 @@ sub addRedirects
             my $redirRow = $redirOther->row($subId);
             $redirOther->addRedirect($row, $redirRow);
         }
-    } catch {}
+    } catch { }
 }
 
 sub deleteRedirects
@@ -115,8 +115,7 @@ sub deleteRedirects
                 $redirOther->deleteRedirect($row, $redirRow);
             }
         }
-    }
-    catch {}
+    } catch { }
 }
 
 # -----------------------------
