@@ -217,7 +217,7 @@ sub deletedRowNotify
     $libMAC->removeDHCPfixedIPMember($row);
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . '( PoundServices->deletedRowNotify() )');
     };
 }
 

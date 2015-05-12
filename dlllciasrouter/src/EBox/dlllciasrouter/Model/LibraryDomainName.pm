@@ -51,6 +51,7 @@ sub loadLibrary
 sub addDomainName
 {
     my ($self, $row) = @_;
+    $self->setupDefaultDomainName();
 
     if ($row->valueByName('boundLocalDns')) {
         my $domainName = $row->valueByName('domainName');
@@ -105,18 +106,15 @@ sub deleteDomainName
     # 先找找看有沒有
     my $hasDomainName = 0;
 
-    if ($hasDomainName == 0 && $excludeModel ne 'PoundServices') 
-    {
+    if ($hasDomainName == 0 && $excludeModel ne 'PoundServices') {
         $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
     }
 
-    if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') 
-    {
+    if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') {
         $hasDomainName = $self->modelHasDomainName('URLRedirect', $domainName);
     }
     
-    if ($hasDomainName == 0 && $excludeModel ne 'DNS') 
-    {
+    if ($hasDomainName == 0 && $excludeModel ne 'DNS') {
         $hasDomainName = $self->modelHasDomainName('DNS', $domainName);
     }
 
@@ -126,14 +124,13 @@ sub deleteDomainName
         my $dns = $gl->modInstance('dns');
         my $domModel = $dns->model('DomainTable');
         my $id = $domModel->findId(domain => $domainName);
-        if (defined($id)) 
-        {
+        if (defined($id)) {
             $domModel->removeRow($id);
         }
     }
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . '( LibraryDomainName->deleteDomainName() )');
     };
 }
 
@@ -358,6 +355,27 @@ sub updatePortDescription
     }   # else {
 
     $redirRow->elementByName("descriptionDisplay")->setValue($link);
+}
+
+##
+# 20150513 Pulipuli Chen
+# 在DNS中新增一個預設的Domain Name
+## 
+sub setupDefaultDomainName
+{
+    my ($self) = @_;
+
+    my $domainName = 'default-domain-name.dlll.nccu.edu.tw';
+    my $gl = EBox::Global->getInstance();
+    my $dns = $gl->modInstance('dns');
+    my $domModel = $dns->model('DomainTable');
+    my $id = $domModel->findId(domain => $domainName);
+    if (defined($id)) {
+        return;
+    }
+    $domModel->addDomain({
+        'domain_name' => $domainName,
+    });
 }
 
 1;
