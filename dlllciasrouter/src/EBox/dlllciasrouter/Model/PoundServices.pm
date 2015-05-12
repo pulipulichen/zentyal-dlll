@@ -207,13 +207,15 @@ sub deletedRowNotify
 
     try {
 
+    #my $libDN = $self->loadLibrary('LibraryDomainName');
+    #$libDN->deleteDomainName($row, 'PoundServices');
+    
     my $libREDIR = $self->loadLibrary('LibraryRedirect');
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->deleteDomainName($row, 'PoundServices');
     $libREDIR->deleteRedirects($row);
 
     my $libMAC = $self->loadLibrary('LibraryMAC');
     $libMAC->removeDHCPfixedIPMember($row);
+
     } catch {
         $self->getLibrary()->show_exceptions($_);
     };
@@ -252,13 +254,15 @@ sub updatedRowNotify
         $libMAC->removeDHCPfixedIPMember($oldRow);
         $libMAC->addDHCPfixedIPMember($row);
 
-        for my $subId (@{$row->subModel('redirOther')->ids()}) {
-            my $redirRow = $row->subModel('redirOther')->row($subId);
-            my $redirModel = $row->subModel('redirOther');
-            $redirModel->deleteRedirect($oldRow, $redirRow);
-            $redirModel->updateExtPortHTML($row, $redirRow);
-            $redirModel->addRedirect($row, $redirRow);
-        }
+        my $redirOther = $row->subModel('redirOther');
+        try {
+            for my $subId (@{$redirOther->ids()}) {
+                my $redirRow = $redirOther->row($subId);
+                $redirOther->deleteRedirect($oldRow, $redirRow);
+                $redirOther->updateExtPortHTML($row, $redirRow);
+                $redirOther->addRedirect($row, $redirRow);
+            }
+        } catch {}
 
         $row->store();
         $ROW_NEED_UPDATE = 0;

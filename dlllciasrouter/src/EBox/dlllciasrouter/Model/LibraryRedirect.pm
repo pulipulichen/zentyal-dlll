@@ -77,13 +77,13 @@ sub addRedirects
     }
 
     my $redirOther = $row->subModel('redirOther');
-    if (defined($redirOther)) {
+    
+    try {
         for my $subId (@{$redirOther->ids()}) {
-            my $redirRow = $row->subModel('redirOther')->row($subId);
-            my $redirModel = $row->subModel('redirOther');
-            $redirModel->addRedirect($row, $redirRow);
+            my $redirRow = $redirOther->row($subId);
+            $redirOther->addRedirect($row, $redirRow);
         }
-    }
+    } catch {}
 }
 
 sub deleteRedirects
@@ -91,12 +91,6 @@ sub deleteRedirects
     my ($self, $row) = @_;
 
     my %param;
-    #try {
-        #%param = $self->getRedirectParamHTTP($row);
-    #} catch {
-        #$self->test($_);
-    #};
-
     %param = $self->getRedirectParamHTTP($row);
     $self->deleteRedirectRow(%param);
 
@@ -111,13 +105,18 @@ sub deleteRedirects
     $self->deleteRedirectRow(%param);
 
     my $redirOther = $row->subModel('redirOther');
-    if (defined($redirOther)) {
-        for my $subId (@{$row->subModel('redirOther')->ids()}) {
-            my $redirRow = $row->subModel('redirOther')->row($subId);
-            my $redirModel = $row->subModel('redirOther');
-            $redirModel->deleteRedirect($row, $redirRow);
+    ##
+    # 20150512 Pulipuli Chen
+    # 由於在ForMod沒有資料的情況下，取出ID時會出錯，所以這部分用try catch跳過
+    try {
+        if (defined($redirOther) && $redirOther->size() > 0) {
+            foreach my $subId ( @{$redirOther->ids() }) {
+                my $redirRow = $redirOther->row($subId);
+                $redirOther->deleteRedirect($row, $redirRow);
+            }
         }
     }
+    catch {}
 }
 
 # -----------------------------
@@ -634,26 +633,25 @@ sub updateRedirectPorts
 
     # 取得Other Redirect Ports
     my $redirOther = $row->subModel('redirOther');
-    if (defined($redirOther)) {
-        for my $subId (@{$redirOther->ids()}) {
-            my $redirRow = $row->subModel('redirOther')->row($subId);
-            my $extPort = $self->getOtherExtPort($row, $redirRow);
-            my $intPort = $redirRow->valueByName('intPort');
-            my $desc = $redirRow->valueByName('description');
-            my $secure = $redirRow->valueByName('secure');
+    for my $subId (@{$redirOther->ids()}) {
+        my $redirRow = $redirOther->row($subId);
+        my $extPort = $self->getOtherExtPort($row, $redirRow);
+        my $intPort = $redirRow->valueByName('intPort');
+        my $desc = $redirRow->valueByName('description');
+        my $secure = $redirRow->valueByName('secure');
 
-            if ($secure) {
-                $desc = '[' . $desc . ']';
-            }
+        if ($secure) {
+            $desc = '[' . $desc . ']';
+        }
 
-            if ($hint ne '')
-            {
-                $hint = $hint . "<br />";
-            }
+        if ($hint ne '')
+        {
+            $hint = $hint . "<br />";
+        }
 
-            $hint = $hint . "<strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."";   
-        }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
-    }   # if (defined($redirOther)) {
+        $hint = $hint . "<strong>" . $desc . "</strong>: <br />" . $extPort ." &gt; " . $intPort."";   
+    }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
+    
 
     # 最後結尾
     if ($hint ne '')
