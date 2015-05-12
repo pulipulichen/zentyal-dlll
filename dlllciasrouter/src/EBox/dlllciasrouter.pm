@@ -11,7 +11,6 @@ use EBox::Sudo;
 
 use EBox::Exceptions::Internal;
 
-use EBox::ServiceManager;
 
 my $CONFFILE = '/etc/pound/pound.cfg';
 
@@ -61,14 +60,9 @@ sub menu
 
 sub _daemons
 {
-    ##
-    # 在這邊開啟所有模組！
-    # 20150509 Pulipuli Chen
-    my $serviceManager = EBox::Global->modInstance('ServiceManager');
-    $serviceManager->enableAllModules();
+    my ($self) = @_;
 
     my $daemons;
-    try {
 
     if (-e '/var/run/apache2.pid') {
         $daemons = [{
@@ -89,8 +83,6 @@ sub _daemons
                 type => 'init.d',
                 pidfiles => ['/var/run/pound.pid']
             }];
-    } catch {
-        $self->getLibrary()->show_exceptions("apache" . $_);
     }
     
     return $daemons;
