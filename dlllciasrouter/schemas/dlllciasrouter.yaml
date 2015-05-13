@@ -30,6 +30,7 @@ models:
     - LibraryContact
     - StorageServers
     - ServerPortRedirect
+    - OtherDomainNames
     
 composites:
     Global: [Settings, URLRedirect]

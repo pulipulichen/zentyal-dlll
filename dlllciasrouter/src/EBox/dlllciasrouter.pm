@@ -185,12 +185,48 @@ sub _setConf
         my $domainNameValue = $row->valueByName('domainName');
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
-        my $portValue = $row->valueByName('port');
-        my $httpToHttpsValue = $row->valueByName('httpToHttps');
-        my $httpsPortValue = $libRedir->getHTTPSextPort($row);
 
-        my $httpSecurityValue = $row->valueByName('redirHTTP_secure');
-        my $httpPortValue = $libRedir->getHTTPextPort($row);
+        #my $portValue = $row->valueByName('port');
+        #my $httpToHttpsValue = $row->valueByName('httpToHttps');
+        #my $redirdomain_scheme = $row->valueByName('redirdomain_scheme');
+        #my $httpToHttpsValue;
+        #if ($redirdomain_scheme eq 'http') {
+        #    $httpToHttpsValue = 0;
+        #}
+        #elsif ($redirdomain_scheme eq 'https') {
+        #    $httpToHttpsValue = 1;
+        #}
+        #else {
+        #    next;
+        #}
+        #my $httpsPortValue = $libRedir->getHTTPSextPort($row);
+        #my $httpSecurityValue = $row->valueByName('redirHTTP_secure');
+        #my $httpPortValue = $libRedir->getHTTPextPort($row);
+
+        my $portValue;
+        my $httpSecurityValue;
+        my $httpToHttpsValue;
+        my $httpsPortValue;
+        my $httpPortValue;
+
+        my $poundProtocolScheme = $row->valueByName('poundProtocolScheme');
+        $self->getLibrary()->show_exceptions($poundProtocolScheme);
+        if ($poundProtocolScheme eq 'poundProtocolScheme_none') {
+            next;
+        }
+        else {
+            $httpSecurityValue = $row->valueByName('redirPound_secure');
+            
+            if ($poundProtocolScheme eq 'poundProtocolScheme_http') {
+                $httpToHttpsValue = 0;
+                $httpPortValue = $row->valueByName('poundProtocolScheme_poundProtocolScheme_http');
+                $portValue = $httpPortValue;
+            }
+            else {
+                $httpToHttpsValue = 1;
+                $httpsPortValue = $row->valueByName('poundProtocolScheme_poundProtocolScheme_https');
+            }
+        }
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');

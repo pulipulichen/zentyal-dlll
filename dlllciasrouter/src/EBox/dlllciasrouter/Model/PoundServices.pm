@@ -38,7 +38,6 @@ sub _table
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainName(),
         $fieldsFactory->createFieldDomainNameLink(),
-        $fieldsFactory->createFieldBoundLocalDNS(),
         $fieldsFactory->createFieldInternalIPAddressHideView(1, 'The 1st part should be 10, <br />'
                 . 'the 2nd part should be 1~5, <br />'
                 . 'the 3rd part should be 0~9, and <br />'
@@ -46,17 +45,33 @@ sub _table
                 . 'Example: 10.1.0.51'),
 
         $fieldsFactory->createFieldMACAddr(),
-        $fieldsFactory->createFieldNetworkDisplay(),
 
-        $fieldsFactory->createFieldInternalPort(),
-        $fieldsFactory->createFieldRedirectToHTTPS(),
-        $fieldsFactory->createFieldEmergencyRestarter(),
+        # ----------------------------
+        $fieldsFactory->createFieldHr('hr_contact'),
 
         $fieldsFactory->createFieldContactName(),
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDescription(),
         $fieldsFactory->createFieldDescriptionHTML(),
         $fieldsFactory->createFieldExpiryDate(),
+
+        # ----------------------------
+        $fieldsFactory->createFieldHr('hr_pound'),
+
+        $fieldsFactory->createFieldBoundLocalDNS(),
+
+        $fieldsFactory->createFieldNetworkDisplay(),
+
+        
+        #$fieldsFactory->createFieldRedirectToHTTPS(),
+        #$fieldsFactory->createFieldProtocolScheme('domain', 0, 'http'),
+        
+        
+        #$fieldsFactory->createFieldInternalPort(),
+        $fieldsFactory->createFieldPoundProtocolScheme(),
+        $fieldsFactory->createFieldPoundOnlyForLAN(),
+        $fieldsFactory->createFieldEmergencyRestarter(),
+
         $fieldsFactory->createFieldHr('hr1'),
         
         # --------------------------

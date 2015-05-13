@@ -355,9 +355,9 @@ sub getProtocolIntPort
     my ($self, $row, $protocol) = @_;
 
     my $fieldName = 'redir'.$protocol.'_intPort';
-    if ($protocol eq 'HTTP') {
-        $fieldName = 'port';
-    }
+    #if ($protocol eq 'HTTP') {
+    #    $fieldName = 'port';
+    #}
     my $intPort = $row->valueByName($fieldName);
 
     return $intPort;
@@ -780,7 +780,8 @@ sub getProtocolHint
     my $scheme = $row->valueByName('redir'.$protocol.'_scheme');
     if ( ($scheme eq 'http') || ($scheme eq 'https') ) {
         
-        my $ipaddr = $libNET->getExternalIpaddr();
+        #my $ipaddr = $libNET->getExternalIpaddr();
+        my $ipaddr = $row->valueByName('domainName');
 
         my $url = "http\://" . $ipaddr . "\:".$extPort."/";
         if ($scheme eq 'https') {

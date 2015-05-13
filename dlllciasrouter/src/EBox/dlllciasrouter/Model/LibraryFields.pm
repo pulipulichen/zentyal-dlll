@@ -415,7 +415,7 @@ sub createFieldBoundLocalDNSwithHR
 {
     my $field = new EBox::Types::Boolean(
             fieldName => 'boundLocalDns',
-            printableName => __('Bound Local DNS'),
+            printableName => __('Setup In Local DNS'),
             editable => 1,
             optional => 0,
             defaultValue => 1,
@@ -579,7 +579,7 @@ sub createFieldProtocolScheme
 
     my $field = new EBox::Types::Select(
             'fieldName' => 'redir'.$protocol.'_scheme',
-            'printableName' => __($protocol.' Scheme'),
+            'printableName' => __($protocol.' Protocol Scheme'),
             'unique' => $unique,
             'populate' => \&_populateFieldProtocolScheme,
             'hiddenOnSetter' => 0,
@@ -588,6 +588,46 @@ sub createFieldProtocolScheme
             'editable' => 1
         );
 
+    return $field;
+}
+
+sub createFieldPoundProtocolScheme
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::Union(
+            'fieldName' => 'poundProtocolScheme',
+            'printableName' => __('Pound Protocol'),
+            'unique' => 0,
+            'subtypes' =>
+            [
+            new EBox::Types::Port(
+                'fieldName' => 'poundProtocolScheme_http',
+                'printableName' => __('HTTP (http://)'),
+                'defaultValue' => 80,
+                'editable' => 1,),
+            new EBox::Types::Port(
+                'fieldName' => 'poundProtocolScheme_https',
+                'printableName' => __('HTTPS (https://)'),
+                'defaultValue' => 443,
+                'editable' => 1,),
+            new EBox::Types::Union::Text(
+                'fieldName' => 'poundProtocolScheme_none',
+                'printableName' => __('Not a link'),
+                'defaultValue' => '',
+                'hidden' => 1,
+                'editable' => 0,),
+            ],
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+
+    return $field;
+}
+
+sub createFieldPoundOnlyForLAN
+{
+    my ($self) = @_;
+    my $field = $self->createFieldProtocolOnlyForLAN("Pound", 1);
     return $field;
 }
 
@@ -675,15 +715,16 @@ sub createFieldHTTPExternalPort
 
 sub createFieldHTTPInternalPort
 {
-    my $field = new EBox::Types::Text(
-            'fieldName' => 'redirHTTP_intPort',
-            'printableName' => __('HTTP Internal Port'),
-            'editable' => 0,
-            'defaultValue' => "Use reverse proxy internal port",
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
-
+    #my $field = new EBox::Types::Text(
+    #        'fieldName' => 'redirHTTP_intPort',
+    #        'printableName' => __('HTTP Internal Port'),
+    #        'editable' => 0,
+    #        'defaultValue' => "Use reverse proxy internal port",
+    #        hiddenOnSetter => 0,
+    #        hiddenOnViewer => 1,
+    #    );
+    my ($self) = @_;
+    my $field = $self->createFieldProtocolInternalPort("HTTP", 80);
     return $field;
 }
 
@@ -890,7 +931,7 @@ sub createFieldOtherRedirectPortsForeignModel
             'editable' => 0,
             'optional' => 1,
             'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 0,
+            'hiddenOnViewer' => 1,
        );
     return $field;
 }
