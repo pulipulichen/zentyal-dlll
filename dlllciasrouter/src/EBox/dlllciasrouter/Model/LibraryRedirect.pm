@@ -53,25 +53,25 @@ sub addRedirects
     my ($self, $row) = @_;
 
     # 加入HTTP
-    if ($row->valueByName('redirHTTP_enable') == 1) {
+    if ($self->isProtocolEnable($row, 'HTTP')) {
         my %param = $self->getRedirectParamHTTP($row);
         $self->addRedirectRow(%param);
     }
 
     # 加入HTTPS
-    if ($row->valueByName('redirHTTPS_enable') == 1) {
+    if ($self->isProtocolEnable($row, 'HTTPS')) {
         my %param = $self->getRedirectParamHTTPS($row);
         $self->addRedirectRow(%param);
     }
 
     # 加入SSH
-    if ($row->valueByName('redirSSH_enable') == 1) {
+    if ($self->isProtocolEnable($row, 'SSH')) {
         my %param = $self->getRedirectParamSSH($row);
         $self->addRedirectRow(%param);
     }
 
     # 加入RDP
-    if ($row->valueByName('redirRDP_enable') == 1) {
+    if ($self->isProtocolEnable($row, 'RDP')) {
         my %param = $self->getRedirectParamRDP($row);
         $self->addRedirectRow(%param);
     }
@@ -81,7 +81,7 @@ sub addRedirects
     try {
         for my $subId (@{$redirOther->ids()}) {
             my $redirRow = $redirOther->row($subId);
-            $redirOther->addRedirect($row, $redirRow);
+            $self->addOtherPortRedirect($row, $redirRow);
         }
     } catch { }
 }
@@ -91,31 +91,68 @@ sub deleteRedirects
     my ($self, $row) = @_;
 
     my %param;
-    %param = $self->getRedirectParamHTTP($row);
-    $self->deleteRedirectRow(%param);
+    if ($self->hasProtocolRedirect($row, 'HTTP')) {
+        %param = $self->getRedirectParamHTTP($row);
+        $self->deleteRedirectRow(%param);
+    }
 
-
-    %param = $self->getRedirectParamHTTPS($row);
-    $self->deleteRedirectRow(%param);
+    if ($self->hasProtocolRedirect($row, 'HTTPS')) {
+        %param = $self->getRedirectParamHTTPS($row);
+        $self->deleteRedirectRow(%param);
+    }
     
-    %param = $self->getRedirectParamSSH($row);
-    $self->deleteRedirectRow(%param);
+    if ($self->hasProtocolRedirect($row, 'SSH')) {
+        %param = $self->getRedirectParamSSH($row);
+        $self->deleteRedirectRow(%param);
+    }
 
-    %param = $self->getRedirectParamRDP($row);
-    $self->deleteRedirectRow(%param);
+    if ($self->hasProtocolRedirect($row, 'RDP')) {
+        %param = $self->getRedirectParamRDP($row);
+        $self->deleteRedirectRow(%param);
+    }
 
     my $redirOther = $row->subModel('redirOther');
     ##
     # 20150512 Pulipuli Chen
     # 由於在ForMod沒有資料的情況下，取出ID時會出錯，所以這部分用try catch跳過
     try {
-        if (defined($redirOther) && $redirOther->size() > 0) {
-            foreach my $subId ( @{$redirOther->ids() }) {
-                my $redirRow = $redirOther->row($subId);
-                $redirOther->deleteRedirect($row, $redirRow);
-            }
+        for my $subId ( @{$redirOther->ids() }) {
+            my $redirRow = $redirOther->row($subId);
+            $redirOther->deleteRedirect($row, $redirRow);
         }
     } catch { }
+}
+
+
+
+sub addOtherPortRedirect
+{
+    my ($self, $row, $redirRow) = @_;
+
+    if (! ($self->getLibrary()->isEnable($row) &&  $self->getLibrary()->isEnable($redirRow))) {
+        return;
+    }
+
+    my %param = $self->getRedirectParamOther($row, $redirRow);
+    $self->addRedirectRow(%param);
+}
+
+sub deleteOtherPortRedirect
+{
+    my ($self, $row, $redirRow) = @_;
+
+    my %param = $self->getRedirectParamOther($row, $redirRow);
+    $self->deleteRedirectRow(%param);
+}
+
+sub updateOtherPortRedirectPorts
+{
+    my ($self, $row, $redirRow, $oldRedirRow) = @_;
+
+    $self->deleteOtherPortRedirect($row, $oldRedirRow);
+    $self->addOtherPortRedirect($row, $redirRow);
+    $self->updateRedirectPorts($row);
+    $row->store();
 }
 
 # -----------------------------
@@ -286,6 +323,15 @@ sub getProtocolDefaultExtPort
     else {
         return 8;
     }
+}
+
+##
+# 20150513 Pulipuli Chen
+##
+sub hasProtocolRedirect
+{   
+    my ($self, $row, $protocol) = @_; 
+    return $row->elementExists('redir' . $protocol . '_enable');
 }
 
 sub getProtocolRedirectParam
@@ -701,7 +747,7 @@ sub isProtocolEnable
 {
     my ($self, $row, $protocol) = @_;
 
-    return ($row->valueByName('redir'.$protocol.'_enable') == 1);
+    return ($row->elementExists('redir'.$protocol.'_enable') && $row->valueByName('redir'.$protocol.'_enable') == 1);
 }
 
 sub getProtocolHint

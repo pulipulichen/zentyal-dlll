@@ -139,8 +139,11 @@ sub addedRowNotify
     $libDomainName->updatePortDescription($row, $redirRow);
 
     $self->checkExternalPort($redirRow);
-    $self->updateRedirectPorts($redirRow);
-    $self->addRedirect($row, $redirRow);
+
+    my $libRe = $self->parentModule()->model("LibraryRedirect");
+    $libRe->addOtherPortRedirect($row, $redirRow);
+    $libRe->updateRedirectPorts($row);
+
     $self->updateExtPortHTML($row, $redirRow);
 
 
@@ -152,10 +155,10 @@ sub deletedRowNotify
     
     try {
 
-    $self->updateRedirectPorts($redirRow);
-
     my $row = $self->parentRow();
-    $self->deleteRedirect($row, $redirRow);
+    my $libRe = $self->parentModule()->model("LibraryRedirect");
+    $libRe->deleteOtherPortRedirect($row, $redirRow);
+    $libRe->updateRedirectPorts($row);
 
     } catch {
         $self->getLibrary()->show_exceptions($_);
@@ -175,10 +178,8 @@ sub updatedRowNotify
         $self->getLibrary()->show_exceptions("row is not defined");
     }
 
-    $self->deleteRedirect($row, $oldRedirRow);
-    $self->addRedirect($row, $redirRow);
-
-    $self->updateRedirectPorts($redirRow);
+    my $libRe = $self->parentModule()->model("LibraryRedirect");
+    $libRe->updateOtherPortRedirectPorts($row, $redirRow, $oldRedirRow);
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
@@ -196,65 +197,6 @@ sub updatedRowNotify
 }
 
 # --------------------------------
-
-sub addRedirect
-{
-    my ($self, $row, $redirRow) = @_;
-
-    #throw EBox::Exceptions::External("Try to add redirect", defined($row));
-
-    my $poundModel;
-    my %param;
-    
-    try {
-    $poundModel = $self->parentModule()->model("LibraryRedirect");
-    } catch {
-        $self->getLibrary()->show_exceptions(51 . $_);
-    };
-    try {
-    %param = $poundModel->getRedirectParamOther($row, $redirRow);
-    } catch {
-        $self->getLibrary()->show_exceptions(52 . $_);
-    };
-    try {
-    $poundModel->addRedirectRow(%param);
-    } catch {
-        $self->getLibrary()->show_exceptions(53 . $_);
-    };
-    
-}
-
-sub deleteRedirect
-{
-    my ($self, $row, $redirRow) = @_;
-
-    #my $row = $self->parentRow();
-
-    if (defined($row))
-    {
-        my $poundModel = $self->parentModule()->model("LibraryRedirect");
-        my %param = $poundModel->getRedirectParamOther($row, $redirRow);
-        $poundModel->deleteRedirectRow(%param);
-    
-        # throw EBox::Exceptions::External("Try to delete redirect: " .  $param{description});
-    }
-}
-
-sub updateRedirectPorts
-{
-    my ($self, $redirRow) = @_;
-
-    my $row = $self->parentRow();
-    #my $row = $redirRow->parentRow();
-
-    if (defined($row))
-    {
-        $self->addRedirect($row, $redirRow);
-
-        $self->parentModule()->model("LibraryRedirect")->updateRedirectPorts($row);
-        $row->store();
-    }
-}
 
 sub checkExternalPort
 {
@@ -292,11 +234,6 @@ sub updateExtPortHTML
         $redirRow->elementByName('extPortHTML')->setValue($extPort);
         $redirRow->store();
     }
-}
-
-sub updateDescriptionDisplay
-{
-    my ($self, $row) = @_;
 }
 
 1;

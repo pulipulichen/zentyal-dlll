@@ -169,24 +169,23 @@ sub addedRowNotify
     my ($self, $row) = @_;
 
     try {
+
     $ROW_NEED_UPDATE = 1;
     
     my $lib = $self->getLibrary();
     my $libDN = $self->loadLibrary('LibraryDomainName');
-    my $libCT = $self->loadLibrary('LibraryContact');
-    my $libREDIR = $self->loadLibrary('LibraryRedirect');
-
     $libDN->updateDomainNameLink($row);
     
-    $libREDIR->updateRedirectPorts($row);
-
+    my $libCT = $self->loadLibrary('LibraryContact');
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
-
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
 
     $libDN->addDomainName($row);
+
+    my $libREDIR = $self->loadLibrary('LibraryRedirect');
+    $libREDIR->updateRedirectPorts($row);
     $libREDIR->addRedirects($row);
 
     my $libMAC = $self->loadLibrary('LibraryMAC');
@@ -200,6 +199,8 @@ sub addedRowNotify
         $self->getLibrary()->show_exceptions($_);
     };
 }
+
+# -------------------------------------------
 
 sub deletedRowNotify
 {
@@ -221,9 +222,13 @@ sub deletedRowNotify
     };
 }
 
+# -------------------------------------------
+
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
+        
+    my $lib = $self->getLibrary();
 
     try {
 
@@ -231,19 +236,16 @@ sub updatedRowNotify
 
         $ROW_NEED_UPDATE = 1;
         
-        my $lib = $self->getLibrary();
         my $libDN = $self->loadLibrary('LibraryDomainName');
-        my $libCT = $self->loadLibrary('LibraryContact');
-        my $libREDIR = $self->loadLibrary('LibraryRedirect');
-
         $self->deletedRowNotify($oldRow);
         $libDN->updateDomainNameLink($row);
     
+        my $libREDIR = $self->loadLibrary('LibraryRedirect');
         $libREDIR->updateRedirectPorts($row);
-        
+
+        my $libCT = $self->loadLibrary('LibraryContact');
         $libCT->setCreateDate($row);
         $libCT->setUpdateDate($row);
-
         $libCT->setContactLink($row);
 
         $libDN->addDomainName($row);
@@ -263,13 +265,11 @@ sub updatedRowNotify
             $redirOther->addRedirect($row, $redirRow);
         }
 
-
         $row->store();
         $ROW_NEED_UPDATE = 0;
     }
 
     } catch {
-        my $lib = $self->getLibrary();
         $lib->show_exceptions($_);
     };
 }

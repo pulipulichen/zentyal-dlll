@@ -458,8 +458,8 @@ sub createFieldProtocolRedirect
             editable => 1,
             optional => 0,
             defaultValue => $enable,
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
         );
 
     return $field;

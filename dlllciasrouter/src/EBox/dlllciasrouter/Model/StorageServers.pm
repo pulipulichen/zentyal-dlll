@@ -51,7 +51,9 @@ sub _table
         $fieldsFactory->createFieldIpaddrLink(),
         $self->createFieldInternalIPAddressHideView(),
 
+        $fieldsFactory->createFieldMACAddr(),
         $fieldsFactory->createFieldNetworkDisplay(),
+
         $fieldsFactory->createFieldInternalPortDefaultValue(443),
         $fieldsFactory->createFieldProtocolOnlyForLAN('Main', 1),
 
@@ -113,6 +115,12 @@ sub loadLibrary
 
 my $ROW_NEED_UPDATE = 0;
 
+# -----------------------------
+
+##
+# 20150513 Pulipuli Chen
+# 增加
+##
 sub addedRowNotify
 {
     my ($self, $row) = @_;
@@ -120,21 +128,31 @@ sub addedRowNotify
     $self->checkInternalIP($row);
 
     try {
+
     $ROW_NEED_UPDATE = 1;
 
     my $lib = $self->getLibrary();
     my $libDN = $self->loadLibrary('LibraryDomainName');
+    $libDN->updateDomainNameLink($row);
+
     my $libCT = $self->loadLibrary('LibraryContact');
-
-    $libDN->setServerMainLink($row);
-
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
     $libCT->setHardwareDisplay($row);
 
-    #$libDN->addDomainName($row);
+    $libDN->setServerMainLink($row);
+    $libDN->addDomainName($row);
+
+
+    my $libREDIR = $self->loadLibrary('LibraryRedirect');
+    $libREDIR->updateRedirectPorts($row);
+    $libREDIR->addRedirects($row);
+    
+    my $libMAC = $self->loadLibrary('LibraryMAC');
+    $libMAC->updateNetworkDisplay($row);
+    $libMAC->addDHCPfixedIPMember($row);
 
     $row->store();
     $ROW_NEED_UPDATE = 0;
@@ -143,42 +161,13 @@ sub addedRowNotify
         $self->getLibrary()->show_exceptions($_);
     };
 }
-sub updatedRowNotify
-{
-    my ($self, $row, $oldRow) = @_;
 
-    $self->checkInternalIP($row);
+# -----------------------------
 
-    try {
-
-    if ($ROW_NEED_UPDATE == 0) {
-        $ROW_NEED_UPDATE = 1;
-
-        my $lib = $self->getLibrary();
-        my $libDN = $self->loadLibrary('LibraryDomainName');
-        my $libCT = $self->loadLibrary('LibraryContact');
-
-        $libDN->setServerMainLink($row);
-
-        # 設定Netword的那一個
-        
-        $libCT->setCreateDate($row);
-        $libCT->setUpdateDate($row);
-        $libCT->setContactLink($row);
-        $libCT->setDescriptionHTML($row);
-        $libCT->setHardwareDisplay($row);
-        
-        #$libDN->addDomainName($row);
-
-        $row->store();
-        $ROW_NEED_UPDATE = 0;
-    }
-
-    } catch {
-        $self->getLibrary()->show_exceptions($_);
-    };
-}
-
+##
+# 20150513 Pulipuli Chen
+# 刪除
+##
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
@@ -186,11 +175,82 @@ sub deletedRowNotify
     my $libDN = $self->loadLibrary('LibraryDomainName');
 
     try {
-        # $libDN->deleteDomainName($row, 'StorageServers');
+        
+        $libDN->deleteDomainName($row, 'StorageServers');
+
+        my $libREDIR = $self->loadLibrary('LibraryRedirect');
+        $libREDIR->deleteRedirects($row);
+
+        my $libMAC = $self->loadLibrary('LibraryMAC');
+        $libMAC->removeDHCPfixedIPMember($row);
+
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . '( StorageServers->deletedRowNotify() )');
     };
 }
+
+# -----------------------------
+
+##
+# 20150513 Pulipuli Chen
+##
+sub updatedRowNotify
+{
+    my ($self, $row, $oldRow) = @_;
+
+    my $lib = $self->getLibrary();
+    $self->checkInternalIP($row);
+
+    try {
+
+    if ($ROW_NEED_UPDATE == 0) {
+        $ROW_NEED_UPDATE = 1;
+
+        
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        $self->deletedRowNotify($oldRow);
+        $libDN->updateDomainNameLink($row);
+
+        my $libREDIR = $self->loadLibrary('LibraryRedirect');
+        $libREDIR->updateRedirectPorts($row);
+
+        $libDN->setServerMainLink($row);
+
+        # 設定Netword的那一個
+        my $libCT = $self->loadLibrary('LibraryContact');
+        $libCT->setCreateDate($row);
+        $libCT->setUpdateDate($row);
+        $libCT->setContactLink($row);
+        $libCT->setDescriptionHTML($row);
+        $libCT->setHardwareDisplay($row);
+        
+        #$libDN->addDomainName($row);
+        $libREDIR->addRedirects($row);
+
+        my $libMAC = $self->loadLibrary('LibraryMAC');
+        $libMAC->updateNetworkDisplay($row);
+        $libMAC->removeDHCPfixedIPMember($oldRow);
+        $libMAC->addDHCPfixedIPMember($row);
+
+        my $redirOther = $row->subModel('redirOther');
+
+        for my $subId (@{$redirOther->ids()}) {
+            my $redirRow = $redirOther->row($subId);
+            $redirOther->deleteRedirect($oldRow, $redirRow);
+            $redirOther->updateExtPortHTML($row, $redirRow);
+            $redirOther->addRedirect($row, $redirRow);
+        }
+
+        $row->store();
+        $ROW_NEED_UPDATE = 0;
+    }
+
+    } catch {
+        $lib->show_exceptions($_);
+    };
+}
+
+# -----------------------------
 
 sub createFieldInternalIPAddressHideView
 {
