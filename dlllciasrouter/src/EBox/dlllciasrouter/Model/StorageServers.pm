@@ -60,6 +60,8 @@ sub _table
         $fieldsFactory->createFieldHardwareDisk(),
         $fieldsFactory->createFieldHardwareDisplay(),
 
+        $fieldsFactory->createFieldHr(),
+
         $fieldsFactory->createFieldContactName(),
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDisplayContactLink(),

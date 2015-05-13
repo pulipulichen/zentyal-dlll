@@ -1006,7 +1006,6 @@ sub createFieldHardwareDisk
             defaultValue => '',
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            help => ( '<hr />'),
         );
     return $field;
 }
