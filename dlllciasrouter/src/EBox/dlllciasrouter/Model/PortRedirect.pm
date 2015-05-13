@@ -131,6 +131,8 @@ sub addedRowNotify
 {
     my ($self, $redirRow) = @_;
 
+    try {
+
     my $row = $self->parentRow();
 
     $ROW_NEED_UPDATE = 1;
@@ -140,14 +142,19 @@ sub addedRowNotify
 
     $self->checkExternalPort($redirRow);
 
-    my $libRe = $self->parentModule()->model("LibraryRedirect");
+    my $libRe = $self->loadLibrary("LibraryRedirect");
     $libRe->addOtherPortRedirect($row, $redirRow);
     $libRe->updateRedirectPorts($row);
 
     $self->updateExtPortHTML($row, $redirRow);
 
+    $redirRow->store();
 
     $ROW_NEED_UPDATE = 0;
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . '( PortRedirect->addedRowNotify() )');
+    };
 }
 sub deletedRowNotify
 {
@@ -232,7 +239,6 @@ sub updateExtPortHTML
         $extPort = "<span>".$extPort."</span>";
 
         $redirRow->elementByName('extPortHTML')->setValue($extPort);
-        $redirRow->store();
     }
 }
 
