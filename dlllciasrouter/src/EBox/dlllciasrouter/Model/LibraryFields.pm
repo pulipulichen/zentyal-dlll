@@ -187,7 +187,7 @@ sub createFieldInternalPortDefaultValue
             'editable' => 1,
             'hiddenOnSetter' => 0,
             'hiddenOnViewer' => 1,
-            'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
+            #'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
         );
 
     return $field;
@@ -526,7 +526,7 @@ sub createFieldProtocolInternalPort
     my ($self, $protocol, $port) = @_;
     my $field = new EBox::Types::Union(
             'fieldName' => 'redir'.$protocol.'_intPort',
-            'printableName' => __($protocol.' Redirect'),
+            'printableName' => __($protocol.' Internal Port'),
             'subtypes' =>
             [
             new EBox::Types::Port(
@@ -627,7 +627,7 @@ sub createFieldPoundProtocolScheme
 sub createFieldPoundOnlyForLAN
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolOnlyForLAN("Pound", 1);
+    my $field = $self->createFieldProtocolOnlyForLAN("POUND", 1);
     return $field;
 }
 

@@ -61,14 +61,14 @@ sub _table
         $fieldsFactory->createFieldBoundLocalDNS(),
 
         $fieldsFactory->createFieldNetworkDisplay(),
-
         
         #$fieldsFactory->createFieldRedirectToHTTPS(),
-        #$fieldsFactory->createFieldProtocolScheme('domain', 0, 'http'),
-        
-        
-        #$fieldsFactory->createFieldInternalPort(),
-        $fieldsFactory->createFieldPoundProtocolScheme(),
+
+        $fieldsFactory->createFieldProtocolScheme('Pound', 0, 'http'),
+        $fieldsFactory->createFieldInternalPortDefaultValue(80),
+
+        #$fieldsFactory->createFieldPoundProtocolScheme(),
+
         $fieldsFactory->createFieldPoundOnlyForLAN(),
         $fieldsFactory->createFieldEmergencyRestarter(),
 

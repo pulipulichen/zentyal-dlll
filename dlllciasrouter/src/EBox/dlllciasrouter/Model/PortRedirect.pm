@@ -76,7 +76,7 @@ sub _table
         $libFactory->createFieldPortDescription(),
         $libFactory->createFieldPortDescriptionDisplay(),
         
-        $libFactory->createFieldPortExtPort("Please enter external port last 1 number, only allow 0,1,4,5,6, or 7. <br />For example, 4 means ****4. **** is based on internal IP address."),
+        $libFactory->createFieldPortExtPort("Please enter external port last 1 number, only allow 1,4,5,6, or 7. <br />For example, 4 means ****4. **** is based on internal IP address."),
         $libFactory->createFieldPortExtPortDisplay(),
 
         $libFactory->createFieldPortIntPort(),
@@ -216,8 +216,9 @@ sub checkExternalPort
         ||  $extPort == 2
         ||  $extPort == 3
         ||  $extPort == 8
-        ||  $extPort == 9) {
-        throw EBox::Exceptions::External("Error External Port Last 1 Numbers format (".$extPort."). Only allow 0,1,4,5,6, or 7");
+        ||  $extPort == 9
+        ||  $extPort == 0) {
+        throw EBox::Exceptions::External("Error External Port Last 1 Numbers format (".$extPort."). Only allow 1,4,5,6, or 7");
     }
 }
 

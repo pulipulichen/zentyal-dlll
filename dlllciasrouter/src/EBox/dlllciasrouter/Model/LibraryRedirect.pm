@@ -52,6 +52,14 @@ sub addRedirects
 {
     my ($self, $row) = @_;
 
+    # 加入Pound
+    my $redirPound_scheme = $row->valueByName('redirPound_scheme');
+    if ($redirPound_scheme eq 'https' 
+        || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) ) {
+        my %param = $self->getProtocolRedirectParam($row, 'POUND');
+        $self->addRedirectRow(%param);
+    }
+
     # 加入HTTP
     if ($self->isProtocolEnable($row, 'HTTP')) {
         my %param = $self->getRedirectParamHTTP($row);
@@ -320,6 +328,9 @@ sub getProtocolDefaultExtPort
     elsif ($protocol eq 'RDP') {
         return 9;
     }
+    elsif ($protocol eq 'POUND') {
+        return 0;
+    }
     else {
         return 8;
     }
@@ -358,6 +369,9 @@ sub getProtocolIntPort
     #if ($protocol eq 'HTTP') {
     #    $fieldName = 'port';
     #}
+    if ($protocol eq 'POUND') {
+        $fieldName = 'port';
+    }
     my $intPort = $row->valueByName($fieldName);
 
     return $intPort;
@@ -366,8 +380,17 @@ sub getProtocolIntPort
 sub getProtocolExtPort
 {
     my ($self, $row, $protocol) = @_;
+    
+    my $extPort;
+    if ($protocol eq 'POUND') {
+        my $portHeader = $self->getPortHeader($row);    
 
-    my $extPort = $row->valueByName('redir'.$protocol.'_extPort');
+        my $port = $self->getProtocolDefaultExtPort($protocol);
+        $extPort = $portHeader . $port;
+        return $extPort;
+    }
+
+    $extPort = $row->valueByName('redir'.$protocol.'_extPort');
     
     if ($extPort 
         eq 'redir'.$protocol.'_extPort_default')
@@ -384,6 +407,10 @@ sub getProtocolExtPort
 sub getProtocolLog
 {
     my ($self, $row, $protocol) = @_;
+
+    if ($protocol eq 'POUND') {
+        return 1;
+    }
 
     my $fieldName = 'redir'.$protocol.'_log';
     my $value = $row->valueByName($fieldName);
@@ -711,7 +738,8 @@ sub updateRedirectPorts
             $hint = $hint . "<br />";
         }
 
-        $hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort.""; 
+        #$hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort.""; 
+        $hint = $hint . $desc . ": " . $extPort ." &gt; " . $intPort.""; 
 
         if ($redirOtherForMod ne '') {
             $redirOtherForMod = $redirOtherForMod . "\n";
@@ -773,7 +801,7 @@ sub getProtocolHint
     }
 
     $hint = "<strong>".$protocolTitle."</strong>: "
-        . "<br />" 
+        #. "<br />" 
         . $extPort ." &gt; " . $intPort."";
     
     # 加入連結的部分

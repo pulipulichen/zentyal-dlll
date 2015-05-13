@@ -261,6 +261,10 @@ sub updateDomainNameLink
         $brokenDomainName = $domainName;
     }
 
+    if ($row->valueByName('redirPOUND_secure') == 1) {
+        $brokenDomainName = '[' . $brokenDomainName . ']';
+    }
+
     my $port = $self->parentModule()->model("Settings")->value("port");
 
     if (!defined($port)) {
