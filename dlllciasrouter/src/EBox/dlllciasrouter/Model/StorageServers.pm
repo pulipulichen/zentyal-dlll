@@ -45,10 +45,14 @@ sub _table
         $fieldsFactory->createFieldConfigEnable(),
         
         $fieldsFactory->createFieldDomainNameUnique(),
+        $fieldsFactory->createFieldDomainNameLink(),
+        $fieldsFactory->createFieldBoundLocalDNS(),
+
         $fieldsFactory->createFieldIpaddrLink(),
         $self->createFieldInternalIPAddressHideView(),
+
         $fieldsFactory->createFieldNetworkDisplay(),
-        $fieldsFactory->createFieldInternalPort(),
+        $fieldsFactory->createFieldInternalPortDefaultValue(443),
         $fieldsFactory->createFieldProtocolOnlyForLAN('Main', 1),
 
         $fieldsFactory->createFieldIsHTTPS(),
@@ -60,7 +64,7 @@ sub _table
         $fieldsFactory->createFieldHardwareDisk(),
         $fieldsFactory->createFieldHardwareDisplay(),
 
-        $fieldsFactory->createFieldHr(),
+        $fieldsFactory->createFieldHr('hr1'),
 
         $fieldsFactory->createFieldContactName(),
         $fieldsFactory->createFieldContactEmail(),

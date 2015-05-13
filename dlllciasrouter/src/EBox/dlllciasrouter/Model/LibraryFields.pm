@@ -155,16 +155,41 @@ sub createFieldInternalIPAddressHideView
     return $field;
 }
 
+##
+# 20150513 Pulipuli Chen
+# 調整內部port的設定
+##
 sub createFieldInternalPort
 {
     my $field = new EBox::Types::Port(
-            fieldName => 'port',
-            printableName => __('Internal Port'),
-            defaultValue => 80,
-            editable => 1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
+            'fieldName' => 'port',
+            'printableName' => __('Internal Port'),
+            'defaultValue' => 80,
+            'editable' => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+            'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
+        );
+
+    return $field;
+}
+
+##
+# 20150513 Pulipuli Chen
+# 調整內部port的設定
+##
+sub createFieldInternalPortDefaultValue
+{
+    my ($self, $defaultValue) = @_;
+
+    my $field = new EBox::Types::Port(
+            'fieldName' => 'port',
+            'printableName' => __('Internal Port'),
+            'defaultValue' => $defaultValue,
+            'editable' => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+            'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
         );
 
     return $field;
@@ -979,14 +1004,13 @@ sub createFieldHr
 {
     my ($self, $fieldName) = @_;
 
-    my $field = new EBox::Types::Text(
-            fieldName => $fieldName,
-            printableName => __(''),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => ( '<hr />'),
+    my $field = new EBox::Types::HTML(
+            'fieldName' => $fieldName . '_hr',
+            'printableName' => __(''),
+            'editable' => 0,
+            'defaultValue' => '<hr />',
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
         );
     return $field;
 }
