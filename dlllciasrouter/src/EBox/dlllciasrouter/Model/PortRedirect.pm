@@ -149,13 +149,14 @@ sub addedRowNotify
     $self->updateExtPortHTML($row, $redirRow);
 
     $redirRow->store();
+    
+    } catch {
+        $self->getLibrary()->show_exceptions('Please add port again.');
+    };
 
     $ROW_NEED_UPDATE = 0;
-
-    } catch {
-        $self->getLibrary()->show_exceptions($_ . '( PortRedirect->addedRowNotify() )');
-    };
 }
+
 sub deletedRowNotify
 {
     my ($self, $redirRow) = @_;
@@ -224,22 +225,18 @@ sub updateExtPortHTML
 {
     my ($self, $row, $redirRow) = @_;
 
-    if (defined($row))
-    {
-        my $poundModel = $self->parentModule()->model("LibraryRedirect");
-        my %param = $poundModel->getRedirectParamOther($row, $redirRow);
-        
-        my $secure = $redirRow->valueByName("secure");
-        #my $description = $redirRow->valueByName("description");
+    my $libRe = $self->parentModule()->model("LibraryRedirect");
+    my %param = $libRe->getRedirectParamOther($row, $redirRow);
 
-        my $extPort = $param{external_port_single_port};
-        if ($secure) {
-            $extPort = '[' . $extPort . ']';
-        }
-        $extPort = "<span>".$extPort."</span>";
+    my $secure = $redirRow->valueByName("secure");
 
-        $redirRow->elementByName('extPortHTML')->setValue($extPort);
+    my $extPort = $param{external_port_single_port};
+    if ($secure) {
+        $extPort = '[' . $extPort . ']';
     }
+    $extPort = "<span>".$extPort."</span>";
+
+    $redirRow->elementByName('extPortHTML')->setValue($extPort);
 }
 
 1;

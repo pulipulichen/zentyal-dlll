@@ -89,7 +89,7 @@ sub addRedirects
 sub deleteRedirects
 {
     my ($self, $row) = @_;
-
+    
     my %param;
     if ($self->hasProtocolRedirect($row, 'HTTP')) {
         %param = $self->getRedirectParamHTTP($row);
@@ -110,20 +110,20 @@ sub deleteRedirects
         %param = $self->getRedirectParamRDP($row);
         $self->deleteRedirectRow(%param);
     }
-
-    my $redirOther = $row->subModel('redirOther');
-    ##
-    # 20150512 Pulipuli Chen
-    # 由於在ForMod沒有資料的情況下，取出ID時會出錯，所以這部分用try catch跳過
-    try {
-        for my $subId ( @{$redirOther->ids() }) {
-            my $redirRow = $redirOther->row($subId);
-            $redirOther->deleteRedirect($row, $redirRow);
-        }
-    } catch { }
+    
+    # 刪除Other Redir
+    my $redirOtherForMod = $row->valueByName('redirOther_ForMod'); 
+    my @redirOtherForModAry = split(/\n/, $redirOtherForMod);
+    for my $redirDesc (@redirOtherForModAry) {
+        %param = (
+            'description' => $row->valueByName('domainName') 
+                . ' ' 
+                . '(' . $row->valueByName('ipaddr') . '): Other (' . $redirDesc . ')'
+        );
+        
+        $self->deleteRedirectParam(%param);
+    }
 }
-
-
 
 sub addOtherPortRedirect
 {
@@ -342,12 +342,10 @@ sub getProtocolRedirectParam
     my $intPort = $self->getProtocolIntPort($row, $protocol);
     my $log = $self->getProtocolLog($row, $protocol);
 
-    if ($row->valueByName('redir'.$protocol.'_secure') == 1)
-    {
+    if ($row->valueByName('redir'.$protocol.'_secure') == 1) {
         return $self->getRedirectParameterSecure($row, $extPort, $intPort, $protocol, $log);
     }
-    else
-    {
+    else {
         return $self->getRedirectParameter($row, $extPort, $intPort, $protocol, $log);
     }
 }
@@ -417,28 +415,23 @@ sub getRedirectParamOther
     };
     
     try {
+
     $desc = $redirRow->valueByName('description');
-    $desc = "Other (".$desc.")";
+    #$desc = "Other";
+    $desc = "Other (" . $desc . ")";
     $log = $redirRow->valueByName('log');
+
     } catch {
         $self->getLibrary()->show_exceptions(25 . $_);
     };
 
     if ($redirRow->valueByName('secure') == 1)
     {
-        try {
-            return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log);
-        } catch {
-            $self->getLibrary()->show_exceptions(3 . $_);
-        };
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log);
     }
     else
     {
-        try {
-            return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
-        } catch {
-            $self->getLibrary()->show_exceptions(4 . $_);
-        };
+        return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
     }
 }
 
@@ -553,30 +546,6 @@ sub getRedirectParameterSecure
     );
 }
 
-sub getRedirectParameterFind
-{
-    my ($self, $row) = @_;
-
-    my $lib = $self->getLibrary();
-    my $libNET = $self->loadLibrary('LibraryNetwork');
-
-    my $domainName = $row->valueByName("domainName");
-    my $iface = $libNET->getExternalIface();
-    my $localIpaddr = $row->valueByName('ipaddr');
-
-    return (
-        #interface => $iface,
-        #origDest_selected => "origDest_ebox",
-        #protocol => "tcp/udp",
-        #external_port_range_type => 'single',
-        destination => $localIpaddr,
-        destination_port_selected => "destination_port_other",
-        #destination_port_other => $intPort,
-        #snat => 1,
-        #log => 0,
-    );
-}
-
 sub addRedirectRow
 {
     my ($self, %params) = @_;
@@ -588,7 +557,7 @@ sub addRedirectRow
     my $redirMod = $firewall->model('RedirectsTable');
 
     my $id = $redirMod->findId(
-        description => $params{description}
+        description => $params{description},
     );
     
     if (defined($id) == 0) {
@@ -602,7 +571,7 @@ sub addRedirectRow
 
 sub deleteRedirectRow
 {
-    my ($self, %param) = @_;
+    my ($self, %params) = @_;
     
     try {
 
@@ -611,8 +580,29 @@ sub deleteRedirectRow
     my $redirMod = $firewall->model('RedirectsTable');
 
     my $id = $redirMod->findId(
-        description => $param{description}
+        description => $params{description},
     );
+
+    if (defined($id) == 1) {
+        $redirMod->removeRow($id);
+    }
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_);
+    };
+}
+
+sub deleteRedirectParam
+{
+    my ($self, %param) = @_;
+    
+    try {
+
+    my $gl = EBox::Global->getInstance();
+    my $firewall = $gl->modInstance('firewall');
+    my $redirMod = $firewall->model('RedirectsTable');
+
+    my $id = $redirMod->findId(%param);
     if (defined($id) == 1) {
         $redirMod->removeRow($id);
     }
@@ -679,6 +669,8 @@ sub updateRedirectPorts
     # 取得Other Redirect Ports
     my $domainName = $row->valueByName("domainName");
     my $redirOther = $row->subModel('redirOther');
+
+    my $redirOtherForMod = '';
     for my $subId (@{$redirOther->ids()}) {
 
         my $redirRow = $redirOther->row($subId);
@@ -719,9 +711,15 @@ sub updateRedirectPorts
             $hint = $hint . "<br />";
         }
 
-        $hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort."";   
+        $hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort.""; 
+
+        if ($redirOtherForMod ne '') {
+            $redirOtherForMod = $redirOtherForMod . "\n";
+        }
+
+        $redirOtherForMod = $redirOtherForMod . $redirRow->valueByName('description');
     }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
-    
+    $row->elementByName('redirOther_ForMod')->setValue($redirOtherForMod);
 
     # 最後結尾
     if ($hint ne '')

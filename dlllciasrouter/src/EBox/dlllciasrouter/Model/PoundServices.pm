@@ -39,7 +39,11 @@ sub _table
         $fieldsFactory->createFieldDomainName(),
         $fieldsFactory->createFieldDomainNameLink(),
         $fieldsFactory->createFieldBoundLocalDNS(),
-        $fieldsFactory->createFieldInternalIPAddressHideView(),
+        $fieldsFactory->createFieldInternalIPAddressHideView(1, 'The 1st part should be 10, <br />'
+                . 'the 2nd part should be 1~5, <br />'
+                . 'the 3rd part should be 0~9, and <br />'
+                . 'the 4th part should be between 1~99. <br />'
+                . 'Example: 10.1.0.51'),
 
         $fieldsFactory->createFieldMACAddr(),
         $fieldsFactory->createFieldNetworkDisplay(),
@@ -52,7 +56,6 @@ sub _table
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDescription(),
         $fieldsFactory->createFieldDescriptionHTML(),
-        #$fieldsFactory->createFieldExpiryDateWithHR(),
         $fieldsFactory->createFieldExpiryDate(),
         $fieldsFactory->createFieldHr('hr1'),
         
@@ -110,6 +113,7 @@ sub _table
 
         $fieldsFactory->createFieldOtherRedirectPortsDisplay(),
         $fieldsFactory->createFieldOtherRedirectPortsHint(),
+        $fieldsFactory->createFieldOtherRedirectPortsForeignModel(),
 
         # --------------------------------
         # Date Display

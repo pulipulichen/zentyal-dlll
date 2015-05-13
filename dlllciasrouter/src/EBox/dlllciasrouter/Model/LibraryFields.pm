@@ -138,18 +138,16 @@ sub createFieldInternalIPAddress
 
 sub createFieldInternalIPAddressHideView
 {
+    my ($self, $unique, $help) = @_;
+
     my $field = new EBox::Types::HostIP(
-            fieldName => 'ipaddr',
-            printableName => __('Internal IP Address'),
-            editable => 1,
-            #'unique' => 1,
-            help => __('The 1st part should be 10, <br />'
-                . 'the 2nd part should be 1~5, <br />'
-                . 'the 3rd part should be 0~9, and <br />'
-                . 'the 4th part should be between 1~99. <br />'
-                . 'Example: 10.1.0.51'),
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
+            'fieldName' => 'ipaddr',
+            'printableName' => __('Internal IP Address'),
+            'editable' => 1,
+            'unique' => $unique,
+            'help' => __($help),
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
         );
 
     return $field;
@@ -879,6 +877,21 @@ sub createFieldOtherRedirectPortsHint
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         );
+    return $field;
+}
+
+sub createFieldOtherRedirectPortsForeignModel
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::Text(
+            'fieldName' => 'redirOther_ForMod',
+            'printableName' => __(''),
+            #'defaultValue' => '',
+            'editable' => 0,
+            'optional' => 1,
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 0,
+       );
     return $field;
 }
 
