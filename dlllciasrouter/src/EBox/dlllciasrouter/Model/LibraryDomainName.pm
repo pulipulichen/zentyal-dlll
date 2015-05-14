@@ -271,17 +271,53 @@ sub setServerMainLink
 
 sub updateDomainNameLink
 {
-    my ($self, $row) = @_;
+    my ($self, $row, $doBreakUrl) = @_;
     
     my $domainName = $row->valueByName("domainName");
-    my $brokenDomainName = $self->breakUrl($domainName);
-
     if (!defined($domainName)) {
         $domainName = $row->valueByName('ipaddr');
-        $brokenDomainName = $domainName;
+        $doBreakUrl = 0;
     }
 
-    if ($row->valueByName('redirPOUND_secure') == 1) {
+    my $enable = $self->getLibrary()->isEnable($row);
+    my $secure = $row->valueByName('redirPOUND_secure');
+    my $link = $self->updateDomainNameLinkDeco($domainName, $enable, $secure, $doBreakUrl);
+    
+    # -----------------
+    # 20150514 Pulipuli Chen
+    # 如果有底下的OtherDomainNames的情況
+    #my $otherDN = $row->subModel('otherDomainName');
+    #if (defined($otherDN)) {
+    if ($row->elementExists('otherDomainName')) {
+        my $otherDN = $row->subModel('otherDomainName');
+        for my $dnId (@{$otherDN->ids()}) {
+            my $dnRow = $otherDN->row($dnId);
+            $enable = $self->getLibrary()->isEnable($dnRow);
+            if ($enable == 0) {
+                next;
+            }
+            $secure = $dnRow->valueByName('redirPOUND_secure');
+            my $otehrDomainName = $dnRow->valueByName("domainName");
+            my $otherLink = $self->updateDomainNameLinkDeco($otehrDomainName, $enable, $secure, $doBreakUrl);
+            $link = $link . "<br />" . $otherLink;
+        }
+    }
+
+    $row->elementByName("domainNameLink")->setValue($link);
+
+    #$row->store();
+}
+
+sub updateDomainNameLinkDeco
+{
+    my ($self, $domainName, $enable, $secure, $doBreakUrl) = @_;
+
+    my $brokenDomainName = $domainName;
+    if ($doBreakUrl == 1) {
+        $brokenDomainName = $self->breakUrl($brokenDomainName);
+    }
+
+    if ($secure == 1) {
         $brokenDomainName = '[' . $brokenDomainName . ']';
     }
 
@@ -299,9 +335,6 @@ sub updateDomainNameLink
     }
     my $link = "http\://" . $domainName . $port . "/";
 
-    #$domainName = $self->breakUrl($domainName);
-
-    my $enable = $self->getLibrary()->isEnable($row);
     my $textDecoration = "underline";
     if ($enable == 0) {
         $textDecoration = "line-through";
@@ -312,9 +345,8 @@ sub updateDomainNameLink
         . 'style="background: none;text-decoration: '.$textDecoration.';color: #A3BD5B;">' 
         . $brokenDomainName 
         . '</a>';
-    $row->elementByName("domainNameLink")->setValue($link);
 
-    #$row->store();
+    return $link;
 }
 
 sub breakUrl

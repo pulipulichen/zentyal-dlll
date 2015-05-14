@@ -100,9 +100,10 @@ sub addRedirects
     my ($self, $row) = @_;
 
     # 加入Pound
-    my $redirPound_scheme = $row->valueByName('redirPound_scheme');
-    if ($redirPound_scheme eq 'https' 
-        || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) ) {
+    #my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
+    #if ($redirPound_scheme eq 'https' 
+    #    || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) ) {
+    if ($self->isProtocolEnable($row, "POUND")) {
         my %param = $self->getProtocolRedirectParam($row, 'POUND');
         $self->addRedirectRow(%param);
     }
@@ -389,6 +390,8 @@ sub getProtocolIntPort
     #if ($protocol eq 'HTTP') {
     #    $fieldName = 'port';
     #}
+
+    # 20150515 為 POUND做的調整
     if ($protocol eq 'POUND') {
         $fieldName = 'port';
     }
@@ -402,6 +405,7 @@ sub getProtocolExtPort
     my ($self, $row, $protocol) = @_;
     
     my $extPort;
+    # 20150515 為 POUND 做得調整
     if ($protocol eq 'POUND') {
         my $portHeader = $self->getPortHeader($row);    
 
@@ -472,12 +476,10 @@ sub getRedirectParamOther
         $self->getLibrary()->show_exceptions(25 . $_);
     };
 
-    if ($redirRow->valueByName('secure') == 1)
-    {
+    if ($redirRow->valueByName('secure') == 1) {
         return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log);
     }
-    else
-    {
+    else {
         return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
     }
 }
@@ -675,6 +677,15 @@ sub updateRedirectPorts
 
     my $portHeader = $self->getPortHeader($row);
 
+    # 加入Pound
+    $protocol = "POUND";
+    if ($self->isProtocolEnable($row, $protocol)) {
+        if ($hint ne ''){
+            $hint = $hint . "<br />";
+        }
+        $hint = $hint. $self->getProtocolHint($row, $protocol);
+    }
+
     # 加入HTTP
     $protocol = "HTTP";
     if ($self->isProtocolEnable($row, $protocol)) {
@@ -767,6 +778,7 @@ sub updateRedirectPorts
 
         $redirOtherForMod = $redirOtherForMod . $redirRow->valueByName('description');
     }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
+
     $row->elementByName('redirOther_ForMod')->setValue($redirOtherForMod);
 
     # 最後結尾
@@ -793,6 +805,13 @@ sub isProtocolEnable
 {
     my ($self, $row, $protocol) = @_;
 
+    # 20150515 加入POUND
+    if ($protocol eq "POUND") {
+        my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
+        return ($redirPound_scheme eq 'https' 
+            || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) );
+    }
+
     return ($row->elementExists('redir'.$protocol.'_enable') && $row->valueByName('redir'.$protocol.'_enable') == 1);
 }
 
@@ -807,7 +826,10 @@ sub getProtocolHint
     my $extPort = $self->getProtocolExtPort($row, $protocol);
 
     my $intPort = $self->getProtocolIntPort($row, $protocol);
-    my $note = $row->valueByName('redir'.$protocol.'_note');
+    my $note = "";
+    if ($row->elementExists('redir'.$protocol.'_note')) {
+        $note = $row->valueByName('redir'.$protocol.'_note');
+    }
 
     my $protocolTitle = $protocol;
     
@@ -815,7 +837,10 @@ sub getProtocolHint
         $protocolTitle = $protocolTitle . '*';
     }
 
-    my $secure = $row->valueByName('redir'.$protocol.'_secure');
+    my $secure = 0;
+    if ($row->elementExists('redir'.$protocol.'_secure')) {
+        $secure = $row->valueByName('redir'.$protocol.'_secure');
+    }
     if ($secure == 1) {
         $protocolTitle = '[' .$protocolTitle . ']';
     }
@@ -825,7 +850,11 @@ sub getProtocolHint
         . $extPort ." &gt; " . $intPort."";
     
     # 加入連結的部分
-    my $scheme = $row->valueByName('redir'.$protocol.'_scheme');
+    my $scheme = "none";
+    if ($row->elementExists('redir'.$protocol.'_scheme')) {
+        $scheme = $row->valueByName('redir'.$protocol.'_scheme');
+    }
+
     if ( ($scheme eq 'http') || ($scheme eq 'https') ) {
         
         #my $ipaddr = $libNET->getExternalIpaddr();

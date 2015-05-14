@@ -189,7 +189,7 @@ sub _setConf
         # -----------------------------
         my $portValue = $row->valueByName('port');
         #my $httpToHttpsValue = $row->valueByName('httpToHttps');
-        my $redirPound_scheme = $row->valueByName('redirPound_scheme');
+        my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
         my $httpToHttpsValue;
         if ($redirPound_scheme eq 'http') {
             $httpToHttpsValue = 0;

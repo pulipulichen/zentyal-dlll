@@ -125,7 +125,7 @@ sub addedRowNotify
     my $libDN = $self->loadLibrary('LibraryDomainName');
     my $libCT = $self->loadLibrary('LibraryContact');
     
-    $libDN->updateDomainNameLink($row);
+    $libDN->updateDomainNameLink($row, 1);
 
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
@@ -160,7 +160,7 @@ sub updatedRowNotify
 
         $self->deletedRowNotify($oldRow);
         
-        $libDN->updateDomainNameLink($row);
+        $libDN->updateDomainNameLink($row, 1);
     
         $libCT->setCreateDate($row);
         $libCT->setUpdateDate($row);

@@ -64,7 +64,7 @@ sub _table
         $libFactory->createFieldDomainName(),
         $libFactory->createFieldDomainNameLink(),
         $libFactory->createFieldBoundLocalDNS(),
-        $libFactory->createFieldProtocolScheme('Pound', 0, 'http'),
+        $libFactory->createFieldProtocolScheme('POUND', 0, 'http'),
         $libFactory->createFieldInternalPortDefaultValue(80),
         $libFactory->createFieldPoundOnlyForLAN(),
         $libFactory->createFieldEmergencyRestarter(),
@@ -115,24 +115,27 @@ sub addedRowNotify
 {
     my ($self, $dnRow) = @_;
 
+    $ROW_NEED_UPDATE = 1;
+
     try {
 
     my $row = $self->parentRow();
     my $libDN = $self->loadLibrary('LibraryDomainName');
-
-    $ROW_NEED_UPDATE = 1;
     
     # 1. 更新自己欄位的domain name連線資訊
-    #$libDN->updateDomainNameLink($dnRow);
-    #$dnRow->store();
+    $libDN->updateDomainNameLink($dnRow, 0);
+    $libDN->addDomainName($dnRow);
 
     # 2. 更新row欄位的domain name顯示資訊
-    #$libDN->updateDomainNameLink($row);
+    $libDN->updateDomainNameLink($row, 1);
+    $row->store();
 
     # 3. 看是否要設定*****0欄位 (由row去觸發)
     #my $libREDIR = $self->loadLibrary('LibraryRedirect');
     #$libREDIR->addPoundRedirect($row);
     
+    $dnRow->store();
+
     } catch {
         $self->getLibrary()->show_exceptions( $_ . '; Please add domain name again. (OtherDomainNames->addedRowNotify)');
     };
@@ -146,10 +149,10 @@ sub deletedRowNotify
     
     try {
 
-    my $row = $self->parentRow();
-    my $libRe = $self->parentModule()->model("LibraryRedirect");
-    $libRe->deleteOtherOtherDomainNames($row, $redirRow);
-    $libRe->updateRedirectPorts($row);
+    #my $row = $self->parentRow();
+    #my $libRe = $self->parentModule()->model("LibraryRedirect");
+    #$libRe->deleteOtherOtherDomainNames($row, $redirRow);
+    #$libRe->updateRedirectPorts($row);
 
     } catch {
         $self->getLibrary()->show_exceptions($_);
@@ -162,25 +165,25 @@ sub updatedRowNotify
 
     try {
 
-    $self->checkExternalPort($redirRow);
-    my $row = $self->parentRow();
+    #$self->checkExternalPort($redirRow);
+    #my $row = $self->parentRow();
 
-    if (!defined($row)) {
-        $self->getLibrary()->show_exceptions("row is not defined");
-    }
+    #if (!defined($row)) {
+    #    $self->getLibrary()->show_exceptions("row is not defined");
+    #}
 
-    my $libRe = $self->parentModule()->model("LibraryRedirect");
-    $libRe->updateOtherOtherDomainNamesPorts($row, $redirRow, $oldRedirRow);
+    #my $libRe = $self->parentModule()->model("LibraryRedirect");
+    #$libRe->updateOtherOtherDomainNamesPorts($row, $redirRow, $oldRedirRow);
 
-    if ($ROW_NEED_UPDATE == 0) {
-        $ROW_NEED_UPDATE = 1;
-
-        my $libDomainName = $self->loadLibrary('LibraryDomainName');
-        $libDomainName->updatePortDescription($row, $redirRow);
-
-        $self->updateExtPortHTML($row, $redirRow);
-        $ROW_NEED_UPDATE = 0;
-    }
+    #if ($ROW_NEED_UPDATE == 0) {
+    #    $ROW_NEED_UPDATE = 1;
+    #
+    #    my $libDomainName = $self->loadLibrary('LibraryDomainName');
+    #    $libDomainName->updatePortDescription($row, $redirRow);
+    #
+    #    $self->updateExtPortHTML($row, $redirRow);
+    #    $ROW_NEED_UPDATE = 0;
+    #}
 
     } catch {
         $self->getLibrary()->show_exceptions($_);
@@ -189,37 +192,5 @@ sub updatedRowNotify
 
 # --------------------------------
 
-sub checkExternalPort
-{
-    my ($self, $redirRow) = @_;
-
-    my $extPort = $redirRow->valueByName("extPort");
-
-    if ( $extPort > 9 
-        ||  $extPort == 2
-        ||  $extPort == 3
-        ||  $extPort == 8
-        ||  $extPort == 9) {
-        throw EBox::Exceptions::External("Error External Port Last 1 Numbers format (".$extPort."). Only allow 0,1,4,5,6, or 7");
-    }
-}
-
-sub updateExtPortHTML
-{
-    my ($self, $row, $redirRow) = @_;
-
-    my $libRe = $self->parentModule()->model("LibraryRedirect");
-    my %param = $libRe->getRedirectParamOther($row, $redirRow);
-
-    my $secure = $redirRow->valueByName("secure");
-
-    my $extPort = $param{external_port_single_port};
-    if ($secure) {
-        $extPort = '[' . $extPort . ']';
-    }
-    $extPort = "<span>".$extPort."</span>";
-
-    $redirRow->elementByName('extPortHTML')->setValue($extPort);
-}
 
 1;

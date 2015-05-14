@@ -35,6 +35,8 @@ sub _table
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @fields = (
+        $fieldsFactory->createFieldAddBtn('add'),
+
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainName(),
         $fieldsFactory->createFieldDomainNameLink(),
@@ -65,7 +67,7 @@ sub _table
         
         #$fieldsFactory->createFieldRedirectToHTTPS(),
 
-        $fieldsFactory->createFieldProtocolScheme('Pound', 0, 'http'),
+        $fieldsFactory->createFieldProtocolScheme('POUND', 0, 'http'),
         $fieldsFactory->createFieldInternalPortDefaultValue(80),
 
         #$fieldsFactory->createFieldPoundProtocolScheme(),
@@ -194,7 +196,7 @@ sub addedRowNotify
     
     my $lib = $self->getLibrary();
     my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->updateDomainNameLink($row);
+    $libDN->updateDomainNameLink($row, 1);
     
     my $libCT = $self->loadLibrary('LibraryContact');
     $libCT->setCreateDate($row);
@@ -258,7 +260,7 @@ sub updatedRowNotify
         
         my $libDN = $self->loadLibrary('LibraryDomainName');
         $self->deletedRowNotify($oldRow);
-        $libDN->updateDomainNameLink($row);
+        $libDN->updateDomainNameLink($row, 1);
     
         my $libREDIR = $self->loadLibrary('LibraryRedirect');
         $libREDIR->updateRedirectPorts($row);

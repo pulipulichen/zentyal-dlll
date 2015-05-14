@@ -61,13 +61,13 @@ sub createFieldConfigEnable
 sub createFieldDomainName
 {
     my $field = new EBox::Types::DomainName(
-        fieldName => 'domainName',
-        printableName => __('Domain Name'),
-        editable => 1,
+        'fieldName' => 'domainName',
+        'printableName' => __('Domain Name'),
+        'editable' => 1,
         # 因為要允許同一個Domain Name指向多個Back End，所以這部份要做些調整
         #'unique' => 1,
-        hiddenOnSetter => 0,
-        hiddenOnViewer => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
     );
 
     return $field;
@@ -1087,6 +1087,26 @@ sub createFieldHr
         );
     return $field;
 }
+
+##
+# 20150515 Pulipuli Chen
+# 新增按鈕
+##
+sub createFieldAddBtn
+{
+    my ($self, $fieldName) = @_;
+
+    my $field = new EBox::Types::HTML(
+            'fieldName' => $fieldName . '_addBtn',
+            'printableName' => __(''),
+            'editable' => 0,
+            'defaultValue' => '<button type="button" onclick="document.getElementsByName (\'add\')[0].click();" class="btn btn-icon btn-add">ADD</button>',
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+    return $field;
+}
+
 
 ##
 # 20150506 Pulipuli Chen
