@@ -52,13 +52,13 @@ sub addRedirects
 {
     my ($self, $row) = @_;
 
-    # 加入Pound
-    my $redirPound_scheme = $row->valueByName('redirPound_scheme');
-    if ($redirPound_scheme eq 'https' 
-        || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) ) {
-        my %param = $self->getProtocolRedirectParam($row, 'POUND');
-        $self->addRedirectRow(%param);
+    # 20150514 Pulipuli Chen 如果不啟用，那就不加入
+    if (! ($self->getLibrary()->isEnable($row))) {
+        return;
     }
+
+    # 加入Pound
+    $self->addPoundRedirect($row);
 
     # 加入HTTP
     if ($self->isProtocolEnable($row, 'HTTP')) {
@@ -94,11 +94,31 @@ sub addRedirects
     } catch { }
 }
 
+# 20150514 Pulipuli Chen
+ sub addPoundRedirect 
+{
+    my ($self, $row) = @_;
+
+    # 加入Pound
+    my $redirPound_scheme = $row->valueByName('redirPound_scheme');
+    if ($redirPound_scheme eq 'https' 
+        || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) ) {
+        my %param = $self->getProtocolRedirectParam($row, 'POUND');
+        $self->addRedirectRow(%param);
+    }
+
+}
+
 sub deleteRedirects
 {
     my ($self, $row) = @_;
     
     my %param;
+
+    # 刪除PoundRedirect
+    %param = $self->getProtocolRedirectParam($row, 'POUND');
+    $self->deleteRedirectRow(%param);
+
     if ($self->hasProtocolRedirect($row, 'HTTP')) {
         %param = $self->getRedirectParamHTTP($row);
         $self->deleteRedirectRow(%param);

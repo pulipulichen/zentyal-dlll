@@ -103,6 +103,25 @@ sub createFieldDomainNameLink
     return $field;
 }
 
+
+# 20150514 Pulipuli Chen
+# 輸入其他連接埠
+sub createFieldOtherDomainNamesButton
+{
+    my ($self, $backView) = @_;
+    my $field = new EBox::Types::HasMany(
+            'fieldName' => 'otherDomainName',
+            'printableName' => __('Other <br />Domain <br />Names'),
+            'foreignModel' => 'OtherDomainNames',
+            'view' => '/dlllciasrouter/View/OtherDomainNames',
+            'backView' => $backView,
+            'size' => '1',
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 0,
+       );
+    return $field;
+}
+
 # 20150506 Pulipuli
 # 顯示時使用
 sub createFieldIpaddrLink
@@ -890,15 +909,15 @@ sub createFieldDisplayRedirectPorts
 # --------------------------------------
 # Other Redirect Ports
 
-sub createFieldOtherRedirectPortsDisplay
+sub createFieldOtherRedirectPortsButton
 {
-    my ($self) = @_;
+    my ($self, $backView) = @_;
     my $field = new EBox::Types::HasMany(
             'fieldName' => 'redirOther',
-            'printableName' => __('Other <br />Redirect <br />Ports'),
+            'printableName' => __('Other <br />Redirect<br />Ports'),
             'foreignModel' => 'PortRedirect',
             'view' => '/dlllciasrouter/View/PortRedirect',
-            'backView' => '/dlllciasrouter/View/PoundServices',
+            'backView' => $backView,
             'size' => '1',
             'hiddenOnSetter' => 1,
             'hiddenOnViewer' => 0,

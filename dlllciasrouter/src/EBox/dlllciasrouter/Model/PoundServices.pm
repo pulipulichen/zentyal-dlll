@@ -45,6 +45,7 @@ sub _table
                 . 'Example: 10.1.0.51'),
 
         $fieldsFactory->createFieldMACAddr(),
+        $fieldsFactory->createFieldOtherDomainNamesButton('/dlllciasrouter/View/PoundServices'),
 
         # ----------------------------
         $fieldsFactory->createFieldHr('hr_contact'),
@@ -126,7 +127,7 @@ sub _table
         # --------------------------------
         # Other Redirect Ports
 
-        $fieldsFactory->createFieldOtherRedirectPortsDisplay(),
+        $fieldsFactory->createFieldOtherRedirectPortsButton('/dlllciasrouter/View/PoundServices'),
         $fieldsFactory->createFieldOtherRedirectPortsHint(),
         $fieldsFactory->createFieldOtherRedirectPortsForeignModel(),
 

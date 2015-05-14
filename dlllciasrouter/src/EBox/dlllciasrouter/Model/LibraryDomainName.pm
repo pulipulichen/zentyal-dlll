@@ -51,7 +51,13 @@ sub loadLibrary
 sub addDomainName
 {
     my ($self, $row) = @_;
-    $self->setupDefaultDomainName();
+
+    # 建立預設的DomainName
+    my $defaultDomainName = $self->setupDefaultDomainName();
+
+    if (! ($self->getLibrary()->isEnable($row))) {
+        return;
+    }
 
     if ($row->valueByName('boundLocalDns')) {
         my $domainName = $row->valueByName('domainName');
@@ -130,7 +136,21 @@ sub deleteDomainName
     }
 
     } catch {
-        $self->getLibrary()->show_exceptions($_ . '( LibraryDomainName->deleteDomainName() )');
+
+        #my $defaultDomainName = $self->getDefaultDomainName();
+        ## DHCP的Dynamic DNS模組模組
+        #my $gl = EBox::Global->getInstance();
+        #my $dhcp = $gl->modInstance('dhcp');
+        #my $interfaces = $dhcp->model('Interfaces');
+        #for my $ifId (@{$interfaces->ids()}) {
+        #    my $ifRow = $interfaces->row($ifId);
+        #    my $configuration = $ifRow->subModel('configuration');
+        #   my $dynamicDNS = $configuration->componentByName('DynamicDNS', 1);
+        #    #$dynamicDNS->setValue('dynamic_domain', $defaultDomainName);
+        #}
+        #$self->deleteDomainName($row, $excludeModel);
+
+        $self->getLibrary()->show_exceptions($_ . '<a href="/DHCP/View/Interfaces">DHCP Module</a>');
     };
 }
 
@@ -369,17 +389,28 @@ sub setupDefaultDomainName
 {
     my ($self) = @_;
 
-    my $domainName = 'default-domain-name.dlll.nccu.edu.tw';
+    my $domainName = $self->getDefaultDomainName();
     my $gl = EBox::Global->getInstance();
     my $dns = $gl->modInstance('dns');
     my $domModel = $dns->model('DomainTable');
     my $id = $domModel->findId(domain => $domainName);
     if (defined($id)) {
-        return;
+        return 0;
     }
     $domModel->addDomain({
         'domain_name' => $domainName,
     });
+
+    return $domainName;
+}
+
+##
+# 20150513 Pulipuli Chen
+# 在DNS中新增一個預設的Domain Name
+## 
+sub getDefaultDomainName
+{
+    return 'default-domain-name.dlll.nccu.edu.tw';
 }
 
 1;

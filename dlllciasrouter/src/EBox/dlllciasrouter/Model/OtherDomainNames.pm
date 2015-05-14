@@ -61,15 +61,13 @@ sub _table
     my @fields = (
         $libFactory->createFieldConfigEnable(),
 
-        $libFactory->createFieldPortDescription(),
-        $libFactory->createFieldPortDescriptionDisplay(),
-        
         $libFactory->createFieldDomainName(),
-
-        $libFactory->createFieldInternalPort(),
-        $libFactory->createFieldRedirectToHTTPS(),
+        $libFactory->createFieldDomainNameLink(),
+        $libFactory->createFieldBoundLocalDNS(),
+        $libFactory->createFieldProtocolScheme('Pound', 0, 'http'),
+        $libFactory->createFieldInternalPortDefaultValue(80),
+        $libFactory->createFieldPoundOnlyForLAN(),
         $libFactory->createFieldEmergencyRestarter(),
-        
     );
 
     my $dataTable =
@@ -109,37 +107,34 @@ sub loadLibrary
     return $self->parentModule()->model($library);
 }
 
+# --------------------------------
 
 my $ROW_NEED_UPDATE = 0;
 
 sub addedRowNotify
 {
-    my ($self, $redirRow) = @_;
+    my ($self, $dnRow) = @_;
 
     try {
 
     my $row = $self->parentRow();
+    my $libDN = $self->loadLibrary('LibraryDomainName');
 
     $ROW_NEED_UPDATE = 1;
     
-    # 1. 更新row欄位的domain name
+    # 1. 更新自己欄位的domain name連線資訊
+    #$libDN->updateDomainNameLink($dnRow);
+    #$dnRow->store();
 
-    # 2. 更新自己欄位的domain name連線資訊
-    my $libDomainName = $self->loadLibrary('LibraryDomainName');
-    $libDomainName->updatePortDescription($row, $redirRow);
+    # 2. 更新row欄位的domain name顯示資訊
+    #$libDN->updateDomainNameLink($row);
 
-    $self->checkExternalPort($redirRow);
-
-    my $libRe = $self->loadLibrary("LibraryRedirect");
-    $libRe->addOtherOtherDomainNames($row, $redirRow);
-    $libRe->updateRedirectPorts($row);
-
-    $self->updateExtPortHTML($row, $redirRow);
-
-    $redirRow->store();
+    # 3. 看是否要設定*****0欄位 (由row去觸發)
+    #my $libREDIR = $self->loadLibrary('LibraryRedirect');
+    #$libREDIR->addPoundRedirect($row);
     
     } catch {
-        $self->getLibrary()->show_exceptions('Please add port again.');
+        $self->getLibrary()->show_exceptions( $_ . '; Please add domain name again. (OtherDomainNames->addedRowNotify)');
     };
 
     $ROW_NEED_UPDATE = 0;

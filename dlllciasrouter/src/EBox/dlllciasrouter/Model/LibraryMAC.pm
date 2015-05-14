@@ -72,6 +72,10 @@ sub addDHCPfixedIPMember
 {
     my ($self, $row) = @_;
 
+    if (! ($self->getLibrary()->isEnable($row))) {
+        return;
+    }
+
     my $domainName = $row->valueByName('domainName');
     my $ipaddr = $row->valueByName('ipaddr');
     my $macaddr = $row->valueByName('macaddr');
@@ -152,6 +156,17 @@ sub setupDHCPfixedIP
         'object' => $objectRowID,
         'description' => $desc,
     );
+}
+
+##
+# 讀取PoundLibrary
+# @author Pulipuli Chen
+# 20150514
+##
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("PoundLibrary");
 }
 
 1;
