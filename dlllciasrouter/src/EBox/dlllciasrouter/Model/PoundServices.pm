@@ -143,6 +143,7 @@ sub _table
         $fieldsFactory->createFieldDisplayContactLink(),
 
         # ----------------------------------
+
     );
 
     my $dataTable =

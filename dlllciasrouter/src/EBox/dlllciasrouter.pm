@@ -169,7 +169,7 @@ sub _setConf
     my $libRedir = $self->model('LibraryRedirect');
 
     # Iterate over table
-    my @paramsArray = ();
+    #my @paramsArray = ();
     my $domainHash = (); 
     my $vmHash = ();
     my $i = 0;
@@ -200,56 +200,30 @@ sub _setConf
         else {
             next;
         }
-        my $httpsPortValue = $libRedir->getServerMainPort($row);
+        my $httpsPortValue = $libRedir->getServerMainPort($ipaddrValue);
         my $httpSecurityValue = $row->valueByName('redirPOUND_secure');
         my $httpPortValue = $httpsPortValue;
-
-        # -----------------------------
-
-        #my $portValue;
-        #my $httpSecurityValue;
-        #my $httpToHttpsValue;
-        #my $httpsPortValue;
-        #my $httpPortValue;
-        #
-        #my $poundProtocolScheme = $row->valueByName('poundProtocolScheme');
-        #if ($poundProtocolScheme eq 'poundProtocolScheme_none') {
-        #    next;
-        #}
-        #else {
-        #    $httpSecurityValue = $row->valueByName('redirPound_secure');
-        #    
-        #    if ($poundProtocolScheme eq 'poundProtocolScheme_http') {
-        #        $httpToHttpsValue = 0;
-        #        $httpPortValue = $row->valueByName('poundProtocolScheme_poundProtocolScheme_http');
-        #        $portValue = $httpPortValue;
-        #    }
-        #    else {
-        #        $httpToHttpsValue = 1;
-        #        $httpsPortValue = $row->valueByName('poundProtocolScheme_poundProtocolScheme_https');
-        #    }
-        #}
 
         # -----------------------------
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
 
-        push (@paramsArray, {
-            domainNameValue => $domainNameValue,
-            ipaddrValue => $ipaddrValue,
-            portValue => $portValue,
-            descriptionValue => $descriptionValue,
-            
-            httpToHttpsValue => $httpToHttpsValue,
-            httpsPortValue => $httpsPortValue,
+        #push (@paramsArray, {
+        #    domainNameValue => $domainNameValue,
+        #    ipaddrValue => $ipaddrValue,
+        #    portValue => $portValue,
+        #    descriptionValue => $descriptionValue,
+        #    
+        #    httpToHttpsValue => $httpToHttpsValue,
+        #    httpsPortValue => $httpsPortValue,
 
-            httpSecurityValue => $httpSecurityValue,
-            httpPortValue => $httpPortValue,
+        #    httpSecurityValue => $httpSecurityValue,
+        #    httpPortValue => $httpPortValue,
 
-            emergencyValue => $emergencyValue,
-            redirHTTP_enable => $redirHTTP_enable,
-        });
+        #    emergencyValue => $emergencyValue,
+        #    redirHTTP_enable => $redirHTTP_enable,
+        #});
 
         # ---------
         # 開始Hash
@@ -282,6 +256,69 @@ sub _setConf
 
         # ----------
         $i++;
+
+
+        # -------------------------------
+        # 取得otherDomainNames
+        if ($row->elementExists('otherDomainName')) {
+            my $otherDN = $row->subModel('otherDomainName');
+            for my $dnId (@{$otherDN->ids()}) {
+                my $dnRow = $otherDN->row($dnId);
+                my $enable = $lib->isEnable($dnRow);
+                if ($enable == 0) {
+                    next;
+                }
+                my $domainNameValue = $dnRow->valueByName("domainName");
+                
+                $redirPound_scheme = $dnRow->valueByName('redirPOUND_scheme');
+                if ($redirPound_scheme eq 'http') {
+                    $httpToHttpsValue = 0;
+                }
+                elsif ($redirPound_scheme eq 'https') {
+                    $httpToHttpsValue = 1;
+                }
+                else {
+                    next;
+                }
+                $httpsPortValue = $libRedir->getServerMainPort($ipaddrValue);
+                $httpSecurityValue = $dnRow->valueByName('redirPOUND_secure');
+                $httpPortValue = $httpsPortValue;
+
+                # -----------------
+
+                my @backEndArray;
+                my $vmidConfig = $self->ipaddrToVMID($ipaddrValue);
+                if ( exists $domainHash->{$domainNameValue}  ) {
+                    # 如果Hash已經有了這個Domain Name
+                    @backEndArray = @{$domainHash->{$domainNameValue}};
+                    $vmidConfig = $vmidConfig.",".$vmHash->{$domainNameValue};
+                }
+
+                my $backEnd = ();
+                $backEnd->{ipaddrValue} = $ipaddrValue;
+                $backEnd->{portValue} = $portValue;
+                $backEnd->{descriptionValue} = $descriptionValue;
+                $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
+                $backEnd->{httpsPortValue} = $httpsPortValue;
+
+                $backEnd->{httpSecurityValue} = $httpSecurityValue;
+                $backEnd->{httpPortValue} = $httpPortValue;
+
+                $backEnd->{emergencyValue} = $emergencyValue;
+                $backEnd->{redirHTTP_enable} = $redirHTTP_enable;
+
+                $backEndArray[$#backEndArray+1] = $backEnd;
+
+                $domainHash->{$domainNameValue} = \@backEndArray;
+                $vmHash->{$domainNameValue} = $vmidConfig;
+
+                # ----------
+                $i++;
+
+            }   # for my $dnId (@{$otherDN->ids()}) {
+        }   # if ($row->elementExists('otherDomainName')) {
+        
+
 
     }
 
@@ -327,7 +364,7 @@ sub _setConf
     push(@servicesParams, 'restarterIP' => $restarterIP);
     push(@servicesParams, 'restarterPort' => $restarterPort);
 
-    push(@servicesParams, 'services' => \@paramsArray);
+    #push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'domainHash' => $domainHash);
 
     push(@servicesParams, 'redir' => \@redirArray);

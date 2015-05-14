@@ -34,4 +34,5 @@ models:
     
 composites:
     Global: [Settings, URLRedirect]
+    BackEndConfiguration: [OtherDomainNames]
     

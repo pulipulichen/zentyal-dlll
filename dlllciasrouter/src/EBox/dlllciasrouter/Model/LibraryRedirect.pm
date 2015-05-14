@@ -84,14 +84,15 @@ sub addRedirects
         $self->addRedirectRow(%param);
     }
 
-    my $redirOther = $row->subModel('redirOther');
-    
-    try {
-        for my $subId (@{$redirOther->ids()}) {
-            my $redirRow = $redirOther->row($subId);
-            $self->addOtherPortRedirect($row, $redirRow);
-        }
-    } catch { }
+    if ($row->elementExists("redirOther")) {
+        my $redirOther = $row->subModel('redirOther');
+        try {
+            for my $subId (@{$redirOther->ids()}) {
+                my $redirRow = $redirOther->row($subId);
+                $self->addOtherPortRedirect($row, $redirRow);
+            }
+        } catch { }
+    }
 }
 
 # 20150514 Pulipuli Chen
@@ -239,10 +240,10 @@ sub getPortHeader
 
 sub getPortHeaderWithoutCheck 
 {
-    my ($self, $row) = @_;
+    my ($self, $ipaddr) = @_;
 
     # 變成ID前幾碼
-    my $ipaddr = $row->valueByName('ipaddr');
+    #my $ipaddr = $row->valueByName('ipaddr');
     my @parts = split('\.', $ipaddr);
     my $partA = $parts[0];
     my $partB = $parts[1];
@@ -265,8 +266,8 @@ sub getPortHeaderWithoutCheck
 
 sub getServerMainPort
 {
-    my ($self, $row) = @_;
-    my $extPort = $self->getPortHeaderWithoutCheck($row) . '0';
+    my ($self, $ipaddr) = @_;
+    my $extPort = $self->getPortHeaderWithoutCheck($ipaddr) . '0';
     return $extPort;
 } 
 

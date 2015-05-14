@@ -243,7 +243,7 @@ sub setServerMainLink
     my $lib = $self->getLibrary();
 
     my $ipaddr = $row->valueByName('ipaddr');
-    my $extPort = $self->loadLibrary('LibraryRedirect')->getServerMainPort($row);
+    my $extPort = $self->loadLibrary('LibraryRedirect')->getServerMainPort($ipaddr);
 
     my $url = $ipaddr . ':' . $extPort;
 
@@ -322,7 +322,7 @@ sub updateDomainNameLink
                 $subMod = $subMod . "\n";
             }
             $subMod = $subMod . $otherDomainName;
-        }
+        }   # for my $dnId (@{$otherDN->ids()}) {
 
         $row->elementByName('otherDomainName_subMod')->setValue($subMod);
     }

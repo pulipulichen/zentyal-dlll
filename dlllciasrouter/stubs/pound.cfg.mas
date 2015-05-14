@@ -10,7 +10,6 @@
     $restarterIP
     $restarterPort
 
-    $services
     $domainHash
 
     $redir
