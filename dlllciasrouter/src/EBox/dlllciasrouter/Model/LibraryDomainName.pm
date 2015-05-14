@@ -104,8 +104,8 @@ sub addDomainName
 
 sub deleteDomainName
 {
-    my ($self, $row, $excludeModel) = @_;
-    my $domainName = $row->valueByName('domainName');
+    my ($self, $domainName, $excludeModel) = @_;
+    #my $domainName = $row->valueByName('domainName');
 
     try {
 
@@ -114,6 +114,9 @@ sub deleteDomainName
 
     if ($hasDomainName == 0 && $excludeModel ne 'PoundServices') {
         $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
+        if ($hasDomainName == 0) {
+            $hasDomainName = $self->modelHasDomainName('OtherDomainNames', $domainName);
+        }
     }
 
     if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') {
@@ -148,10 +151,21 @@ sub deleteDomainName
         #   my $dynamicDNS = $configuration->componentByName('DynamicDNS', 1);
         #    #$dynamicDNS->setValue('dynamic_domain', $defaultDomainName);
         #}
-        #$self->deleteDomainName($row, $excludeModel);
+        #$self->deleteDomainName($domainName, $excludeModel);
 
-        $self->getLibrary()->show_exceptions($_ . '<a href="/DHCP/View/Interfaces">DHCP Module</a>');
+        $self->getLibrary()->show_exceptions($_ . '<a href="/DHCP/View/Interfaces">DHCP Module</a> (LibraryDomainName->deleteDomainName() )');
     };
+}
+
+# 20150515 Pulipuli Chen
+sub deleteOtherDomainNames
+{
+    my ($self, $subMod, $excludeModel) = @_;
+    
+    my @subModAry = split(/\n/, $subMod);
+    for my $domainName (@subModAry) {
+        $self->deleteDomainName($domainName, $excludeModel);
+    }
 }
 
 sub modelHasDomainName
@@ -162,6 +176,7 @@ sub modelHasDomainName
     my $domainNameId = $model->findId(
         'domainName' => $domainName
     );
+
     return defined($domainNameId);
 }
 
@@ -286,9 +301,11 @@ sub updateDomainNameLink
     # -----------------
     # 20150514 Pulipuli Chen
     # 如果有底下的OtherDomainNames的情況
-    #my $otherDN = $row->subModel('otherDomainName');
-    #if (defined($otherDN)) {
     if ($row->elementExists('otherDomainName')) {
+
+        my $subMod = "";
+
+        # 把資訊更新到自己裡面
         my $otherDN = $row->subModel('otherDomainName');
         for my $dnId (@{$otherDN->ids()}) {
             my $dnRow = $otherDN->row($dnId);
@@ -297,10 +314,17 @@ sub updateDomainNameLink
                 next;
             }
             $secure = $dnRow->valueByName('redirPOUND_secure');
-            my $otehrDomainName = $dnRow->valueByName("domainName");
-            my $otherLink = $self->updateDomainNameLinkDeco($otehrDomainName, $enable, $secure, $doBreakUrl);
+            my $otherDomainName = $dnRow->valueByName("domainName");
+            my $otherLink = $self->updateDomainNameLinkDeco($otherDomainName, $enable, $secure, $doBreakUrl);
             $link = $link . "<br />" . $otherLink;
+
+            if ($subMod ne '') {
+                $subMod = $subMod . "\n";
+            }
+            $subMod = $subMod . $otherDomainName;
         }
+
+        $row->elementByName('otherDomainName_subMod')->setValue($subMod);
     }
 
     $row->elementByName("domainNameLink")->setValue($link);

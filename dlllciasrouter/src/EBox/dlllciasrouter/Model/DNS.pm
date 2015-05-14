@@ -145,7 +145,7 @@ sub deletedRowNotify
 
     my $libDN = $self->loadLibrary('LibraryDomainName');
 
-    $libDN->deleteDomainName($row, 'DNS');
+    $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
 }
 
 sub updatedRowNotify
@@ -173,7 +173,7 @@ sub updatedRowNotify
                 $libDN->addDomainName($row);
             }
             else {
-                $libDN->deleteDomainName($row, 'DNS');
+                $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
             }
         } catch {
             my $lib = $self->getLibrary();

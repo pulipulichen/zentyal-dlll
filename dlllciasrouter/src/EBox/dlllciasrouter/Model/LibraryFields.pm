@@ -122,6 +122,22 @@ sub createFieldOtherDomainNamesButton
     return $field;
 }
 
+# 20150515 Pulipuli Chen
+sub createFieldOtherDomainNamesSubModel
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::Text(
+            'fieldName' => 'otherDomainName_subMod',
+            'printableName' => __(''),
+            #'defaultValue' => '',
+            'editable' => 0,
+            'optional' => 1,
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 1,
+       );
+    return $field;
+}
+
 # 20150506 Pulipuli
 # 顯示時使用
 sub createFieldIpaddrLink
@@ -940,11 +956,12 @@ sub createFieldOtherRedirectPortsHint
     return $field;
 }
 
-sub createFieldOtherRedirectPortsForeignModel
+# 20150515 Pulipuli Chen
+sub createFieldOtherRedirectPortsSubModel
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'redirOther_ForMod',
+            'fieldName' => 'redirOther_subMod',
             'printableName' => __(''),
             #'defaultValue' => '',
             'editable' => 0,

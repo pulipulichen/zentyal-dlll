@@ -151,7 +151,7 @@ sub updatedRowNotify
 
         $libDN->setLink($row);
 
-        $libDN->deleteDomainName($oldRow, 'URLRedirect');
+        $libDN->deleteDomainName($oldRow->valueByName('domainName'), 'URLRedirect');
 
         $libDN->setLink($row);
         #$self->setLink($row);
@@ -171,7 +171,7 @@ sub deletedRowNotify
     my ($self, $row) = @_;
 
     my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->deleteDomainName($row, 'URLRedirect');
+    $libDN->deleteDomainName($row->valueByName('domainName'), 'URLRedirect');
 }
 
 1

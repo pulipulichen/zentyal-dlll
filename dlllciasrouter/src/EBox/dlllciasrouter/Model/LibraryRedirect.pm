@@ -141,7 +141,7 @@ sub deleteRedirects
     }
     
     # 刪除Other Redir
-    my $redirOtherForMod = $row->valueByName('redirOther_ForMod'); 
+    my $redirOtherForMod = $row->valueByName('redirOther_subMod'); 
     my @redirOtherForModAry = split(/\n/, $redirOtherForMod);
     for my $redirDesc (@redirOtherForModAry) {
         %param = (
@@ -779,7 +779,7 @@ sub updateRedirectPorts
         $redirOtherForMod = $redirOtherForMod . $redirRow->valueByName('description');
     }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
 
-    $row->elementByName('redirOther_ForMod')->setValue($redirOtherForMod);
+    $row->elementByName('redirOther_subMod')->setValue($redirOtherForMod);
 
     # 最後結尾
     if ($hint ne '')
@@ -805,14 +805,39 @@ sub isProtocolEnable
 {
     my ($self, $row, $protocol) = @_;
 
+    my $enable = 0;
+
     # 20150515 加入POUND
     if ($protocol eq "POUND") {
-        my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
-        return ($redirPound_scheme eq 'https' 
-            || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) );
+        #my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
+        #my $enable = ($redirPound_scheme eq 'https' 
+        #    || ( $redirPound_scheme eq 'http' && $row->valueByName('redirPOUND_secure') == 1 ) );
+        #    
+        #if ($enable == 0 && $row->elementExists('otherDomainName')) {
+        #    my $otherDN = $row->subModel('otherDomainName');
+        #    
+        #    for my $dnId (@{$otherDN->ids()}) {
+        #        my $dnRow = $otherDN->row($dnId);
+        #        
+        #        my $scheme = $dnRow->valueByName('redirPOUND_scheme');
+        #        my $secure = $dnRow->valueByName('redirPOUND_secure');
+        #
+        #        $enable = ($scheme eq 'https' 
+        #            || ( $scheme eq 'http' && $secure == 1) );
+        #
+        #       if ($enable == 1) {
+        #            last;
+        #        }
+        #    }   # for my $dnId (@{$otherDN->ids()}) {
+
+        #}   # if ($enable == 0 && $row->elementExists('otherDomainName')) {
+        $enable = 1;
+    }
+    else {
+        $enable = ($row->elementExists('redir'.$protocol.'_enable') && $row->valueByName('redir'.$protocol.'_enable') == 1);
     }
 
-    return ($row->elementExists('redir'.$protocol.'_enable') && $row->valueByName('redir'.$protocol.'_enable') == 1);
+    return $enable;
 }
 
 sub getProtocolHint

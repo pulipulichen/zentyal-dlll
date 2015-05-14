@@ -176,7 +176,7 @@ sub deletedRowNotify
 
     try {
         
-        $libDN->deleteDomainName($row, 'StorageServers');
+        $libDN->deleteDomainName($row->valueByName('domainName'), 'StorageServers');
 
         my $libREDIR = $self->loadLibrary('LibraryRedirect');
         $libREDIR->deleteRedirects($row);

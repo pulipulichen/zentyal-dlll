@@ -48,6 +48,7 @@ sub _table
 
         $fieldsFactory->createFieldMACAddr(),
         $fieldsFactory->createFieldOtherDomainNamesButton('/dlllciasrouter/View/PoundServices'),
+        $fieldsFactory->createFieldOtherDomainNamesSubModel(),
 
         # ----------------------------
         $fieldsFactory->createFieldHr('hr_contact'),
@@ -131,7 +132,7 @@ sub _table
 
         $fieldsFactory->createFieldOtherRedirectPortsButton('/dlllciasrouter/View/PoundServices'),
         $fieldsFactory->createFieldOtherRedirectPortsHint(),
-        $fieldsFactory->createFieldOtherRedirectPortsForeignModel(),
+        $fieldsFactory->createFieldOtherRedirectPortsSubModel(),
 
         # --------------------------------
         # Date Display
@@ -231,7 +232,8 @@ sub deletedRowNotify
     try {
 
     my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->deleteDomainName($row, 'PoundServices');
+    $libDN->deleteDomainName($row->valueByName('domainName'), 'PoundServices');
+    $libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'PoundServices');
     
     my $libREDIR = $self->loadLibrary('LibraryRedirect');
     $libREDIR->deleteRedirects($row);
