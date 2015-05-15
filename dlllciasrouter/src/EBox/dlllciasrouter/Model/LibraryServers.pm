@@ -34,7 +34,7 @@ sub loadLibrary
 
 sub getFields
 {
-    my ($self) = @_;
+    my ($self, $options) = @_;
 
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
@@ -45,10 +45,10 @@ sub getFields
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainName(),
         $fieldsFactory->createFieldDomainNameLink(),
-        $fieldsFactory->createFieldInternalIPAddressHideView(1,$self->getIPHelp()),
+        $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}),
 
         $fieldsFactory->createFieldMACAddr(),
-        $fieldsFactory->createFieldOtherDomainNamesButton('/dlllciasrouter/View/PoundServices'),
+        $fieldsFactory->createFieldOtherDomainNamesButton('/dlllciasrouter/View/' . $options->{tableName}),
         $fieldsFactory->createFieldOtherDomainNamesSubModel(),
 
         # ----------------------------
@@ -69,8 +69,8 @@ sub getFields
         
         #$fieldsFactory->createFieldRedirectToHTTPS(),
 
-        $fieldsFactory->createFieldProtocolScheme('POUND', 0, $self->getPoundScheme()),
-        $fieldsFactory->createFieldInternalPortDefaultValue($self->getInternalPortDefaultValue()),
+        $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}),
+        $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}),
 
         #$fieldsFactory->createFieldPoundProtocolScheme(),
 
@@ -131,7 +131,7 @@ sub getFields
         # --------------------------------
         # Other Redirect Ports
 
-        $fieldsFactory->createFieldOtherRedirectPortsButton('/dlllciasrouter/View/PoundServices'),
+        $fieldsFactory->createFieldOtherRedirectPortsButton('/dlllciasrouter/View/' . $options->{tableName}),
         $fieldsFactory->createFieldOtherRedirectPortsHint(),
         $fieldsFactory->createFieldOtherRedirectPortsSubModel(),
 
@@ -159,6 +159,10 @@ sub getFields
 
     return \@fields;
 }
+
+# ---------------------------------------------------------
+
+my $ROW_NEED_UPDATE = 0;
 
 ##
 # 設定新增時的動作

@@ -32,6 +32,7 @@ models:
     - ServerPortRedirect
     - OtherDomainNames
     - AttachedFiles
+    - LibraryServers
     
 composites:
     Global: [Settings, URLRedirect]

@@ -1,62 +1,10 @@
 package EBox::dlllciasrouter::Model::PoundServices;
 
 use base 'EBox::Model::DataTable';
-
 use strict;
 use warnings;
-
 use EBox::Gettext;
-
-use EBox::Types::DomainName;
-use EBox::Types::HostIP;
-use EBox::Types::Port;
-use EBox::Types::Text;
-use EBox::Types::HTML;
-use EBox::Types::Boolean;
-use EBox::Types::Union;
-use EBox::Types::Union::Text;
-use EBox::Types::Select;
-use EBox::Types::HasMany;
-
 use EBox::Global;
-use EBox::DNS;
-use EBox::DNS::Model::Services;
-use EBox::DNS::Model::DomainTable;
-
-use EBox::Exceptions::Internal;
-use EBox::Exceptions::External;
-
-use LWP::Simple;
-use Try::Tiny;
-
-sub getPageTitle
-{
-    return __('Pound Back End');
-}
-
-sub getTableName
-{
-    return 'PoundServices';
-}
-
-sub getIPHelp
-{
-    return  'The 1st part should be 10, <br />'
-                . 'the 2nd part should be 1~5, <br />'
-                . 'the 3rd part should be 0~9, and <br />'
-                . 'the 4th part should be between 1~99. <br />'
-                . 'Example: 10.1.0.51';
-}
-
-sub getPoundScheme
-{
-    return 'http';
-}
-
-sub getInternalPortDefaultValue 
-{
-    return 80;
-}
 
 sub _table
 {
@@ -89,14 +37,6 @@ sub _table
     return $dataTable;
 }
 
-
-
-sub getLibrary
-{
-    my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
-}
-
 ##
 # 讀取指定的Model
 #
@@ -109,8 +49,6 @@ sub loadLibrary
 }
 
 # ---------------------------------------
-
-my $ROW_NEED_UPDATE = 0;
 
 ##
 # 設定新增時的動作
