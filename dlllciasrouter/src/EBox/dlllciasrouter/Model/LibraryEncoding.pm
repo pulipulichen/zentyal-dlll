@@ -119,6 +119,10 @@ sub convertEscapedCodesToCodes {
     # var parts = str.split(prefix);
     #print $str;
     #$prefix = '+';
+    if (!defined($str)) {
+        return '';
+    }
+
     my @parts = split(/\+/, $str);
 
     # var codes = [];

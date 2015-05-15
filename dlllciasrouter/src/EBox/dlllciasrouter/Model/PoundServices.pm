@@ -141,15 +141,24 @@ sub _table
         $fieldsFactory->createFieldCreateDateData(),
         $fieldsFactory->createFieldDisplayLastUpdateDate(),
         $fieldsFactory->createFieldDisplayContactLink(),
+        $fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'),
 
         # ----------------------------------
+
+        #new EBox::Types::HasMany(
+        #    fieldName => 'configuration',
+        #    printableName => __('Configuration'),
+        #    foreignModel => 'BackEndConfiguration',
+        #    foreignModelIsComposite => 1,
+        #    view => '/dlllciasrouter/Composite/BackEndConfiguration',
+        #    backView => 'dlllciasrouter/View/PoundServices',
+        #),
 
     );
 
     my $dataTable =
     {
         tableName => 'PoundServices',
-
         'pageTitle' => __('Pound Back End'),
         'printableTableName' => __('Pound Back End'),
         'defaultActions' => [ 'add', 'del', 'editField', 'clone', 'changeView' ],

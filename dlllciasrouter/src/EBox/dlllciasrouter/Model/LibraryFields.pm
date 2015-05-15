@@ -18,6 +18,7 @@ use EBox::Types::Union;
 use EBox::Types::Union::Text;
 use EBox::Types::Select;
 use EBox::Types::HasMany;
+use EBox::Types::File;
 
 use EBox::Global;
 use EBox::DNS;
@@ -1286,6 +1287,42 @@ sub createFieldPortEnableLog
             editable => 1,
             optional => 0,
             defaultValue => 1,
+        );
+    return $field;
+}
+
+# 20150515 Pulipuli Chen
+# 開啟記錄按鈕
+sub createFieldAttachedFilesButton
+{
+    my ($self, $backView) = @_;
+    my $field = new EBox::Types::HasMany(
+            'fieldName' => 'attachedFiles',
+            'printableName' => __('Files'),
+            'foreignModel' => 'AttachedFiles',
+            'view' => '/dlllciasrouter/View/AttachedFiles',
+            'backView' => $backView,
+            'size' => '1',
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 0,
+       );
+    return $field;
+}
+
+##
+# 20150515 Pulipuli Chen
+# 檔案上傳標示
+##
+sub createFieldFile
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::File(
+            'fieldName' => 'file',
+            'printableName' => __('File'),
+            'editable' => 1,
+            'optional' => 0,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
         );
     return $field;
 }
