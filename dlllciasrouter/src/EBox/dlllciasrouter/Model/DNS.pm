@@ -133,7 +133,9 @@ sub addedRowNotify
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
 
-    $libDN->addDomainName($row);
+    if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+        $libDN->addDomainName($row->valueByName('domainName'));
+    }
 
     $row->store();
     $ROW_NEED_UPDATE = 0;
@@ -151,6 +153,7 @@ sub deletedRowNotify
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
+
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
 
@@ -170,7 +173,9 @@ sub updatedRowNotify
         try 
         {
             if ($row->valueByName("configEnable")) {
-                $libDN->addDomainName($row);
+                if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+                    $libDN->addDomainName($row->valueByName('domainName'));
+                }
             }
             else {
                 $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');

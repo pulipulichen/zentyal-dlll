@@ -189,6 +189,25 @@ sub createFieldInternalIPAddressHideView
     return $field;
 }
 
+# 20150516 Pulipuli Chen
+# 外部的IP
+sub createFieldExternalIPAddressHideView
+{
+    my ($self, $unique, $help) = @_;
+
+    my $field = new EBox::Types::HostIP(
+            'fieldName' => 'extIpaddr',
+            'printableName' => __('External IP Address'),
+            'editable' => 1,
+            'unique' => $unique,
+            'help' => __($help),
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+
+    return $field;
+}
+
 ##
 # 20150513 Pulipuli Chen
 # 調整內部port的設定

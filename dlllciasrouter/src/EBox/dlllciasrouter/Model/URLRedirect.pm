@@ -133,7 +133,9 @@ sub addedRowNotify
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
 
-    $libDN->addDomainName($row);
+    if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+        $libDN->addDomainName($row->valueByName('domainName'));
+    }
 
     $row->store();
     $ROW_NEED_UPDATE = 0;
@@ -159,7 +161,10 @@ sub updatedRowNotify
         $libCT->setCreateDate($row);
         $libCT->setUpdateDate($row);
         $libCT->setContactLink($row);
-        $libDN->addDomainName($row);
+
+        if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+            $libDN->addDomainName($row->valueByName('domainName'));
+        }
 
         $row->store();
         $ROW_NEED_UPDATE = 0;

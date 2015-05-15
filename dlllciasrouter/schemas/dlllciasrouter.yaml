@@ -28,6 +28,7 @@ models:
     - LibraryNetwork
     - LibraryRedirect
     - LibraryContact
+    - StorageServerSetting
     - StorageServers
     - ServerPortRedirect
     - OtherDomainNames

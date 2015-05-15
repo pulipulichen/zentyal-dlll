@@ -48,64 +48,75 @@ sub loadLibrary
     return $self->parentModule()->model($library);
 }
 
+# 20150506 Pulipuli Chen
+# 新增Domain Name
 sub addDomainName
 {
-    my ($self, $row) = @_;
+    my ($self, $domainName) = @_;
+
+    my $libNetwork = $self->loadLibrary('LibraryNetwork');
+    my $ipaddr = $libNetwork->getExternalIpaddr();
+    $self->addDomainNameWithIP($domainName, $ipaddr);
+}
+
+# 20150506 Pulipuli Chen
+# 指定IP
+sub addDomainNameWithIP
+{
+    my ($self, $domainName, $ipaddr) = @_;
+
+    if ($domainName eq '') {
+        return;
+    }
 
     # 建立預設的DomainName
     my $defaultDomainName = $self->setupDefaultDomainName();
 
-    if (! ($self->getLibrary()->isEnable($row))) {
-        return;
+    my $gl = EBox::Global->getInstance();
+    my $dns = $gl->modInstance('dns');
+    my $domModel = $dns->model('DomainTable');
+    my $id = $domModel->findId(domain => $domainName);
+    if (defined($id)) {
+        $domModel->removeRow($id);
     }
+    $domModel->addDomain({
+        'domain_name' => $domainName,
+    });
 
-    if ($row->valueByName('boundLocalDns')) {
-        my $domainName = $row->valueByName('domainName');
-        my $gl = EBox::Global->getInstance();
-        my $dns = $gl->modInstance('dns');
-        my $domModel = $dns->model('DomainTable');
-        my $id = $domModel->findId(domain => $domainName);
-        if (defined($id)) {
-            $domModel->removeRow($id);
-        }
-        $domModel->addDomain({
-            'domain_name' => $domainName,
-        });
+    $id = $domModel->findId(domain => $domainName);
+    my $domainRow = $domModel->row($id);
 
-        $id = $domModel->findId(domain => $domainName);
-        my $domainRow = $domModel->row($id);
+    # 刪掉多餘的IP
+    my $ipTable;
+    $ipTable = $domainRow->subModel("ipAddresses");
+    $ipTable->removeAll();
 
-        # 刪掉多餘的IP
-        my $ipTable;
-        $ipTable = $domainRow->subModel("ipAddresses");
-        $ipTable->removeAll();
+    # 刪掉多餘的Hostname
+    my $hostnameTable = $domainRow->subModel("hostnames");
+    my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+    my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+    my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+    $zentyalIpTable->removeAll();
 
-        # 刪掉多餘的Hostname
-        my $hostnameTable = $domainRow->subModel("hostnames");
-        my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
-        my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
-        my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-        $zentyalIpTable->removeAll();
-        
-        my $libNetwork = $self->loadLibrary('LibraryNetwork');
-        my $ipaddr = $libNetwork->getExternalIpaddr();
+    # 幫ipTable加上指定的IP
+    $ipTable->addRow(
+        ip => , $ipaddr
+    );
 
-        # 幫ipTable加上指定的IP
-        $ipTable->addRow(
-            ip => , $ipaddr
-        );
-
-        # 幫zentyalIpTalbe加上指定的IP
-        $zentyalIpTable->addRow(
-            ip => , $ipaddr
-        );
-    }
+    # 幫zentyalIpTalbe加上指定的IP
+    $zentyalIpTable->addRow(
+        ip => , $ipaddr
+    );
 }
 
 sub deleteDomainName
 {
     my ($self, $domainName, $excludeModel) = @_;
     #my $domainName = $row->valueByName('domainName');
+
+    if ($domainName eq '') {
+        return;
+    }
 
     try {
 

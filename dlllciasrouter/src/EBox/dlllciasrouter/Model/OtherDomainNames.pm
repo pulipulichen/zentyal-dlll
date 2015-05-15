@@ -125,7 +125,9 @@ sub addedRowNotify
     
     # 1. 更新自己欄位的domain name連線資訊
     $libDN->updateDomainNameLink($subRow, 0);
-    $libDN->addDomainName($subRow);
+    if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($subRow) == 1) {
+        $libDN->addDomainName($subRow->valueByName('domainName'));
+    }
 
     # 2. 更新row欄位的domain name顯示資訊
     my $row = $self->parentRow();

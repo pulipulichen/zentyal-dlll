@@ -211,7 +211,9 @@ sub serverAddedRowNotify
     $libCT->setDescriptionHTML($row);
     $libCT->setHardwareDisplay($row);
 
-    $libDN->addDomainName($row);
+    if ($self->isDomainNameEnable($row) == 1) {
+        $libDN->addDomainName($row->valueByName('domainName'));
+    }
 
     my $libREDIR = $self->loadLibrary('LibraryRedirect');
     $libREDIR->updateRedirectPorts($row);
@@ -273,7 +275,10 @@ sub serverUpdatedRowNotify
         $libCT->setContactLink($row);
         $libCT->setHardwareDisplay($row);
 
-        $libDN->addDomainName($row);
+        if ($self->isDomainNameEnable($row) == 1) {
+            $libDN->addDomainName($row->valueByName('domainName'));
+        }
+
         $libREDIR->addRedirects($row);
 
         my $libMAC = $self->loadLibrary('LibraryMAC');
@@ -294,6 +299,22 @@ sub serverUpdatedRowNotify
     } catch {
         $lib->show_exceptions($_);
     };
+}
+
+sub isDomainNameEnable
+{
+    my ($self, $row) = @_;
+
+    my $isEnable = 1;
+    if ($row->elementExists('configEnable')) {
+        $isEnable = $row->valueByName('configEnable');
+    }
+    my $isBound = 1;
+    if ($row->elementExists('boundLocalDns')) {
+        $isBound = $row->valueByName('boundLocalDns');
+    }
+
+    return ($isEnable && $isBound);
 }
 
 1;
