@@ -138,8 +138,8 @@ sub updatedRowNotify
 
         # 新增 Redirect
         my $libREDIR = $self->loadLibrary('LibraryRedirect');
-        #$libREDIR->deleteServerRedirect($oldRow);
-        #$libREDIR->addServerRedirects($row);
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParam($oldRow));
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParam($row));
 
         $ROW_NEED_UPDATE = 0;
     }

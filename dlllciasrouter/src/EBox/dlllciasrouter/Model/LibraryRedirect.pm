@@ -542,6 +542,28 @@ sub getRedirectParameterSecure
     my $iface = $libNET->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
+    my $source = $self->getSecureIpSource();
+
+    return (
+        interface => $iface,
+        origDest_selected => "origDest_ebox",
+        protocol => "tcp/udp",
+        external_port_range_type => 'single',
+        external_port_single_port => $extPort,
+        source_selected => 'source_ipaddr',
+        source_ipaddr_ip => $source->{sourceIp},
+        source_ipaddr_mask => $source->{sourceMask},
+        destination => $localIpaddr,
+        destination_port_selected => "destination_port_other",
+        destination_port_other => $intPort,
+        description => $domainName. " (" . $localIpaddr . "): " . $desc,
+        snat => 0,
+        log => $log,
+    );
+}
+
+sub getSecureIpSource
+{
     my $sourceIp = '192.168.11.0';
     my $sourceMask = '24';
 
@@ -583,22 +605,11 @@ sub getRedirectParameterSecure
         $sourceMask = "1";
     }
 
-    return (
-        interface => $iface,
-        origDest_selected => "origDest_ebox",
-        protocol => "tcp/udp",
-        external_port_range_type => 'single',
-        external_port_single_port => $extPort,
-        source_selected => 'source_ipaddr',
-        source_ipaddr_ip => $sourceIp,
-        source_ipaddr_mask => $sourceMask,
-        destination => $localIpaddr,
-        destination_port_selected => "destination_port_other",
-        destination_port_other => $intPort,
-        description => $domainName. " (" . $localIpaddr . "): " . $desc,
-        snat => 0,
-        log => $log,
-    );
+    my $source = ();
+    $source->{sourceIp} = $sourceIp;
+    $source->{sourceMask} = $sourceMask;
+
+    return $source;
 }
 
 sub addRedirectRow
@@ -907,6 +918,44 @@ sub getProtocolHint
     }
 
     return $hint;
+}
+
+# --------------------------------------------
+
+# 20150516 Pulipuli Chen
+sub getServerRedirectParam
+{
+    my ($self, $row, $desc) = @_;
+
+    my $domainName = $row->valueByName("domainName");
+    my $destIpaddr = $row->valueByName("extIpaddr");
+    my $localIpaddr = $row->valueByName("ipaddr");
+
+    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $iface = $libNET->getExternalIface();
+    my $source = $self->getSecureIpSource();
+
+    my %param = (
+        interface => $iface,
+        origDest_selected => "origDest_ipaddr",
+        origDest_ipaddr_ip => $destIpaddr,
+        origDest_ipaddr_mask => 32,
+        protocol => "tcp/udp",
+        external_port_range_type => 'any',
+
+        source_selected => 'source_ipaddr',
+        source_ipaddr_ip => $source->{sourceIp},
+        source_ipaddr_mask => $source->{sourceMask},
+
+        destination => $row->valueByName("ipaddr"),
+        destination_port_selected => "destination_port_same",
+
+        description => $domainName. " (" . $localIpaddr . "): " . $desc,
+        snat => 0,
+        log => 1,
+    );
+
+    return %param;
 }
 
 1;
