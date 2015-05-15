@@ -103,7 +103,10 @@ sub convertUtf16CodesToString {
         my $code = $utf16_codes[$i];
         #print $code . " - ";
         
-        my $hex = chr($code);
+        my $hex = '';
+        if ($code ne '') {
+            $hex = chr($code);
+        }
         
         #print $hex . "\n";
         $unescaped = $unescaped . $hex;

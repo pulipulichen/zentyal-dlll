@@ -141,7 +141,7 @@ sub _table
         $fieldsFactory->createFieldCreateDateData(),
         $fieldsFactory->createFieldDisplayLastUpdateDate(),
         $fieldsFactory->createFieldDisplayContactLink(),
-        $fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'),
+        #$fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'),
 
         # ----------------------------------
 

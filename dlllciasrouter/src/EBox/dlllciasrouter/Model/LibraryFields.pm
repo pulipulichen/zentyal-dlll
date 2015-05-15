@@ -272,6 +272,22 @@ sub createFieldContactName
     return $field;
 }
 
+# 20150515 Pulipuli Chen
+# 讓聯絡人可以在欄位上顯示
+sub createFieldContactNameDisplayOnViewer
+{
+    my $field = new EBox::Types::Text(
+            fieldName => 'contactName',
+            printableName => __('Contact Name'),
+            editable => 1,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 0,
+        );
+
+    return $field;
+}
+
 sub createFieldContactEmail
 {
     my $field = new EBox::Types::Text(
@@ -1291,6 +1307,8 @@ sub createFieldPortEnableLog
     return $field;
 }
 
+# ---------------------------------------
+
 # 20150515 Pulipuli Chen
 # 開啟記錄按鈕
 sub createFieldAttachedFilesButton
@@ -1322,7 +1340,29 @@ sub createFieldFile
             'editable' => 1,
             'optional' => 0,
             'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
+            'hiddenOnViewer' => 0,
+            user => EBox::Config::user(),
+            group => EBox::Config::group(),
+            showFileWhenEditing => 1,
+            allowDownload  => 1,
+        );
+    return $field;
+}
+
+##
+# 20150515 Pulipuli Chen
+# 檔案資訊顯示
+##
+sub createFieldFileDescriptionDisplay
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => 'fileDescription',
+            printableName => __('Fille Description '),
+            editable => 0,
+            optional=>1,
+            #hiddenOnSetter => 1,
+            #hiddenOnViewer => 0,
         );
     return $field;
 }

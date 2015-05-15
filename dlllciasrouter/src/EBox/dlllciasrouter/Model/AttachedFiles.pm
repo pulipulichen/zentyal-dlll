@@ -62,11 +62,15 @@ sub _table
         $libFactory->createFieldAddBtn('add'),
         
         # Description
-        $libFactory->createFieldContactName(),
+        $libFactory->createFieldContactNameDisplayOnViewer(),
+
         $libFactory->createFieldDescription(),
-        $libFactory->createFieldFile(),
         $libFactory->createFieldDescriptionHTML(),
+
+        $libFactory->createFieldFile(),
         $libFactory->createFieldDisplayLastUpdateDate(),
+
+        $libFactory->createFieldFileDescriptionDisplay(),
     );
 
     my $dataTable =
@@ -119,8 +123,16 @@ sub addedRowNotify
     try {
 
     # 更新Description HTML + File Link
+    my $libCT = $self->loadLibrary('LibraryContact');
+    $libCT->setDescriptionHTML($subRow);
+
+    #  更新ContactLink
+    $self->setFileDescription($subRow);
 
     # 更新LastUpdated
+    $libCT->setUpdateDate($subRow);
+
+    $subRow->store();
 
     } catch {
         $self->getLibrary()->show_exceptions( $_ . '; Please add domain name again. (AttachedFiles->addedRowNotify)');
@@ -135,7 +147,6 @@ sub updatedRowNotify
 
     try {
 
-    
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
     
@@ -149,5 +160,22 @@ sub updatedRowNotify
 
 # --------------------------------
 
+sub setFileDescription
+{
+    my ($self, $subRow) = @_;
+
+    my $fileDesc = '';
+
+    my $desc = $subRow->valueByName('descriptionHTML');
+    #my $file = $subRow->valueByName('file')->linkToDownload();
+    my $file = $subRow->valueByName('file');
+
+    if (defined($file) && $file ne '') {
+        $fileDesc = $file . "<br />";
+    }
+    $fileDesc = $fileDesc . $desc;
+
+    $subRow->elementByName('fileDescription')->setValue($fileDesc);
+}
 
 1;

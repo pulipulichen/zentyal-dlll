@@ -162,6 +162,10 @@ sub deleteOtherDomainNames
 {
     my ($self, $subMod, $excludeModel) = @_;
     
+    if (!defined($subMod) || $subMod eq '') {
+        return;
+    }
+
     my @subModAry = split(/\n/, $subMod);
     for my $domainName (@subModAry) {
         $self->deleteDomainName($domainName, $excludeModel);

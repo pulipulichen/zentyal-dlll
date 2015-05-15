@@ -143,16 +143,20 @@ sub deleteRedirects
     
     # 刪除Other Redir
     my $redirOtherForMod = $row->valueByName('redirOther_subMod'); 
-    my @redirOtherForModAry = split(/\n/, $redirOtherForMod);
-    for my $redirDesc (@redirOtherForModAry) {
-        %param = (
-            'description' => $row->valueByName('domainName') 
-                . ' ' 
-                . '(' . $row->valueByName('ipaddr') . '): Other (' . $redirDesc . ')'
-        );
-        
-        $self->deleteRedirectParam(%param);
-    }
+    if (defined($redirOtherForMod) && $redirOtherForMod ne '') {
+
+        my @redirOtherForModAry = split(/\n/, $redirOtherForMod);
+        for my $redirDesc (@redirOtherForModAry) {
+            %param = (
+                'description' => $row->valueByName('domainName') 
+                    . ' ' 
+                    . '(' . $row->valueByName('ipaddr') . '): Other (' . $redirDesc . ')'
+            );
+
+            $self->deleteRedirectParam(%param);
+        }
+
+    }   # if (defined($redirOtherForMod) && $redirOtherForMod ne '') {}
 }
 
 sub addOtherPortRedirect
