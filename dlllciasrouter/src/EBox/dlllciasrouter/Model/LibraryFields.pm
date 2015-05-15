@@ -324,6 +324,9 @@ sub createFieldEmailKMDescription
 sub createFieldDescription
 {
     # https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js
+    my $script = "https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js";
+    #my $script = "http://pc-pudding.dlll.nccu.edu.tw/zentyal-dlll/dlllciasrouter/javascript/zentyal-field-html-editor.js";      # 不能用HTTP!!
+
     my $field = new EBox::Types::Text(
     #my $field = new EBox::dlllciasrouter::Model::DescriptionText(
             fieldName => 'description',
@@ -341,11 +344,14 @@ sub createFieldDescription
             #size => 100,
             #type => "html",
             help => 
-                '<div class="html-editor">'
-                   . '<div class="html-editor-view"></div>'
-                .'</div><span class="init-span"><button type="button" class="init-button" '
-                    . 'onclick="this.className=\'init-button trigger\';this.style.display=\'none\';if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\'https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js\';document.getElementsByTagName(\'body\')[0].appendChild(_script);} else {_ZENTYAL_UTIL.init()}" '
-                    . '>EDIT</button> Please click this button to initialize description. </span>',
+                '<div class="html-editor"><div class="html-editor-view"></div></div>'
+    .'<span class="init-span">'
+        .'<button type="button" class="init-button" style="display:none;" '
+    .'onclick="this.className=\'init-button trigger\';this.innerHTML=\'WAIT\';this.disabled=true;if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\''.$script.'\';document.getElementsByTagName(\'body\')[0].appendChild(_script);} else {_ZENTYAL_UTIL.init()}"'
+    .'></button> </span>'
+    .'<script type="text/javascript">'
+        .'document.getElementsByClassName("init-button")[0].click();'
+    .'</script>',
                 #. '<script type="text/javascript" src="https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js"></script>',
         );
 

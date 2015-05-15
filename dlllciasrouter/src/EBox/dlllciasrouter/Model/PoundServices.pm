@@ -35,7 +35,8 @@ sub _table
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @fields = (
-        $fieldsFactory->createFieldAddBtn('add'),
+        #$fieldsFactory->createFieldAddBtn('add'),
+        #$fieldsFactory->createFieldDescription(),
 
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainName(),
