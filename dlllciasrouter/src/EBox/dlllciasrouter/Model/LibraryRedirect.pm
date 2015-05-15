@@ -216,17 +216,18 @@ sub getPortHeader
     my $partD = $parts[3];
 
     # 檢查
-    if ( !($partA == 10)
-        || !($partB > 0 && $partB < 6)
-        || !($partC < 9)
-        || !($partD > 0 && $partD < 100) ) {
-        throw EBox::Exceptions::External("Error IP address format (".$ipaddr."). " 
-            . "For example: 10.1.0.1. <br />"
-            . "The 1st part shout be 10, <br />"
-            . "the 2nd part should be between 1~5, <br />"
-            . "the 3rd part should be between 0~9, and <br />"
-            . "the 4th part should be between 1~99");
-    }
+    # 20150515 改到Model裡面自己檢查
+    #if ( !($partA == 10)
+    #    || !($partB > 0 && $partB < 6)
+    #    || !($partC < 9)
+    #    || !($partD > 0 && $partD < 100) ) {
+    #    throw EBox::Exceptions::External("Error IP address format (".$ipaddr."). " 
+    #        . "For example: 10.1.0.1. <br />"
+    #        . "The 1st part shout be 10, <br />"
+    #        . "the 2nd part should be between 1~5, <br />"
+    #        . "the 3rd part should be between 0~9, and <br />"
+    #        . "the 4th part should be between 1~99");
+    #}
     
     # 重新組合
         $partB = substr($partB, -1);
