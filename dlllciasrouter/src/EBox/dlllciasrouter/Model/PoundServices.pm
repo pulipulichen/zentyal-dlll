@@ -35,7 +35,7 @@ sub _table
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @fields = (
-        #$fieldsFactory->createFieldAddBtn('add'),
+        $fieldsFactory->createFieldAddBtn('add'),
         #$fieldsFactory->createFieldDescription(),
 
         $fieldsFactory->createFieldConfigEnable(),
@@ -201,37 +201,10 @@ my $ROW_NEED_UPDATE = 0;
 sub addedRowNotify
 {
     my ($self, $row) = @_;
-
-    try {
-
+    $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
-    
-    my $lib = $self->getLibrary();
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->updateDomainNameLink($row, 1);
-    
-    my $libCT = $self->loadLibrary('LibraryContact');
-    $libCT->setCreateDate($row);
-    $libCT->setUpdateDate($row);
-    $libCT->setContactLink($row);
-    $libCT->setDescriptionHTML($row);
-
-    $libDN->addDomainName($row);
-
-    my $libREDIR = $self->loadLibrary('LibraryRedirect');
-    $libREDIR->updateRedirectPorts($row);
-    $libREDIR->addRedirects($row);
-
-    my $libMAC = $self->loadLibrary('LibraryMAC');
-    $libMAC->updateNetworkDisplay($row);
-    $libMAC->addDHCPfixedIPMember($row);
-
-    $row->store();
+    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row);
     $ROW_NEED_UPDATE = 0;
-
-    } catch {
-        $self->getLibrary()->show_exceptions($_);
-    };
 }
 
 # -------------------------------------------
@@ -239,74 +212,46 @@ sub addedRowNotify
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
-
-    try {
-
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->deleteDomainName($row->valueByName('domainName'), 'PoundServices');
-    $libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'PoundServices');
-    
-    my $libREDIR = $self->loadLibrary('LibraryRedirect');
-    $libREDIR->deleteRedirects($row);
-
-    my $libMAC = $self->loadLibrary('LibraryMAC');
-    $libMAC->removeDHCPfixedIPMember($row);
-
-    } catch {
-        $self->getLibrary()->show_exceptions($_ . '( PoundServices->deletedRowNotify() )');
-    };
+    $self->loadLibrary("LibraryServers")->serverDeletedRowNotify($row);
 }
 
 # -------------------------------------------
 
+my $ROW_NEED_UPDATE = 0;
+
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
-        
-    my $lib = $self->getLibrary();
-
-    try {
+    $self->checkInternalIP($row);
 
     if ($ROW_NEED_UPDATE == 0) {
-
         $ROW_NEED_UPDATE = 1;
-        
-        my $libDN = $self->loadLibrary('LibraryDomainName');
-        $self->deletedRowNotify($oldRow);
-        $libDN->updateDomainNameLink($row, 1);
-    
-        my $libREDIR = $self->loadLibrary('LibraryRedirect');
-        $libREDIR->updateRedirectPorts($row);
-
-        my $libCT = $self->loadLibrary('LibraryContact');
-        $libCT->setCreateDate($row);
-        $libCT->setUpdateDate($row);
-        $libCT->setContactLink($row);
-
-        $libDN->addDomainName($row);
-        $libREDIR->addRedirects($row);
-
-        my $libMAC = $self->loadLibrary('LibraryMAC');
-        $libMAC->updateNetworkDisplay($row);
-        $libMAC->removeDHCPfixedIPMember($oldRow);
-        $libMAC->addDHCPfixedIPMember($row);
-
-        my $redirOther = $row->subModel('redirOther');
-
-        for my $subId (@{$redirOther->ids()}) {
-            my $redirRow = $redirOther->row($subId);
-            $redirOther->deleteRedirect($oldRow, $redirRow);
-            $redirOther->updateExtPortHTML($row, $redirRow);
-            $redirOther->addRedirect($row, $redirRow);
-        }
-
-        $row->store();
+        $self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
         $ROW_NEED_UPDATE = 0;
     }
+}
 
-    } catch {
-        $lib->show_exceptions($_);
-    };
+sub checkInternalIP
+{
+    my ($self, $row) = @_;
+
+    my $ipaddr = $row->valueByName('ipaddr');
+    my @parts = split('\.', $ipaddr);
+    my $partA = $parts[0];
+    my $partB = $parts[1];
+    my $partC = $parts[2];
+    my $partD = $parts[3];
+
+    if (!($partA == 10) 
+        || !($partB > 0 && $partB < 5) 
+        || !($partC > -1 && $partC < 10) 
+        || !($partD > 0 && $partD < 100) ) {
+        $self->loadLibrary("PoundLibrary")->show_exceptions('The 1st part should be 10, <br />'
+                    . 'the 2nd part should be 1~5, <br />'
+                    . 'the 3rd part should be 0~9, and <br />'
+                    . 'the 4th part should be between 1~99. <br />'
+                    . 'Example: 10.6.1.1');
+    }
 }
 
 1;

@@ -12,6 +12,8 @@ use EBox::Global;
 use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 
+use Try::Tiny;
+
 
 sub getLibrary
 {
@@ -162,7 +164,7 @@ sub getFields
 
 # ---------------------------------------------------------
 
-my $ROW_NEED_UPDATE = 0;
+
 
 ##
 # 設定新增時的動作
@@ -199,7 +201,7 @@ sub serverAddedRowNotify
     #$ROW_NEED_UPDATE = 0;
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . "( LibraryServers->serverAddedRowNotify() )");
     };
 }
 
@@ -234,10 +236,6 @@ sub serverUpdatedRowNotify
 
     try {
 
-    if ($ROW_NEED_UPDATE == 0) {
-
-        $ROW_NEED_UPDATE = 1;
-        
         my $libDN = $self->loadLibrary('LibraryDomainName');
         $self->deletedRowNotify($oldRow);
         $libDN->updateDomainNameLink($row, 1);
@@ -268,8 +266,7 @@ sub serverUpdatedRowNotify
         }
 
         $row->store();
-        $ROW_NEED_UPDATE = 0;
-    }
+    }   # if ($ROW_NEED_UPDATE == 0) {}
 
     } catch {
         $lib->show_exceptions($_);
