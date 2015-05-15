@@ -375,11 +375,14 @@ sub createFieldDescriptionHTML
 
 sub createFieldExpiryDate
 {
+    my ($self, $defaultValue) = @_;
+
     my $field = new EBox::Types::Text(
             fieldName => 'expiry',
             printableName => __('Expiry Date'),
             editable => 1,
             optional=>0,
+            defaultValue => $defaultValue,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
 
@@ -745,8 +748,8 @@ sub createFieldProtocolNoteWithHr
 
 sub createFieldHTTPRedirect
 {
-    my ($self) = @_;
-    my $field = $self->createFieldProtocolRedirect("HTTP", 1);
+    my ($self, $enable) = @_;
+    my $field = $self->createFieldProtocolRedirect("HTTP", $enable);
     return $field;
 }
 
@@ -798,8 +801,8 @@ sub createFieldHTTPNote
 
 sub createFieldHTTPSRedirect
 {
-    my ($self) = @_;
-    my $field = $self->createFieldProtocolRedirect("HTTPS", 1);
+    my ($self, $enable) = @_;
+    my $field = $self->createFieldProtocolRedirect("HTTPS", $enable);
     return $field;
 }
 
@@ -844,8 +847,8 @@ sub createFieldHTTPSNote
 
 sub createFieldSSHRedirect
 {
-    my ($self) = @_;
-    my $field = $self->createFieldProtocolRedirect("SSH", 1);
+    my ($self, $enable) = @_;
+    my $field = $self->createFieldProtocolRedirect("SSH", $enable);
     return $field;
 }
 
@@ -889,8 +892,8 @@ sub createFieldSSHNote
 
 sub createFieldRDPRedirect
 {
-    my ($self) = @_;
-    my $field = $self->createFieldProtocolRedirect("RDP", 1);
+    my ($self, $enable) = @_;
+    my $field = $self->createFieldProtocolRedirect("RDP", $enable);
     return $field;
 }
 

@@ -39,124 +39,135 @@ sub getDataTable
     my ($self, $options) = @_;
 
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
-    my @fields = (
-        $fieldsFactory->createFieldAddBtn('add'),
-        #$fieldsFactory->createFieldDescription(),
+    my @fields = ();
+    push(@fields, $fieldsFactory->createFieldAddBtn('add'));
+    #push(@fields, $fieldsFactory->createFieldDescription());
 
-        $fieldsFactory->createFieldConfigEnable(),
-        $fieldsFactory->createFieldDomainName(),
-        $fieldsFactory->createFieldDomainNameLink(),
-        $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}),
+    push(@fields, $fieldsFactory->createFieldConfigEnable());
+    push(@fields, $fieldsFactory->createFieldDomainName());
+    push(@fields, $fieldsFactory->createFieldDomainNameLink());
+    push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
 
-        $fieldsFactory->createFieldMACAddr(),
-        $fieldsFactory->createFieldOtherDomainNamesButton('/dlllciasrouter/View/' . $options->{tableName}),
-        $fieldsFactory->createFieldOtherDomainNamesSubModel(),
+    push(@fields, $fieldsFactory->createFieldMACAddr());
+    push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton('/dlllciasrouter/View/' . $options->{tableName}));
+    push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());
 
-        # ----------------------------
-        $fieldsFactory->createFieldHr('hr_contact'),
+    # ----------------------------
+    push(@fields, $fieldsFactory->createFieldHr('hr_contact'));
 
-        $fieldsFactory->createFieldContactName(),
-        $fieldsFactory->createFieldContactEmail(),
-        $fieldsFactory->createFieldDescription(),
-        $fieldsFactory->createFieldDescriptionHTML(),
-        $fieldsFactory->createFieldExpiryDate(),
+    push(@fields, $fieldsFactory->createFieldContactName());
+    push(@fields, $fieldsFactory->createFieldContactEmail());
+    push(@fields, $fieldsFactory->createFieldDescription());
+    push(@fields, $fieldsFactory->createFieldDescriptionHTML());
+    push(@fields, $fieldsFactory->createFieldExpiryDate($options->{expiryDate}));
 
-        # ----------------------------
-        $fieldsFactory->createFieldHr('hr_pound'),
+    # ----------------------------
+    push(@fields, $fieldsFactory->createFieldHr('hr_pound'));
 
-        $fieldsFactory->createFieldBoundLocalDNS(),
+    push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
 
-        $fieldsFactory->createFieldNetworkDisplay(),
+    push(@fields, $fieldsFactory->createFieldNetworkDisplay());
         
-        #$fieldsFactory->createFieldRedirectToHTTPS(),
+    #push(@fields, $fieldsFactory->createFieldRedirectToHTTPS());
 
-        $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}),
-        $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}),
+    push(@fields, $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}));
+    push(@fields, $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}));
 
-        #$fieldsFactory->createFieldPoundProtocolScheme(),
+    #push(@fields, $fieldsFactory->createFieldPoundProtocolScheme());
 
-        $fieldsFactory->createFieldPoundOnlyForLAN(),
-        $fieldsFactory->createFieldEmergencyRestarter(),
+    push(@fields, $fieldsFactory->createFieldPoundOnlyForLAN());
+    push(@fields, $fieldsFactory->createFieldEmergencyRestarter());
 
-        $fieldsFactory->createFieldHr('hr1'),
+    push(@fields, $fieldsFactory->createFieldHr('hr1'));
+
+    # -------------------------------------
+    # hardware
+
+    if ($options->{enableHardware} == 1) {
+        push(@fields, $fieldsFactory->createFieldHardwareCPU());
+        push(@fields, $fieldsFactory->createFieldHardwareRAM());
+        push(@fields, $fieldsFactory->createFieldHardwareDisk());
+        push(@fields, $fieldsFactory->createFieldHardwareDisplay());
+
+        push(@fields, $fieldsFactory->createFieldHr('hr_hardd'));
+    }
         
-        # --------------------------
-        # HTTP Redirect Fields 
-        $fieldsFactory->createFieldHTTPRedirect(),
-        $fieldsFactory->createFieldHTTPOnlyForLAN(),
-        $fieldsFactory->createFieldHTTPLog(),
-        $fieldsFactory->createFieldHTTPExternalPort(),
-        $fieldsFactory->createFieldHTTPInternalPort(),
-        $fieldsFactory->createFieldProtocolScheme("HTTP", 0, "http"),
-        $fieldsFactory->createFieldHTTPNote(),
-        $fieldsFactory->createFieldHr('hr_http'),
-        
+    # --------------------------
+    # HTTP Redirect Fields 
+    push(@fields, $fieldsFactory->createFieldHTTPRedirect($options->{enableHTTP}));
+    push(@fields, $fieldsFactory->createFieldHTTPOnlyForLAN());
+    push(@fields, $fieldsFactory->createFieldHTTPLog());
+    push(@fields, $fieldsFactory->createFieldHTTPExternalPort());
+    push(@fields, $fieldsFactory->createFieldHTTPInternalPort());
+    push(@fields, $fieldsFactory->createFieldProtocolScheme("HTTP", 0, "http"));
+    push(@fields, $fieldsFactory->createFieldHTTPNote());
+    push(@fields, $fieldsFactory->createFieldHr('hr_http'));
 
-        # ----------------------
-        # HTTPS Redirect Fields
-        $fieldsFactory->createFieldHTTPSRedirect(),
-        $fieldsFactory->createFieldHTTPSOnlyForLAN(),
-        $fieldsFactory->createFieldHTTPSLog(),
-        $fieldsFactory->createFieldHTTPSExternalPort(),
-        $fieldsFactory->createFieldHTTPSInternalPort(),
-        $fieldsFactory->createFieldProtocolScheme("HTTPS", 0, "https"),
-        $fieldsFactory->createFieldHTTPSNote(),
-        $fieldsFactory->createFieldHr('hr_https'),
-        
-        # --------------------------------
-        # SSH Redirect Fields
-        $fieldsFactory->createFieldSSHRedirect(),
-        $fieldsFactory->createFieldSSHOnlyForLAN(),
-        $fieldsFactory->createFieldSSHLog(),
-        $fieldsFactory->createFieldSSHExternalPort(),
-        $fieldsFactory->createFieldSSHInternalPort(),
-        $fieldsFactory->createFieldProtocolScheme("SSH", 0, "none"),
-        $fieldsFactory->createFieldSSHNote(),
-        $fieldsFactory->createFieldHr('hr_ssh'),
 
-        # --------------------------------
-        # RDP Redirect Fields
-        $fieldsFactory->createFieldRDPRedirect(),
-        $fieldsFactory->createFieldRDPOnlyForLAN(),
-        $fieldsFactory->createFieldRDPLog(),
-        $fieldsFactory->createFieldRDPExternalPort(),
-        $fieldsFactory->createFieldRDPInternalPort(),
-        $fieldsFactory->createFieldProtocolScheme("RDP", 0, "none"),
-        $fieldsFactory->createFieldRDPNote(),
-        $fieldsFactory->createFieldHr('hr_rdp'),
+    # ----------------------
+    # HTTPS Redirect Fields
+    push(@fields, $fieldsFactory->createFieldHTTPSRedirect($options->{enableHTTPS}));
+    push(@fields, $fieldsFactory->createFieldHTTPSOnlyForLAN());
+    push(@fields, $fieldsFactory->createFieldHTTPSLog());
+    push(@fields, $fieldsFactory->createFieldHTTPSExternalPort());
+    push(@fields, $fieldsFactory->createFieldHTTPSInternalPort());
+    push(@fields, $fieldsFactory->createFieldProtocolScheme("HTTPS", 0, "https"));
+    push(@fields, $fieldsFactory->createFieldHTTPSNote());
+    push(@fields, $fieldsFactory->createFieldHr('hr_https'));
 
-        # --------------------------------
+    # --------------------------------
+    # SSH Redirect Fields
+    push(@fields, $fieldsFactory->createFieldSSHRedirect($options->{enableSSH}));
+    push(@fields, $fieldsFactory->createFieldSSHOnlyForLAN());
+    push(@fields, $fieldsFactory->createFieldSSHLog());
+    push(@fields, $fieldsFactory->createFieldSSHExternalPort());
+    push(@fields, $fieldsFactory->createFieldSSHInternalPort());
+    push(@fields, $fieldsFactory->createFieldProtocolScheme("SSH", 0, "none"));
+    push(@fields, $fieldsFactory->createFieldSSHNote());
+    push(@fields, $fieldsFactory->createFieldHr('hr_ssh'));
 
-        $fieldsFactory->createFieldDisplayRedirectPorts(),
+    # --------------------------------
+    # RDP Redirect Fields
+    push(@fields, $fieldsFactory->createFieldRDPRedirect($options->{enableRDP}));
+    push(@fields, $fieldsFactory->createFieldRDPOnlyForLAN());
+    push(@fields, $fieldsFactory->createFieldRDPLog());
+    push(@fields, $fieldsFactory->createFieldRDPExternalPort());
+    push(@fields, $fieldsFactory->createFieldRDPInternalPort());
+    push(@fields, $fieldsFactory->createFieldProtocolScheme("RDP", 0, "none"));
+    push(@fields, $fieldsFactory->createFieldRDPNote());
+    push(@fields, $fieldsFactory->createFieldHr('hr_rdp'));
 
-        # --------------------------------
-        # Other Redirect Ports
+    # --------------------------------
 
-        $fieldsFactory->createFieldOtherRedirectPortsButton('/dlllciasrouter/View/' . $options->{tableName}),
-        $fieldsFactory->createFieldOtherRedirectPortsHint(),
-        $fieldsFactory->createFieldOtherRedirectPortsSubModel(),
+    push(@fields, $fieldsFactory->createFieldDisplayRedirectPorts());
 
-        # --------------------------------
-        # Date Display
+    # --------------------------------
+    # Other Redirect Ports
 
-        $fieldsFactory->createFieldCreateDateDisplay(),
-        $fieldsFactory->createFieldCreateDateData(),
-        $fieldsFactory->createFieldDisplayLastUpdateDate(),
-        $fieldsFactory->createFieldDisplayContactLink(),
-        #$fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'),
+    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton('/dlllciasrouter/View/' . $options->{tableName}));
+    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsHint());
+    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsSubModel());
 
-        # ----------------------------------
+    # --------------------------------
+    # Date Display
 
-        #new EBox::Types::HasMany(
-        #    fieldName => 'configuration',
-        #    printableName => __('Configuration'),
-        #    foreignModel => 'BackEndConfiguration',
-        #    foreignModelIsComposite => 1,
-        #    view => '/dlllciasrouter/Composite/BackEndConfiguration',
-        #    backView => 'dlllciasrouter/View/PoundServices',
-        #),
+    push(@fields, $fieldsFactory->createFieldCreateDateDisplay());
+    push(@fields, $fieldsFactory->createFieldCreateDateData());
+    push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
+    push(@fields, $fieldsFactory->createFieldDisplayContactLink());
+    #$fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'),
 
-    );
+    # ----------------------------------
+
+    #new EBox::Types::HasMany(
+    #    fieldName => 'configuration',
+    #    printableName => __('Configuration'),
+    #    foreignModel => 'BackEndConfiguration',
+    #    foreignModelIsComposite => 1,
+    #    view => '/dlllciasrouter/Composite/BackEndConfiguration',
+    #    backView => 'dlllciasrouter/View/PoundServices',
+    #),
+
 
     my $dataTable =
     {
@@ -198,6 +209,7 @@ sub serverAddedRowNotify
     $libCT->setUpdateDate($row);
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
+    $libCT->setHardwareDisplay($row);
 
     $libDN->addDomainName($row);
 
@@ -259,6 +271,7 @@ sub serverUpdatedRowNotify
         $libCT->setCreateDate($row);
         $libCT->setUpdateDate($row);
         $libCT->setContactLink($row);
+        $libCT->setHardwareDisplay($row);
 
         $libDN->addDomainName($row);
         $libREDIR->addRedirects($row);

@@ -166,6 +166,10 @@ sub setHardwareDisplay
 {
     my ($self, $row) = @_;
 
+    if (!$row->elementExists('hardwareCPU')) {
+        return;
+    }
+
     my $cpu = $row->valueByName('hardwareCPU');
     my $ram = $row->valueByName('hardwareRAM');
     my $disk = $row->valueByName('hardwareDisk');

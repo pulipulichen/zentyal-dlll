@@ -22,6 +22,12 @@ sub _table
                 . 'Example: 10.1.0.51';
     $options->{poundScheme} = 'http';
     $options->{internalPortDefaultValue} = 80;
+    $options->{expiryDate} = '';
+    $options->{enableHTTP} = 1;
+    $options->{enableHTTPS} = 1;
+    $options->{enableSSH} = 1;
+    $options->{enableRDP} = 1;
+    $options->{enableHardware} = 0;
 
     return $self->loadLibrary("LibraryServers")->getDataTable($options);
 }
