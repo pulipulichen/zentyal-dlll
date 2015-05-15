@@ -34,14 +34,13 @@ sub loadLibrary
 
 # ----------------------------
 
-sub getFields
+sub getDataTable
 {
     my ($self, $options) = @_;
 
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
-
     my @fields = (
-        #$fieldsFactory->createFieldAddBtn('add'),
+        $fieldsFactory->createFieldAddBtn('add'),
         #$fieldsFactory->createFieldDescription(),
 
         $fieldsFactory->createFieldConfigEnable(),
@@ -159,7 +158,20 @@ sub getFields
 
     );
 
-    return \@fields;
+    my $dataTable =
+    {
+        tableName => $options->{tableName},
+        'pageTitle' => $options->{pageTitle},
+        'printableTableName' => $options->{pageTitle},
+        'defaultActions' => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
+        'modelDomain' => 'dlllciasrouter',
+        'tableDescription' => \@fields,
+        'printableRowName' => $options->{pageTitle},
+        'HTTPUrlView'=> 'dlllciasrouter/View/' . $options->{tableName},
+        'order' => 1,
+    };
+
+    return $dataTable;
 }
 
 # ---------------------------------------------------------
@@ -266,8 +278,6 @@ sub serverUpdatedRowNotify
         }
 
         $row->store();
-    }   # if ($ROW_NEED_UPDATE == 0) {}
-
     } catch {
         $lib->show_exceptions($_);
     };
