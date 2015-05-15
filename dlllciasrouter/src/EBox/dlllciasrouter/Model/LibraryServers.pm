@@ -167,7 +167,7 @@ my $ROW_NEED_UPDATE = 0;
 ##
 # 設定新增時的動作
 ##
-sub addedRowNotify
+sub serverAddedRowNotify
 {
     my ($self, $row) = @_;
 
@@ -204,7 +204,7 @@ sub addedRowNotify
 }
 
 
-sub deletedRowNotify
+sub serverDeletedRowNotify
 {
     my ($self, $row) = @_;
 
@@ -226,7 +226,7 @@ sub deletedRowNotify
 }
 
 
-sub updatedRowNotify
+sub serverUpdatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
 
