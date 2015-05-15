@@ -4,7 +4,28 @@ use base 'EBox::Model::DataTable';
 use strict;
 use warnings;
 use EBox::Gettext;
+
+use EBox::Types::DomainName;
+use EBox::Types::HostIP;
+use EBox::Types::Port;
+use EBox::Types::Text;
+use EBox::Types::HTML;
+use EBox::Types::Boolean;
+use EBox::Types::Union;
+use EBox::Types::Union::Text;
+use EBox::Types::Select;
+use EBox::Types::HasMany;
+
 use EBox::Global;
+use EBox::DNS;
+use EBox::DNS::Model::Services;
+use EBox::DNS::Model::DomainTable;
+
+use EBox::Exceptions::Internal;
+use EBox::Exceptions::External;
+
+use LWP::Simple;
+use Try::Tiny;
 
 sub _table
 {
@@ -95,7 +116,7 @@ sub checkInternalIP
         || !($partB > 0 && $partB < 5) 
         || !($partC > -1 && $partC < 10) 
         || !($partD > 0 && $partD < 100) ) {
-        $self->getLibrary()->show_exceptions('The 1st part should be 10, <br />'
+        $self->loadLibrary("PoundLibrary")->show_exceptions('The 1st part should be 10, <br />'
                     . 'the 2nd part should be 1~5, <br />'
                     . 'the 3rd part should be 0~9, and <br />'
                     . 'the 4th part should be between 1~99. <br />'
