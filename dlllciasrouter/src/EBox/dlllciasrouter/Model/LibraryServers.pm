@@ -301,6 +301,7 @@ sub serverUpdatedRowNotify
     };
 }
 
+# 20150518 Pulipuli Chen
 sub isDomainNameEnable
 {
     my ($self, $row) = @_;

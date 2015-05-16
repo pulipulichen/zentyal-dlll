@@ -36,6 +36,7 @@ models:
     - AttachedFiles
     - LibraryServers
     - LibrarySetting
+    - LibraryHeader
     
 composites:
     Global: [Settings, URLRedirect, StorageServerSetting]

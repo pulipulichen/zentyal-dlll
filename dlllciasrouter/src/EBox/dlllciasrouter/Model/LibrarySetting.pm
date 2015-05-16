@@ -132,7 +132,7 @@ sub updatedRowNotify
         my $link = $scheme . "://" . $domainName . $port . "/";
         my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
         my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>';
-        $button = "<span>" . $buttonBtn . " " . $buttonLink . "</span>";
+        $button = "<span>" . $buttonBtn . "<br/>" . $buttonLink . "</span>";
     }   # if ($shceme ne "none") {}
 
     my $fieldName = $options->{tableName} . '_web_button';

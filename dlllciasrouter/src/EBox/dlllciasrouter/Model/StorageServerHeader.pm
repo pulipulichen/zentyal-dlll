@@ -8,30 +8,21 @@ use warnings;
 use EBox::Global;
 use EBox::Gettext;
 
-use EBox::Types::HostIP;
-use EBox::Types::Port;
-use EBox::Types::Link;
-use EBox::Types::Union;
-use EBox::Types::Union::Text;
-use EBox::Types::HTML;
-use EBox::Types::Link;
-use EBox::Types::Boolean;
-
-use EBox::Network;
-
 use Try::Tiny;
 
-# Group: Public methods
 
-# Constructor: new
-#
-#      Create a new Text model instance
-#
-# Returns:
-#
-#      <EBox::DNS::Model::StorageServerHeader> - the newly created model
-#      instance
-#
+
+sub getOptions
+{
+    my $options = ();
+    $options->{pageTitle} = __('Main Server');
+    $options->{tableName} = 'StorageServerHeader';
+    $options->{configView} = '/dlllciasrouter/View/StorageServerSetting';
+    return $options;
+}
+
+# ------------------------------------------
+
 sub new
 {
     my ($class, %params) = @_;
@@ -42,58 +33,16 @@ sub new
     return $self;
 }
 
-# Group: Protected methods
-
-# Method: _table
-#
-# Overrides:
-#
-#     <EBox::Model::DataForm::_table>
-#
 sub _table
 {
     my ($self) = @_;
 
     my $options = $self->getOptions();
 
-    my $lib = $self->getLibrary();
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
-
-    my @fields = ();
-
-    push(@fields, $fieldsFactory->createFieldWebLinkButton($options->{tableName}));
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($options->{tableName}, 'CONFIGURATION', $options->{configView}));
-
-    my $dataTable =
-        {
-            'tableName' => $options->{tableName},
-            'pageTitle' => $options->{pageTitle},
-            'printableTableName' => $options->{pageTitle},
-            'modelDomain'     => 'dlllciasrouter',
-            #defaultActions => [ 'editField' ],
-            'tableDescription' => \@fields,
-            'HTTPUrlView'=> 'dlllciasrouter/View/' . $options->{tableName},
-        };
-
-    return $dataTable;
-}
-
-sub getOptions
-{
-    my $options = ();
-    $options->{pageTitle} = __('Setting');
-    $options->{tableName} = 'StorageServerHeader';
-    $options->{configView} = '/dlllciasrouter/View/StorageServerSetting';
-    return $options;
+    return $self->loadLibrary('LibraryHeader')->getDataTable($options);
 }
 
 # -------------------------------------------------------------
-
-sub getLibrary
-{
-    my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
-}
 
 ##
 # 讀取指定的Model
