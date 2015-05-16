@@ -111,6 +111,8 @@ sub getOptions
     $options->{internalPortDefaultValue} = 443;
     $options->{externalPortDefaultValue} = 61000;
     $options->{configView} = '/dlllciasrouter/Composite/StorageServerComposite';
+    $options->{headerModule} = 'StorageServerHeader';
+    $options->{headerFieldName} = 'StorageServerHeader_web_button';
     return $options;
 }
 
@@ -191,7 +193,11 @@ sub updatedRowNotify
             $row->elementByName($fieldName)->setValue($button);
         }
         $row->store();
-        
+
+        # 更新另外一個模組的資料
+        my $header = $self->parentModule->model($options->{headerModule});
+        $header->setValue($options->{headerFieldName}, $button);
+
         } catch {
             $self->getLibrary()->show_exceptions($_ . '( StorageServerSetting->updatedRowNotify() )');
         };
