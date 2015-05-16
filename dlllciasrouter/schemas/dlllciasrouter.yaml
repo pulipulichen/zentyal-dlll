@@ -30,7 +30,7 @@ models:
     - LibraryRedirect
     - LibraryContact
     - StorageServerSetting
-    - StorageServers
+    - StorageServer
     - ServerPortRedirect
     - OtherDomainNames
     - AttachedFiles
@@ -40,5 +40,5 @@ models:
     
 composites:
     Global: [Settings, URLRedirect, StorageServerSetting]
-    StorageServerComposite: [StorageServerHeader, StorageServers]
+    StorageServerComposite: [StorageServerHeader, StorageServer]
 

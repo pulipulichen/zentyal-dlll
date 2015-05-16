@@ -44,18 +44,21 @@ sub getDataTable
 
     my @fields = ();
 
-    push(@fields, $fieldsFactory->createFieldWebLinkButton($options->{tableName}));
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($options->{tableName}, 'CONFIGURATION', $options->{configView}));
+    my $tableName = $options->{moduleName} . "Header";
+    my $configView = '/dlllciasrouter/View/'.$options->{moduleName}.'Setting';
+
+    push(@fields, $fieldsFactory->createFieldWebLinkButton($tableName));
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, 'CONFIGURATION', $configView));
 
     my $dataTable =
         {
-            'tableName' => $options->{tableName},
+            'tableName' => $tableName,
             'pageTitle' => $options->{pageTitle},
             'printableTableName' => $options->{pageTitle},
             'modelDomain'     => 'dlllciasrouter',
             #defaultActions => [ 'editField' ],
             'tableDescription' => \@fields,
-            'HTTPUrlView'=> 'dlllciasrouter/View/' . $options->{tableName},
+            'HTTPUrlView'=> 'dlllciasrouter/View/' . $tableName,
         };
 
     return $dataTable;

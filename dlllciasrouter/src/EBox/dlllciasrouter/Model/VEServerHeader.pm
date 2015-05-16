@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::StorageServerHeader;
+package EBox::dlllciasrouter::Model::VEServerHeader;
 
 use base 'EBox::Model::DataForm';
 
@@ -16,7 +16,8 @@ sub getOptions
 {
     my $options = ();
     $options->{pageTitle} = __('Main Server');
-    $options->{moduleName} = 'StorageServer';
+    $options->{tableName} = 'VEServerHeader';
+    $options->{configView} = '/dlllciasrouter/View/VEServerSetting';
     return $options;
 }
 

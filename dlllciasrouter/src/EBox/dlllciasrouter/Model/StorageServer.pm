@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::StorageServers;
+package EBox::dlllciasrouter::Model::StorageServer;
 
 use base 'EBox::Model::DataTable';
 
@@ -14,7 +14,7 @@ sub _table
 
     my $options = ();
     $options->{pageTitle} = __('Storage Servers');
-    $options->{tableName} = 'StorageServers';
+    $options->{tableName} = 'StorageServer';
     $options->{IPHelp} = 'The 1st part should be 10, <br />'
                 . 'the 2nd part should be 6, <br />'
                 . 'the 3rd part should be 1, and <br />'

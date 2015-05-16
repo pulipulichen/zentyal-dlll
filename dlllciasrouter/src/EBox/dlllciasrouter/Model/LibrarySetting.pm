@@ -54,7 +54,9 @@ sub getDataTable
 
     my @fields = ();
 
-    push(@fields, $fieldsFactory->createFieldServerLinkButton($options->{tableName}, 'SERVERS', $options->{configView}));
+    my $tableName = $options->{moduleName} . "Setting";
+    my $configView = '/dlllciasrouter/Composite/'. $options->{moduleName} . 'Composite';
+    push(@fields, $fieldsFactory->createFieldServerLinkButton($tableName, 'SERVERS', $configView));
 
     #push(@fields, $fieldsFactory->createFieldWebLinkButton($options->{tableName}));
 
@@ -67,17 +69,16 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}));
     push(@fields, $fieldsFactory->createFieldProtocolScheme('Main', 0, $options->{poundScheme}));
 
-    my $dataTable =
-        {
-            'tableName' => $options->{tableName},
+    my $dataTable = {
+            'tableName' => $tableName,
             'pageTitle' => $options->{pageTitle},
             'printableTableName' => $options->{pageTitle},
             'modelDomain'     => 'dlllciasrouter',
             'defaultActions' => [ 'editField' ],
             'tableDescription' => \@fields,
-            'HTTPUrlView'=> 'dlllciasrouter/View/' . $options->{tableName},
+            'HTTPUrlView'=> 'dlllciasrouter/View/' . $tableName,
             'messages' => {
-                'update' => 'DONE <script type="text/javascript">location.href="'.$options->{configView}.'";</script>',
+                'update' => 'DONE <script type="text/javascript">location.href="'.$configView.'";</script>',
             }
         };
 
@@ -95,7 +96,7 @@ sub updatedRowNotify
 
     try {
 
-    $self->loadLibrary($options->{checkInternalIpModule})->checkInternalIP($row);
+    $self->loadLibrary($options->{moduleName})->checkInternalIP($row);
 
     #$self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
 
@@ -109,7 +110,7 @@ sub updatedRowNotify
 
     # 新增 Redirect
     my $libREDIR = $self->loadLibrary('LibraryRedirect');
-    my $tableName = $options->{tableName};
+    my $tableName = $options->{moduleName} . "Setting";
     my $extPort = $row->valueByName('redirMain_extPort');
     $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamDMZ($oldRow, $tableName, $extPort));
     $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $extPort));
@@ -135,15 +136,17 @@ sub updatedRowNotify
         $button = "<span>" . $buttonBtn . "<br/>" . $buttonLink . "</span>";
     }   # if ($shceme ne "none") {}
 
-    my $fieldName = $options->{tableName} . '_web_button';
+    my $fieldName = $tableName . '_web_button';
     if ($row->elementExists($fieldName)) {
         $row->elementByName($fieldName)->setValue($button);
     }
     $row->store();
 
     # 更新另外一個模組的資料
-    my $header = $self->parentModule->model($options->{headerModule});
-    $header->setValue($options->{headerFieldName}, $button);
+    my $headerModule = $options->{moduleName} . 'Header';
+    my $headerFieldName = $headerModule . "_web_button";
+    my $header = $self->parentModule->model($headerModule);
+    $header->setValue($headerFieldName, $button);
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');
