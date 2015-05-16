@@ -19,6 +19,8 @@ use EBox::Types::Boolean;
 
 use EBox::Network;
 
+use Try::Tiny;
+
 # Group: Public methods
 
 # Constructor: new
@@ -52,6 +54,8 @@ sub _table
 {
     my ($self) = @_;
 
+    my $options = $self->getOptions();
+
     my $network = EBox::Global->modInstance('network');
     my $external_iface = "eth0";
     foreach my $if (@{$network->ExternalIfaces()}) {
@@ -61,23 +65,23 @@ sub _table
         }
     }
 
-    my $options = ();
-    $options->{pageTitle} = __('Storage Main Server Setting');
-    $options->{tableName} = 'StorageServerSetting';
-    $options->{IPHelp} = 'The 1st part should be 10, '
-                . 'the 2nd part should be 6, '
-                . 'the 3rd part should be 1, and '
-                . 'the 4th part should be between 1~99. '
-                . 'Example: 10.6.1.4';
-
     my $lib = $self->getLibrary();
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @fields = ();
+
+    push(@fields, $fieldsFactory->createFieldServerLinkButton($options->{tableName}, 'SERVERS', $options->{configView}));
+
+    #push(@fields, $fieldsFactory->createFieldWebLinkButton($options->{tableName}));
+
     push(@fields, $fieldsFactory->createFieldDomainName());
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
     push(@fields, $fieldsFactory->createFieldExternalIPAddressHideView(1, ""));
+    push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('Main', $options->{externalPortDefaultValue}));
     push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
+
+    push(@fields, $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}));
+    push(@fields, $fieldsFactory->createFieldProtocolScheme('Main', 0, $options->{poundScheme}));
 
     my $dataTable =
         {
@@ -91,6 +95,23 @@ sub _table
         };
 
     return $dataTable;
+}
+
+sub getOptions
+{
+    my $options = ();
+    $options->{pageTitle} = __('Storage Main Server Setting');
+    $options->{tableName} = 'StorageServerSetting';
+    $options->{IPHelp} = 'The 1st part should be 10, '
+                . 'the 2nd part should be 6, '
+                . 'the 3rd part should be 1, and '
+                . 'the 4th part should be between 1~99. '
+                . 'Example: 10.6.1.4';
+    $options->{poundScheme} = 'https';
+    $options->{internalPortDefaultValue} = 443;
+    $options->{externalPortDefaultValue} = 61000;
+    $options->{configView} = '/dlllciasrouter/Composite/StorageServerComposite';
+    return $options;
 }
 
 # -------------------------------------------------------------
@@ -122,10 +143,13 @@ sub updatedRowNotify
     my ($self, $row, $oldRow) = @_;
 
     $self->loadLibrary("StorageServers")->checkInternalIP($row);
+    my $options = $self->getOptions();
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
         
+        try {
+
         #$self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
         
         # 新增 Domain Name
@@ -138,8 +162,39 @@ sub updatedRowNotify
 
         # 新增 Redirect
         my $libREDIR = $self->loadLibrary('LibraryRedirect');
-        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParam($oldRow));
-        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParam($row));
+        my $tableName = $options->{tableName};
+        my $extPort = $row->valueByName('redirMain_extPort');
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamDMZ($oldRow, $tableName, $extPort));
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $extPort));
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $extPort));
+
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamDMZ($row, $tableName, $extPort));
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $extPort));
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $extPort));
+
+        # 設定按鈕
+
+        my $domainName = $row->valueByName('domainName');
+        my $scheme = $row->valueByName('redirMain_scheme');
+        my $button = '<span></span>';
+        if ($scheme ne "none") {
+            my $port = ":" . $extPort;
+            if ($port eq ":80") {
+                $port = "";
+            }
+            my $link = $scheme . "://" . $domainName . $port . "/";
+            $button = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
+        }   # if ($shceme ne "none") {}
+
+        my $fieldName = $options->{tableName} . '_web_button';
+        if ($row->elementExists($fieldName)) {
+            $row->elementByName($fieldName)->setValue($button);
+        }
+        $row->store();
+        
+        } catch {
+            $self->getLibrary()->show_exceptions($_ . '( StorageServerSetting->updatedRowNotify() )');
+        };
 
         $ROW_NEED_UPDATE = 0;
     }

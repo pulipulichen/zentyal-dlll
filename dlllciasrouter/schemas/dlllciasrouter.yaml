@@ -18,6 +18,7 @@ models:
     - Settings
     - PoundLibrary
     - PoundServices
+    - StorageServerHeader
     - PortRedirect
     - URLRedirect
     - DNS
@@ -36,4 +37,6 @@ models:
     - LibraryServers
     
 composites:
-    Global: [Settings, URLRedirect]
+    Global: [Settings, URLRedirect, StorageServerSetting]
+    StorageServerComposite: [StorageServerHeader, StorageServers]
+

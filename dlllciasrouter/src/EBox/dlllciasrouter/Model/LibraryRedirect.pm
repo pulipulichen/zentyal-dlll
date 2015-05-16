@@ -923,9 +923,9 @@ sub getProtocolHint
 # --------------------------------------------
 
 # 20150516 Pulipuli Chen
-sub getServerRedirectParam
+sub getServerRedirectParamDMZ
 {
-    my ($self, $row, $desc) = @_;
+    my ($self, $row, $desc, $extPort) = @_;
 
     my $domainName = $row->valueByName("domainName");
     my $destIpaddr = $row->valueByName("extIpaddr");
@@ -934,6 +934,8 @@ sub getServerRedirectParam
     my $libNET = $self->loadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
     my $source = $self->getSecureIpSource();
+
+    my $intPort = $row->valueByName("port");
 
     my %param = (
         interface => $iface,
@@ -950,7 +952,87 @@ sub getServerRedirectParam
         destination => $row->valueByName("ipaddr"),
         destination_port_selected => "destination_port_same",
 
-        description => $domainName. " (" . $localIpaddr . "): " . $desc,
+        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(DMZ)',
+        snat => 0,
+        log => 0,
+    );
+
+    return %param;
+}
+
+sub getServerRedirectParamOrigin
+{
+    my ($self, $row, $desc, $extPort) = @_;
+
+    my $domainName = $row->valueByName("domainName");
+    my $destIpaddr = $row->valueByName("extIpaddr");
+    my $localIpaddr = $row->valueByName("ipaddr");
+
+    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $iface = $libNET->getExternalIface();
+    my $source = $self->getSecureIpSource();
+
+    my $intPort = $row->valueByName("port");
+
+    my %param = (
+        interface => $iface,
+        origDest_selected => "origDest_ipaddr",
+        origDest_ipaddr_ip => $destIpaddr,
+        origDest_ipaddr_mask => 32,
+        protocol => "tcp/udp",
+
+        external_port_range_type => 'single',
+        external_port_single_port => $extPort,
+
+        source_selected => 'source_ipaddr',
+        source_ipaddr_ip => $source->{sourceIp},
+        source_ipaddr_mask => $source->{sourceMask},
+
+        destination => $row->valueByName("ipaddr"),
+        
+        destination_port_selected => "destination_port_other",
+        destination_port_other => $intPort,
+
+        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(Original)',
+        snat => 0,
+        log => 1,
+    );
+
+    return %param;
+}
+
+sub getServerRedirectParamZentyal
+{
+    my ($self, $row, $desc, $extPort) = @_;
+
+    my $domainName = $row->valueByName("domainName");
+    my $destIpaddr = $row->valueByName("extIpaddr");
+    my $localIpaddr = $row->valueByName("ipaddr");
+
+    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $iface = $libNET->getExternalIface();
+    my $source = $self->getSecureIpSource();
+
+    my $intPort = $row->valueByName("port");
+
+    my %param = (
+        interface => $iface,
+        origDest_selected => "origDest_ebox",
+        protocol => "tcp/udp",
+
+        external_port_range_type => 'single',
+        external_port_single_port => $extPort,
+
+        source_selected => 'source_ipaddr',
+        source_ipaddr_ip => $source->{sourceIp},
+        source_ipaddr_mask => $source->{sourceMask},
+
+        destination => $row->valueByName("ipaddr"),
+        
+        destination_port_selected => "destination_port_other",
+        destination_port_other => $intPort,
+
+        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(Zentyal)',
         snat => 0,
         log => 1,
     );

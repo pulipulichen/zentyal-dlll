@@ -601,6 +601,24 @@ sub createFieldProtocolExternalPort
     return $field;
 }
 
+
+# 20150516 Pulipuli Chen
+# 固定欄位的連接埠
+sub createFieldProtocolExternalPortFixed
+{
+    my ($self, $protocol, $extPort) = @_;
+
+    my $field = new EBox::Types::Port(
+            'fieldName' => 'redir'.$protocol.'_extPort',
+            'printableName' => __($protocol.' External Port'),
+            'unique' => 1,
+            'defaultValue' => $extPort,
+            'editable' => 0,
+        );
+
+    return $field;
+}
+
 sub createFieldProtocolInternalPort
 {
     my ($self, $protocol, $port) = @_;
@@ -630,32 +648,6 @@ sub createFieldProtocolInternalPort
 sub createFieldProtocolScheme
 {
     my ($self, $protocol, $unique, $defaultValue) = @_;
-
-#    my %http_type = {
-#            value => 'http',
-#            printableValue => __('HTTP (http://)'),
-#        };
-
-#    my %https_type = {
-#            value => 'https',
-#            printableValue => __('HTTPS (https://)'),
-#        };
-
-#    my %none_type = {
-#            value => 'none',
-#            printableValue => __('NONE'),
-#        };
-
-#    my $subtypes;
-#    if ($defaultValue eq "http") {
-#        $subtypes = [$http_type, $https_type, $none_type];
-#    }
-#    elsif ($defaultValue eq "https") {
-#        $subtypes = [$https_type, $http_type, $none_type];
-#    }
-#    else {
-#        $subtypes = [$none_type, $http_type, $https_type];
-#    }
 
     my $field = new EBox::Types::Select(
             'fieldName' => 'redir'.$protocol.'_scheme',
@@ -1392,6 +1384,56 @@ sub createFieldFileDescriptionDisplay
             #hiddenOnSetter => 1,
             #hiddenOnViewer => 0,
         );
+    return $field;
+}
+
+# --------------------------------------------------------
+
+# 20150516 Pulipuli Chen
+# 建立網頁連線的工具
+sub createFieldWebLinkButton
+{
+    my ($self, $fieldName) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => $fieldName . "_web_button",
+            printableName => '',
+            editable => 0,
+            optional=>0,
+            defaultValue => "<span></span>",
+        );
+
+    return $field;
+}
+
+# 20150516 Pulipuli Chen
+# 建立網頁連線的工具
+sub createFieldConfigLinkButton
+{
+    my ($self, $fieldName, $text, $link) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => $fieldName . "_config_button",
+            printableName => '',
+            editable => 0,
+            optional=>0,
+            defaultValue => '<a href="'.$link.'" class="btn btn-icon btn-config">'.$text.'</a>',
+        );
+
+    return $field;
+}
+
+# 20150516 Pulipuli Chen
+# 建立網頁連線的工具
+sub createFieldServerLinkButton
+{
+    my ($self, $fieldName, $text, $link) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => $fieldName . "_server_button",
+            printableName => '',
+            editable => 0,
+            optional=>0,
+            defaultValue => '<a href="'.$link.'" class="btn btn-icon btn-log">'.$text.'</a><hr />',
+        );
+
     return $field;
 }
 
