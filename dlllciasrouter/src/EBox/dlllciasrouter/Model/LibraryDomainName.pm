@@ -310,7 +310,10 @@ sub updateDomainNameLink
     }
 
     my $enable = $self->getLibrary()->isEnable($row);
-    my $secure = $row->valueByName('redirPOUND_secure');
+    my $secure = 0;
+    if ($row->elementExists('redirPOUND_secure')) {
+        $secure = $row->valueByName('redirPOUND_secure');
+    }
     my $link = $self->updateDomainNameLinkDeco($domainName, $enable, $secure, $doBreakUrl);
     
     # -----------------

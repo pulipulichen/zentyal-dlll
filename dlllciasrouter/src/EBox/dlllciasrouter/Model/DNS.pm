@@ -55,7 +55,7 @@ sub _table
         $fieldsFactory->createFieldContactEmail(),
         $fieldsFactory->createFieldDescription(),
         $fieldsFactory->createFieldDescriptionHTML(),
-        $fieldsFactory->createFieldExpiryDate(),
+        $fieldsFactory->createFieldExpiryDate('NEVER'),
 
         $fieldsFactory->createFieldCreateDateDisplay(),
         $fieldsFactory->createFieldCreateDateData(),

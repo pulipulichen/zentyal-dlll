@@ -66,7 +66,7 @@ sub _table
         $fieldsFactory->createFieldDisplayContactLink(),
         $fieldsFactory->createFieldDescription(),
         $fieldsFactory->createFieldDescriptionHTML(),
-        $fieldsFactory->createFieldExpiryDate(),
+        $fieldsFactory->createFieldExpiryDate('NEVER'),
         
         $fieldsFactory->createFieldCreateDateDisplay(),
         $fieldsFactory->createFieldCreateDateData(),
@@ -113,6 +113,8 @@ sub loadLibrary
     return $self->parentModule()->model($library);
 }
 
+# --------------------------------------------------------
+
 my $ROW_NEED_UPDATE = 0;
 
 sub addedRowNotify
@@ -124,6 +126,8 @@ sub addedRowNotify
     my $lib = $self->getLibrary();
     my $libDN = $self->loadLibrary('LibraryDomainName');
     my $libCT = $self->loadLibrary('LibraryContact');
+
+    $libDN->updateDomainNameLink($row, 1);
 
     $libDN->setLink($row);
 
@@ -150,6 +154,8 @@ sub updatedRowNotify
         my $lib = $self->getLibrary();
         my $libDN = $self->loadLibrary('LibraryDomainName');
         my $libCT = $self->loadLibrary('LibraryContact');
+
+        $libDN->updateDomainNameLink($row, 1);
 
         $libDN->setLink($row);
 
