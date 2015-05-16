@@ -57,6 +57,8 @@ sub getDataTable
     my $tableName = $options->{moduleName} . "Setting";
     my $configView = '/dlllciasrouter/Composite/'. $options->{moduleName} . 'Composite';
     push(@fields, $fieldsFactory->createFieldServerLinkButton($tableName, 'SERVERS', $configView));
+    push(@fields, $fieldsFactory->createFieldHr('hr_setting'));
+
 
     #push(@fields, $fieldsFactory->createFieldWebLinkButton($options->{tableName}));
 

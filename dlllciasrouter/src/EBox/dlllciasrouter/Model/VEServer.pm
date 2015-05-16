@@ -13,7 +13,8 @@ use EBox::Global;
 sub getOptions
 {
     my $options = ();
-    $options->{pageTitle} = __('Virtual Environment Servers');
+    #$options->{pageTitle} = __('Virtual Environment Servers');
+    $options->{pageTitle} = __('Servers');
     $options->{tableName} = 'VEServer';
     $options->{IPHelp} = 'The 1st part should be 10, <br />'
                 . 'the 2nd part should be 6, <br />'

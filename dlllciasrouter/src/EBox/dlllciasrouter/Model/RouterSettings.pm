@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::Settings;
+package EBox::dlllciasrouter::Model::RouterSettings;
 
 use base 'EBox::Model::DataForm';
 
@@ -27,7 +27,7 @@ use EBox::Network;
 #
 # Returns:
 #
-#      <EBox::DNS::Model::Settings> - the newly created model
+#      <EBox::DNS::Model::RouterSettings> - the newly created model
 #      instance
 #
 sub new
@@ -104,10 +104,11 @@ sub _table
               printableName => __('TimeOut'),
               editable      => 1,
               unique        => 0,
-              defaultValue => 30,
+              defaultValue => 300,
               optional => 0,
               help => __("Wait for response X secs. Default is 30 sec."),
              ),
+        $fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
         new EBox::Types::Boolean(
               fieldName     => 'enableError',
               printableName => __('Enable Custom Error Message'),
@@ -123,8 +124,9 @@ sub _table
               optional => 0,
               help => __('HTML format. Don\'t use HTTPS. Example: ')
                 .'<a href="https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html" target="error_example">http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html</a>'
-                . '<br /> <hr />',
+                ,
              ),
+        $fieldsFactory->createFieldHrWithHeading('hr_EmergencyRestarter', __('Emergency Restarter Configuration')),
         new EBox::Types::HostIP(
             fieldName => 'restarterIP',
             printableName => __('Restarter IP'),
@@ -146,8 +148,8 @@ sub _table
         new EBox::Types::Text(
             fieldName => 'senderEmail',
             printableName => __('Sender E-MAIL Address'),
-            help => __('<hr /><br />'
-                . '<strong>Zentyal Configuration Link</strong>'),
+            #help => __('<hr /><br />'
+            #    . '<strong>Zentyal Configuration Link</strong>'),
             editable => 1,
             optional => 1,
         ),
@@ -155,51 +157,51 @@ sub _table
         # --------------------------------
         # External Link
         
-        $fieldsFactory->createFieldLink(
-            'portForwarding',
-            'Port Forwarding',
-            "/Firewall/View/RedirectsTable",
-            'LINK'
-        ),
+        #$fieldsFactory->createFieldLink(
+        #    'portForwarding',
+        #    'Port Forwarding',
+        #    "/Firewall/View/RedirectsTable",
+        #    'LINK'
+        #),
 
-        $fieldsFactory->createFieldLink(
-            'firewallLog',
-            'Firewall Log',
-            "/Logs/Index?selected=firewall&refresh=1",
-            'LINK'
-        ),
+        #$fieldsFactory->createFieldLink(
+        #    'firewallLog',
+        #    'Firewall Log',
+        #    "/Logs/Index?selected=firewall&refresh=1",
+        #    'LINK'
+        #),
         
-        $fieldsFactory->createFieldLink(
-            'managementMember',
-            'Administrator',
-            "/Objects/View/MemberTable?directory=ObjectTable/keys/objc6/members&backview=/Objects/View/MemberTable",
-            'LINK'
-        ),
+        #$fieldsFactory->createFieldLink(
+        #    'managementMember',
+        #    'Administrator',
+        #    "/Objects/View/MemberTable?directory=ObjectTable/keys/objc6/members&backview=/Objects/View/MemberTable",
+        #    'LINK'
+        #),
 
-        $fieldsFactory->createFieldLink(
-            'denyAnyConnectMember',
-            'Deny Any Connect Member',
-            "/Objects/View/MemberTable?directory=ObjectTable/keys/objc5/members&backview=/Objects/View/MemberTable",
-            'LINK'
-        ),
+        #$fieldsFactory->createFieldLink(
+        #    'denyAnyConnectMember',
+        #    'Deny Any Connect Member',
+        #    "/Objects/View/MemberTable?directory=ObjectTable/keys/objc5/members&backview=/Objects/View/MemberTable",
+        #    'LINK'
+        #),
 
-        $fieldsFactory->createFieldLink(
-            'denyUDPMember',
-            'Deny UDP Member',
-            "/Objects/View/MemberTable?directory=ObjectTable/keys/objc4/members&backview=/Objects/View/MemberTable",
-            'LINK'
-        ),
+        #$fieldsFactory->createFieldLink(
+        #    'denyUDPMember',
+        #    'Deny UDP Member',
+        #    "/Objects/View/MemberTable?directory=ObjectTable/keys/objc4/members&backview=/Objects/View/MemberTable",
+        #    'LINK'
+        #),
       );
 
-    my $dataTable =
-        {
-            tableName => 'Settings',
-            'pageTitle' => __('Pound Settings'),
-            printableTableName => __('Pound Settings'),
+    my $pageTitle = __('Pound Settings');
+    my $dataTable = {
+            'tableName' => 'RouterSettings',
+            'pageTitle' => '',
+            'printableTableName' => $pageTitle,
             modelDomain     => 'dlllciasrouter',
             defaultActions => [ 'editField' ],
             tableDescription => \@tableDesc,
-            'HTTPUrlView'=> 'dlllciasrouter/Composite/Global',
+            'HTTPUrlView'=> 'dlllciasrouter/Composite/SettingComposite',
         };
 
     return $dataTable;

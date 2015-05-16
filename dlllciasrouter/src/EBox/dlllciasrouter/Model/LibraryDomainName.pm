@@ -363,10 +363,10 @@ sub updateDomainNameLinkDeco
         $brokenDomainName = '[' . $brokenDomainName . ']';
     }
 
-    my $port = $self->parentModule()->model("Settings")->value("port");
+    my $port = $self->parentModule()->model("RouterSettings")->value("port");
 
     if (!defined($port)) {
-        throw EBox::Exceptions::External("Port is not set. Go to <a href='dlllciasrouter/View/Settings'>Settings</a>");
+        throw EBox::Exceptions::External("Port is not set. Go to <a href='dlllciasrouter/Composite/SettingComposite'>Settings</a>");
     }
 
     if ($port == 80) {

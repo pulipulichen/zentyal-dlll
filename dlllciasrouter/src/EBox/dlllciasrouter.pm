@@ -44,8 +44,8 @@ sub menu
                                         'separator' => 'DLLL-CIAS Router',
                                         'order' => 0);
 
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
-                                      'text' => __('Pound Settings')));
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/SettingComposite',
+                                      'text' => __('Settings')));
 
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VEServerComposite',
                                       'text' => __('Virtual Environment Servers')));
@@ -115,7 +115,7 @@ sub _setConf
     # 設定
     # ----------------------------
 
-    my $settings = $self->model('Settings');
+    my $settings = $self->model('RouterSettings');
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
     my $timeout = $settings->value('timeout');

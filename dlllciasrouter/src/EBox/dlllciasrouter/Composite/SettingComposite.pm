@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Composite::Global;
+package EBox::dlllciasrouter::Composite::SettingComposite;
 
 use base 'EBox::Model::Composite';
 
@@ -18,12 +18,12 @@ use EBox::Global;
 #
 sub _description
 {
-    my $pageTitle = 'Reverse Proxy (DLLL-CIAS Router)';
+    my $pageTitle = 'CIAS-DLLL Router Setting';
 
     my $description =
       {
        layout          => 'top-bottom',
-       name            => 'Global',
+       name            => 'SettingComposite',
        pageTitle       => $pageTitle,
        printableName   => $pageTitle,
        compositeDomain => 'dlllciasrouter',

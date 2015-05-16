@@ -1143,6 +1143,26 @@ sub createFieldHr
 }
 
 ##
+# 20150517 Pulipuli Chen
+# 水平線
+##
+sub createFieldHrWithHeading
+{
+    my ($self, $fieldName, $heading) = @_;
+
+    my $field = new EBox::Types::HTML(
+            'fieldName' => $fieldName . '_hr',
+            'printableName' => __(''),
+            'editable' => 0,
+            'defaultValue' => '<span></span>',
+            'help' => "<hr /><h4>".$heading."</h4>",
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+    return $field;
+}
+
+##
 # 20150515 Pulipuli Chen
 # 新增按鈕
 ##
@@ -1411,11 +1431,29 @@ sub createFieldConfigLinkButton
 {
     my ($self, $fieldName, $text, $link) = @_;
     my $field = new EBox::Types::HTML(
-            fieldName => $fieldName . "_config_button",
-            printableName => '',
-            editable => 0,
-            optional=>0,
-            defaultValue => '<a href="'.$link.'" class="btn btn-icon btn-config">'.$text.'</a>',
+            "fieldName" => $fieldName . "_config_button",
+            "printableName" => '',
+            "editable" => 0,
+            "optional"=> 0,
+            "defaultValue" => "<span></span>",
+            "help" => '<a href="'.$link.'" class="btn btn-icon btn-config">'.$text.'</a>',
+        );
+
+    return $field;
+}
+
+# 20150516 Pulipuli Chen
+# 建立標題空白的HTML文字網頁
+sub createFieldHTMLDisplay
+{
+    my ($self, $fieldName, $html) = @_;
+    my $field = new EBox::Types::HTML(
+            "fieldName" => $fieldName . "_config_button",
+            "printableName" => '',
+            "editable" => 0,
+            "optional"=> 0,
+            "defaultValue" => "<span></span>",
+            "help" => $html,
         );
 
     return $field;
@@ -1427,11 +1465,12 @@ sub createFieldServerLinkButton
 {
     my ($self, $fieldName, $text, $link) = @_;
     my $field = new EBox::Types::HTML(
-            fieldName => $fieldName . "_server_button",
-            printableName => '',
-            editable => 0,
-            optional=>0,
-            defaultValue => '<a href="'.$link.'" class="btn btn-icon btn-log">'.$text.'</a><hr />',
+            'fieldName' => $fieldName . "_server_button",
+            'printableName' => '',
+            'editable' => 0,
+            'optional'=>0,
+            "defaultValue" => "<span></span>",
+            'help' => '<a href="'.$link.'" class="btn btn-icon btn-log">'.$text.'</a>',
         );
 
     return $field;

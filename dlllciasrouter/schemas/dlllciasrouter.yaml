@@ -15,7 +15,8 @@ enabledepends:
     - dhcp
 
 models:
-    - Settings
+    - RouterSettings
+    - RouterLinks
     - PoundLibrary
     - PoundServices
     - PortRedirect
@@ -43,7 +44,7 @@ models:
     - LibraryHeader
     
 composites:
-    Global: [Settings, URLRedirect, StorageServerSetting]
+    SettingComposite: [RouterLinks, RouterSettings]
     StorageServerComposite: [StorageServerHeader, StorageServer]
     VEServerComposite: [VEServerHeader, VEServer]
     VMServerComposite: [VEServerHeader, VMServer]
