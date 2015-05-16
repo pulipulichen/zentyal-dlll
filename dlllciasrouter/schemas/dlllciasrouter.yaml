@@ -35,6 +35,7 @@ models:
     - OtherDomainNames
     - AttachedFiles
     - LibraryServers
+    - LibrarySetting
     
 composites:
     Global: [Settings, URLRedirect, StorageServerSetting]
