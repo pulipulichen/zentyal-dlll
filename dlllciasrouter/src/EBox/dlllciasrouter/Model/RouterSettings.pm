@@ -14,7 +14,7 @@ use EBox::Types::Link;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
 use EBox::Types::HTML;
-use EBox::Types::Link;
+use EBox::Types::URI;
 use EBox::Types::Boolean;
 
 use EBox::Network;
@@ -67,8 +67,8 @@ sub _table
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @tableDesc =
-      (
-          new EBox::Types::Union(
+    (
+        new EBox::Types::Union(
             'fieldName' => 'address',
             'printableName' => __('External IP Address'),
             'subtypes' =>
@@ -81,8 +81,8 @@ sub _table
                 'printableName' => __('Custom'),
                 'editable' => 1,),
             ]
-          ),
-          new EBox::Types::Port(
+        ),
+        new EBox::Types::Port(
               fieldName     => 'port',
               printableName => __('External Port'),
               editable      => 1,
@@ -90,7 +90,7 @@ sub _table
               defaultValue => 80,
               optional => 0,
              ),
-          new EBox::Types::Text(
+        new EBox::Types::Text(
               fieldName     => 'alive',
               printableName => __('Alive Time'),
               editable      => 1,
@@ -99,7 +99,7 @@ sub _table
               optional => 0,
               help => __("Check backend every X secs. Default is 30 sec."),
              ),
-          new EBox::Types::Text(
+        new EBox::Types::Text(
               fieldName     => 'timeout',
               printableName => __('TimeOut'),
               editable      => 1,
@@ -107,7 +107,9 @@ sub _table
               defaultValue => 300,
               optional => 0,
               help => __("Wait for response X secs. Default is 30 sec."),
-             ),
+        ),
+        
+
         $fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
         new EBox::Types::Boolean(
               fieldName     => 'enableError',
@@ -120,80 +122,44 @@ sub _table
               fieldName     => 'error',
               printableName => __('Error Page Link'),
               editable      => 1,
-              defalutValue => 'https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html',
-              optional => 0,
-              help => __('HTML format. Don\'t use HTTPS. Example: ')
-                .'<a href="https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html" target="error_example">http://dl.dropboxusercontent.com/u/717137/20130914-error_page/error_example.html</a>'
+              #defalutValue => 'http://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html',
+              optional => 1,
+              help => __('HTML format. Example: ')
+                .'<a href="https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html" target="error_example">https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html</a>'
                 ,
              ),
-        $fieldsFactory->createFieldHrWithHeading('hr_EmergencyRestarter', __('Emergency Restarter Configuration')),
-        new EBox::Types::HostIP(
-            fieldName => 'restarterIP',
-            printableName => __('Restarter IP'),
-            editable => 1,
-            optional => 1,
-        ),
-        new EBox::Types::Port(
-            fieldName => 'restarterPort',
-            printableName => __('Restarter Port'),
-            editable => 1,
-            defaultValue => 80,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'notifyEmail',
-            printableName => __('Notify E-MAIL Address'),
-            editable => 1,
-            optional => 1,
-        ),
-        new EBox::Types::Text(
-            fieldName => 'senderEmail',
-            printableName => __('Sender E-MAIL Address'),
-            #help => __('<hr /><br />'
-            #    . '<strong>Zentyal Configuration Link</strong>'),
-            editable => 1,
-            optional => 1,
-        ),
-        
-        # --------------------------------
-        # External Link
-        
-        #$fieldsFactory->createFieldLink(
-        #    'portForwarding',
-        #    'Port Forwarding',
-        #    "/Firewall/View/RedirectsTable",
-        #    'LINK'
-        #),
 
-        #$fieldsFactory->createFieldLink(
-        #    'firewallLog',
-        #    'Firewall Log',
-        #    "/Logs/Index?selected=firewall&refresh=1",
-        #    'LINK'
+        # 20150517 Pulipuli Chen
+        # 由於Restarter的設計不穩定，在此關閉她的功能
+        #$fieldsFactory->createFieldHrWithHeading('hr_EmergencyRestarter', __('Emergency Restarter Configuration')),
+        #new EBox::Types::HostIP(
+        #    fieldName => 'restarterIP',
+        #    printableName => __('Restarter IP'),
+        #    editable => 1,
+        #    optional => 1,
+        #),
+        #new EBox::Types::Port(
+        #    fieldName => 'restarterPort',
+        #    printableName => __('Restarter Port'),
+        #    editable => 1,
+        #    defaultValue => 80,
+        #),
+        #new EBox::Types::Text(
+        #    fieldName => 'notifyEmail',
+        #    printableName => __('Notify E-MAIL Address'),
+        #    editable => 1,
+        #    optional => 1,
+        #),
+        #new EBox::Types::Text(
+        #    fieldName => 'senderEmail',
+        #    printableName => __('Sender E-MAIL Address'),
+        #    editable => 1,
+        #    optional => 1,
         #),
         
-        #$fieldsFactory->createFieldLink(
-        #    'managementMember',
-        #    'Administrator',
-        #    "/Objects/View/MemberTable?directory=ObjectTable/keys/objc6/members&backview=/Objects/View/MemberTable",
-        #    'LINK'
-        #),
-
-        #$fieldsFactory->createFieldLink(
-        #    'denyAnyConnectMember',
-        #    'Deny Any Connect Member',
-        #    "/Objects/View/MemberTable?directory=ObjectTable/keys/objc5/members&backview=/Objects/View/MemberTable",
-        #    'LINK'
-        #),
-
-        #$fieldsFactory->createFieldLink(
-        #    'denyUDPMember',
-        #    'Deny UDP Member',
-        #    "/Objects/View/MemberTable?directory=ObjectTable/keys/objc4/members&backview=/Objects/View/MemberTable",
-        #    'LINK'
-        #),
       );
 
-    my $pageTitle = __('Pound Settings');
+    my $pageTitle = __('Setting');
     my $dataTable = {
             'tableName' => 'RouterSettings',
             'pageTitle' => '',

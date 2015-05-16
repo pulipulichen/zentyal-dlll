@@ -40,7 +40,7 @@ sub getDataTable
 
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
     my @fields = ();
-    push(@fields, $fieldsFactory->createFieldAddBtn('add'));
+    #push(@fields, $fieldsFactory->createFieldAddBtn('add'));
     #push(@fields, $fieldsFactory->createFieldDescription());
 
     push(@fields, $fieldsFactory->createFieldConfigEnable());

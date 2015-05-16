@@ -42,7 +42,7 @@ sub menu
     my $folder = new EBox::Menu::Folder('name' => 'dlllciasrouter',
                                         'text' => $self->printableName(),
                                         #'separator' => 'DLLL-CIAS Router',
-                                        'icon' => 'dlllciasirouter',
+                                        'icon' => 'squid',
                                         'tag' => 'system',
                                         'order' => 1);
 
@@ -122,10 +122,11 @@ sub _setConf
     my $alive = $settings->value('alive');
     my $timeout = $settings->value('timeout');
     my $enableError = $settings->value('enableError');
-    my $errorURL = $settings->value('error');
-    if (!defined($errorURL) || $errorURL eq "") 
-    {
-        $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
+    my $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
+    if ($settings->row()->elementExists('error') 
+            && defined($settings->value('error')) 
+            && $settings->value('error') ne '') {
+        $errorURL = $settings->value('error');
     }
     my $file = "/etc/pound/error.html";
     my $fileTemp = "/tmp/error.html";
@@ -169,16 +170,28 @@ sub _setConf
          #unlink $fileTemp;
     }
 
-    my $restarterIP = $settings->value('restarterIP');
-    my $restarterPort = $settings->value('restarterPort');
-    my $notifyEmail = $settings->value('notifyEmail');
-    my $senderEmail = $settings->value('senderEmail');
+    my $restarterIP;
+    if ($settings->row->elementExists('restarterIP')) {
+        $restarterIP = $settings->value('restarterIP');
+    }
+    my $restarterPort;
+    if ($settings->row->elementExists('restarterPort')) {
+        $restarterPort = $settings->value('restarterPort');
+    }
+    my $notifyEmail;
+    if ($settings->row->elementExists('notifyEmail')) {
+        $notifyEmail = $settings->value('notifyEmail');
+    }
+    my $senderEmail;
+    if ($settings->row->elementExists('senderEmail')) {
+        $senderEmail = $settings->value('senderEmail');
+    }
 
     # ----------------------------
     # Back End
     # ----------------------------
 
-    my $services = $self->model('PoundServices');
+    my $services = $self->model('VMServer');
     my $libRedir = $self->model('LibraryRedirect');
 
     # Iterate over table

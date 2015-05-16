@@ -63,7 +63,7 @@ ListenHTTP
         Err503 "<% $file %>"
 %
 % } # if ($enableError == 1) {
-% print "# -----------------------------------------\n";
+% print "\n# -----------------------------------------\n";
 % print "# Back End\n";
 % print "# -----------------------------------------\n";
 
@@ -73,7 +73,7 @@ ListenHTTP
 % print "#                        Address 192.168.1.31\n";
 % print "#                        Port    80\n";
 % print "#                End\n";
-% print "#        End\n";
+% print "#        End\n\n";
 %
 % if (length($domainHash)) {
 %   while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
@@ -119,7 +119,7 @@ ListenHTTP
 %   
 %   my $emergencyEnable = $service->{'emergencyValue'};
 %   my $redirHTTP_enable = $service->{'redirHTTP_enable'};
-%   if ( $emergencyEnable == 1 && $redirHTTP_enable == 1 ) {
+%   if ( $emergencyEnable == 1 && $redirHTTP_enable == 1 && defined($restarterIP) && defined($restarterPort) )  {
                 Emergency
 			Address	<% $restarterIP %>
 			Port	<% $restarterPort %>
@@ -150,7 +150,7 @@ ListenHTTP
 		End
 %   } # for(my $i=0; $i<=$#backEndArray; $i++) {
 %   
-%   if ($emergencyEnable == 1) {
+%   if ($emergencyEnable == 1 && defined($restarterIP) && defined($restarterPort) ) {
                 Emergency
 			Address	<% $restarterIP %>
 			Port	<% $restarterPort %>
