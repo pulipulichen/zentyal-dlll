@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::StorageServer;
+package EBox::dlllciasrouter::Model::VEServer;
 
 use base 'EBox::Model::DataTable';
 
@@ -13,15 +13,15 @@ use EBox::Global;
 sub getOptions
 {
     my $options = ();
-    $options->{pageTitle} = __('Storage Servers');
-    $options->{tableName} = 'StorageServer';
+    $options->{pageTitle} = __('Virtual Environment Servers');
+    $options->{tableName} = 'VEServer';
     $options->{IPHelp} = 'The 1st part should be 10, <br />'
                 . 'the 2nd part should be 6, <br />'
-                . 'the 3rd part should be 1, and <br />'
+                . 'the 3rd part should be 0, and <br />'
                 . 'the 4th part should be between 1~99. <br />'
-                . 'Example: 10.6.1.4';
+                . 'Example: 10.6.0.55';
     $options->{poundScheme} = 'https';
-    $options->{internalPortDefaultValue} = 443;
+    $options->{internalPortDefaultValue} = 8006;
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
     $options->{enableHTTPS} = 0;
@@ -47,7 +47,7 @@ sub checkInternalIP
 
     if (!($partA == 10) 
         || !($partB == 6) 
-        || !($partC == 1) 
+        || !($partC == 0) 
         || !($partD > 0 && $partD < 100) ) {
         my $message = __('Internal IP format error.' . $options->{IPHelp});
         $self->loadLibrary('PoundLibrary')->show_exceptions($message);

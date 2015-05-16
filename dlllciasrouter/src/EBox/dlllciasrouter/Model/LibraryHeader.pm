@@ -50,11 +50,13 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldWebLinkButton($tableName));
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, 'CONFIGURATION', $configView));
 
+    my $pageTitle = __('Main Server');
+
     my $dataTable =
         {
             'tableName' => $tableName,
-            'pageTitle' => $options->{pageTitle},
-            'printableTableName' => $options->{pageTitle},
+            'pageTitle' => $pageTitle,
+            'printableTableName' => $pageTitle,
             'modelDomain'     => 'dlllciasrouter',
             #defaultActions => [ 'editField' ],
             'tableDescription' => \@fields,

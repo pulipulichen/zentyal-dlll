@@ -15,9 +15,7 @@ use Try::Tiny;
 sub getOptions
 {
     my $options = ();
-    $options->{pageTitle} = __('Main Server');
-    $options->{tableName} = 'VEServerHeader';
-    $options->{configView} = '/dlllciasrouter/View/VEServerSetting';
+    $options->{moduleName} = 'VEServer';
     return $options;
 }
 

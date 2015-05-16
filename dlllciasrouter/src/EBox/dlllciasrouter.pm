@@ -44,21 +44,27 @@ sub menu
                                         'separator' => 'DLLL-CIAS Router',
                                         'order' => 0);
 
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/StorageServerSetting',
-                                      'text' => __('Storage Server Setting')));
-    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/StorageServerHeader',
-    #                                  'text' => __('Storage Server Header')));
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
+                                      'text' => __('Pound Settings')));
+
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VEServerComposite',
+                                      'text' => __('Virtual Environment Servers')));
+
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/StorageServerComposite',
                                       'text' => __('Storage Servers')));
 
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/Settings',
-                                      'text' => __('Pound Settings')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',
-                                      'text' => __('Pound Back End')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/URLRedirect',
-                                      'text' => __('URL Redirect')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/DNS',
-                                      'text' => __('DNS')));
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VMServerComposite',
+                                      'text' => __('Virtual Machine Servers')));
+
+    
+    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',
+    #                                  'text' => __('Pound Back End')));
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/OtherRoutingSettingComposite',
+                                      'text' => __('Other Routing Setting')));
+    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/URLRedirect',
+    #                                  'text' => __('URL Redirect')));
+    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/DNS',
+    #                                  'text' => __('DNS')));
     
     $root->add($folder);
 }

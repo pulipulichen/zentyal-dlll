@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::StorageServer;
+package EBox::dlllciasrouter::Model::VMServer;
 
 use base 'EBox::Model::DataTable';
 
@@ -13,21 +13,21 @@ use EBox::Global;
 sub getOptions
 {
     my $options = ();
-    $options->{pageTitle} = __('Storage Servers');
-    $options->{tableName} = 'StorageServer';
+    $options->{pageTitle} = __('Virtual Machine Servers');
+    $options->{tableName} = 'VMServer';
     $options->{IPHelp} = 'The 1st part should be 10, <br />'
-                . 'the 2nd part should be 6, <br />'
-                . 'the 3rd part should be 1, and <br />'
+                . 'the 2nd part should be 1~5, <br />'
+                . 'the 3rd part should be 0~9, and <br />'
                 . 'the 4th part should be between 1~99. <br />'
-                . 'Example: 10.6.1.4';
-    $options->{poundScheme} = 'https';
-    $options->{internalPortDefaultValue} = 443;
-    $options->{expiryDate} = 'NEVER';
-    $options->{enableHTTP} = 0;
-    $options->{enableHTTPS} = 0;
-    $options->{enableSSH} = 0;
+                . 'Example: 10.1.0.51';
+    $options->{poundScheme} = 'http';
+    $options->{internalPortDefaultValue} = 80;
+    $options->{expiryDate} = '';
+    $options->{enableHTTP} = 1;
+    $options->{enableHTTPS} = 1;
+    $options->{enableSSH} = 1;
     $options->{enableRDP} = 0;
-    $options->{enableHardware} = 1;
+    $options->{enableHardware} = 0;
 
     return $options;
 }
@@ -46,8 +46,8 @@ sub checkInternalIP
     my $partD = $parts[3];
 
     if (!($partA == 10) 
-        || !($partB == 6) 
-        || !($partC == 1) 
+        || !($partB > 0 && $partB < 5) 
+        || !($partC > -1 && $partC < 10) 
         || !($partD > 0 && $partD < 100) ) {
         my $message = __('Internal IP format error.' . $options->{IPHelp});
         $self->loadLibrary('PoundLibrary')->show_exceptions($message);

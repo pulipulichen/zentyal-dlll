@@ -37,20 +37,16 @@ sub _table
 sub getOptions
 {
     my $options = ();
-    $options->{pageTitle} = __('Virtual Environment Main Server Setting');
-    $options->{tableName} = 'VEServerSetting';
+    $options->{pageTitle} = __('VE Main Server Setting');
+    $options->{moduleName} = 'VEServer';
     $options->{IPHelp} = 'The 1st part should be 10, '
                 . 'the 2nd part should be 6, '
                 . 'the 3rd part should be 0, and '
                 . 'the 4th part should be between 1~99. '
-                . 'Example: 10.6.0.55';
+                . 'Example: 10.6.1.4';
     $options->{poundScheme} = 'https';
     $options->{internalPortDefaultValue} = 8006;
     $options->{externalPortDefaultValue} = 60000;
-    $options->{configView} = '/dlllciasrouter/Composite/VEServerComposite';
-    $options->{headerModule} = 'StorageServerHeader';
-    $options->{headerFieldName} = 'StorageServerHeader_web_button';
-    $options->{checkInternalIpModule} = 'StorageServer';
     return $options;
 }
 

@@ -44,6 +44,7 @@ sub _table
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainNameUnique(),
+        $fieldsFactory->createFieldBoundLocalDNS(),
         new EBox::Types::Text(
             'fieldName' => 'url',
             'printableName' => __('Redirect URL'),
@@ -52,7 +53,6 @@ sub _table
             hiddenOnViewer => 1,
         ),
         $fieldsFactory->createFieldDomainNameLink(),
-        $fieldsFactory->createFieldBoundLocalDNS(),
         new EBox::Types::HTML(
             fieldName => 'urlLink',
             printableName => __('Redirect URL'),
