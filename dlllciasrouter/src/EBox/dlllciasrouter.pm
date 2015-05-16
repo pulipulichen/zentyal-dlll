@@ -41,8 +41,10 @@ sub menu
 
     my $folder = new EBox::Menu::Folder('name' => 'dlllciasrouter',
                                         'text' => $self->printableName(),
-                                        'separator' => 'DLLL-CIAS Router',
-                                        'order' => 0);
+                                        #'separator' => 'DLLL-CIAS Router',
+                                        'icon' => 'dlllciasirouter',
+                                        'tag' => 'system',
+                                        'order' => 1);
 
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/SettingComposite',
                                       'text' => __('Settings')));
