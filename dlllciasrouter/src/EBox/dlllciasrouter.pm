@@ -120,16 +120,21 @@ sub _setConf
     my $settings = $self->model('RouterSettings');
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
-    my $timeout = $settings->value('timeout');
-    my $enableError = $settings->value('enableError');
-    my $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
-    if ($settings->row()->elementExists('error') 
-            && defined($settings->value('error')) 
-            && $settings->value('error') ne '') {
-        $errorURL = $settings->value('error');
-    }
-    my $file = "/etc/pound/error.html";
-    my $fileTemp = "/tmp/error.html";
+
+    #my $timeout = $settings->value('timeout');
+    my $timeout = 1;    # 20150517 測試用，記得要移除
+
+    #my $enableError = $settings->value('enableError');
+    #my $enableError = 1;
+    #my $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
+    #my $errorURL = '/usr/share/zentyal/www/dlllciasrouter';
+    #if ($settings->row()->elementExists('error') 
+    #        && defined($settings->value('error')) 
+    #        && $settings->value('error') ne '') {
+    #    $errorURL = $settings->value('error');
+    #}
+    #my $file = "/etc/pound/error.html";
+    #my $fileTemp = "/tmp/error.html";
     #my $file = "/tmp/error.html";
 
     my $address = "127.0.0.1";
@@ -146,29 +151,30 @@ sub _setConf
     {
         $address = $settings->value("address");
     }
-     if ( $enableError == 1) {
-        unless (-e $fileTemp) {
-            system('wget ' . $errorURL . ' -O ' . $fileTemp);
-        }
+#     if ( $enableError == 1) {
+#        unless (-e $fileTemp) {
+#            system('wget ' . $errorURL . ' -O ' . $fileTemp);
+#        }
 
         # 讀取
         #my $errorPage = system('cat '.$fileTemp);
-        open FILE, "<".$fileTemp;
-        my $errorPage = do { local $/; <FILE> };
+        #open FILE, "<".$fileTemp;
+        #my $errorPage = do { local $/; <FILE> };
         
         # 寫入
         my @errorPageParams = ();
-        push(@errorPageParams, 'errorPage' => $errorPage);
+        #my $errorPage = system('cat '.$errorURL);
+        #push(@errorPageParams, 'errorPage' => $errorPage);
 
         $self->writeConfFile(
             '/etc/pound/error.html',
             "dlllciasrouter/error.html.mas",
             \@errorPageParams,
-            { uid => '0', gid => '0', mode => '740' }
+            { uid => '0', gid => '0', mode => '777' }
         );
 
          #unlink $fileTemp;
-    }
+#    }
 
     my $restarterIP;
     if ($settings->row->elementExists('restarterIP')) {
@@ -383,9 +389,9 @@ sub _setConf
     push(@servicesParams, 'port' => $port);
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'timeout' => $timeout);
-    push(@servicesParams, 'enableError' => $enableError);
-    push(@servicesParams, 'errorURL' => $errorURL);
-    push(@servicesParams, 'file' => $file);
+    #push(@servicesParams, 'enableError' => $enableError);
+    #push(@servicesParams, 'errorURL' => $errorURL);
+    #push(@servicesParams, 'file' => $file);
 
     push(@servicesParams, 'restarterIP' => $restarterIP);
     push(@servicesParams, 'restarterPort' => $restarterPort);

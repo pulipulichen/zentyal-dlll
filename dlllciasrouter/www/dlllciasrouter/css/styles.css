@@ -88,7 +88,7 @@ input[type='submit']:hover { background-position: 0 -30px; }
 /* ============= FONTS ============= */
 /* === Headings === */
 h1,h2,h3,h4,h5,h6 { font-family: "Droid Custom", Georgia, Garamond, serif; font-weight: normal; color: #2d2d2d; }
-
+h4 {font-weight: bold;}
 /* BEGIN STYLES FOR THE LARGE ERROR MESSAGE */
 h1 {
 	font-size: 80px;

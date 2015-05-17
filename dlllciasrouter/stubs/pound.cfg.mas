@@ -3,15 +3,9 @@
     $port
     $alive
     $timeout
-    $enableError
-    $errorURL
-    $file
-
     $restarterIP
     $restarterPort
-
     $domainHash
-
     $redir
 </%args>
 % print "## Minimal sample pound.cfg\n";
@@ -55,14 +49,11 @@ ListenHTTP
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		0
 
-% if ($enableError == 1) {
-%
-        Err414 "<% $file %>"
-        Err500 "<% $file %>"
-        Err501 "<% $file %>"
-        Err503 "<% $file %>"
-%
-% } # if ($enableError == 1) {
+        Err414 "/etc/pound/error.html"
+        Err500 "/etc/pound/error.html"
+        Err501 "/etc/pound/error.html"
+        Err503 "/etc/pound/error.html"
+
 % print "\n# -----------------------------------------\n";
 % print "# Back End\n";
 % print "# -----------------------------------------\n";

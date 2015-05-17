@@ -12,94 +12,85 @@
 -->
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Internal Server Error</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="css/reset.css" rel="stylesheet" type="text/css">	
-	<link href="css/styles.css" rel="stylesheet" type="text/css">
-        <!--
-        <link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/reset.css" rel="stylesheet" type="text/css">	
-	<link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/styles.css" rel="stylesheet" type="text/css">
-        -->
-	<!--[if LTE IE 8]>
-		<link href="css/ie.css" rel="stylesheet" type="text/css">
-	<![endif]-->
-	<!--[if IE 6]>
-		<script type="text/javascript" src="js/DD_belatedPNG_0.0.8a-min.js"></script>
-		<script type="text/javascript">
-			DD_belatedPNG.fix('#bg-top, #bg-bottom, #logo, #nav ul, #contentWrap, #content, #leftColumn');
-		</script>
-	<![endif]-->
+<head>
+    <title>Internal Server Error</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <link href="css/reset.css" rel="stylesheet" type="text/css">	
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <!--
+    <link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/reset.css" rel="stylesheet" type="text/css">	
+    <link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/styles.css" rel="stylesheet" type="text/css">
+    -->
+</head>
+<body>
+<div id="wrapper">
 
-    </head>
-    <body>
-	<div id="wrapper">
+<div id="bg-top"></div>
 
-		<div id="bg-top"></div>
-		<div id="contentWrap">
-        <div id="content">
-				
-                <!-- BEGIN LEFT COLUMN -->
-                <div id="leftColumn">
+<div id="contentWrap">
+<div id="content">
 
-                        <!-- YOUR LOGO GOES HERE -->
-                        <a href="http://dlll.nccu.edu.tw/" class="logo">
-                            <!-- <img id="logo" src="images/template/logo.png" alt="Logo Sample" width="222" height="100"> -->
-                            <span>Website Title</span>
-                        </a>
+<!-- BEGIN LEFT COLUMN -->
+<div id="leftColumn">
 
-                        <!-- BEGIN MENU -->
-                        <div id="nav">
+<!-- YOUR LOGO GOES HERE -->
+<a href="http://dlll.nccu.edu.tw/" class="logo">
+    <span>
+        <!-- %websiteTile -->
+        Website Title
+    </span>
+</a>
 
-                                <span>menu</span>
-                                <ul>
-                                        <li class="home"><a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a></li>
-                                        <!--<li class="about"><a href="http://dlll.nccu.edu.tw/?page_id=10">REPORT</a></li>-->
-                                        <li class="contact"><a href="mailto:pudding@nccu.edu.tw">CONTACT US</a></li>
-                                </ul>
-                        </div><!-- end div #nav -->
+<!-- BEGIN MENU -->
+<div id="nav">
+    <span>menu</span>
+    <ul>
+        <!-- %homeText %homeLink -->
+        <li class="home"><a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a></li>
+        <!-- %aboutText %aboutLink -->
+        <li class="about"><a href="http://dlll.nccu.edu.tw/?page_id=10">ABOUT</a></li>
+        <!-- %contactText %contactEmail -->
+        <li class="contact"><a href="mailto:pudding@nccu.edu.tw">CONTACT US</a></li>
+    </ul>
+</div><!-- end div #nav -->
 
 
-                        <!-- ERROR CODE HERE -->
-                        <h1>ERROR<span>Internal Server Error</span></h1>
-                </div><!-- end div #leftColumn -->
-                <!-- END LEFT COLUMN -->
-
-                <!-- BEGIN RIGHT COLUMN -->
-                <div id="rightColumn">
-                        <h2>Oops! It looks something went completely wrong.</h2>
-                        
-                        <p>
-                            Sorry. Evidently the document you were looking for has either been moved or no longer exists. 
-                            Please use the navigational links to the night to locate additional resources and information.
-                        </p>
-                        <!--
-                        <p>很抱歉，現在系統內部發生了錯誤。這個網頁暫時無法連結，請稍候再嘗試登入。
-                            請<a href="mailto:pudding@nccu.edu.tw">聯絡網管人員</a>來協助您處理這個問題。</p>
-                        -->
-                        <br>
-                        <br>
-                        <br>
-                        <!-- <h4 class="regular">不知道該怎麼辦嗎？我們建議您……</h4> -->
-                        <h4 class="regular">Lost? We suggest...</h4>
-                        <ol>
-                                <!-- <li><span>可能是短期內系統負荷過大，稍候一陣子再進入這個網址看看。</span></li> -->
-                                <li><span>Checking the web address for types.</span></li>
-                                <li><span>Contacting our <a href="mailto:pudding@nccu.edu.tw">WEB ADMINISTRATOR</a>.</span></li>
-                                <li><span>Visiting the <a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a> (link to the left).</span></li>
-                                <li><span><a href="javascript:window.history.back();">Go back</a>.</span></li>
-                                <!-- <li><span>using our site search below.</span></li> -->
-                        </ol>
+<!-- ERROR CODE HERE -->
+<h1>ERROR<span>Internal Server Error</span></h1>
+</div><!-- end div #leftColumn -->
+<!-- END LEFT COLUMN -->
 
 
-                </div><!-- end div #rightColumn -->
-                <!-- END RIGHT COLUMN -->
+<div id="rightColumn">
+<!-- %errorMessage -->
+<!-- BEGIN RIGHT COLUMN -->
+    
+<h2>Oops! It looks something went completely wrong.</h2>
 
-                <div class="clear"></div>
-        </div>
-</div>
+<p>
+    Sorry. Evidently the document you were looking for has either been moved or no longer exists. 
+    Please use the navigational links to the night to locate additional resources and information.
+</p>
+<h4 class="regular">Lost? We suggest...</h4>
+<ol>
+    <li><span>The load average on the server is too high at the moment. Please wait a few minutes and <a href="javascript:location.reload();">trying again</a>.</span></li>
+    <li><span>Checking the web address for types.</span></li>
+    <li><span>Contacting our <a href="mailto:pudding@nccu.edu.tw">WEB ADMINISTRATOR</a>.</span></li>
+    <li><span>Visiting the <a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a> (link to the left).</span></li>
+    <li><span><a href="javascript:window.history.back();">Go back</a>.</span></li>
+</ol>
+
+<!-- END RIGHT COLUMN -->
+</div><!-- end div #rightColumn -->
+
+
+<div class="clear"></div>
+                
+</div>  <!-- end <div id="content"> -->
+</div>  <!-- end <div id="contentWrap"> -->          
+                
 <div id="bg-bottom"></div>
-
 
 </div><!-- end div #wrapper -->
 </body>
