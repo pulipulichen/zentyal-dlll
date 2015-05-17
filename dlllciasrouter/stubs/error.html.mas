@@ -50,9 +50,9 @@
 <div id="nav">
     <span>menu</span>
     <ul>
-        <!-- %homeText %homeLink -->
+        <!-- %homeText %homeURL -->
         <li class="home"><a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a></li>
-        <!-- %aboutText %aboutLink -->
+        <!-- %aboutText %aboutURL -->
         <li class="about"><a href="http://dlll.nccu.edu.tw/?page_id=10">ABOUT</a></li>
         <!-- %contactText %contactEmail -->
         <li class="contact"><a href="mailto:pudding@nccu.edu.tw">CONTACT US</a></li>

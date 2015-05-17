@@ -52,6 +52,9 @@ sub _table
 {
     my ($self) = @_;
 
+    my $tableName = 'RouterSettings';
+    my $editErrorView = '/dlllciasrouter/View/ErrorMessage';
+
     my $network = EBox::Global->modInstance('network');
     my $address = "127.0.0.1";
     my $external_iface = "eth0";
@@ -109,25 +112,25 @@ sub _table
               help => __("Wait for response X secs. Default is 30 sec."),
         ),
         
-
-        $fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
-        new EBox::Types::Boolean(
-              fieldName     => 'enableError',
-              printableName => __('Enable Custom Error Message'),
-              defaultValue => 1,
-              editable      => 1,
-              optional => 0,
-             ),
-        new EBox::Types::Text(
-              fieldName     => 'error',
-              printableName => __('Error Page Link'),
-              editable      => 1,
-              #defalutValue => 'http://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html',
-              optional => 1,
-              help => __('HTML format. Example: ')
-                .'<a href="https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html" target="error_example">https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html</a>'
-                ,
-             ),
+        $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView),
+        #$fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
+        #new EBox::Types::Boolean(
+        #      fieldName     => 'enableError',
+        #      printableName => __('Enable Custom Error Message'),
+        #      defaultValue => 1,
+        #      editable      => 1,
+        #      optional => 0,
+        #     ),
+        #new EBox::Types::Text(
+        #      fieldName     => 'error',
+        #      printableName => __('Error Page Link'),
+        #      editable      => 1,
+        #      #defalutValue => 'http://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html',
+        #      optional => 1,
+        #      help => __('HTML format. Example: ')
+        #        .'<a href="https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html" target="error_example">https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html</a>'
+        #        ,
+        #     ),
 
         # 20150517 Pulipuli Chen
         # 由於Restarter的設計不穩定，在此關閉她的功能
@@ -161,13 +164,14 @@ sub _table
       );
 
     my $pageTitle = __('Setting');
+    
     my $dataTable = {
-            'tableName' => 'RouterSettings',
+            'tableName' => $tableName,
             'pageTitle' => '',
             'printableTableName' => $pageTitle,
-            modelDomain     => 'dlllciasrouter',
-            defaultActions => [ 'editField' ],
-            tableDescription => \@tableDesc,
+            'modelDomain'     => 'dlllciasrouter',
+            'defaultActions' => [ 'editField' ],
+            'tableDescription' => \@tableDesc,
             'HTTPUrlView'=> 'dlllciasrouter/Composite/SettingComposite',
         };
 
