@@ -35,14 +35,6 @@ sub _create
     bless ($self, $class);
     $self->{inited} = 0;
     
-    my $poundInstalled = readpipe('dpkg --get-selections | grep -v deinstall | grep ' . 'pound');
-
-    #throw EBox::Exceptions::External('poundInstalled: ['.$poundInstalled . ']');
-    if (!defined($poundInstalled) || $poundInstalled eq '') {
-        system('sudo apt-get -y --force-yes  update');
-        system('sudo apt-get -y --force-yes install zentyal-network zentyal-objects zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp pound lighttpd');
-    }
-    
     return $self;
 }
 
