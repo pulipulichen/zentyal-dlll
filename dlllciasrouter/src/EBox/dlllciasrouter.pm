@@ -47,6 +47,13 @@ sub dlllciasrouter_init
     } 
 
     # 初始化安裝
+    $self->initInstall('zentyal-network');
+    $self->initInstall('zentyal-objects');
+    $self->initInstall('zentyal-dns');
+    $self->initInstall('zentyal-firewall');
+    $self->initInstall('zentyal-services');
+    $self->initInstall('zentyal-dhcp');
+
     $self->initInstall('pound');
     $self->initInstall('lighttpd');
     $self->setupLighttpd();
@@ -54,6 +61,7 @@ sub dlllciasrouter_init
     $self->model("LibraryMAC")->setupDHCPfixedIP();
     $self->model('LibraryMAC')->setupAdministorNetworkMember();
     $self->model("LibraryDomainName")->setupDefaultDomainName();
+    $self->model('LibraryRedirect')->setupZentyalRedirect();
 
     $self->{inited} = 1;
 }

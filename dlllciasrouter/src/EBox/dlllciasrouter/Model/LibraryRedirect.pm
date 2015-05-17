@@ -1045,4 +1045,59 @@ sub getServerRedirectParamZentyal
     return %param;
 }
 
+sub setupZentyalRedirect
+{
+    my ($self) = @_;
+
+    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $iface = $libNET->getExternalIface();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+
+    my %paramAdmin = (
+        interface => $iface,
+        origDest_selected => "origDest_ebox",
+        protocol => "tcp/udp",
+
+        external_port_range_type => 'single',
+        external_port_single_port => 64443,
+
+        source_selected => 'source_object',
+        source_object => $objectRowId,
+
+        destination => "10.0.0.254",
+        
+        destination_port_selected => "destination_port_other",
+        destination_port_other => 8443,
+
+        description => __("Zentyal Webadmin (64443->8443)"),
+        snat => 0,
+        log => 1,
+    );
+
+    $self->addRedirectRow(%paramAdmin);
+
+    my %paramSSH = (
+        interface => $iface,
+        origDest_selected => "origDest_ebox",
+        protocol => "tcp/udp",
+
+        external_port_range_type => 'single',
+        external_port_single_port => 64422,
+
+        source_selected => 'source_object',
+        source_object => $objectRowId,
+
+        destination => "10.0.0.254",
+        
+        destination_port_selected => "destination_port_other",
+        destination_port_other => 22,
+
+        description => __("Zentyal SSH (64422->22)"),
+        snat => 0,
+        log => 1,
+    );
+
+    $self->addRedirectRow(%paramSSH);
+}
+
 1;
