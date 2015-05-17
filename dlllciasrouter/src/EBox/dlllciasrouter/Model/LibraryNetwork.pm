@@ -15,6 +15,7 @@ use EBox::DNS::Model::DomainTable;
 use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 use EBox::Exceptions::DataExists;
+use EBox::NetWrappers qw(:all);
 
 use LWP::Simple;
 use POSIX qw(strftime);
@@ -100,6 +101,15 @@ sub getExternalMask
         }
     }
     return $sourceMask;
+}
+
+# 20150517 Pulipuli Chen
+sub getExternalMaskBit
+{
+    my ($self) = @_;
+    my $network = EBox::Global->modInstance('network');
+    my $sourceMask = $self->getExternalMask();
+    return EBox::NetWrappers::bits_from_mask($sourceMask);
 }
 
 # 20150517 Pulipuli Chen

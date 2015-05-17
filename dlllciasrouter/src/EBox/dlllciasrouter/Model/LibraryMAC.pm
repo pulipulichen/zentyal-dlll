@@ -12,6 +12,19 @@ use EBox::Global;
 use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 
+use EBox::NetWrappers qw(:all);
+
+##
+# 讀取指定的Model
+#
+# 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
+# @author 20140312 Pulipuli Chen
+sub loadLibrary
+{
+    my ($self, $library) = @_;
+    return $self->parentModule()->model($library);
+}
+
 ##
 # 更新NetworkDisplay欄位
 # 顯示IP跟MAC
@@ -40,24 +53,41 @@ sub getDHCPfixedIPMemberModel
 {
     my ($self) = @_;
 
+    my $name = 'DHCP-fixed-IP';
+    my $objectRow = $self->getObjectRow($name);
+    $self->setupDHCPfixedIP($objectRow->id());
+    my $memberModel = $objectRow->subModel('members');
+
+    return $memberModel;
+}
+
+# 20150517 Pulipuli Chen
+sub getObjectRow
+{
+    my ($self, $name) = @_;
+
     my $objectsModule = EBox::Global->modInstance('objects');
     my $objectTable = $objectsModule->model('ObjectTable');
 
-    my $name = 'DHCP-fixed-IP';
     my $id = $objectTable->findId('name' => $name);
 
     if (defined($id) == 0) {
         $id = $objectTable->addRow('name' => $name);
 
         unless (defined($id)) {
-            throw EBox::Exceptions::Internal("Couldn't add object's name: $name");
+            throw EBox::Exceptions::Internal("Couldn't add object's name: " . $name);
         }
     }
 
     my $objectRow = $objectTable->row($id);
     
-    # 設定DHCP FixedAddresses
-    $self->setupDHCPfixedIP($id);
+    return $objectRow;
+}
+
+# 20150517 Pulipuli Chen
+sub getMemberModel
+{
+    my ($self, $objectRow) = @_;
 
     my $memberModel = $objectRow->subModel('members');
 
@@ -99,6 +129,40 @@ sub addDHCPfixedIPMember
         ipaddr_ip => $ipaddr,
         ipaddr_mask => '32',
         macaddr => $macaddr
+    );
+}
+
+##
+# 20150517 Pulipuli Chen
+##
+sub setupAdministorNetworkMember
+{
+    my ($self) = @_;
+
+    my $libNET = $self->loadLibrary('LibraryNetwork');
+
+    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $sourceMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+
+    my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
+    my $ip_broadcast = EBox::NetWrappers::ip_broadcast($address, $sourceMask);
+
+    my $objectRow = $self->getObjectRow('Administrator-Network');
+    my $memberModel = $objectRow->subModel('members');
+    # 先移除既有的
+    my $id = $memberModel->findId('name' => 'default');
+    if (defined($id)) {
+        $memberModel->removeRow($id);
+    }
+    
+    #my $macaddr;
+    # 加入新的 
+    $memberModel->addRow(
+        name => 'default',
+        address_selected => 'iprange',
+        iprange_begin => $ip_network,
+        iprange_end => $ip_broadcast,
+        #macaddr => $macaddr,
     );
 }
 

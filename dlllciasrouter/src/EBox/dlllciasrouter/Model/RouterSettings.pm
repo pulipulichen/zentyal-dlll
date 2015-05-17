@@ -68,9 +68,8 @@ sub _table
 
     
 
-    my @tableDesc =
-    (
-        new EBox::Types::Union(
+    my @fields = ();
+    push(@fields, new EBox::Types::Union(
             'fieldName' => 'address',
             'printableName' => __('External IP Address'),
             'subtypes' =>
@@ -83,16 +82,16 @@ sub _table
                 'printableName' => __('Custom'),
                 'editable' => 1,),
             ]
-        ),
-        new EBox::Types::Port(
+        ));
+    push(@fields, new EBox::Types::Port(
               fieldName     => 'port',
               printableName => __('External Port'),
               editable      => 1,
               unique        => 1,
               defaultValue => 80,
               optional => 0,
-             ),
-        new EBox::Types::Text(
+             ));
+    push(@fields, new EBox::Types::Text(
               fieldName     => 'alive',
               printableName => __('Alive Time'),
               editable      => 1,
@@ -100,8 +99,8 @@ sub _table
               defaultValue => 30,
               optional => 0,
               help => __("Check backend every X secs. Default is 30 sec."),
-             ),
-        new EBox::Types::Text(
+             ));
+    push(@fields, new EBox::Types::Text(
               fieldName     => 'timeout',
               printableName => __('TimeOut'),
               editable      => 1,
@@ -109,20 +108,24 @@ sub _table
               defaultValue => 300,
               optional => 0,
               help => __("Wait for response X secs. Default is 30 sec."),
-        ),
+        ));
         
-        $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView),
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView));
 
-        #  Administrator Network
-        new EBox::Types::IPAddr(
-              fieldName     => 'adminNet',
-              printableName => __('Administrator Network'),
-              editable      => 1,
-              ip => $address,
-              mask => $submask,
-              optional => 0,
-              #help => __(""),
-        ),
+    
+    #  Administrator Network
+#    push(@fields, new EBox::Types::HTML(
+#              fieldName     => 'adminNet',
+#              printableName => __('Administrator Network'),
+#              #editable      => 1,
+#              ip => $address,
+#              mask => $submask,
+#              optional => 1,
+#              #help => __(""),
+#        );
+    my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR NETWORK'), $editAdminNet));
 
         #$fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
         #new EBox::Types::Boolean(
@@ -171,8 +174,7 @@ sub _table
         #    optional => 1,
         #),
         
-        $fieldsFactory->createFieldDescription(),
-      );
+    push(@fields, $fieldsFactory->createFieldDescription());
 
     my $pageTitle = __('Setting');
     
@@ -182,7 +184,7 @@ sub _table
             'printableTableName' => $pageTitle,
             'modelDomain'     => 'dlllciasrouter',
             'defaultActions' => [ 'editField' ],
-            'tableDescription' => \@tableDesc,
+            'tableDescription' => \@fields,
             'HTTPUrlView'=> 'dlllciasrouter/Composite/SettingComposite',
         };
 
@@ -213,11 +215,15 @@ sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
 
+    #my $msg = $self->loadLibrary('LibraryMAC')->getObjectRow('DHCP-fixed-IP')->id();
+    #$self->getLibrary()->show_exceptions("[" . $msg . ']'. ' ( RouterSettings->updatedRowNotify() )');
     #$self->getLibrary()->show_exceptions("[" . $row->elementByName('adminNet')->ip() . ']'. ref($row->valueByName('adminNet')).' ( RouterSettings->updatedRowNotify() )');
 
     try {
 
     my $poundService = $self->getServicePortModel();
+
+    $self->loadLibrary('LibraryMAC')->setupAdministorNetworkMember();
 
     if (defined($oldRow) && $self->checkServicePort($oldRow) == 1) {
         $self->deleteServicePort($oldRow);
@@ -236,8 +242,8 @@ sub updatedRowNotify
     #my $url  = $self->value('helpURL');
     #$url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
     #$self->setValue('helpLink', $url);
-    my $adminIp = $row->elementByName('adminNet')->ip();
-    my $adminNetmask = $row->elementByName('adminNet')->mask();
+    #my $adminIp = $row->elementByName('adminNet')->ip();
+    #my $adminNetmask = $row->elementByName('adminNet')->mask();
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
