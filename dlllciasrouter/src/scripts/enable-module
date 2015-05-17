@@ -4,5 +4,6 @@ set -e
 
 ### Actions to be executed when enabling the module ###
 /etc/init.d/pound start
+/etc/init.d/lighttpd start
 
 exit 0

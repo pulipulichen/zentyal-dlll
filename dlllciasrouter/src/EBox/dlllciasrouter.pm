@@ -8,9 +8,11 @@ use warnings;
 use EBox::Global;
 use EBox::Gettext;
 use EBox::Sudo;
+use EBox::CGI::SaveChanges;
 
 use EBox::Exceptions::Internal;
 
+use Try::Tiny;
 
 my $CONFFILE = '/etc/pound/pound.cfg';
 
@@ -31,8 +33,29 @@ sub _create
     );
 
     bless ($self, $class);
+    $self->{inited} = 0;
 
     return $self;
+}
+
+sub dlllciasrouter_init
+{
+    my ($self) = @_;
+
+    if ($self->{inited} == 1) {
+        return;
+    } 
+
+    # 初始化安裝
+    $self->initInstall('pound');
+    $self->initInstall('lighttpd');
+    $self->setupLighttpd();
+    $self->model("LibraryNetwork")->setupInternalIface();
+    $self->model("LibraryMAC")->setupDHCPfixedIP();
+    $self->model('LibraryMAC')->setupAdministorNetworkMember();
+    $self->model("LibraryDomainName")->setupDefaultDomainName();
+
+    $self->{inited} = 1;
 }
 
 sub menu
@@ -76,15 +99,6 @@ sub _daemons
     my ($self) = @_;
 
     my $daemons;
-
-    # 初始化安裝
-    $self->initInstall('pound');
-    $self->initInstall('lighttpd');
-    $self->setupLighttpd();
-    
-    #my $row = $self->model('RouterSettings')->row();
-    #my $oldRow;
-    #$self->model('RouterSettings')->updatedRowNotify($row, $oldRow);
 
     if (-e '/var/run/apache2.pid') {
         $daemons = [{
@@ -444,6 +458,8 @@ sub _setConf
         { uid => '0', gid => '0', mode => '740' }
     );
 
+    $self->dlllciasrouter_init();
+    #EBox::CGI::SaveChanges->saveAllModulesAction();
 }
 
 sub getLibrary

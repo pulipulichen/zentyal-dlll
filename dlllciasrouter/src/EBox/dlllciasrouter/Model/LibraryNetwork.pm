@@ -66,6 +66,55 @@ sub getExternalIpaddr
     return $address;
 }
 
+# 20150518 Pulipuli Chen
+sub getInternalIface
+{
+    my ($self) = @_;
+
+    my $network = EBox::Global->modInstance('network');
+    my $iface;
+    foreach my $if (@{$network->InternalIfaces()}) {
+        if (!$network->ifaceIsExternal($if)) {
+            $iface = $if;
+            last;
+        }
+    }
+
+    #if (!defined($iface)) {
+    #    $self->loadLibrary('PoundLibrary')->show_exceptions(__('You should set an Internal Interface.') 
+    #        . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
+    #}
+
+    return $iface;
+}
+
+# 20150518 Pulipuli Chen
+sub setupInternalIface
+{
+    my ($self) = @_;
+
+    my $network = EBox::Global->modInstance('network');
+    my $iface;
+    foreach my $if (@{$network->InternalIfaces()}) {
+        if (!$network->ifaceIsExternal($if)) {
+
+            my $name = $if;
+            my $address = "10.0.0.254";
+            my $netmask = "255.0.0.0";
+            my $ext = 0;
+            my $force = 1;
+            $network->setIfaceStatic($name, $address, $netmask, $ext, $force);
+            last;
+        }
+    }
+
+    #if (!defined($iface)) {
+    #     $self->loadLibrary('PoundLibrary')->show_exceptions(__('You should set an Internal Interface.') 
+    #        . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
+    #}
+
+    return $iface;
+}
 
 # 20150517 Pulipuli Chen
 sub getExternalIface

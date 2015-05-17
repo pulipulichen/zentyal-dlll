@@ -226,8 +226,6 @@ sub updatedRowNotify
 
     my $poundService = $self->getServicePortModel();
 
-    $self->loadLibrary('LibraryMAC')->setupAdministorNetworkMember();
-
     if (defined($oldRow) && $self->checkServicePort($oldRow) == 1) {
         $self->deleteServicePort($oldRow);
     }

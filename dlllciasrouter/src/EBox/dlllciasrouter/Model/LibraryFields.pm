@@ -1385,7 +1385,7 @@ sub createFieldAttachedFilesButton
             'size' => '1',
             'hiddenOnSetter' => $hiddenOnSetter,
             'hiddenOnViewer' => 0,
-            'parent' =>  $self->loadLibrary('RouterSettings'),
+            #'parent' =>  $self->loadLibrary('RouterSettings'),
        );
     return $field;
 }

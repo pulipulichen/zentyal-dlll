@@ -55,7 +55,7 @@ sub getDHCPfixedIPMemberModel
 
     my $name = 'DHCP-fixed-IP';
     my $objectRow = $self->getObjectRow($name);
-    $self->setupDHCPfixedIP($objectRow->id());
+    #$self->setupDHCPfixedIP($objectRow->id());
     my $memberModel = $objectRow->subModel('members');
 
     return $memberModel;
@@ -151,19 +151,17 @@ sub setupAdministorNetworkMember
     my $memberModel = $objectRow->subModel('members');
     # 先移除既有的
     my $id = $memberModel->findId('name' => 'default');
-    if (defined($id)) {
-        $memberModel->removeRow($id);
+    if (!defined($id)) {
+        #my $macaddr;
+        # 加入新的 
+        $memberModel->addRow(
+            name => 'default',
+            address_selected => 'iprange',
+            iprange_begin => $ip_network,
+            iprange_end => $ip_broadcast,
+            #macaddr => $macaddr,
+        );
     }
-    
-    #my $macaddr;
-    # 加入新的 
-    $memberModel->addRow(
-        name => 'default',
-        address_selected => 'iprange',
-        iprange_begin => $ip_network,
-        iprange_end => $ip_broadcast,
-        #macaddr => $macaddr,
-    );
 }
 
 ##
@@ -191,13 +189,20 @@ sub removeDHCPfixedIPMember
 ## 
 sub setupDHCPfixedIP
 {
-    my ($self, $objectRowID) = @_;
+    my ($self) = @_;
 
+    my $name = 'DHCP-fixed-IP';
+    my $objectRowID = $self->getObjectRow($name)->id();
+
+    my $iface = $self->loadLibrary('LibraryNetwork')->getInternalIface();
+    if (!defined($iface)) {
+        return;
+    }
     my $dhcpModule = EBox::Global->modInstance('dhcp');
     my $interfacesModel = $dhcpModule->model('Interfaces');
 
     # 先找尋有啟用的裝置，取得第一個
-    my $id = $interfacesModel->findId('enabled'=>1);
+    my $id = $interfacesModel->findId('iface'=>$iface);
     if (defined($id) == 0) {
         # 沒有裝置啟動，不使用
         return;
@@ -205,21 +210,29 @@ sub setupDHCPfixedIP
 
     my $enabledInterface = $interfacesModel->row($id);
     my $configuration = $enabledInterface->subModel('configuration');
+
+    my $RangeTable = $configuration->componentByName('RangeTable');
+    $name = 'Reverse Proxy Ranges (DHCP)';
+    $id = $RangeTable->findId('name' => $name);
+    if (!defined($id)) {
+        $RangeTable->addRow(
+            'name' => $name,
+            'from' => "10.6.2.1",
+            'to' => "10.6.2.254",
+        );
+    }
+
     my $fixedAddresses = $configuration->componentByName('FixedAddressTable');
-    
     # 先找找有沒有已經設定的群組
     my $desc = 'Reverse Proxy Fixed Address Object (DHCP-fixed-IP)';
     $id = $fixedAddresses->findId('description' => $desc);
 
-    if (defined($id)) {
-        # 已經設定
-        return;
+    if (!defined($id)) {
+        $fixedAddresses->addRow(
+            'object' => $objectRowID,
+            'description' => $desc,
+        );
     }
-
-    $fixedAddresses->addRow(
-        'object' => $objectRowID,
-        'description' => $desc,
-    );
 }
 
 ##

@@ -49,6 +49,3 @@ composites:
     VEServerComposite: [VEServerHeader, VEServer]
     VMServerComposite: [VEServerHeader, VMServer]
     OtherRoutingSettingComposite: [DNS, URLRedirect]
-
-foreign:
-    AttachedFiles: [RouterSettings, VEServer, StorageServer, VMServer]

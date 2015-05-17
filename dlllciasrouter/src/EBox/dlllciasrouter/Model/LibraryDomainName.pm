@@ -70,7 +70,7 @@ sub addDomainNameWithIP
     }
 
     # 建立預設的DomainName
-    my $defaultDomainName = $self->setupDefaultDomainName();
+    #my $defaultDomainName = $self->setupDefaultDomainName();
 
     my $gl = EBox::Global->getInstance();
     my $dns = $gl->modInstance('dns');
