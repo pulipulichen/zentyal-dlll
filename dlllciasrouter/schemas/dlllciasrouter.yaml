@@ -50,3 +50,5 @@ composites:
     VMServerComposite: [VEServerHeader, VMServer]
     OtherRoutingSettingComposite: [DNS, URLRedirect]
 
+foreign:
+    AttachedFiles: [RouterSettings, VEServer, StorageServer, VMServer]

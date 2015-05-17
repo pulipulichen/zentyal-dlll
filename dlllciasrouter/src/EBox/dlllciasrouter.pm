@@ -82,9 +82,9 @@ sub _daemons
     $self->initInstall('lighttpd');
     $self->setupLighttpd();
     
-    my $row = $self->model('RouterSettings')->row();
-    my $oldRow;
-    $self->model('RouterSettings')->updatedRowNotify($row, $oldRow);
+    #my $row = $self->model('RouterSettings')->row();
+    #my $oldRow;
+    #$self->model('RouterSettings')->updatedRowNotify($row, $oldRow);
 
     if (-e '/var/run/apache2.pid') {
         $daemons = [{

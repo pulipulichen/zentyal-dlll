@@ -80,7 +80,7 @@ sub _table
 
     my $dataTable =
     {
-        'tableName' => 'attachedFiles',
+        'tableName' => 'AttachedFiles',
         'printableTableName' => __('Attached File'),
         'printableRowName' => __('Attached File'),
         'pageTitle' => $self->pageTitle(),
