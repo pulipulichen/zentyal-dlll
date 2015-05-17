@@ -41,6 +41,7 @@ models:
     - LibrarySetting
     - LibraryHeader
     - ErrorMessage
+    - AttachedFiles
     
 composites:
     SettingComposite: [RouterLinks, RouterSettings]

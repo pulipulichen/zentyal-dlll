@@ -155,7 +155,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldCreateDateData());
     push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
     push(@fields, $fieldsFactory->createFieldDisplayContactLink());
-    #$fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'),
+    push(@fields, $fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'));
 
     # ----------------------------------
 

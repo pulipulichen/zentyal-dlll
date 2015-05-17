@@ -381,7 +381,8 @@ sub createFieldDescription
 sub createFieldDescriptionEditor
 {
     # https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js
-    my $script = "https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js";
+    #my $script = "https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js";
+    my $script = "/data/dlllciasrouter/js/zentyal-field-html-editor.js";
     #my $script = "http://pc-pudding.dlll.nccu.edu.tw/zentyal-dlll/dlllciasrouter/javascript/zentyal-field-html-editor.js";      # 不能用HTTP!!
     
     return '<div class="html-editor"></div>'
@@ -1390,18 +1391,35 @@ sub createFieldAttachedFilesButton
 ##
 sub createFieldFile
 {
-    my ($self, $help) = @_;
+    my ($self, $fieldName, $label) = @_;
     my $field = new EBox::Types::File(
-            'fieldName' => 'file',
-            'printableName' => __('File'),
+            'fieldName' => $fieldName,
+            'printableName' => $label,
             'editable' => 1,
-            'optional' => 0,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 0,
-            user => EBox::Config::user(),
-            group => EBox::Config::group(),
-            showFileWhenEditing => 1,
-            allowDownload  => 1,
+            'optional' => 1,
+            dynamicPath   => sub {
+                                my ($self) = @_;
+                                my $name = $self->row()->id();
+                                $name =~ s/\s/_/g;
+                                return '/usr/share/zentyal/www/dlllciasrouter/files' . '/' .$name;
+                              },
+            #'filePath' => '/usr/share/zentyal/www/dlllciasrouter/files/' . $fieldName,
+            #'filePath' => '/var/lib/zentyal/tmp/file',
+            #'tmpPath' => '/var/lib/zentyal/tmp/file',
+            #'dynamicPath' => '/data/dlllciasrouter/files/' . $fieldName ,
+            #'dynamicPath' => sub {
+            #                    my ($self) = @_;
+            #                    my $name = $self->row()->id();
+            #                    $name =~ s/\s/_/g;
+            #                    #return LIST_FILE_DIR . '/' .$name;
+            #                    return '/usr/share/zentyal/www/dlllciasrouter/files/' .$name;
+            #                  },
+            #'hiddenOnSetter' => 0,
+            #'hiddenOnViewer' => 0,
+            #user => EBox::Config::user(),
+            #group => EBox::Config::group(),
+            #showFileWhenEditing => 1,
+            "allowDownload"  => 1,
         );
     return $field;
 }
