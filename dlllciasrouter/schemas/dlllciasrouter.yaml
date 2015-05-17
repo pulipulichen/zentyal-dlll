@@ -10,10 +10,8 @@ depends:
 
 enabledepends:
     - network
-    - objects
     - dns
     - firewall
-    - services
     - dhcp
 
 models:
