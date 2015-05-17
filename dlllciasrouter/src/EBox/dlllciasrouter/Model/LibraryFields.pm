@@ -1371,15 +1371,15 @@ sub createFieldPortEnableLog
 # 開啟記錄按鈕
 sub createFieldAttachedFilesButton
 {
-    my ($self, $backView) = @_;
+    my ($self, $backView, $hiddenOnSetter) = @_;
     my $field = new EBox::Types::HasMany(
-            'fieldName' => 'OtherDomainNames2',
-            'printableName' => __('other domain Nmae '),
-            'foreignModel' => 'OtherDomainNames2',
-            'view' => '/dlllciasrouter/View/OtherDomainNames2',
+            'fieldName' => 'attachedFiles',
+            'printableName' => __('Files'),
+            'foreignModel' => 'AttachedFiles',
+            'view' => '/dlllciasrouter/View/AttachedFiles',
             'backView' => $backView,
             'size' => '1',
-            'hiddenOnSetter' => 1,
+            'hiddenOnSetter' => $hiddenOnSetter,
             'hiddenOnViewer' => 0,
        );
     return $field;
@@ -1461,14 +1461,19 @@ sub createFieldWebLinkButton
 # 建立網頁連線的工具
 sub createFieldConfigLinkButton
 {
-    my ($self, $fieldName, $text, $link) = @_;
+    my ($self, $fieldName, $text, $link, $isBlank) = @_;
+
+    my $target = "";
+    if ($isBlank == 1) {
+        $target = ' target="_blank"';
+    }
     my $field = new EBox::Types::HTML(
             "fieldName" => $fieldName . "_config_button",
             "printableName" => '',
             "editable" => 0,
             "optional"=> 0,
             "defaultValue" => "<span></span>",
-            "help" => '<a href="'.$link.'" class="btn btn-icon btn-config">'.$text.'</a>',
+            "help" => '<a href="'.$link.'" class="btn btn-icon btn-config" '.$target.'>'.$text.'</a>',
         );
 
     return $field;

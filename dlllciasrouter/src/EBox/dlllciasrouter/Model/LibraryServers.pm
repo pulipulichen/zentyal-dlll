@@ -157,7 +157,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldCreateDateData());
     push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
     push(@fields, $fieldsFactory->createFieldDisplayContactLink());
-    push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView));
+    push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView, 1));
 
     # ----------------------------------
 

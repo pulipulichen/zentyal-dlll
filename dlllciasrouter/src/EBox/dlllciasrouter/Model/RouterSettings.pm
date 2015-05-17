@@ -110,7 +110,7 @@ sub _table
               help => __("Wait for response X secs. Default is 30 sec."),
         ));
         
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView));
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
 
     
     #  Administrator Network
@@ -125,7 +125,7 @@ sub _table
 #        );
     my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
     my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR NETWORK'), $editAdminNet));
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR NETWORK'), $editAdminNet, 1));
 
         #$fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
         #new EBox::Types::Boolean(
@@ -175,6 +175,9 @@ sub _table
         #),
         
     push(@fields, $fieldsFactory->createFieldDescription());
+    #push(@fields, $fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/Composite/SettingComposite', 0));
+    my $filePath = "/dlllciasrouter/View/AttachedFiles?directory=RouterSettings/keys/rs1/attachedFiles&backview=/dlllciasrouter/Composite/SettingComposite";
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_attachedFiles", __('UPLOAD FILE'), $filePath, 1));
 
     my $pageTitle = __('Setting');
     

@@ -48,7 +48,7 @@ sub getDataTable
     my $configView = '/dlllciasrouter/View/'.$options->{moduleName}.'Setting';
 
     push(@fields, $fieldsFactory->createFieldWebLinkButton($tableName));
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('CONFIGURATION'), $configView));
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('CONFIGURATION'), $configView, 0));
 
     my $pageTitle = __('Main Server');
 
