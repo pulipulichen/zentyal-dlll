@@ -1,8 +1,8 @@
 DLLL-CIAS Router直接安裝方法
 ===============
 
-sudo dpkg -i https://raw.githubusercontent.com/pulipulichen/zentyal-dlll/master/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb
-sudo /etc/init.d/zentyal dlllciasrouter restart
+wget https://raw.githubusercontent.com/pulipulichen/zentyal-dlll/master/dlllciasrouter/dlllciasrouter_installer.sh
+bash dlllciasrouter_installer.sh
 
 Zentyal模組編譯的方法
 ===============
