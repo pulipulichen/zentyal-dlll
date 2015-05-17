@@ -14,7 +14,9 @@ sub getOptions
 {
     my $options = ();
     #$options->{pageTitle} = __('Virtual Machine Servers');
-    $options->{pageTitle} = __('Servers');
+    $options->{pageTitle} = __('Virtual Machine Servers');
+    $options->{printableTableName} = __('Servers');
+    $options->{printableRowName} = __('Server');
     $options->{tableName} = 'VMServer';
     $options->{IPHelp} = 'The 1st part should be 10, <br />'
                 . 'the 2nd part should be 1~5, <br />'

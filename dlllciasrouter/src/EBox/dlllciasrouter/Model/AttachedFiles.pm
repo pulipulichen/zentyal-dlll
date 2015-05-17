@@ -24,6 +24,8 @@ use EBox::Sudo;
 
 use Try::Tiny;
 
+#use CGI;
+
 
 sub new
 {
@@ -41,15 +43,16 @@ sub pageTitle
     my ($self) = @_;
     my $row = $self->parentRow();
     
-    if (defined($row))
-    {
-        my $domainName = $row->printableValueByName('domainName');
-        my $ip = $row->printableValueByName('ipaddr');
-        return $domainName . " (" . $ip . ")";
-    }
-    else {
+    #if (defined($row))
+    #{
+        #my $domainName = $row->printableValueByName('domainName');
+        #my $ip = $row->printableValueByName('ipaddr');
+        #return $domainName . " (" . $ip . ")";
+#        return $row->id() . __("Attached Files");
+#    }
+#    else {
         return __("Attached Files");
-    } 
+#    } 
 }
 
 sub _table
@@ -74,12 +77,12 @@ sub _table
 
         
     );
-
+    
     my $dataTable =
     {
-        'tableName' => 'AttachedFiles',
-        'printableTableName' => __('Attached File'),
-        'printableRowName' => __('Attached File'),
+        'tableName' => 'attachedFiles',
+        'printableTableName' => __('Attached File') .  '+' . $self->{parent}. '+' . $self->{backview}. '-'  . $self->{directory},
+        'printableRowName' => __('Attached File') . $self->{backView},
         'pageTitle' => $self->pageTitle(),
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,
@@ -88,7 +91,13 @@ sub _table
         'tableDescription' => \@fields,
         'sortedBy' => 'updateDate',
         'class' => 'dataTable',
+        #'confmodule' => $self->loadLibrary('RouterSettings'),
+        #'directory' => 'RouterSettings/keys/rs1/attachedFiles',
     };
+
+    #$self->{parent} = $self->loadLibrary('RouterSettings');
+    #$self->{confmodule} = $self->loadLibrary('RouterSettings');
+    #$self->{directory} = 'RouterSettings/keys/rs1/attachedFiles';
 
     # 變更權限...
     my $chmod = "chmod 777 /usr/share/zentyal/www/dlllciasrouter/files";

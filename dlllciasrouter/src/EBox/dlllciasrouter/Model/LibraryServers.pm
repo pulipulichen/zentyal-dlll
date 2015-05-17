@@ -173,13 +173,13 @@ sub getDataTable
 
     my $dataTable =
     {
-        tableName => $options->{tableName},
+        'tableName' => $options->{tableName},
         'pageTitle' => $options->{pageTitle},
-        'printableTableName' => $options->{pageTitle},
+        'printableTableName' => $options->{printableTableName},
         'defaultActions' => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
         'modelDomain' => 'dlllciasrouter',
         'tableDescription' => \@fields,
-        'printableRowName' => $options->{pageTitle},
+        'printableRowName' => $options->{printableRowName},
         'HTTPUrlView'=> 'dlllciasrouter/View/' . $options->{tableName},
         'order' => 1,
     };
