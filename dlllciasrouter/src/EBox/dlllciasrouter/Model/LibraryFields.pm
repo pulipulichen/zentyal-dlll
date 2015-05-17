@@ -216,7 +216,7 @@ sub createFieldExternalIPAddressWithSubmask
 {
     my ($self, $unique, $help) = @_;
 
-    my $field = new EBox::Types::IPNetwork(
+    my $field = new EBox::Types::IPAddr(
             'fieldName' => 'extIpaddr',
             'printableName' => __('External IP Address'),
             'editable' => 1,
@@ -565,8 +565,8 @@ sub createFieldProtocolOnlyForLAN
     my ($self, $protocol, $enable) = @_;
     my $field = new EBox::Types::Boolean(
             fieldName => 'redir'.$protocol.'_secure',
-            printableName => __('Only For LAN'),
-            help => __('Only for local LAN, like 140.119.61.0/24.'),
+            printableName => __('Only For Administrator Network'),
+            help => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator Network Setting') . '</a>',
             editable => 1,
             optional => 0,
             defaultValue => $enable,
@@ -1338,8 +1338,8 @@ sub createFieldPortOnlyForLan
     my ($self, $help) = @_;
     my $field = new EBox::Types::Boolean(
             'fieldName' => 'secure',
-            'printableName' => __('Only for LAN'),
-            help => __('Only for local lan, like 140.119.61.0/24.'),
+            'printableName' => __('Only For Administrator Network'),
+            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator Network Setting') . '</a>',
             'editable' => 1,
             optional=>0,
         );

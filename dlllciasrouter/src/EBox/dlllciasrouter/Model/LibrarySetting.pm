@@ -57,7 +57,7 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldDomainName());
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
-    push(@fields, $fieldsFactory->createFieldExternalIPAddressHideView(1, ""));
+    push(@fields, $fieldsFactory->createFieldExternalIPAddressWithSubmask(1, ""));
     push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('Main', $options->{externalPortDefaultValue}));
     push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
 
@@ -91,6 +91,9 @@ sub updatedRowNotify
 
     try {
 
+    my $extIp = $row->elementByName('extIpaddr')->ip();
+    my $extMask = $row->elementByName('extIpaddr')->mask();
+
     $self->loadLibrary($options->{moduleName})->checkInternalIP($row);
 
     #$self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
@@ -100,7 +103,7 @@ sub updatedRowNotify
     $libDN->deleteDomainName($oldRow->valueByName('domainName'), 'PoundServices');
 
     if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-        $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('extIpaddr'));
+        $libDN->addDomainNameWithIP($row->valueByName('domainName'), $extIp);
     }
 
     # 新增 Redirect
@@ -145,7 +148,7 @@ sub updatedRowNotify
 
     # 設定Virtual Interface
     $self->loadLibrary('LibraryNetwork')->setVirtualInterface(
-        $options->{moduleName}, $row->valueByName('extIpaddr'));
+        $options->{moduleName}, $extIp, $extMask);
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');

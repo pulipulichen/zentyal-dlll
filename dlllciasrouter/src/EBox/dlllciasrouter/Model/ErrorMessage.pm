@@ -9,6 +9,8 @@ use EBox::Global;
 use EBox::Gettext;
 
 use EBox::Types::Text;
+use EBox::Types::MailAddress;
+
 
 use Try::Tiny;
 
@@ -94,7 +96,7 @@ sub _table
             'optional'=>0,
             'defaultValue' => __('CONTACT US'),
         ));
-    push(@fields, new EBox::Types::Text(
+    push(@fields, new EBox::Types::MailAddress(
             'fieldName' => 'contactEMAIL',
             'printableName' => __('Contact Us Email'),
             'editable' => 1,

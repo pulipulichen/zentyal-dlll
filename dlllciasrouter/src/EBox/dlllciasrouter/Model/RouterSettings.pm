@@ -16,8 +16,11 @@ use EBox::Types::Union::Text;
 use EBox::Types::HTML;
 use EBox::Types::URI;
 use EBox::Types::Boolean;
+use EBox::Types::IPAddr;
 
 use EBox::Network;
+
+use Try::Tiny;
 
 # Group: Public methods
 
@@ -56,10 +59,14 @@ sub _table
     my $editErrorView = '/dlllciasrouter/View/ErrorMessage';
 
     my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    #my $submask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+    my $submask = 24;
     my $external_iface = $self->loadLibrary('LibraryNetwork')->getExternalIface();
 
     my $lib = $self->getLibrary();
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
+
+    
 
     my @tableDesc =
     (
@@ -105,6 +112,18 @@ sub _table
         ),
         
         $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView),
+
+        #  Administrator Network
+        new EBox::Types::IPAddr(
+              fieldName     => 'adminNet',
+              printableName => __('Administrator Network'),
+              editable      => 1,
+              ip => $address,
+              mask => $submask,
+              optional => 0,
+              #help => __(""),
+        ),
+
         #$fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
         #new EBox::Types::Boolean(
         #      fieldName     => 'enableError',
@@ -194,6 +213,10 @@ sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
 
+    #$self->getLibrary()->show_exceptions("[" . $row->elementByName('adminNet')->ip() . ']'. ref($row->valueByName('adminNet')).' ( RouterSettings->updatedRowNotify() )');
+
+    try {
+
     my $poundService = $self->getServicePortModel();
 
     if (defined($oldRow) && $self->checkServicePort($oldRow) == 1) {
@@ -213,6 +236,12 @@ sub updatedRowNotify
     #my $url  = $self->value('helpURL');
     #$url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
     #$self->setValue('helpLink', $url);
+    my $adminIp = $row->elementByName('adminNet')->ip();
+    my $adminNetmask = $row->elementByName('adminNet')->mask();
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
+    };
 }
 
 # --------------------------
