@@ -2,10 +2,8 @@ class: 'EBox::dlllciasrouter'
 
 depends:
     - network
-    - objects
     - dns
     - firewall
-    - services
     - dhcp
 
 enabledepends:
