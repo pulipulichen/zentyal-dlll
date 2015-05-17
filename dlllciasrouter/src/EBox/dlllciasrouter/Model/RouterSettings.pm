@@ -203,10 +203,11 @@ sub updatedRowNotify
     my ($self, $row, $oldRow) = @_;
 
     my $poundService = $self->getServicePortModel();
-    if ($self->checkServicePort($oldRow) == 1)
-    {
+
+    if (defined($oldRow) && $self->checkServicePort($oldRow) == 1) {
         $self->deleteServicePort($oldRow);
     }
+
     if ($self->checkServicePort($row) == 0)
     {
         $self->addServicePort($row);
@@ -378,6 +379,15 @@ sub addServicePort
     my %param = $self->getServicePortParam($port);
 
     my $id = $portMod->findId('destination'=>$port);
+    if (defined($id) == 0) {
+        $portMod->addRow(%param);
+    }
+
+    # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
+    $port = 88;
+    %param = $self->getServicePortParam($port);
+
+    $id = $portMod->findId('destination'=>$port);
     if (defined($id) == 0) {
         $portMod->addRow(%param);
     }

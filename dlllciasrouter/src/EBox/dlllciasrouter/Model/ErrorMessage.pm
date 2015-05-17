@@ -47,7 +47,7 @@ sub _table
     my $tableName = $options->{moduleName};
 
     push(@fields, new EBox::Types::Text(
-            'fieldName' => 'websiteTile',
+            'fieldName' => 'websiteTitle',
             'printableName' => __('Website Title'),
             'editable' => 1,
             'optional'=>0,
@@ -126,7 +126,7 @@ sub _table
     }
 
     push(@fields, new EBox::Types::Text(
-            'fieldName'  => 'description',
+            'fieldName'  => 'errorMessage',
             'printableName' => __('Right Column Error Message'),
             'editable' => 0,
             'optional' => 0,

@@ -77,11 +77,25 @@ sub _daemons
 
     my $daemons;
 
+    # 初始化安裝
+    $self->initInstall('pound');
+    $self->initInstall('lighttpd');
+    $self->setupLighttpd();
+    
+    my $row = $self->model('RouterSettings')->row();
+    my $oldRow;
+    $self->model('RouterSettings')->updatedRowNotify($row, $oldRow);
+
     if (-e '/var/run/apache2.pid') {
         $daemons = [{
                 name => 'pound',
                 type => 'init.d',
                 pidfiles => ['/var/run/pound.pid']
+            }, 
+            {
+                name => 'lighttpd',
+                type => 'init.d',
+                pidfiles => ['/var/run/lighttpd.pid']
             }, 
             {
                 name => 'apache2',
@@ -95,6 +109,11 @@ sub _daemons
                 name => 'pound',
                 type => 'init.d',
                 pidfiles => ['/var/run/pound.pid']
+            },
+            {
+                name => 'lighttpd',
+                type => 'init.d',
+                pidfiles => ['/var/run/lighttpd.pid']
             }];
     }
     
@@ -151,30 +170,9 @@ sub _setConf
     {
         $address = $settings->value("address");
     }
-#     if ( $enableError == 1) {
-#        unless (-e $fileTemp) {
-#            system('wget ' . $errorURL . ' -O ' . $fileTemp);
-#        }
 
-        # 讀取
-        #my $errorPage = system('cat '.$fileTemp);
-        #open FILE, "<".$fileTemp;
-        #my $errorPage = do { local $/; <FILE> };
-        
-        # 寫入
-        my @errorPageParams = ();
-        #my $errorPage = system('cat '.$errorURL);
-        #push(@errorPageParams, 'errorPage' => $errorPage);
-
-        $self->writeConfFile(
-            '/etc/pound/error.html',
-            "dlllciasrouter/error.html.mas",
-            \@errorPageParams,
-            { uid => '0', gid => '0', mode => '777' }
-        );
-
-         #unlink $fileTemp;
-#    }
+    #  更新錯誤訊息
+    $self->updateErrorMessage();
 
     my $restarterIP;
     if ($settings->row->elementExists('restarterIP')) {
@@ -475,6 +473,82 @@ sub ipaddrToVMID
      my $portHeader = $partC.$partD;
      
      return $portHeader;
+}
+
+sub updateErrorMessage
+{
+    my ($self) = @_;
+
+    my $mod = $self->model('ErrorMessage');
+
+    my @params = ();
+
+    my $network = EBox::Global->modInstance('network');
+    my $address = "127.0.0.1";
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $address = $network->ifaceAddress($if);
+            last;
+        }
+    }
+    push(@params, 'baseURL' => "http://" . $address . ":88/");
+
+    push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
+    push(@params, 'homeText' => $mod->value('homeText'));
+    push(@params, 'homeURL' => $mod->value('homeURL'));
+    push(@params, 'aboutText' => $mod->value('aboutText'));
+    push(@params, 'aboutURL' => $mod->value('aboutURL'));    
+    push(@params, 'contactText' => $mod->value('contactText'));
+    push(@params, 'contactEMAIL' => $mod->value('contactEMAIL'));
+
+    my $errorMessage = $mod->value('errorMessage');
+    my $libEnc = $self->model("LibraryEncoding");
+    $errorMessage = $libEnc->unescapeFromUtf16($errorMessage);
+    push(@params, 'errorMessage' => $errorMessage);
+
+    $self->writeConfFile(
+        '/etc/pound/error.html',
+        "dlllciasrouter/error.html.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '777' }
+    );
+
+    $self->writeConfFile(
+        '/usr/share/zentyal/www/dlllciasrouter/css/styles.css',
+        "dlllciasrouter/styles.css.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '777' }
+    );
+}
+
+# 20150517 Pulipuli Chen
+sub initInstall
+{
+    my ($self, $packageName) = @_;
+
+    my $poundInstalled = readpipe('dpkg --get-selections | grep -v deinstall | grep ' . $packageName);
+
+    #throw EBox::Exceptions::External('poundInstalled: ['.$poundInstalled . ']');
+    if (!defined($poundInstalled) || $poundInstalled eq '') {
+        system('sudo apt-get -y --force-yes install ' . $packageName);
+    }
+}
+
+sub setupLighttpd
+{
+    my ($self, $packageName) = @_;
+
+    my @params = ();
+    $self->writeConfFile(
+        '/etc/lighttpd/lighttpd.conf',
+        "dlllciasrouter/lighttped.conf.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '744' }
+    );
+
+    # 變更 /usr/share/zentyal/www/dlllciasrouter 權限 
+    system('chmod 744  /usr/share/zentyal/www/dlllciasrouter');
+
 }
 
 1;

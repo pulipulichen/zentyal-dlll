@@ -43,6 +43,22 @@ if (_ZENTYAL_UTIL === undefined) {
                 _container.addClass('zentyal-util-base-container');
                 //console.log(["_container.length", _container.length]);
                 
+                jQuery(".html-editor")
+                    .css("color", "black")
+                    .hide();
+                
+                // 移除文字節點
+                var _input = _.get_input();
+                _input.parent().contents().filter(function() {
+                    return (this.nodeType === 3);
+                }).remove();
+
+
+                // 把view放進去
+                var _view = jQuery('<div class="html-editor-view" style=""></div>');
+                _view.attr("style", "position: relative;background-color: #fff;box-shadow: 0 0 0 1px rgba(39,41,43,.15),0 1px 2px 0 rgba(0,0,0,.05);padding: 1em;border-radius: .2857rem;border: none;");
+                jQuery(".html-editor").prepend(_view);
+
                 _.load_tinymce(function() {
                     //console.log("tinymce 讀取完畢");
                     var _after_init = function () {
@@ -53,10 +69,9 @@ if (_ZENTYAL_UTIL === undefined) {
 
                         //var _edit_button = _.get_container().find("button.edit");
                         //console.log(['_edit_button.length', _edit_button.length]);
-                        
 
-                        jQuery(".init-button:visible").remove();
-                        jQuery(".init-span:visible").remove();
+                        jQuery(".init-button").remove();
+                        jQuery(".init-span").remove();
 
                         //_edit_button.click();
 
@@ -65,6 +80,8 @@ if (_ZENTYAL_UTIL === undefined) {
                             //_.resize_overlay();
                         //});
                         
+                        
+
                         //setTimeout(function () {
                         jQuery(".html-editor.inited").show();
                         //}, 500);
@@ -91,7 +108,7 @@ if (_ZENTYAL_UTIL === undefined) {
         },
         main: function(_callback) {
             var _ = this;
-            var _selector = '.html-editor:not(.inited):visible';
+            var _selector = '.html-editor:not(.inited)';
             
             //console.log(['selector legnth', jQuery(_selector).length]);
             
@@ -163,11 +180,6 @@ if (_ZENTYAL_UTIL === undefined) {
                     //        return (this.nodeType === 3);
                     //    })
                     //]);
-                    // 移除文字節點
-                    _input.parent().contents().filter(function() {
-                        return (this.nodeType === 3);
-                    }).remove();
-                    
                     
                     if (typeof(_callback) === 'function') {
                         _callback();
@@ -339,7 +351,7 @@ if (_ZENTYAL_UTIL === undefined) {
 //            return _ele;
 //        },
         create_toggle_button: function() {
-            var _ele = jQuery('<button type="button" class="toggle"></button>')
+            var _ele = jQuery('<button type="button" class="toggle" style="margin: 1em 0;"></button>')
                     .html('EDIT');
 
             var _ = this;

@@ -1,4 +1,13 @@
 <%args>
+    $baseURL
+    $websiteTitle
+    $homeText
+    $homeURL
+    $aboutText
+    $aboutURL
+    $contactText
+    $contactEMAIL
+    $errorMessage
 </%args>
 <!--
 /* =====================================================================
@@ -17,14 +26,9 @@
 <head>
     <title>Internal Server Error</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <!--
-    <link href="css/reset.css" rel="stylesheet" type="text/css">	
-    <link href="css/styles.css" rel="stylesheet" type="text/css">
-    -->
-    
-    <link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/reset.css" rel="stylesheet" type="text/css">	
-    <link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/styles.css" rel="stylesheet" type="text/css">
+   
+    <link href="<% $baseURL $>/css/reset.css" rel="stylesheet" type="text/css">	
+    <link href="<% $baseURL $>/css/styles.css" rel="stylesheet" type="text/css">
     
 </head>
 <body>
@@ -41,8 +45,8 @@
 <!-- YOUR LOGO GOES HERE -->
 <a href="http://dlll.nccu.edu.tw/" class="logo">
     <span>
-        <!-- %websiteTile -->
-        Website Title
+        <% $websiteTitle %>
+        <!-- Website Title -->
     </span>
 </a>
 
@@ -50,12 +54,17 @@
 <div id="nav">
     <span>menu</span>
     <ul>
-        <!-- %homeText %homeURL -->
-        <li class="home"><a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a></li>
-        <!-- %aboutText %aboutURL -->
-        <li class="about"><a href="http://dlll.nccu.edu.tw/?page_id=10">ABOUT</a></li>
-        <!-- %contactText %contactEmail -->
-        <li class="contact"><a href="mailto:pudding@nccu.edu.tw">CONTACT US</a></li>
+        <li class="home"><a href="<% $homeURL %>"><% $homeText %></a></li>
+        <!-- <li class="home"><a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a></li> -->
+        
+% if (defined($aboutURL) && defined($aboutText)) {
+        <li class="about"><a href="<% $aboutURL %>"><% $aboutText %></a></li>
+        <!-- <li class="about"><a href="http://dlll.nccu.edu.tw/?page_id=10">ABOUT</a></li> -->
+% }
+% if (defined($contactEMAIL) && defined($contactText)) {        
+        <li class="contact"><a href="mailto:<% $contactEMAIL %>"><% $contactText %></a></li>
+        <!-- <li class="contact"><a href="mailto:pudding@nccu.edu.tw">CONTACT US</a></li> -->
+% }
     </ul>
 </div><!-- end div #nav -->
 
@@ -69,7 +78,8 @@
 <div id="rightColumn">
 <!-- %errorMessage -->
 <!-- BEGIN RIGHT COLUMN -->
-    
+<% $errorMessage %>
+<!--    
 <h2>Oops! It looks something went completely wrong.</h2>
 
 <p>
@@ -84,6 +94,7 @@
     <li><span>Visiting the <a href="http://dlll.nccu.edu.tw/">HOMEPAGE</a> (link to the left).</span></li>
     <li><span><a href="javascript:window.history.back();">Go back</a>.</span></li>
 </ol>
+-->
 
 <!-- END RIGHT COLUMN -->
 </div><!-- end div #rightColumn -->
