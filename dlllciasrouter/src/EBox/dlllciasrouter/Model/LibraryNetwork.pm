@@ -43,32 +43,52 @@ sub loadLibrary
 
 # ------------------------------
 
+# 20150517 Pulipuli Chen
 sub getExternalIpaddr
 {
+    my ($self) = @_;
+
     my $network = EBox::Global->modInstance('network');
-    my $address = "127.0.0.1";
+    my $address;
     foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
             $address = $network->ifaceAddress($if);
             last;
         }
     }
+    
+    if (!defined($address)) {
+        $self->loadLibrary('PoundLibrary')->show_exceptions(__('External Interface should be static.') 
+            . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
+    }
+
     return $address;
 }
 
+
+# 20150517 Pulipuli Chen
 sub getExternalIface
 {
+    my ($self) = @_;
+
     my $network = EBox::Global->modInstance('network');
-    my $iface = "eth0";
+    my $iface;
     foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
             $iface = $if;
             last;
         }
     }
+
+    if (!defined($iface)) {
+        $self->loadLibrary('PoundLibrary')->show_exceptions(__('You should set an External Interface.') 
+            . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
+    }
+
     return $iface;
 }
 
+# 20150517 Pulipuli Chen
 sub getExternalMask
 {
     my $network = EBox::Global->modInstance('network');
