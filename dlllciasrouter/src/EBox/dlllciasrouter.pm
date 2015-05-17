@@ -491,7 +491,7 @@ sub updateErrorMessage
             last;
         }
     }
-    push(@params, 'baseURL' => "http://" . $address . ":88/");
+    push(@params, 'baseURL' => "http://" . $address . ":88");
 
     push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
     push(@params, 'homeText' => $mod->value('homeText'));

@@ -102,6 +102,13 @@ h1 {
 	position: absolute;
 	top: 265px;
 	opacity: .04;
+	cursor: default;
+	-webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 }
 h1:hover { opacity: .1; }
 h1 span {
@@ -138,7 +145,7 @@ strong      { font-weight: bold; }
 em		    { font-style: italic; }
 
 /* === Lists === */
-ul, ol      { margin: 0 0px 20px 40px; font-weight: bold; color: #a62e2e; line-height: 20px; }
+ul, ol      { margin: 0 0px 20px 40px; /*font-weight: bold; color: #a62e2e;*/ line-height: 20px; }
 ol span		{ font-weight: normal; color: #646464; }
 
 ul          { list-style-type: disc; }

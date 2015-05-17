@@ -82,7 +82,8 @@ sub _table
             'fieldName' => 'aboutURL',
             'printableName' => __('About URL'),
             'editable' => 1,
-            'optional'=>1,
+            'optional'=>0,
+            'defaultValue' => "https://github.com/pulipulichen/zentyal-dlll",
         ));
     
     # menu contact
@@ -97,7 +98,8 @@ sub _table
             'fieldName' => 'contactEMAIL',
             'printableName' => __('Contact Us Email'),
             'editable' => 1,
-            'optional' => 1,
+            'optional' => 0,
+            'defaultValue' => 'pulipuli.chen@gmail.com',
         ));
 
     #  error message

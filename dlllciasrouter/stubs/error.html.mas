@@ -27,8 +27,8 @@
     <title>Internal Server Error</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    
-    <link href="<% $baseURL $>/css/reset.css" rel="stylesheet" type="text/css">	
-    <link href="<% $baseURL $>/css/styles.css" rel="stylesheet" type="text/css">
+    <link href="<% $baseURL %>/css/reset.css" rel="stylesheet" type="text/css">	
+    <link href="<% $baseURL %>/css/styles.css" rel="stylesheet" type="text/css">
     
 </head>
 <body>
@@ -43,7 +43,7 @@
 <div id="leftColumn">
 
 <!-- YOUR LOGO GOES HERE -->
-<a href="http://dlll.nccu.edu.tw/" class="logo">
+<a href="<% $homeURL %>" class="logo">
     <span>
         <% $websiteTitle %>
         <!-- Website Title -->
