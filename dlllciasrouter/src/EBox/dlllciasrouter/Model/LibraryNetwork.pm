@@ -102,4 +102,21 @@ sub getExternalMask
     return $sourceMask;
 }
 
+# 20150517 Pulipuli Chen
+sub setVirtualInterface
+{
+    my ($self, $name, $ipaddr) = @_;
+
+    $name = substr(lc($name), 0, 4);
+
+    my $network = EBox::Global->modInstance('network');
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            my $mask = $network->ifaceNetmask($if);
+            $network->setViface($if, $name, $ipaddr, $mask);
+            last;
+        }
+    }
+}
+
 1;

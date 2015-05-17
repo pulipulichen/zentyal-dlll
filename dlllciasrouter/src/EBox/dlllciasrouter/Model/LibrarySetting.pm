@@ -143,6 +143,10 @@ sub updatedRowNotify
     my $header = $self->parentModule->model($headerModule);
     $header->setValue($headerFieldName, $button);
 
+    # 設定Virtual Interface
+    $self->loadLibrary('LibraryNetwork')->setVirtualInterface(
+        $options->{moduleName}, $row->valueByName('extIpaddr'));
+
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');
     };

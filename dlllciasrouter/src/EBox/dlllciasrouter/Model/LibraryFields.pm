@@ -19,6 +19,8 @@ use EBox::Types::Union::Text;
 use EBox::Types::Select;
 use EBox::Types::HasMany;
 use EBox::Types::File;
+use EBox::Types::IPAddr;
+use EBox::Types::IPNetwork;
 
 use EBox::Global;
 use EBox::DNS;
@@ -196,6 +198,25 @@ sub createFieldExternalIPAddressHideView
     my ($self, $unique, $help) = @_;
 
     my $field = new EBox::Types::HostIP(
+            'fieldName' => 'extIpaddr',
+            'printableName' => __('External IP Address'),
+            'editable' => 1,
+            'unique' => $unique,
+            'help' => __($help),
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+
+    return $field;
+}
+
+# 20150517 Pulipuli Chen
+# 外部的IP，包含submask
+sub createFieldExternalIPAddressWithSubmask
+{
+    my ($self, $unique, $help) = @_;
+
+    my $field = new EBox::Types::IPNetwork(
             'fieldName' => 'extIpaddr',
             'printableName' => __('External IP Address'),
             'editable' => 1,
