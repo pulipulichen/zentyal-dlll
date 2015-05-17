@@ -34,7 +34,15 @@ sub _create
 
     bless ($self, $class);
     $self->{inited} = 0;
+    
+    my $poundInstalled = readpipe('dpkg --get-selections | grep -v deinstall | grep ' . 'pound');
 
+    #throw EBox::Exceptions::External('poundInstalled: ['.$poundInstalled . ']');
+    if (!defined($poundInstalled) || $poundInstalled eq '') {
+        system('sudo apt-get -y --force-yes  update');
+        system('sudo apt-get -y --force-yes install zentyal-network zentyal-objects zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp pound lighttpd');
+    }
+    
     return $self;
 }
 
@@ -47,15 +55,6 @@ sub dlllciasrouter_init
     } 
 
     # 初始化安裝
-    $self->initInstall('zentyal-network');
-    $self->initInstall('zentyal-objects');
-    $self->initInstall('zentyal-dns');
-    $self->initInstall('zentyal-firewall');
-    $self->initInstall('zentyal-services');
-    $self->initInstall('zentyal-dhcp');
-
-    $self->initInstall('pound');
-    $self->initInstall('lighttpd');
     $self->setupLighttpd();
     $self->model("LibraryNetwork")->setupInternalIface();
     $self->model("LibraryMAC")->setupDHCPfixedIP();

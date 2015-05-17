@@ -1,6 +1,11 @@
 DLLL-CIAS Router直接安裝方法
 ===============
 
+要先設定好對外網路
+設定gateway
+設定DNS
+確定可ping到www.google.com
+
 wget http://j.mp/dlllciasrouter -O dlllciasrouter_installer.sh
 bash dlllciasrouter_installer.sh
 
