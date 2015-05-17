@@ -127,7 +127,7 @@ if (_ZENTYAL_UTIL === undefined) {
             });
             //console.log("ready init");
             tinymce.init({
-                selector: 'textarea.html-editor',
+                selector: 'textarea.html-editor-textarea',
                 //width : "80%",
                 theme: "modern",
                 plugins: [
@@ -146,7 +146,9 @@ if (_ZENTYAL_UTIL === undefined) {
                     var _content = _input.val();
                     
                     if (_content !== undefined && _content !== "") {
-                        _content = _.decode(_content);
+                        if (_content.substr(0,1) === "+") {
+                            _content = _.decode(_content);
+                        }
                         //console.log(["content", _content]);
                         _ed.setContent(_content);
                         _.set_view(_content);
@@ -282,7 +284,7 @@ if (_ZENTYAL_UTIL === undefined) {
 //                    .addClass('inner')
 //                    .appendTo(_ele);
 
-            var _editor = '<div class="html-editor-container" style="display:none;"><textarea class="html-editor"></textarea></div>';
+            var _editor = '<div class="html-editor-container" style="display:none;"><textarea class="html-editor-textarea"></textarea></div>';
             return _editor;
 //            
 //            _inner.append(_editor);
