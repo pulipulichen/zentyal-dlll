@@ -20,7 +20,7 @@ use EBox::Types::Select;
 use EBox::Types::HasMany;
 use EBox::Types::File;
 use EBox::Types::IPAddr;
-use EBox::Types::IPNetwork;
+use EBox::Types::MailAddress;
 
 use EBox::Global;
 use EBox::DNS;
@@ -330,7 +330,7 @@ sub createFieldContactNameDisplayOnViewer
 
 sub createFieldContactEmail
 {
-    my $field = new EBox::Types::Text(
+    my $field = new EBox::Types::MailAddress(
             fieldName => 'contactEmail',
             printableName => __('Contact Email'),
             editable => 1,
@@ -1392,33 +1392,30 @@ sub createFieldAttachedFilesButton
 sub createFieldFile
 {
     my ($self, $fieldName, $label) = @_;
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
     my $field = new EBox::Types::File(
             'fieldName' => $fieldName,
             'printableName' => $label,
             'editable' => 1,
             'optional' => 1,
-            dynamicPath   => sub {
-                                my ($self) = @_;
-                                my $name = $self->row()->id();
-                                $name =~ s/\s/_/g;
-                                return '/usr/share/zentyal/www/dlllciasrouter/files' . '/' .$name;
-                              },
-            #'filePath' => '/usr/share/zentyal/www/dlllciasrouter/files/' . $fieldName,
-            #'filePath' => '/var/lib/zentyal/tmp/file',
-            #'tmpPath' => '/var/lib/zentyal/tmp/file',
-            #'dynamicPath' => '/data/dlllciasrouter/files/' . $fieldName ,
-            #'dynamicPath' => sub {
-            #                    my ($self) = @_;
-            #                    my $name = $self->row()->id();
-            #                    $name =~ s/\s/_/g;
-            #                    #return LIST_FILE_DIR . '/' .$name;
-            #                    return '/usr/share/zentyal/www/dlllciasrouter/files/' .$name;
-            #                  },
-            #'hiddenOnSetter' => 0,
-            #'hiddenOnViewer' => 0,
-            #user => EBox::Config::user(),
-            #group => EBox::Config::group(),
-            #showFileWhenEditing => 1,
+            'dynamicPath'   => sub {
+                my ($self) = @_;
+                my $name = $self->row()->elementByName($fieldName)->userPath();
+                if (!defined($name) || $name eq '') {
+                    return $self->row()->elementByName($fieldName)->{filePath};
+                }
+                my $id = $self->row()->id();
+                
+                my $dir = "/usr/share/zentyal/www/dlllciasrouter/files/" . $id;
+                mkdir($dir);
+
+                my $path = $dir. "/" . $name;
+                $self->row()->elementByName($fieldName)->{filePath} = $path;
+                
+                return $path;
+            },
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
             "allowDownload"  => 1,
         );
     return $field;
@@ -1436,8 +1433,8 @@ sub createFieldFileDescriptionDisplay
             printableName => __('Fille Description '),
             editable => 0,
             optional=>1,
-            #hiddenOnSetter => 1,
-            #hiddenOnViewer => 0,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
         );
     return $field;
 }

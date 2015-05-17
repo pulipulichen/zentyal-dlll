@@ -160,10 +160,10 @@ if (_ZENTYAL_UTIL === undefined) {
                     
                     // 開啟時要載入參數
                     var _input = _.get_input();
-                    var _content = _input.val();
-                    
+                    var _content = jQuery.trim(_input.val());
+                    console.log(['content', _content]);
                     if (_content !== undefined && _content !== "") {
-                        if (_content.substr(0,1) === "+") {
+                        if (_content.length > 1 && _content.substr(0,1) === "+") {
                             _content = _.decode(_content);
                         }
                         //console.log(["content", _content]);

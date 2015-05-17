@@ -60,7 +60,7 @@ sub _table
     my $libFactory = $self->parentModule()->model('LibraryFields');
 
     my @fields = (
-        $libFactory->createFieldAddBtn('add'),
+        #$libFactory->createFieldAddBtn('add'),
         
         # Description
         $libFactory->createFieldContactNameDisplayOnViewer(),
@@ -125,7 +125,7 @@ sub addedRowNotify
 
     $ROW_NEED_UPDATE = 1;
 
-    #my $msg = $subRow->elementByName('file')->linkToDownload();
+    #my $msg = $subRow->elementByName('file')->userPath();
     #$self->getLibrary()->show_exceptions( '[' . $msg . ']; Please add domain name again. (AttachedFiles->addedRowNotify)');
 
     try {
@@ -170,9 +170,14 @@ sub deletedRowNotify
 {
     my ($self, $subRow) = @_;
 
-    my $path = $subRow->elementByName('file')->path();
-    if (unlink($path) == 0) {
-        system('echo "" > ' . $path);
+    my $file = $subRow->elementByName('file');
+    if ($file->toRemove() == 0) {
+        my $path = $file->path();
+        unlink($path);
+
+        my $pos = rindex($path, "/");
+        my $dir = substr($path, 0, $pos);
+        rmdir($dir);
     }
     #$self->getLibrary()->show_exceptions(system('rm -f ' . $path) . 'rm -f ' . $path . '; Please add domain name again. (AttachedFiles->updatedRowNotify)');
 }
@@ -187,10 +192,18 @@ sub setFileDescription
 
     my $desc = $subRow->valueByName('descriptionHTML');
     #my $file = $subRow->valueByName('file')->linkToDownload();
-    my $file = $subRow->elementByName('file')->linkToDownload();
+    $subRow->store();
+    my $file = $subRow->elementByName('file');
+    #my $chmod = "chmod 777 /usr/share/zentyal/www/dlllciasrouter/files";
+    #EBox::Sudo::root($chmod);
 
-    if (defined($file) && $file ne '') {
-        $file = '<a href="'.$file.'">' . $file . "</a>";
+    if (defined($file->exist())) {
+        my $link = $file->linkToDownload();
+        #my $filename = "DOWNLOAD";
+        my $path = $file->path();
+        my $pos = rindex($path, "/") + 1;
+        my $filename = substr($path, $pos);
+        $file = '<a href="'.$link.'" class="btn btn-icon btn-download" style="text-transform: none;">'.$filename.'</a>';
         $fileDesc = $file . "<br />";
     }
     $fileDesc = $fileDesc . $desc;

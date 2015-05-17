@@ -39,6 +39,8 @@ sub getDataTable
     my ($self, $options) = @_;
 
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $backView = '/dlllciasrouter/Composite/' . $options->{tableName} . "Composite";
+
     my @fields = ();
     #push(@fields, $fieldsFactory->createFieldAddBtn('add'));
     #push(@fields, $fieldsFactory->createFieldDescription());
@@ -49,7 +51,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
 
     push(@fields, $fieldsFactory->createFieldMACAddr());
-    push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton('/dlllciasrouter/View/' . $options->{tableName}));
+    push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView));
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());
 
     # ----------------------------
@@ -144,7 +146,7 @@ sub getDataTable
     # --------------------------------
     # Other Redirect Ports
 
-    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton('/dlllciasrouter/View/' . $options->{tableName}));
+    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
     push(@fields, $fieldsFactory->createFieldOtherRedirectPortsHint());
     push(@fields, $fieldsFactory->createFieldOtherRedirectPortsSubModel());
 
@@ -155,7 +157,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldCreateDateData());
     push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
     push(@fields, $fieldsFactory->createFieldDisplayContactLink());
-    push(@fields, $fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/View/PoundServices'));
+    push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView));
 
     # ----------------------------------
 
