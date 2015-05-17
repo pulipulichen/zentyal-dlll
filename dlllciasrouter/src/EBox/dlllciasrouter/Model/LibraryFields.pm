@@ -1060,14 +1060,18 @@ sub createFieldCreateDateData
 
 sub createFieldDisplayLastUpdateDate
 {
-    my ($self) = @_;
+    my ($self, $hiddenOnViewer) = @_;
+    if (!defined($hiddenOnViewer)) {
+        $hiddenOnViewer = 1;
+    }
+
     my $field = new EBox::Types::HTML(
             fieldName => 'updateDate',
             printableName => __('Last Update Date'),
             editable => 0,
             optional=>1,
             hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
+            hiddenOnViewer => $hiddenOnViewer,
         );
     return $field;
 }

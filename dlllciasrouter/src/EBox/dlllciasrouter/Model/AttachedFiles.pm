@@ -63,15 +63,16 @@ sub _table
         #$libFactory->createFieldAddBtn('add'),
         
         # Description
-        $libFactory->createFieldContactNameDisplayOnViewer(),
+        $libFactory->createFieldFileDescriptionDisplay(),
 
+        $libFactory->createFieldFile('file', __('File')),
         $libFactory->createFieldDescription(),
         $libFactory->createFieldDescriptionHTML(),
 
-        $libFactory->createFieldFile('file', __('File')),
-        $libFactory->createFieldDisplayLastUpdateDate(),
+        $libFactory->createFieldContactNameDisplayOnViewer(),
+        $libFactory->createFieldDisplayLastUpdateDate(0),
 
-        $libFactory->createFieldFileDescriptionDisplay(),
+        
     );
 
     my $dataTable =
