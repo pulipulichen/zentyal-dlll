@@ -41,7 +41,7 @@ models:
     - LibrarySetting
     - LibraryHeader
     - ErrorMessage
-    - AttachedFiles
+    - OtherDomainNames2
     
 composites:
     SettingComposite: [RouterLinks, RouterSettings]

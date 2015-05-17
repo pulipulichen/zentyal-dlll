@@ -1373,10 +1373,10 @@ sub createFieldAttachedFilesButton
 {
     my ($self, $backView) = @_;
     my $field = new EBox::Types::HasMany(
-            'fieldName' => 'attachedFiles',
-            'printableName' => __('Files'),
-            'foreignModel' => 'AttachedFiles',
-            'view' => '/dlllciasrouter/View/AttachedFiles',
+            'fieldName' => 'OtherDomainNames2',
+            'printableName' => __('other domain Nmae '),
+            'foreignModel' => 'OtherDomainNames2',
+            'view' => '/dlllciasrouter/View/OtherDomainNames2',
             'backView' => $backView,
             'size' => '1',
             'hiddenOnSetter' => 1,
