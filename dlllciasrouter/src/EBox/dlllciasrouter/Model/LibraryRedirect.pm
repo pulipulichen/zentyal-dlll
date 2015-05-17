@@ -542,7 +542,8 @@ sub getRedirectParameterSecure
     my $iface = $libNET->getExternalIface();
     my $localIpaddr = $row->valueByName('ipaddr');
 
-    my $source = $self->getSecureIpSource();
+    #my $source = $self->getSecureIpSource();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
 
     return (
         interface => $iface,
@@ -550,9 +551,10 @@ sub getRedirectParameterSecure
         protocol => "tcp/udp",
         external_port_range_type => 'single',
         external_port_single_port => $extPort,
-        source_selected => 'source_ipaddr',
-        source_ipaddr_ip => $source->{sourceIp},
-        source_ipaddr_mask => $source->{sourceMask},
+        source_selected => 'source_object',
+        source_object => $objectRowId,
+        #source_ipaddr_ip => $source->{sourceIp},
+        #source_ipaddr_mask => $source->{sourceMask},
         destination => $localIpaddr,
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
@@ -930,6 +932,7 @@ sub getServerRedirectParamDMZ
     my $source = $self->getSecureIpSource();
 
     my $intPort = $row->valueByName("port");
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
 
     my %param = (
         interface => $iface,
@@ -939,9 +942,11 @@ sub getServerRedirectParamDMZ
         protocol => "tcp/udp",
         external_port_range_type => 'any',
 
-        source_selected => 'source_ipaddr',
-        source_ipaddr_ip => $source->{sourceIp},
-        source_ipaddr_mask => $source->{sourceMask},
+        #source_selected => 'source_ipaddr',
+        #source_ipaddr_ip => $source->{sourceIp},
+        #source_ipaddr_mask => $source->{sourceMask},
+        source_selected => 'source_object',
+        source_object => $objectRowId,
 
         destination => $row->valueByName("ipaddr"),
         destination_port_selected => "destination_port_same",
@@ -967,6 +972,7 @@ sub getServerRedirectParamOrigin
     my $source = $self->getSecureIpSource();
 
     my $intPort = $row->valueByName("port");
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
 
     my %param = (
         interface => $iface,
@@ -978,9 +984,11 @@ sub getServerRedirectParamOrigin
         external_port_range_type => 'single',
         external_port_single_port => $extPort,
 
-        source_selected => 'source_ipaddr',
-        source_ipaddr_ip => $source->{sourceIp},
-        source_ipaddr_mask => $source->{sourceMask},
+        source_selected => 'source_object',
+        source_object => $objectRowId,
+        #source_selected => 'source_ipaddr',
+        #source_ipaddr_ip => $source->{sourceIp},
+        #source_ipaddr_mask => $source->{sourceMask},
 
         destination => $row->valueByName("ipaddr"),
         
@@ -1005,7 +1013,8 @@ sub getServerRedirectParamZentyal
 
     my $libNET = $self->loadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
-    my $source = $self->getSecureIpSource();
+    #my $source = $self->getSecureIpSource();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
 
     my $intPort = $row->valueByName("port");
 
@@ -1017,9 +1026,11 @@ sub getServerRedirectParamZentyal
         external_port_range_type => 'single',
         external_port_single_port => $extPort,
 
-        source_selected => 'source_ipaddr',
-        source_ipaddr_ip => $source->{sourceIp},
-        source_ipaddr_mask => $source->{sourceMask},
+        source_selected => 'source_object',
+        source_object => $objectRowId,
+        #source_selected => 'source_ipaddr',
+        #source_ipaddr_ip => $source->{sourceIp},
+        #source_ipaddr_mask => $source->{sourceMask},
 
         destination => $row->valueByName("ipaddr"),
         
