@@ -40,14 +40,7 @@ sub getDataTable
 {
     my ($self, $options) = @_;
 
-    my $network = EBox::Global->modInstance('network');
-    my $external_iface = "eth0";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $external_iface = $if;
-            last;
-        }
-    }
+    my $external_iface = $self->loadLibrary('LibraryNetwork')->getExternalIface();
 
     my $lib = $self->getLibrary();
     my $fieldsFactory = $self->loadLibrary('LibraryFields');

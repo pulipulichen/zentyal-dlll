@@ -69,4 +69,17 @@ sub getExternalIface
     return $iface;
 }
 
+sub getExternalMask
+{
+    my $network = EBox::Global->modInstance('network');
+    my $sourceMask = '24';
+    foreach my $if (@{$network->ExternalIfaces()}) {
+        if ($network->ifaceIsExternal($if)) {
+            $sourceMask = $network->ifaceNetmask($if);
+            last;
+        }
+    }
+    return $sourceMask;
+}
+
 1;

@@ -564,18 +564,12 @@ sub getRedirectParameterSecure
 
 sub getSecureIpSource
 {
-    my $sourceIp = '192.168.11.0';
-    my $sourceMask = '24';
+    my ($self) = @_;
 
-    my $network = EBox::Global->modInstance('network');
-    my $address = "127.0.0.1";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $address = $network->ifaceAddress($if);
-            $sourceMask = $network->ifaceNetmask($if);
-            last;
-        }
-    }
+    my $sourceIp = '192.168.11.0';
+
+    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $sourceMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
     
     #把address轉換成source
     

@@ -55,16 +55,8 @@ sub _table
     my $tableName = 'RouterSettings';
     my $editErrorView = '/dlllciasrouter/View/ErrorMessage';
 
-    my $network = EBox::Global->modInstance('network');
-    my $address = "127.0.0.1";
-    my $external_iface = "eth0";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $external_iface = $if;
-            $address = $network->ifaceAddress($if);
-            last;
-        }
-    }
+    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $external_iface = $self->loadLibrary('LibraryNetwork')->getExternalIface();
 
     my $lib = $self->getLibrary();
     my $fieldsFactory = $self->loadLibrary('LibraryFields');

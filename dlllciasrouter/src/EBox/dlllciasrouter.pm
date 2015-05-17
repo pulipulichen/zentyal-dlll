@@ -483,14 +483,7 @@ sub updateErrorMessage
 
     my @params = ();
 
-    my $network = EBox::Global->modInstance('network');
-    my $address = "127.0.0.1";
-    foreach my $if (@{$network->ExternalIfaces()}) {
-        if ($network->ifaceIsExternal($if)) {
-            $address = $network->ifaceAddress($if);
-            last;
-        }
-    }
+    my $address = $self->model('LibraryNetwork')->getExternalIpaddr();
     push(@params, 'baseURL' => "http://" . $address . ":88");
 
     push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
