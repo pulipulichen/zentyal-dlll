@@ -403,7 +403,10 @@ sub addServicePort
     my ($self, $row) = @_;
 
     my $portMod = $self->getServicePortModel();
-    my $port = $row->valueByName("port");
+    my $port = 80;
+    if (defined($row)) {
+        $port = $row->valueByName("port");
+    }
     my %param = $self->getServicePortParam($port);
 
     my $id = $portMod->findId('destination'=>$port);
@@ -413,6 +416,23 @@ sub addServicePort
 
     # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
     $port = 88;
+    %param = $self->getServicePortParam($port);
+
+    $id = $portMod->findId('destination'=>$port);
+    if (defined($id) == 0) {
+        $portMod->addRow(%param);
+    }
+
+    # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
+    $port = 64443;
+    %param = $self->getServicePortParam($port);
+
+    $id = $portMod->findId('destination'=>$port);
+    if (defined($id) == 0) {
+        $portMod->addRow(%param);
+    }
+
+    $port = 64422;
     %param = $self->getServicePortParam($port);
 
     $id = $portMod->findId('destination'=>$port);

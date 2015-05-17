@@ -35,6 +35,8 @@ sub _create
     bless ($self, $class);
     $self->{inited} = 0;
     
+    $self->dlllciasrouter_init();
+
     return $self;
 }
 
@@ -48,10 +50,11 @@ sub dlllciasrouter_init
 
     # 初始化安裝
     $self->setupLighttpd();
-    $self->model("LibraryNetwork")->setupInternalIface();
-    $self->model("LibraryMAC")->setupDHCPfixedIP();
-    $self->model('LibraryMAC')->setupAdministorNetworkMember();
+    #$self->model("LibraryNetwork")->setupInternalIface();
+    $self->model("RouterSettings")->addServicePort();
     $self->model("LibraryDomainName")->setupDefaultDomainName();
+    $self->model('LibraryMAC')->setupAdministorNetworkMember();
+    $self->model("LibraryMAC")->setupDHCPfixedIP();
     $self->model('LibraryRedirect')->setupZentyalRedirect();
 
     $self->{inited} = 1;
@@ -457,7 +460,7 @@ sub _setConf
         { uid => '0', gid => '0', mode => '740' }
     );
 
-    $self->dlllciasrouter_init();
+    
     #EBox::CGI::SaveChanges->saveAllModulesAction();
 }
 

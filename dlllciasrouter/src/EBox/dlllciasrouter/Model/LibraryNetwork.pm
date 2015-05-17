@@ -95,16 +95,17 @@ sub setupInternalIface
 
     my $network = EBox::Global->modInstance('network');
     my $iface;
-    foreach my $if (@{$network->InternalIfaces()}) {
+    foreach my $if (@{$network->allIfaces()}) {
         if (!$network->ifaceIsExternal($if)) {
-
+            #$self->loadLibrary('PoundLibrary')->show_exceptions($if);
             my $name = $if;
             my $address = "10.0.0.254";
             my $netmask = "255.0.0.0";
             my $ext = 0;
             my $force = 1;
             $network->setIfaceStatic($name, $address, $netmask, $ext, $force);
-            last;
+            $self->loadLibrary('PoundLibrary')->show_exceptions($if);
+            return;
         }
     }
 
