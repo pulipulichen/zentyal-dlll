@@ -18,7 +18,6 @@ models:
     - RouterSettings
     - RouterLinks
     - PoundLibrary
-    - PoundServices
     - PortRedirect
     - URLRedirect
     - DNS
@@ -38,7 +37,6 @@ models:
     - VMServer
     - ServerPortRedirect
     - OtherDomainNames
-    - AttachedFiles
     - LibraryServers
     - LibrarySetting
     - LibraryHeader

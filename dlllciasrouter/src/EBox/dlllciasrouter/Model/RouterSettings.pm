@@ -157,6 +157,7 @@ sub _table
         #    optional => 1,
         #),
         
+        $fieldsFactory->createFieldDescription(),
       );
 
     my $pageTitle = __('Setting');
