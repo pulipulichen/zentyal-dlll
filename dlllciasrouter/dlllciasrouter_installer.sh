@@ -31,6 +31,9 @@ fi
 if ! echo `sudo /etc/init.d/zentyal firewall status` | grep "$GREP_STR" > /dev/null; then
     DISABLED_MODULES=$DISABLED_MODULES"Firewall "
 fi
+if ! echo `sudo /etc/init.d/zentyal logs status` | grep "$GREP_STR" > /dev/null; then
+    DISABLED_MODULES=$DISABLED_MODULES"Logs "
+fi
 
 if [ "$DISABLED_MODULES" != "" ] ; then
     echo "You have to enable "$DISABLED_MODULES"before you install DLLL-CIAS Router."
