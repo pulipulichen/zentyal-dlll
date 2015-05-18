@@ -174,7 +174,7 @@ sub addServicePort
     my ($self, $name, $port, $onlyTcp) = @_;
 
     my $config = $self->getConfig($name);
-    my $id = $config->findId("port" => $port);
+    my $id = $config->findId("destination" => $port);
     if (!defined($id)) {
         my $tcp = "tcp/udp";
         if ($onlyTcp == 1) {
@@ -195,7 +195,7 @@ sub deleteServicePort
     my ($self, $name, $port) = @_;
 
     my $config = $self->getConfig($name);
-    my $id = $config->findId("port" => $port);
+    my $id = $config->findId("destination" => $port);
     if (defined($id)) {
         $config->removeRow($id);
     }

@@ -34,7 +34,7 @@ sub _create
     );
 
     bless ($self, $class);
-    $self->{inited} = 0;
+    #$self->{inited} = 0;
     
     $self->dlllciasrouter_init();
 
@@ -45,11 +45,12 @@ sub dlllciasrouter_init
 {
     my ($self) = @_;
 
-    if ($self->{inited} == 1) {
-        return;
-    } 
+    #if ($self->{inited} == 1) {
+    #    return;
+    #} 
 
     # 初始化安裝
+    try {
     $self->setupLighttpd();
     #$self->model("LibraryNetwork")->setupInternalIface();
     $self->model("LibraryDomainName")->initDefaultDomainName();
@@ -57,15 +58,8 @@ sub dlllciasrouter_init
     $self->model("LibraryService")->getPoundService();
     $self->model("LibraryService")->getZentyalAdminService();
 
-    #$self->model("RouterSettings")->initServicePort();
+    $self->model("RouterSettings")->initServicePort();
     
-    my $libServ = $self->model("LibraryService");
-    $libServ->addServicePort("pound", 80, 0);
-    $libServ->addServicePort("pound", 88, 0); # lighttpd
-
-    $libServ->addServicePort("dlllciastouer-admin", 64443, 1);
-    $libServ->addServicePort("dlllciastouer-admin", 64422, 1);
-
     #$self->model("RouterSettings")->addServicePort();
     #$self->model("RouterSettings")->addFilter();
     
@@ -78,7 +72,10 @@ sub dlllciasrouter_init
     #$self->model("LibraryService")->setupZentyalAdminService();
     #$self->model('LibraryRedirect')->setupZentyalRedirect();
 
-    $self->{inited} = 1;
+    } catch {
+        $self->modle("PoundLibrary")->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
+    };
+    #$self->{inited} = 1;
 }
 
 sub menu

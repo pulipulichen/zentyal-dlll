@@ -71,9 +71,6 @@ sub _table
     my @fields = ();
     #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
 
-    #my $editAdminPort = '/SysInfo/Composite/General#AdminPort';
-    #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName . 'zentyal_webadmin', __('EDIT Zentyal Webadmin Port'), $editAdminPort, 1));
-    
     push(@fields, new EBox::Types::Port(
               fieldName     => 'webadminPort',
               printableName => __('Zentyal Webadmin Port. ') . __('Only For Administrator Network'),
@@ -137,17 +134,6 @@ sub _table
         
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
 
-    
-    #  Administrator Network
-#    push(@fields, new EBox::Types::HTML(
-#              fieldName     => 'adminNet',
-#              printableName => __('Administrator Network'),
-#              #editable      => 1,
-#              ip => $address,
-#              mask => $submask,
-#              optional => 1,
-#              #help => __(""),
-#        );
     my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
     my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR NETWORK'), $editAdminNet, 1));
@@ -227,9 +213,6 @@ sub getLibrary
 
 ##
 # 讀取指定的Model
-#
-# 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
-# @author 20140312 Pulipuli Chen
 sub loadLibrary
 {
     my ($self, $library) = @_;
@@ -243,23 +226,12 @@ sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
 
-    #my $msg = $self->loadLibrary('LibraryMAC')->getObjectRow('DHCP-fixed-IP')->id();
-    #$self->getLibrary()->show_exceptions("[" . $msg . ']'. ' ( RouterSettings->updatedRowNotify() )');
-    #$self->getLibrary()->show_exceptions("[" . $row->elementByName('adminNet')->ip() . ']'. ref($row->valueByName('adminNet')).' ( RouterSettings->updatedRowNotify() )');
-
     try {
 
-    #my $sshPort = $row->valueByName('sshPort');
-    #my $poundService = $self->getServicePortModel();
+    $self->setWebadminPort($row->valueByName("webadminPort"));
 
-    #if (defined($oldRow) && $self->checkServicePort($oldRow) == 1) {
-    #    $self->deleteServicePort($oldRow);
-    #}
     my $libServ = $self->loadLibrary("LibraryService");
-    $libServ->updateServicePort('pound'
-        , $oldRow->valueByName("port")
-        , $row->valueByName("port")
-        , 1);
+
     $libServ->updateServicePort("dlllciastouer-admin"
         , $oldRow->valueByName("webadminPort")
         , $row->valueByName("webadminPort")
@@ -268,148 +240,31 @@ sub updatedRowNotify
         , $oldRow->valueByName("adminPort")
         , $row->valueByName("adminPort")
         , 1);
-
-    #if ($self->checkServicePort($row) == 0)
-    #{
-    #    $self->addServicePort($row);
-    #}
-
-    #if ($self->checkFilter() == 0) 
-    #{
-    #        $self->addFilter();
-    #}
-
-    $self->setWebadminPort($row->valueByName("webadminPort"));
-
-    #my $url  = $self->value('helpURL');
-    #$url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
-    #$self->setValue('helpLink', $url);
-    #my $adminIp = $row->elementByName('adminNet')->ip();
-    #my $adminNetmask = $row->elementByName('adminNet')->mask();
+    $libServ->updateServicePort('pound'
+        , $oldRow->valueByName("port")
+        , $row->valueByName("port")
+        , 1);
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
 }
+
 sub setWebadminPort
 {
+    # 要在設定防火牆之前修改
     my ($self, $port) = @_;
 
-    my $mod = EBox::Global->modInstance('webadmin');
-    my $portMod = $mod->model('AdminPort');
-    
-    ##$portMod->set(
-    #    'port' => $port
-    #);
-    #$portMod->store();
-    $portMod->setValue('port', $port);
-
-    #$self->getLibrary()->show_exceptions($portMod->value('port') . '( RouterSettings->updatedRowNotify() )'. $port);
-    #$row->elementByName('port')->setValue($port);
-    #$row->store();
+    try {
+        my $mod = EBox::Global->modInstance('webadmin');
+        #$mod->updateAdminPortService($port);
+        my $portMod = $mod->model('AdminPort');
+        $portMod->setValue('port', $port);
+        #$portMod->store();
+    } catch {
+        #$self->getLibrary()->show_exceptions($_ . $port . ' ( RouterSettings->setWebadminPort() )');
+    };
 }
-# --------------------------
-
-
-
-#sub getFilterModel
-#{
-#    my ($self) = @_;
-#
-#    my $network = EBox::Global->modInstance('firewall');
-#    return $network->model('ExternalToEBoxRuleTable');
-#}
-
-# --------------------------
-
-# 20150518 Pulipuli Chen
-#sub getServiceParam
-#{
-#    my ($self) = @_;
-#    return $self->loadLibrary("LibraryService")->getPoundService();
-#}
-
-#sub addService
-#{
-#    my ($self) = @_;
-#    
-#    my %param = $self->getServiceParam();
-#
-#    # 新增服務
-#    my $serviceMod = $self->loadLibrary("LibraryService")->getServiceModel();
-#
-#    my $id = $serviceMod->findId(name=> $param{name});
-#
-#    if (defined($id) == 0) {
-#        $serviceMod->addRow(%param);
-#    }
-#}
-
-#sub getServiceRowId
-#{
-#    my ($self) = @_;
-#    
-#    return $self->loadLibrary("LibraryService")->getServiceId("pound");
-#
-#    #my %param = $self->getServiceParam();
-#    #my $serviceMod = $self->loadLibrary("LibraryService")->getServiceModel();
-#    #my $id = $serviceMod->findId('name'=>$param{name});
-#    
-#    #return $id;
-#}
-#
-#sub getServiceRow
-#{
-#     my ($self) = @_;
-     
-    #if ($self->checkService() == 0) {
-    #    $self->addService();
-    #}
-
-    #my $serviceMod = $self->loadLibrary("LibraryService")->getServiceModel();
-    #my $id = $self->getServiceRowId();
-
-    #if (defined($id) == 1) {
-    #      return $serviceMod->row($id);
-    #}
-    #else {
-    #   return undef;
-    #}
-#}
-
-# ------------------
-
-#sub getServicePortModel
-#{
-#    my ($self) = @_;
-#    return $self->loadLibrary("LibraryService")->getConfig("pound");
-    #
-    #my $serviceRow = $self->loadLibrary("")getServiceRow();
-    #if (defined($serviceRow) == 1) {
-    #    return $serviceRow->subModel('configuration');
-    #}
-    #else {
-    #    return undef;
-    #}
-#}
-
-#sub checkServicePort
-#{
-#    my ($self, $row) = @_;
-#
-#    my $portMod = $self->getServicePortModel();
-#    my $port = $row->valueByName("port");
-#    my %param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
-#
-#    my $id = $portMod->findId('destination'=> $port );
-#    
-#    my $existed = 0;
-#    if (defined($id) == 1)
-#    {
-#        $existed = 1;
-#    }
-#    return $existed;
-#}
 
 # 20150518 Pulipuli Chen
 sub initServicePort
@@ -419,119 +274,14 @@ sub initServicePort
     try
     {
     my $libServ = $self->loadLibrary("LibraryService");
-    $libServ->addServicePort("pound", 80, 0);
+    $libServ->addServicePort("pound", $self->value('port'), 0);
     $libServ->addServicePort("pound", 88, 0); # lighttpd
 
-    $libServ->addServicePort("dlllciastouer-admin", 64443, 1);
-    $libServ->addServicePort("dlllciastouer-admin", 6, 1);
+    $libServ->addServicePort("dlllciastouer-admin", $self->value('webadminPort'), 1);
+    $libServ->addServicePort("dlllciastouer-admin", $self->value('adminPort'), 1);
     } catch {
         $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');
     }
-    
-
-    #my $portMod = $self->getServicePortModel();
-    #my $port = 80;
-    #if (defined($row)) {
-    #    $port = $row->valueByName("port");
-    #}
-    #my %param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
-
-    #my $id = $portMod->findId('destination'=>$port);
-    #if (defined($id) == 0) {
-    #    $portMod->addRow(%param);
-    #}
-
-    # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
-    #$port = 88;
-    #%param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
-
-    #$id = $portMod->findId('destination'=>$port);
-    #if (defined($id) == 0) {
-    #    $portMod->addRow(%param);
-    #}
-
-#    # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
-#    $port = 64443;
-#    %param = $self->getServicePortParam($port);
-#
-#    $id = $portMod->findId('destination'=>$port);
-#    if (defined($id) == 0) {
-#        $portMod->addRow(%param);
-#    }
-
-#    $port = 64422;
-#    %param = $self->getServicePortParam($port);
-#
-#    $id = $portMod->findId('destination'=>$port);
-#    if (defined($id) == 0) {
-#        $portMod->addRow(%param);
-#    }
 }
-
-#sub deleteServicePort
-#{
-#    my ($self, $row) = @_;
-#
-#    #my $portMod = $self->getServicePortModel();
-#    
-#    my $name = "pound";
-#    $self->loadLibrary("LibraryService")->deleteServicePort($name, $row->valueByName("port"));
-#    #my %param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
-#
-#    #my $id = $portMod->findId('destination'=>$port);
-#
-#    #if (defined($id) == 1) {
-#    #    $portMod->removeRow($id);
-#    #}
-#}
-
-# ----------------------
-
-#sub checkFilter
-#{
-#    my ($self) = @_;
-#
-#    my $filterMod = $self->getFilterModel();
-#    my %param = $self->getFilterParam();
-#
-#    my $existed = 0;
-#    my $id = $filterMod->findId(description => $param{description});
-#    if (defined($id) == 1) {
-#        $existed = 1;
-#    }
-#    return $existed;
-#}
-
-#sub addFilter
-#{
-#    my ($self) = @_;
-#
-#    my $filterMod = $self->getFilterModel();
-#    my %param = $self->getFilterParam();
-#
-#    my $id = $filterMod->findId('description'=>$param{description});
-#    if (defined($id) == 0) {
-#        $filterMod->addRow(%param);
-#    }
-#}
-
-#sub getFilterRow
-#{
-#    my ($self) = @_;    
-#
-#    my $filterMod = $self->getFilterModel();
-#    my %param = $self->getFilterParam();
-#
-#    my $id = $filterMod->findId('description'=>$param{description});
-#
-#    if (defined($id) == 1) {
-#        return $filterMod->row($id);
-#    }
-#    else {
-#        return undef;
-#    }
-#}
-
-
 
 1;

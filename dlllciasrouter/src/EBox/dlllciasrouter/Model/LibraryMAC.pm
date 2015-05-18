@@ -71,7 +71,7 @@ sub getObjectRow
 
     my $id = $objectTable->findId('name' => $name);
 
-    if (defined($id) == 0) {
+    if (!defined($id)) {
         $id = $objectTable->addRow('name' => $name);
 
         unless (defined($id)) {

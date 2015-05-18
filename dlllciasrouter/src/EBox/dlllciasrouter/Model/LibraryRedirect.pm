@@ -91,7 +91,7 @@ sub addRedirects
                 my $redirRow = $redirOther->row($subId);
                 $self->addOtherPortRedirect($row, $redirRow);
             }
-        } catch { }
+        } catch { };
     }
 }
 
