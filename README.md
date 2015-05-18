@@ -27,3 +27,20 @@ Zentyal本機參考資源
 ==============
 /usr/share/perl5/EBox/ 主要程式
 
+
+參考來源：[Zentyal 3.0動手做模組入門 / Zentyal 3.0 Module Development](http://pulipuli.blogspot.tw/2013/07/zentyal-30.html)
+
+以下操作適用於Zentyal 3
+
+- 安裝必要資料庫
+```
+sudo apt-get -y update
+sudo apt-get -y install libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound vim  --fixing-miss
+```
+- 下載模組框架
+```
+wget https://raw.github.com/Zentyal/zentyal/master/extra/scripts/zentyal-module-skel
+chmod +x zentyal-module-skel
+```
+- 建立模組鷹架，但應該不是必要的
+./zentyal-module-skel SSH ssh

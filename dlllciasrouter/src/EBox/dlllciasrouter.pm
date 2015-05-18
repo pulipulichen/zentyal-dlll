@@ -11,6 +11,7 @@ use EBox::Sudo;
 use EBox::CGI::SaveChanges;
 
 use EBox::Exceptions::Internal;
+use EBox::Sudo;
 
 use Try::Tiny;
 
@@ -461,7 +462,8 @@ sub _setConf
         { uid => '0', gid => '0', mode => '740' }
     );
 
-    
+    # 設定SSH
+    #$self->setConfSSH();
     #EBox::CGI::SaveChanges->saveAllModulesAction();
 }
 
@@ -561,6 +563,26 @@ sub setupLighttpd
     # 變更 /usr/share/zentyal/www/dlllciasrouter 權限 
     system('chmod 744  /usr/share/zentyal/www/dlllciasrouter');
 
+}
+
+# 20150518
+sub setConfSSH
+{
+    my ($self) = @_;
+
+    my $port = $self->model("RouterSettings")->value("sshPort");
+
+    my @params = (
+        "port" => $port
+    );
+    $self->writeConfFile(
+        '/etc/ssh/sshd_conf',
+        "dlllciasrouter/sshd_config.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    EBox::Sudo::root("/etc/init.d/ssh restart");
 }
 
 1;

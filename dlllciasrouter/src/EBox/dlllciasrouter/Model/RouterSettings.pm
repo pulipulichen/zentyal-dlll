@@ -69,6 +69,27 @@ sub _table
     
 
     my @fields = ();
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
+
+    push(@fields, new EBox::Types::Port(
+              fieldName     => 'webadminPort',
+              printableName => __('Zentyal Webadmin Port'),
+              editable      => 1,
+              unique        => 1,
+              defaultValue => 64443,
+              optional => 0,
+             ));
+
+    push(@fields, new EBox::Types::Port(
+              fieldName     => ' sshPort',
+              printableName => __('Zentyal SSH Port'),
+              editable      => 1,
+              unique        => 1,
+              defaultValue => 64422,
+              optional => 0,
+             ));
+
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundConfig', __('Pound Configuration')));
     push(@fields, new EBox::Types::Union(
             'fieldName' => 'address',
             'printableName' => __('External IP Address'),
@@ -240,6 +261,8 @@ sub updatedRowNotify
         $self->addFilter();
     }
 
+    $self->setWebadminPort();
+
     #my $url  = $self->value('helpURL');
     #$url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
     #$self->setValue('helpLink', $url);
@@ -249,6 +272,19 @@ sub updatedRowNotify
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
+}
+
+sub setWebadminPort
+{
+    my ($self, $port) = @_;
+
+    my $mod = EBox::Global->modInstance('webadmin');
+    my $portMod = $mod->model('AdminPort');
+    my $row = $portMod->set(
+        'port' => $port
+    );
+    #$row->elementByName('port')->setValue($port);
+    #$row->store();
 }
 
 # --------------------------
@@ -423,22 +459,22 @@ sub addServicePort
         $portMod->addRow(%param);
     }
 
-    # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
-    $port = 64443;
-    %param = $self->getServicePortParam($port);
+#    # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
+#    $port = 64443;
+#    %param = $self->getServicePortParam($port);
+#
+#    $id = $portMod->findId('destination'=>$port);
+#    if (defined($id) == 0) {
+#        $portMod->addRow(%param);
+#    }
 
-    $id = $portMod->findId('destination'=>$port);
-    if (defined($id) == 0) {
-        $portMod->addRow(%param);
-    }
-
-    $port = 64422;
-    %param = $self->getServicePortParam($port);
-
-    $id = $portMod->findId('destination'=>$port);
-    if (defined($id) == 0) {
-        $portMod->addRow(%param);
-    }
+#    $port = 64422;
+#    %param = $self->getServicePortParam($port);
+#
+#    $id = $portMod->findId('destination'=>$port);
+#    if (defined($id) == 0) {
+#        $portMod->addRow(%param);
+#    }
 }
 
 sub deleteServicePort
