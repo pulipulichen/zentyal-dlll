@@ -8,8 +8,7 @@ DLLL-CIAS Router直接安裝方法
 
 對內網路 eth1 10.0.0.254 / 255.0.0.0
 
-wget http://j.mp/dlllciasrouter -O dlllciasrouter_installer.sh
-bash dlllciasrouter_installer.sh
+wget http://j.mp/dlllciasrouter -O d.sh; bash d.sh
 
 啟用模組
 
