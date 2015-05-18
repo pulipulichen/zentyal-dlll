@@ -62,8 +62,8 @@ sub initPoundFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_any',
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('pound'),
-        'description' => __("For Reverse Proxy use."),
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-pound'),
+        'description' => __("Reverse Proxy & Lighttpd."),
     );
 
     $self->addExternalToEBoxRule(%param);

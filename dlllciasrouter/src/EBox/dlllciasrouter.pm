@@ -52,7 +52,9 @@ sub dlllciasrouter_init
     # 初始化安裝
     try {
     $self->setupLighttpd();
-    #$self->model("LibraryNetwork")->setupInternalIface();
+
+    #$self->model("LibraryNetwork")->initInternalIface();
+
     $self->model("LibraryDomainName")->initDefaultDomainName();
 
     $self->model("LibraryService")->getPoundService();
@@ -580,7 +582,6 @@ sub setupLighttpd
 
     # 變更 /usr/share/zentyal/www/dlllciasrouter 權限 
     system('chmod 744  /usr/share/zentyal/www/dlllciasrouter');
-
 }
 
 # 20150518

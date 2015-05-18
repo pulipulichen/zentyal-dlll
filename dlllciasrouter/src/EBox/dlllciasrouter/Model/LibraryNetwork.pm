@@ -89,29 +89,38 @@ sub getInternalIface
 }
 
 # 20150518 Pulipuli Chen
-sub setupInternalIface
+# 設定時會有問題，所以不使用
+sub initInternalIface
 {
     my ($self) = @_;
+    return;
 
-    my $network = EBox::Global->modInstance('network');
     my $iface;
+    try {
+    my $network = EBox::Global->modInstance('network');
     foreach my $if (@{$network->allIfaces()}) {
         if (!$network->ifaceIsExternal($if)) {
             #$self->loadLibrary('PoundLibrary')->show_exceptions($if);
-            my $name = $if;
-            my $address = "10.0.0.254";
-            my $netmask = "255.0.0.0";
-            my $ext = 0;
-            my $force = 1;
-            $network->setIfaceStatic($name, $address, $netmask, $ext, $force);
-            $self->loadLibrary('PoundLibrary')->show_exceptions($if);
+            if ($network->ifaceAddress($if) ne "10.0.0.253") {
+                my $name = $if;
+                my $address = "10.0.0.254";
+                my $netmask = "255.255.0.0";
+                my $ext = 0;
+                my $force = 1;
+                $network->setIfaceStatic($name, $address, $netmask, $ext, $force);
+                $network->saveConfig();
+                #$self->loadLibrary('PoundLibrary')->show_exceptions("OK: ". $if);
+            }
+            #last;
             return;
         }
     }
 
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryNetwork->initInternalIface() )');
+    };
     #if (!defined($iface)) {
-    #     $self->loadLibrary('PoundLibrary')->show_exceptions(__('You should set an Internal Interface.') 
-    #        . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
+    #    $self->loadLibrary('PoundLibrary')->show_exceptions('(LibraryNetwork->initInternalIface())))');
     #}
 
     return $iface;

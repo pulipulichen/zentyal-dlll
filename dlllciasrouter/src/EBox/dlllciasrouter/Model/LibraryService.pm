@@ -53,8 +53,8 @@ sub getPoundService
 {
     my ($self) = @_;
 
-    my $name = "pound";
-    my $desc = __("For Reverse Proxy use.");
+    my $name = "dlllciasrouter-pound";
+    my $desc = __("Reverse Proxy & Lighttpd.");
     return $self->initService($name, $desc);
 }
 

@@ -240,7 +240,7 @@ sub updatedRowNotify
         , $oldRow->valueByName("adminPort")
         , $row->valueByName("adminPort")
         , 1);
-    $libServ->updateServicePort('pound'
+    $libServ->updateServicePort('dlllciasrouter-pound'
         , $oldRow->valueByName("port")
         , $row->valueByName("port")
         , 1);
@@ -267,15 +267,18 @@ sub setWebadminPort
 }
 
 # 20150518 Pulipuli Chen
+# 只有第一次執行會用到
 sub initServicePort
 {
     my ($self) = @_;
 
     try
     {
+    $self->setWebadminPort($self->value("webadminPort"));
+
     my $libServ = $self->loadLibrary("LibraryService");
-    $libServ->addServicePort("pound", $self->value('port'), 0);
-    $libServ->addServicePort("pound", 88, 0); # lighttpd
+    $libServ->addServicePort("dlllciasrouter-pound", $self->value('port'), 0);
+    $libServ->addServicePort("dlllciasrouter-pound", 88, 0); # lighttpd
 
     $libServ->addServicePort("dlllciastouer-admin", $self->value('webadminPort'), 1);
     $libServ->addServicePort("dlllciastouer-admin", $self->value('adminPort'), 1);
