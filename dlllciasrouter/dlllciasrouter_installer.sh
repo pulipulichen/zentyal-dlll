@@ -18,16 +18,17 @@ fi
 # 檢查模組的啟用狀態
 #echo "Check module enabled...";
 DISABLED_MODULES=""
-if ! echo `sudo /etc/init.d/zentyal network status` | grep RUNNING > /dev/null; then
+GREP_STR="\[ RUNNING \]"
+if ! echo `sudo /etc/init.d/zentyal network status` | grep "$GREP_STR" > /dev/null; then
     DISABLED_MODULES=$DISABLED_MODULES"Network "
 fi
-if ! echo `sudo /etc/init.d/zentyal dns status` | grep RUNNING > /dev/null; then
+if ! echo `sudo /etc/init.d/zentyal dns status` | grep "$GREP_STR" > /dev/null; then
     DISABLED_MODULES=$DISABLED_MODULES"DNS "
 fi
-if ! echo `sudo /etc/init.d/zentyal dhcp status` | grep RUNNING > /dev/null; then
+if ! echo `sudo /etc/init.d/zentyal dhcp status` | grep "$GREP_STR" > /dev/null; then
     DISABLED_MODULES=$DISABLED_MODULES"DHCP "
 fi
-if ! echo `sudo /etc/init.d/zentyal firewall status` | grep RUNNING > /dev/null; then
+if ! echo `sudo /etc/init.d/zentyal firewall status` | grep "$GREP_STR" > /dev/null; then
     DISABLED_MODULES=$DISABLED_MODULES"Firewall "
 fi
 
