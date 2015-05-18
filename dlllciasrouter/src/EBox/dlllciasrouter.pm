@@ -35,7 +35,9 @@ sub _create
 
     bless ($self, $class);
     
-    $self->dlllciasrouter_init();
+    # 20150519* Pulipuli Chen
+    # 不可以在此初始化，這會導致無法安裝
+    #$self->dlllciasrouter_init();
 
     return $self;
 }

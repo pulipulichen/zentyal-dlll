@@ -36,14 +36,18 @@ if ! echo `sudo /etc/init.d/zentyal logs status` | grep "$GREP_STR" > /dev/null;
 fi
 
 if [ "$DISABLED_MODULES" != "" ] ; then
-    echo "You have to enable "$DISABLED_MODULES"before you install DLLL-CIAS Router."
+    echo "You have to enable "$DISABLED_MODULES"in Zentyal before you install DLLL-CIAS Router."
     exit
 else
     echo "All modules enabled."
 fi
 
 cd /tmp
-#wget https://raw.githubusercontent.com/pulipulichen/zentyal-dlll/master/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
-wget http://192.168.11.50/zentyal-dlll/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
+wget https://raw.githubusercontent.com/pulipulichen/zentyal-dlll/master/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
+#wget http://192.168.11.50/zentyal-dlll/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
 sudo dpkg -i zentyal-dlllciasrouter_3.4_all.deb
 sudo /etc/init.d/zentyal dlllciasrouter restart
+
+if ! echo `sudo /etc/init.d/zentyal logs status` | grep "$GREP_STR" > /dev/null; then
+    echo "Please enable DLLL-CIAS Router module in Zentyal."
+fi
