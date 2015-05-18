@@ -468,13 +468,29 @@ sub initDefaultDomainName
     my $dns = $gl->modInstance('dns');
     my $domModel = $dns->model('DomainTable');
     my $id = $domModel->findId(domain => $domainName);
-    if (defined($id)) {
-        return 0;
+    if (!defined($id)) {
+        $domModel->addDomain({
+            'domain_name' => $domainName,
+        });
+        #$domModel->store();
     }
-    $domModel->addDomain({
-        'domain_name' => $domainName,
-    });
+    
+    $id = $domModel->findId(domain => $domainName);
 
+    my $defaultDomainName = $self->getDefaultDomainName();
+    # DHCP的Dynamic DNS模組模組
+    my $dhcp = $gl->modInstance('dhcp');
+    my $interfaces = $dhcp->model('Interfaces');
+    for my $ifId (@{$interfaces->ids()}) {
+        my $ifRow = $interfaces->row($ifId);
+        my $configuration = $ifRow->subModel('configuration');
+        my $dynamicDNS = $configuration->componentByName('DynamicDNS', 1);
+        $dynamicDNS->setValue('dynamic_domain', $id);
+        #$dynamicDNS->store();
+        #throw EBox::Exceptions::External("D DHCP: " . $id);
+    }
+    #throw EBox::Exceptions::External("D DHCP: ");
+    
     return $domainName;
 }
 

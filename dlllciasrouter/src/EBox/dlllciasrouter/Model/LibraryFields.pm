@@ -216,10 +216,11 @@ sub createFieldExternalIPAddressWithSubmask
 {
     my ($self, $unique, $help) = @_;
 
-    my $field = new EBox::Types::IPAddr(
+    my $field = new EBox::Types::HostIP(
             'fieldName' => 'extIpaddr',
             'printableName' => __('External IP Address'),
             'editable' => 1,
+            'mask' => 24,
             'unique' => $unique,
             'help' => __($help),
             'hiddenOnSetter' => 0,

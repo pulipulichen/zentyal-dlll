@@ -91,8 +91,10 @@ sub updatedRowNotify
 
     try {
 
-    my $extIp = $row->elementByName('extIpaddr')->ip();
-    my $extMask = $row->elementByName('extIpaddr')->mask();
+    #my $extIp = $row->elementByName('extIpaddr')->ip();
+    #my $extMask = $row->elementByName('extIpaddr')->mask();
+    my $extIp = $row->valueByName('extIpaddr');
+    my $extMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
 
     $self->loadLibrary($options->{moduleName})->checkInternalIP($row);
 
@@ -147,6 +149,7 @@ sub updatedRowNotify
     $header->setValue($headerFieldName, $button);
 
     # 設定Virtual Interface
+    #$extMask = $self->loadLibrary('LibraryNetwork')->bitwiseShiftMask($extMask);
     $self->loadLibrary('LibraryNetwork')->setVirtualInterface(
         $options->{moduleName}, $extIp, $extMask);
 

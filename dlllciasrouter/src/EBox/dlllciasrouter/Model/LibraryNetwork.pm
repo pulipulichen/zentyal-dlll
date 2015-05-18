@@ -176,16 +176,32 @@ sub setVirtualInterface
 {
     my ($self, $name, $ipaddr, $mask) = @_;
 
+    my $network = EBox::Global->modInstance('network');
     $name = substr(lc($name), 0, 4);
 
-    my $network = EBox::Global->modInstance('network');
     foreach my $if (@{$network->ExternalIfaces()}) {
         if ($network->ifaceIsExternal($if)) {
-            #my $mask = $network->ifaceNetmask($if);
-            $network->setViface($if, $name, $ipaddr, $mask);
+            try {
+                $network->setViface($if, $name, $ipaddr, $mask);
+            } catch {
+                $network->removeViface($if, $name, 1);
+                $network->setViface($if, $name, $ipaddr, $mask);
+            };
+            
             last;
         }
     }
+    
+}
+
+# 20150519 Pulipuli Chen
+# http://www.perlmonks.org/bare/?node_id=402228
+sub bitwiseShiftMask
+{
+    my ($self, $cidr) = @_;
+    my $mask = "1" x ( 32 - $cidr ) . "0" x $cidr;
+    $mask = join ".", ( unpack "C4", ( pack "B*", $mask ) );
+    return $mask;
 }
 
 1;

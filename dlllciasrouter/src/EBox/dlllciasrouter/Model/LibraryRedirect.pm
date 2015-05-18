@@ -924,6 +924,7 @@ sub getServerRedirectParamDMZ
     my ($self, $row, $desc, $extPort) = @_;
 
     my $domainName = $row->valueByName("domainName");
+    #my $destIpaddr = $row->elementByName("extIpaddr")->ip();
     my $destIpaddr = $row->valueByName("extIpaddr");
     my $localIpaddr = $row->valueByName("ipaddr");
 
@@ -964,6 +965,7 @@ sub getServerRedirectParamOrigin
     my ($self, $row, $desc, $extPort) = @_;
 
     my $domainName = $row->valueByName("domainName");
+    #my $destIpaddr = $row->elementByName("extIpaddr")->ip();
     my $destIpaddr = $row->valueByName("extIpaddr");
     my $localIpaddr = $row->valueByName("ipaddr");
 
@@ -1008,6 +1010,7 @@ sub getServerRedirectParamZentyal
     my ($self, $row, $desc, $extPort) = @_;
 
     my $domainName = $row->valueByName("domainName");
+    #my $destIpaddr = $row->elementByName("extIpaddr")->ip();
     my $destIpaddr = $row->valueByName("extIpaddr");
     my $localIpaddr = $row->valueByName("ipaddr");
 

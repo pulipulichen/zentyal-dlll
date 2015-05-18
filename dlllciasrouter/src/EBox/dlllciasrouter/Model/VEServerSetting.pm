@@ -39,11 +39,11 @@ sub getOptions
     my $options = ();
     $options->{pageTitle} = __('VE Main Server Setting');
     $options->{moduleName} = 'VEServer';
-    $options->{IPHelp} = 'The 1st part should be 10, '
-                . 'the 2nd part should be 6, '
-                . 'the 3rd part should be 0, and '
-                . 'the 4th part should be between 1~99. '
-                . 'Example: 10.6.1.4';
+    $options->{IPHelp} = 'The 1st part should be 10, <br />'
+                . 'the 2nd part should be 6, <br />'
+                . 'the 3rd part should be 0, and <br />'
+                . 'the 4th part should be between 1~99. <br />'
+                . 'Example: 10.6.0.55';
     $options->{poundScheme} = 'https';
     $options->{internalPortDefaultValue} = 8006;
     $options->{externalPortDefaultValue} = 60000;
