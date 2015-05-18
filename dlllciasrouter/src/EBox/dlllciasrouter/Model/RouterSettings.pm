@@ -69,11 +69,14 @@ sub _table
     
 
     my @fields = ();
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
+    #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
 
+    #my $editAdminPort = '/SysInfo/Composite/General#AdminPort';
+    #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName . 'zentyal_webadmin', __('EDIT Zentyal Webadmin Port'), $editAdminPort, 1));
+    
     push(@fields, new EBox::Types::Port(
               fieldName     => 'webadminPort',
-              printableName => __('Zentyal Webadmin Port'),
+              printableName => __('Zentyal Webadmin Port. ') . __('Only For Administrator Network'),
               editable      => 1,
               unique        => 1,
               defaultValue => 64443,
@@ -81,13 +84,14 @@ sub _table
              ));
 
     push(@fields, new EBox::Types::Port(
-              fieldName     => ' sshPort',
-              printableName => __('Zentyal SSH Port'),
-              editable      => 1,
-              unique        => 1,
-              defaultValue => 64422,
-              optional => 0,
-             ));
+            fieldName     => 'adminPort',
+            printableName => __('Zentyal SSH Port. '). __('Only For Administrator Network'),
+            help => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator Network Setting') . '</a>',
+            editable      => 1,
+            unique        => 1,
+            defaultValue => 64422,
+            optional => 0,
+        ));
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundConfig', __('Pound Configuration')));
     push(@fields, new EBox::Types::Union(
@@ -245,23 +249,37 @@ sub updatedRowNotify
 
     try {
 
-    my $poundService = $self->getServicePortModel();
+    #my $sshPort = $row->valueByName('sshPort');
+    #my $poundService = $self->getServicePortModel();
 
-    if (defined($oldRow) && $self->checkServicePort($oldRow) == 1) {
-        $self->deleteServicePort($oldRow);
-    }
+    #if (defined($oldRow) && $self->checkServicePort($oldRow) == 1) {
+    #    $self->deleteServicePort($oldRow);
+    #}
+    my $libServ = $self->loadLibrary("LibraryService");
+    $libServ->updateServicePort('pound'
+        , $oldRow->valueByName("port")
+        , $row->valueByName("port")
+        , 1);
+    $libServ->updateServicePort("dlllciastouer-admin"
+        , $oldRow->valueByName("webadminPort")
+        , $row->valueByName("webadminPort")
+        , 1);
+    $libServ->updateServicePort("dlllciastouer-admin"
+        , $oldRow->valueByName("adminPort")
+        , $row->valueByName("adminPort")
+        , 1);
 
-    if ($self->checkServicePort($row) == 0)
-    {
-        $self->addServicePort($row);
-    }
+    #if ($self->checkServicePort($row) == 0)
+    #{
+    #    $self->addServicePort($row);
+    #}
 
-    if ($self->checkFilter() == 0) 
-    {
-        $self->addFilter();
-    }
+    #if ($self->checkFilter() == 0) 
+    #{
+    #        $self->addFilter();
+    #}
 
-    $self->setWebadminPort();
+    $self->setWebadminPort($row->valueByName("webadminPort"));
 
     #my $url  = $self->value('helpURL');
     #$url = '<a href="'.$url.'" target="_blank">'.$url.'</a>';
@@ -273,191 +291,164 @@ sub updatedRowNotify
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
 }
-
 sub setWebadminPort
 {
     my ($self, $port) = @_;
 
     my $mod = EBox::Global->modInstance('webadmin');
     my $portMod = $mod->model('AdminPort');
-    my $row = $portMod->set(
-        'port' => $port
-    );
+    
+    ##$portMod->set(
+    #    'port' => $port
+    #);
+    #$portMod->store();
+    $portMod->setValue('port', $port);
+
+    #$self->getLibrary()->show_exceptions($portMod->value('port') . '( RouterSettings->updatedRowNotify() )'. $port);
     #$row->elementByName('port')->setValue($port);
     #$row->store();
 }
+# --------------------------
+
+
+
+#sub getFilterModel
+#{
+#    my ($self) = @_;
+#
+#    my $network = EBox::Global->modInstance('firewall');
+#    return $network->model('ExternalToEBoxRuleTable');
+#}
 
 # --------------------------
 
-sub getServiceModel
-{
-    my ($self) = @_;
+# 20150518 Pulipuli Chen
+#sub getServiceParam
+#{
+#    my ($self) = @_;
+#    return $self->loadLibrary("LibraryService")->getPoundService();
+#}
 
-    my $network = EBox::Global->modInstance('services');
-    return $network->model('ServiceTable');
-}
+#sub addService
+#{
+#    my ($self) = @_;
+#    
+#    my %param = $self->getServiceParam();
+#
+#    # 新增服務
+#    my $serviceMod = $self->loadLibrary("LibraryService")->getServiceModel();
+#
+#    my $id = $serviceMod->findId(name=> $param{name});
+#
+#    if (defined($id) == 0) {
+#        $serviceMod->addRow(%param);
+#    }
+#}
 
-sub getFilterModel
-{
-    my ($self) = @_;
-
-    my $network = EBox::Global->modInstance('firewall');
-    return $network->model('ExternalToEBoxRuleTable');
-}
-
-# --------------------------
-
-sub getServiceParam
-{
-    my ($self) = @_;
-
-    return (
-        # 寫入參數
-        'internal' => 'pound',
-        'name' => 'pound',
-        'printableName' => 'pound',
-        'description' => 'For Reverse Proxy use.',
-    );
-}
-
-sub checkService
-{
-    my ($self) = @_;
-
-    # 確認服務是否存在
-    my %param = $self->getServiceParam();
-
-    my $serviceMod = $self->getServiceModel();
-
-    # 確認
-    my $id = $serviceMod->findId('name' => $param{name});
-
-    my $existed = 0;
-    if (defined($id) == 1)
-    {
-        $existed = 1;
-    }
-    return $existed;
-}
-
-sub addService
-{
-    my ($self) = @_;
-    
-    my %param = $self->getServiceParam();
-
-    # 新增服務
-    my $serviceMod = $self->getServiceModel();
-
-    my $id = $serviceMod->findId(name=> $param{name});
-
-    if (defined($id) == 0) {
-        $serviceMod->addRow(%param);
-    }
-}
-
-sub getServiceRowId
-{
-     my ($self) = @_;
-    
-    my %param = $self->getServiceParam();
-    my $serviceMod = $self->getServiceModel();
-    my $id = $serviceMod->findId('name'=>$param{name});
-    
-    return $id;
-}
-
-sub getServiceRow
-{
-     my ($self) = @_;
+#sub getServiceRowId
+#{
+#    my ($self) = @_;
+#    
+#    return $self->loadLibrary("LibraryService")->getServiceId("pound");
+#
+#    #my %param = $self->getServiceParam();
+#    #my $serviceMod = $self->loadLibrary("LibraryService")->getServiceModel();
+#    #my $id = $serviceMod->findId('name'=>$param{name});
+#    
+#    #return $id;
+#}
+#
+#sub getServiceRow
+#{
+#     my ($self) = @_;
      
-    if ($self->checkService() == 0) {
-        $self->addService();
-    }
+    #if ($self->checkService() == 0) {
+    #    $self->addService();
+    #}
 
-     my $serviceMod = $self->getServiceModel();
-     my $id = $self->getServiceRowId();
+    #my $serviceMod = $self->loadLibrary("LibraryService")->getServiceModel();
+    #my $id = $self->getServiceRowId();
 
-     if (defined($id) == 1) {
-        return $serviceMod->row($id);
-     }
-     else {
-        return undef;
-     }
-}
+    #if (defined($id) == 1) {
+    #      return $serviceMod->row($id);
+    #}
+    #else {
+    #   return undef;
+    #}
+#}
 
 # ------------------
 
-sub getServicePortModel
+#sub getServicePortModel
+#{
+#    my ($self) = @_;
+#    return $self->loadLibrary("LibraryService")->getConfig("pound");
+    #
+    #my $serviceRow = $self->loadLibrary("")getServiceRow();
+    #if (defined($serviceRow) == 1) {
+    #    return $serviceRow->subModel('configuration');
+    #}
+    #else {
+    #    return undef;
+    #}
+#}
+
+#sub checkServicePort
+#{
+#    my ($self, $row) = @_;
+#
+#    my $portMod = $self->getServicePortModel();
+#    my $port = $row->valueByName("port");
+#    my %param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
+#
+#    my $id = $portMod->findId('destination'=> $port );
+#    
+#    my $existed = 0;
+#    if (defined($id) == 1)
+#    {
+#        $existed = 1;
+#    }
+#    return $existed;
+#}
+
+# 20150518 Pulipuli Chen
+sub initServicePort
 {
     my ($self) = @_;
-    
-    my $serviceRow = $self->getServiceRow();
-    if (defined($serviceRow) == 1) {
-        return $serviceRow->subModel('configuration');
-    }
-    else {
-        return undef;
-    }
-}
 
-sub getServicePortParam
-{
-    my ($self, $port) = @_;
-
-    # 不確定，有可能錯誤
-    return (
-        # 設定連接埠參數
-        'protocol' => 'tcp/udp',
-        'source_range_type' => 'any',
-        'destination_range_type' => 'single',
-        'destination_single_port' => $port,
-    );
-}
-
-
-sub checkServicePort
-{
-    my ($self, $row) = @_;
-
-    my $portMod = $self->getServicePortModel();
-    my $port = $row->valueByName("port");
-    my %param = $self->getServicePortParam($port);
-
-    my $id = $portMod->findId('destination'=> $port );
-    
-    my $existed = 0;
-    if (defined($id) == 1)
+    try
     {
-        $existed = 1;
-    }
-    return $existed;
-}
+    my $libServ = $self->loadLibrary("LibraryService");
+    $libServ->addServicePort("pound", 80, 0);
+    $libServ->addServicePort("pound", 88, 0); # lighttpd
 
-sub addServicePort
-{
-    my ($self, $row) = @_;
-
-    my $portMod = $self->getServicePortModel();
-    my $port = 80;
-    if (defined($row)) {
-        $port = $row->valueByName("port");
+    $libServ->addServicePort("dlllciastouer-admin", 64443, 1);
+    $libServ->addServicePort("dlllciastouer-admin", 6, 1);
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');
     }
-    my %param = $self->getServicePortParam($port);
+    
 
-    my $id = $portMod->findId('destination'=>$port);
-    if (defined($id) == 0) {
-        $portMod->addRow(%param);
-    }
+    #my $portMod = $self->getServicePortModel();
+    #my $port = 80;
+    #if (defined($row)) {
+    #    $port = $row->valueByName("port");
+    #}
+    #my %param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
+
+    #my $id = $portMod->findId('destination'=>$port);
+    #if (defined($id) == 0) {
+    #    $portMod->addRow(%param);
+    #}
 
     # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
-    $port = 88;
-    %param = $self->getServicePortParam($port);
+    #$port = 88;
+    #%param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
 
-    $id = $portMod->findId('destination'=>$port);
-    if (defined($id) == 0) {
-        $portMod->addRow(%param);
-    }
+    #$id = $portMod->findId('destination'=>$port);
+    #if (defined($id) == 0) {
+    #    $portMod->addRow(%param);
+    #}
 
 #    # 20150517 Pulipuli Chen 同時新增Lighttpd的Port
 #    $port = 64443;
@@ -477,79 +468,70 @@ sub addServicePort
 #    }
 }
 
-sub deleteServicePort
-{
-    my ($self, $row) = @_;
-
-    my $portMod = $self->getServicePortModel();
-    my $port = $row->valueByName("port");
-    my %param = $self->getServicePortParam($port);
-
-    my $id = $portMod->findId('destination'=>$port);
-
-    if (defined($id) == 1) {
-        $portMod->removeRow($id);
-    }
-}
+#sub deleteServicePort
+#{
+#    my ($self, $row) = @_;
+#
+#    #my $portMod = $self->getServicePortModel();
+#    
+#    my $name = "pound";
+#    $self->loadLibrary("LibraryService")->deleteServicePort($name, $row->valueByName("port"));
+#    #my %param = $self->loadLibrary("LibraryService")->getServicePortParam(0, $port);
+#
+#    #my $id = $portMod->findId('destination'=>$port);
+#
+#    #if (defined($id) == 1) {
+#    #    $portMod->removeRow($id);
+#    #}
+#}
 
 # ----------------------
 
-sub checkFilter
-{
-    my ($self) = @_;
+#sub checkFilter
+#{
+#    my ($self) = @_;
+#
+#    my $filterMod = $self->getFilterModel();
+#    my %param = $self->getFilterParam();
+#
+#    my $existed = 0;
+#    my $id = $filterMod->findId(description => $param{description});
+#    if (defined($id) == 1) {
+#        $existed = 1;
+#    }
+#    return $existed;
+#}
 
-    my $filterMod = $self->getFilterModel();
-    my %param = $self->getFilterParam();
+#sub addFilter
+#{
+#    my ($self) = @_;
+#
+#    my $filterMod = $self->getFilterModel();
+#    my %param = $self->getFilterParam();
+#
+#    my $id = $filterMod->findId('description'=>$param{description});
+#    if (defined($id) == 0) {
+#        $filterMod->addRow(%param);
+#    }
+#}
 
-    my $existed = 0;
-    my $id = $filterMod->findId(description => $param{description});
-    if (defined($id) == 1) {
-        $existed = 1;
-    }
-    return $existed;
-}
+#sub getFilterRow
+#{
+#    my ($self) = @_;    
+#
+#    my $filterMod = $self->getFilterModel();
+#    my %param = $self->getFilterParam();
+#
+#    my $id = $filterMod->findId('description'=>$param{description});
+#
+#    if (defined($id) == 1) {
+#        return $filterMod->row($id);
+#    }
+#    else {
+#        return undef;
+#    }
+#}
 
-sub addFilter
-{
-    my ($self) = @_;
 
-    my $filterMod = $self->getFilterModel();
-    my %param = $self->getFilterParam();
-
-    my $id = $filterMod->findId('description'=>$param{description});
-    if (defined($id) == 0) {
-        $filterMod->addRow(%param);
-    }
-}
-
-sub getFilterRow
-{
-    my ($self) = @_;    
-
-    my $filterMod = $self->getFilterModel();
-    my %param = $self->getFilterParam();
-
-    my $id = $filterMod->findId('description'=>$param{description});
-
-    if (defined($id) == 1) {
-        return $filterMod->row($id);
-    }
-    else {
-        return undef;
-    }
-}
-
-sub getFilterParam
-{
-    my ($self) = @_;
-
-    return (
-        # 設定連接埠參數
-        'decision' => 'accept',
-        'source_selected' => 'source_any',
-        'service' => $self->getServiceRowId(),
-        'description' => 'For Reverse Proxy use.',
-    );
-}
 
 1;

@@ -20,6 +20,8 @@ models:
     - URLRedirect
     - DNS
     - LibraryMAC
+    - LibraryService
+    - LibraryFilter
     - LibraryEncoding
     - LibraryFields
     - LibraryDomainName

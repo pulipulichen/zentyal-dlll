@@ -1045,10 +1045,12 @@ sub getServerRedirectParamZentyal
     return %param;
 }
 
+# 20150528 Pulipuli Chen
+# 捨棄不用
 sub setupZentyalRedirect
 {
     my ($self) = @_;
-
+    return;
     my $libNET = $self->loadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
     my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();

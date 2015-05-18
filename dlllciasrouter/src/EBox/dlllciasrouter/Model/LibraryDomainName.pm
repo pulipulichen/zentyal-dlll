@@ -459,7 +459,7 @@ sub updatePortDescription
 # 20150513 Pulipuli Chen
 # 在DNS中新增一個預設的Domain Name
 ## 
-sub setupDefaultDomainName
+sub initDefaultDomainName
 {
     my ($self) = @_;
 

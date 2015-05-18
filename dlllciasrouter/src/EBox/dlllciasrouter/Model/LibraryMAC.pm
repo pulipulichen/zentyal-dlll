@@ -135,7 +135,7 @@ sub addDHCPfixedIPMember
 ##
 # 20150517 Pulipuli Chen
 ##
-sub setupAdministorNetworkMember
+sub initAdministorNetworkMember
 {
     my ($self) = @_;
 
@@ -154,7 +154,7 @@ sub setupAdministorNetworkMember
     if (!defined($id)) {
         #my $macaddr;
         # 加入新的 
-        $memberModel->addRow(
+        $id = $memberModel->addRow(
             name => 'default',
             address_selected => 'iprange',
             iprange_begin => $ip_network,
@@ -162,6 +162,7 @@ sub setupAdministorNetworkMember
             #macaddr => $macaddr,
         );
     }
+    return $memberModel->row($id);
 }
 
 ##
@@ -187,7 +188,7 @@ sub removeDHCPfixedIPMember
 # 設定DHCP中的FixedAddresses
 # @param $objectRowID 要設定的ObjectID
 ## 
-sub setupDHCPfixedIP
+sub initDHCPfixedIP
 {
     my ($self) = @_;
 

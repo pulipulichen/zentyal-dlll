@@ -52,12 +52,31 @@ sub dlllciasrouter_init
     # 初始化安裝
     $self->setupLighttpd();
     #$self->model("LibraryNetwork")->setupInternalIface();
-    $self->model("RouterSettings")->addServicePort();
-    $self->model("RouterSettings")->addFilter();
-    $self->model("LibraryDomainName")->setupDefaultDomainName();
-    $self->model('LibraryMAC')->setupAdministorNetworkMember();
-    $self->model("LibraryMAC")->setupDHCPfixedIP();
-    $self->model('LibraryRedirect')->setupZentyalRedirect();
+    $self->model("LibraryDomainName")->initDefaultDomainName();
+
+    $self->model("LibraryService")->getPoundService();
+    $self->model("LibraryService")->getZentyalAdminService();
+
+    #$self->model("RouterSettings")->initServicePort();
+    
+    my $libServ = $self->model("LibraryService");
+    $libServ->addServicePort("pound", 80, 0);
+    $libServ->addServicePort("pound", 88, 0); # lighttpd
+
+    $libServ->addServicePort("dlllciastouer-admin", 64443, 1);
+    $libServ->addServicePort("dlllciastouer-admin", 64422, 1);
+
+    #$self->model("RouterSettings")->addServicePort();
+    #$self->model("RouterSettings")->addFilter();
+    
+
+    $self->model('LibraryMAC')->initAdministorNetworkMember();
+    $self->model("LibraryMAC")->initDHCPfixedIP();
+
+    $self->model("LibraryFilter")->initZentyalAdminFilter();
+    $self->model("LibraryFilter")->initPoundFilter();
+    #$self->model("LibraryService")->setupZentyalAdminService();
+    #$self->model('LibraryRedirect')->setupZentyalRedirect();
 
     $self->{inited} = 1;
 }
@@ -155,6 +174,10 @@ sub _setConf
     # ----------------------------
 
     my $settings = $self->model('RouterSettings');
+
+    # 設定SSH
+    $self->setConfSSH($settings->value('adminPort'));
+
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
 
@@ -462,8 +485,6 @@ sub _setConf
         { uid => '0', gid => '0', mode => '740' }
     );
 
-    # 設定SSH
-    #$self->setConfSSH();
     #EBox::CGI::SaveChanges->saveAllModulesAction();
 }
 
@@ -568,21 +589,21 @@ sub setupLighttpd
 # 20150518
 sub setConfSSH
 {
-    my ($self) = @_;
-
-    my $port = $self->model("RouterSettings")->value("sshPort");
+    my ($self, $port) = @_;
+    #return;
+    #my $port = $self->model("RouterSettings")->value("sshPort");
 
     my @params = (
         "port" => $port
     );
     $self->writeConfFile(
-        '/etc/ssh/sshd_conf',
+        '/etc/ssh/sshd_config',
         "dlllciasrouter/sshd_config.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
 
-    EBox::Sudo::root("/etc/init.d/ssh restart");
+    EBox::Sudo::root("service ssh restart");
 }
 
 1;
