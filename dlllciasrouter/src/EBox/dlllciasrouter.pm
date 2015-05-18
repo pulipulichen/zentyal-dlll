@@ -52,6 +52,7 @@ sub dlllciasrouter_init
     $self->setupLighttpd();
     #$self->model("LibraryNetwork")->setupInternalIface();
     $self->model("RouterSettings")->addServicePort();
+    $self->model("RouterSettings")->addFilter();
     $self->model("LibraryDomainName")->setupDefaultDomainName();
     $self->model('LibraryMAC')->setupAdministorNetworkMember();
     $self->model("LibraryMAC")->setupDHCPfixedIP();
