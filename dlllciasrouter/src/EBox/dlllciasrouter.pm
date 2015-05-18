@@ -34,7 +34,6 @@ sub _create
     );
 
     bless ($self, $class);
-    #$self->{inited} = 0;
     
     $self->dlllciasrouter_init();
 
@@ -45,15 +44,9 @@ sub dlllciasrouter_init
 {
     my ($self) = @_;
 
-    #if ($self->{inited} == 1) {
-    #    return;
-    #} 
-
     # 初始化安裝
     try {
     $self->setupLighttpd();
-
-    #$self->model("LibraryNetwork")->initInternalIface();
 
     $self->model("LibraryDomainName")->initDefaultDomainName();
 
@@ -62,22 +55,16 @@ sub dlllciasrouter_init
 
     $self->model("RouterSettings")->initServicePort();
     
-    #$self->model("RouterSettings")->addServicePort();
-    #$self->model("RouterSettings")->addFilter();
-    
 
     $self->model('LibraryMAC')->initAdministorNetworkMember();
     $self->model("LibraryMAC")->initDHCPfixedIP();
 
     $self->model("LibraryFilter")->initZentyalAdminFilter();
     $self->model("LibraryFilter")->initPoundFilter();
-    #$self->model("LibraryService")->setupZentyalAdminService();
-    #$self->model('LibraryRedirect')->setupZentyalRedirect();
 
     } catch {
         $self->modle("PoundLibrary")->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
-    #$self->{inited} = 1;
 }
 
 sub menu
@@ -119,6 +106,8 @@ sub menu
 sub _daemons
 {
     my ($self) = @_;
+
+    $self->dlllciasrouter_init();
 
     my $daemons;
 
