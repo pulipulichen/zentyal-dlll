@@ -139,6 +139,16 @@ sub setContactLink
     #$row->store();
 }
 
+# 20150519 Pulipuli Chen
+sub updateLogsLink
+{
+    my ($self, $row) = @_;
+
+    my $ipaddr = $row->valueByName('ipaddr');
+    my $btn = '<a class="btn-only-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$ipaddr.'">configure</a>';
+    $row->elementByName('logsLink')->setValue($btn);
+}
+
 sub setDescriptionHTML
 {
     my ($self, $row) = @_;

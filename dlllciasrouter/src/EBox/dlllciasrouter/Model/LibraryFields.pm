@@ -1091,6 +1091,21 @@ sub createFieldDisplayContactLink
     return $field;
 }
 
+# 20150519 Pulipuli Chen
+sub createFieldLogsLink
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => 'logsLink',
+            printableName => __('Logs'),
+            editable => 0,
+            optional=>1,
+            hiddenOnSetter => 1,
+            hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
 # -----------------------------------
 
 sub createFieldLink

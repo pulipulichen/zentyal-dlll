@@ -157,7 +157,9 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldCreateDateData());
     push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
     push(@fields, $fieldsFactory->createFieldDisplayContactLink());
+
     push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView, 1));
+    push(@fields, $fieldsFactory->createFieldLogsLink());
 
     # ----------------------------------
 
@@ -210,6 +212,7 @@ sub serverAddedRowNotify
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
     $libCT->setContactLink($row);
+    $libCT->updateLogsLink($row);
     $libCT->setDescriptionHTML($row);
     $libCT->setHardwareDisplay($row);
 
@@ -276,6 +279,7 @@ sub serverUpdatedRowNotify
         $libCT->setCreateDate($row);
         $libCT->setUpdateDate($row);
         $libCT->setContactLink($row);
+        $libCT->updateLogsLink($row);
         $libCT->setHardwareDisplay($row);
 
         if ($self->isDomainNameEnable($row) == 1) {
