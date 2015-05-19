@@ -54,6 +54,22 @@ sub initZentyalAdminFilter
     $self->addExternalToEBoxRule(%param);
 }
 
+# 20150519 Pulipuli Chen
+sub initBlackListFilter
+{
+    my ($self) = @_;
+
+    my %param = (
+        'decision' => 'deny',
+        'source_selected' => 'source_object',
+        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Black-List')->id(),
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('any'),
+        'description' => __("Black List"),
+    );
+
+    $self->addExternalToEBoxRule(%param);
+}
+
 # 20150518 Pulipuli Chen
 sub initPoundFilter
 {
@@ -64,6 +80,21 @@ sub initPoundFilter
         'source_selected' => 'source_any',
         'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-pound'),
         'description' => __("Reverse Proxy & Lighttpd."),
+    );
+
+    $self->addExternalToEBoxRule(%param);
+}
+
+# 20150519 Pulipuli Chen
+sub initPoundLogFilter
+{
+    my ($self) = @_;
+
+    my %param = (
+        'decision' => 'log',
+        'source_selected' => 'source_any',
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-pound'),
+        'description' => __("Reverse Proxy & Lighttpd Log."),
     );
 
     $self->addExternalToEBoxRule(%param);

@@ -64,10 +64,12 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}));
     push(@fields, $fieldsFactory->createFieldProtocolScheme('Main', 0, $options->{poundScheme}));
 
+    my $logBtn = '  <a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_actions&filter-model='.$tableName.'">Logs</a>';
+    
     my $dataTable = {
             'tableName' => $tableName,
             'pageTitle' => $options->{pageTitle},
-            'printableTableName' => $options->{pageTitle},
+            'printableTableName' => $options->{pageTitle} . $logBtn,
             'modelDomain'     => 'dlllciasrouter',
             'defaultActions' => [ 'editField' ],
             'tableDescription' => \@fields,

@@ -61,13 +61,16 @@ sub dlllciasrouter_init
     
 
     $self->model('LibraryMAC')->initAdministorNetworkMember();
+    $self->model('LibraryMAC')->initBlackListMember();
     $self->model("LibraryMAC")->initDHCPfixedIP();
 
     $self->model("LibraryFilter")->initZentyalAdminFilter();
+    $self->model("LibraryFilter")->initBlackListFilter();
     $self->model("LibraryFilter")->initPoundFilter();
+    $self->model("LibraryFilter")->initPoundLogFilter();
 
     } catch {
-        $self->model("PoundLibrary")->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
+        $self->model("PoundLibrary")->show_exceptions($_ . '( dlllciasrouter->dlllciasrouter_init() )');
     };
 }
 

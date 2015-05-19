@@ -166,6 +166,16 @@ sub initAdministorNetworkMember
 }
 
 ##
+# 20150517 Pulipuli Chen
+##
+sub initBlackListMember
+{
+    my ($self) = @_;
+
+    my $objectRow = $self->getObjectRow('Black-list');
+}
+
+##
 # 移除DHCP-fixed-IP的成員
 # @param $row 來自BackEnd的row
 ##

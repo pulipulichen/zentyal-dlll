@@ -40,6 +40,8 @@ sub new
     my $self = $class->SUPER::new(%params);
     bless($self, $class);
 
+    $self->{pound_port} = 80;
+
     return $self;
 }
 
@@ -73,7 +75,7 @@ sub _table
 
     push(@fields, new EBox::Types::Port(
               fieldName     => 'webadminPort',
-              printableName => __('Zentyal Webadmin Port. ') . __('Only For Administrator Network'),
+              printableName => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator Network') . ")",
               editable      => 1,
               unique        => 1,
               defaultValue => 64443,
@@ -82,13 +84,27 @@ sub _table
 
     push(@fields, new EBox::Types::Port(
             fieldName     => 'adminPort',
-            printableName => __('Zentyal SSH Port. '). __('Only For Administrator Network'),
-            help => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator Network Setting') . '</a>',
+            printableName => __('Zentyal SSH Port. ') . "(" . __('Only For Administrator Network') . ")",
             editable      => 1,
             unique        => 1,
             defaultValue => 64422,
             optional => 0,
         ));
+
+    my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR NETWORK'), $editAdminNet, 1));
+
+    my $blObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Black-List')->id();
+    my $editBL = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$blObjectID.'/members&backview=/Objects/View/MemberTable';
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_bl", __('EDIT BLACK LIST'), $editBL, 1));
+
+    my $html = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_sessions">Administrator Sessions Logs</a>';
+        #. ' <a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_actions">Configuration Changes Logs</a>';
+    $html = "<span>" . $html . "</span>";
+    push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_zentyal_links", $html));
+
+    # ----------------------------------------------------------
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundConfig', __('Pound Configuration')));
     push(@fields, new EBox::Types::Union(
@@ -134,9 +150,14 @@ sub _table
         
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
 
-    my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
-    my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR NETWORK'), $editAdminNet, 1));
+    #my $port = $self->value("port");
+    my $port = $self->{pound_port};
+    my $logPound = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$address.'&filter-fw_dpt='.$port.'">POUND LOGS</a>';
+    push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_log_pound", $logPound));
+
+    my $errPort = 88;
+    my $logErr = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$address.'&filter-fw_dpt='.$errPort.'">POUND ERROR LOGS</a>';
+    push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_log_err", $logErr));
 
         #$fieldsFactory->createFieldHrWithHeading('hr_ErrorMessage', __('Error Message Configuration')),
         #new EBox::Types::Boolean(
@@ -184,6 +205,8 @@ sub _table
         #    editable => 1,
         #    optional => 1,
         #),
+
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundDesc', __('Zentyal Description')));
         
     push(@fields, $fieldsFactory->createFieldDescription());
     #push(@fields, $fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/Composite/SettingComposite', 0));
@@ -192,10 +215,11 @@ sub _table
 
     my $pageTitle = __('Setting');
     
+    my $logBtn = '  <a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_actions&filter-model='.$tableName.'">Logs</a>';
     my $dataTable = {
             'tableName' => $tableName,
             'pageTitle' => '',
-            'printableTableName' => $pageTitle,
+            'printableTableName' => $pageTitle . $logBtn,
             'modelDomain'     => 'dlllciasrouter',
             'defaultActions' => [ 'editField' ],
             'tableDescription' => \@fields,
@@ -244,6 +268,7 @@ sub updatedRowNotify
         , $oldRow->valueByName("port")
         , $row->valueByName("port")
         , 1);
+    $self->{pound_port} = $row->valueByName("port");
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');

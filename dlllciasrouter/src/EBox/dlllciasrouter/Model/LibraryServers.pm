@@ -172,12 +172,12 @@ sub getDataTable
     #    backView => 'dlllciasrouter/View/PoundServices',
     #),
 
-
+    my $logBtn = '  <a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_actions&filter-model='.$options->{tableName}.'">Logs</a>';
     my $dataTable =
     {
         'tableName' => $options->{tableName},
         'pageTitle' => $options->{pageTitle},
-        'printableTableName' => $options->{printableTableName},
+        'printableTableName' => $options->{printableTableName} . $logBtn,
         'defaultActions' => [ 'add', 'del', 'editField', 'clone', 'changeView' ],
         'modelDomain' => 'dlllciasrouter',
         'tableDescription' => \@fields,
