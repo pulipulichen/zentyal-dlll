@@ -27,6 +27,7 @@ use EBox::DNS::Model::DomainTable;
 use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 use EBox::Exceptions::DataExists;
+use EBox::Exceptions::Error;
 
 use LWP::Simple;
 use POSIX qw(strftime);
@@ -59,6 +60,12 @@ sub show_exceptions
 {
     my ($self, $message) = @_;
     throw EBox::Exceptions::External($message);
+    #throw EBox::Exceptions::InvalidData("ERROR", $message);
+
+    #throw EBox::Exceptions::Error($message);
+    #$self->setMessage(
+    #       $message,
+    #        'warning');
 }
 
 sub isEnable

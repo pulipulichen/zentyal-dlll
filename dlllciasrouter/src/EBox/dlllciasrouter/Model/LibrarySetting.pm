@@ -85,7 +85,7 @@ sub getDataTable
 # 20150516 更新表單的動作
 sub updatedRowNotify
 {
-    my ($self, $row, $oldRow, $options) = @_;
+    my ($self, $mod, $row, $oldRow, $options) = @_;
 
     my $lib = $self->getLibrary();
 
@@ -154,7 +154,8 @@ sub updatedRowNotify
         $options->{moduleName}, $extIp, $extMask);
 
     } catch {
-        $self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');
+        #$self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');
+        $mod->setMessage($_ . '( LibrarySetting->updatedRowNotify() )', 'warning');
     };
 }
 

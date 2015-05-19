@@ -49,7 +49,7 @@ sub checkInternalIP
     my $partD = $parts[3];
 
     if (!($partA == 10) 
-        || !($partB > 0 && $partB < 5) 
+        || !($partB > 0 && $partB < 6) 
         || !($partC > -1 && $partC < 10) 
         || !($partD > 0 && $partD < 100) ) {
         my $message = __('Internal IP format error.' . $options->{IPHelp});
@@ -88,7 +88,7 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
-    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row);
+    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($self, $row);
     $ROW_NEED_UPDATE = 0;
 }
 

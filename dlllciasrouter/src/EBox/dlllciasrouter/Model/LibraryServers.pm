@@ -196,7 +196,7 @@ sub getDataTable
 ##
 sub serverAddedRowNotify
 {
-    my ($self, $row) = @_;
+    my ($self, $mod, $row) = @_;
 
     try {
 
@@ -229,7 +229,8 @@ sub serverAddedRowNotify
     #$ROW_NEED_UPDATE = 0;
 
     } catch {
-        $self->getLibrary()->show_exceptions($_ . "( LibraryServers->serverAddedRowNotify() )");
+        #$self->getLibrary()->show_exceptions($_ . "( LibraryServers->serverAddedRowNotify() )");
+        $mod->setMessage($_ . '( LibraryServers->updatedRowNotify() )', 'error');
     };
 }
 

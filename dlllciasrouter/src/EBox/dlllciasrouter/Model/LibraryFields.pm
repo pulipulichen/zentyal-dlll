@@ -279,7 +279,7 @@ sub createFieldMACAddr
             optional=>1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            help => __('Set MAC to assign Internal IP by DHCP.'),
+            help => __('Set MAC to assign Internal IP by DHCP. For example: 00:A0:C9:14:C8:29' ),
         );
 
     return $field;

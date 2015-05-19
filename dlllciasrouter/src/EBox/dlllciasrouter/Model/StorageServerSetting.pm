@@ -75,7 +75,7 @@ sub updatedRowNotify
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
         
-        $self->loadLibrary('LibrarySetting')->updatedRowNotify($row, $oldRow, $options);
+        $self->loadLibrary('LibrarySetting')->updatedRowNotify($self, $row, $oldRow, $options);
 
         $ROW_NEED_UPDATE = 0;
     }

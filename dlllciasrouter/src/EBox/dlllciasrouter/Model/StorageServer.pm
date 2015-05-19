@@ -88,7 +88,7 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
-    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row);
+    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($self, $row);
     $ROW_NEED_UPDATE = 0;
 }
 

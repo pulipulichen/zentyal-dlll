@@ -48,6 +48,6 @@ wget https://raw.githubusercontent.com/pulipulichen/zentyal-dlll/master/dlllcias
 sudo dpkg -i zentyal-dlllciasrouter_3.4_all.deb
 sudo /etc/init.d/zentyal dlllciasrouter restart
 
-if ! echo `sudo /etc/init.d/zentyal logs status` | grep "$GREP_STR" > /dev/null; then
+if ! echo `sudo /etc/init.d/zentyal dlllciasrouter status` | grep "$GREP_STR" > /dev/null; then
     echo "Please enable DLLL-CIAS Router module in Zentyal."
 fi
