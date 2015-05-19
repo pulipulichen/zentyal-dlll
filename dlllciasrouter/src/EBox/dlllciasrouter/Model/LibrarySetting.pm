@@ -124,6 +124,10 @@ sub updatedRowNotify
 
     my $domainName = $row->valueByName('domainName');
     my $scheme = $row->valueByName('redirMain_scheme');
+
+    my $intIpaddr = $row->valueByName('ipaddr');
+    my $logButton = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$intIpaddr.'">LOGS</a>';
+
     my $button = '<span></span>';
     if ($scheme ne "none") {
         my $port = ":" . $extPort;
@@ -133,8 +137,11 @@ sub updatedRowNotify
         my $link = $scheme . "://" . $domainName . $port . "/";
         my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
         my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>';
-        $button = "<span>" . $buttonBtn . "<br/>" . $buttonLink . "</span>";
+        $button = "<span>" . $buttonBtn . " " . $logButton . "<br/>" . $buttonLink . "</span>";
     }   # if ($shceme ne "none") {}
+    else {
+        $button = $logButton;
+    }
 
     my $fieldName = $tableName . '_web_button';
     if ($row->elementExists($fieldName)) {

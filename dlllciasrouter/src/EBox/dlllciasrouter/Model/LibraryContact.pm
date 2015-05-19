@@ -145,7 +145,7 @@ sub updateLogsLink
     my ($self, $row) = @_;
 
     my $ipaddr = $row->valueByName('ipaddr');
-    my $btn = '<a class="btn-only-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$ipaddr.'">configure</a>';
+    my $btn = '<a class="btn-only-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$ipaddr.'">LOGS</a>';
     $row->elementByName('logsLink')->setValue($btn);
 }
 
