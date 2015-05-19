@@ -51,6 +51,7 @@ sub dlllciasrouter_init
     $self->initApache();
     $self->initDefaultPound();
 
+    $self->model("LibraryLogs")->enableLogs();
     $self->model("LibraryDomainName")->initDefaultDomainName();
 
     $self->model("LibraryService")->getPoundService();
@@ -66,7 +67,7 @@ sub dlllciasrouter_init
     $self->model("LibraryFilter")->initPoundFilter();
 
     } catch {
-        $self->modle("PoundLibrary")->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
+        $self->model("PoundLibrary")->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
 }
 
