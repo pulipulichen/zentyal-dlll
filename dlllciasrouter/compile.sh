@@ -1,3 +1,5 @@
+sudo ls >> /dev/null
+
 cd ~/zentyal-dlll/dlllciasrouter
 
 echo ""

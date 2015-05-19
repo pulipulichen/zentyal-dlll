@@ -1,3 +1,5 @@
+sudo ls >> /dev/null
+
 # 必須要設定內部網路
 if ! echo `ifconfig` | grep 10.0.0.254  > /dev/null; then
     echo "You have to setup an Internel Network in Zentyal > Network > Interfaces."
