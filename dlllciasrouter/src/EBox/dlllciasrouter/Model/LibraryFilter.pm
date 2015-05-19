@@ -67,7 +67,8 @@ sub initBlackListFilter
         'description' => __("Black List"),
     );
 
-    $self->addExternalToEBoxRule(%param);
+    my $id = $self->addExternalToEBoxRule(%param);
+    $self->moveRuleToTop(%param);
 }
 
 # 20150518 Pulipuli Chen
@@ -109,8 +110,46 @@ sub addExternalToEBoxRule
     my $ruleTable = $network->model('ExternalToEBoxRuleTable');
     my $id = $ruleTable->findId('description'=>$param{description});
     if (!defined($id)) {
-        $ruleTable->addRow(%param)
+        $id = $ruleTable->addRow(%param)
     }
+    return $id;
+}
+
+sub moveRuleToTop
+{
+    my ($self, %param) = @_;
+
+    
+    my $id = $self->addExternalToEBoxRule(%param);
+
+    my $network = EBox::Global->modInstance('firewall');
+    my $ruleTable = $network->model('ExternalToEBoxRuleTable');
+    my $row = $ruleTable->row($id);
+    my $order = $ruleTable->_rowOrder($id);
+
+    while ($ruleTable->_rowOrder($id) > 0) {
+        my %order = $ruleTable->_orderHash();
+
+        my $pos = $order{$id};
+        if ($order{$id} == 0) {
+            last;
+        }
+        #$ruleTable->_swapPos($pos, $pos - 1);
+        my $posA = $pos;
+        my $posB = $pos - 1;
+
+        my $confmod = $ruleTable->{'confmodule'};
+        my @order = @{$confmod->get_list($ruleTable->{'order'})};
+
+        my $temp = $order[$posA];
+        $order[$posA] =  $order[$posB];
+        $order[$posB] = $temp;
+
+        $confmod->set_list($ruleTable->{'order'}, 'string', \@order);
+    }
+    
+
+    #$self->loadLibrary('PoundLibrary')->show_exceptions("[] " . $param{description} . "-----" . $ruleTable->_rowOrder($id) . "[]");
 }
 
 1;
