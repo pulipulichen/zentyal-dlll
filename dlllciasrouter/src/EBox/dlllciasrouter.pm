@@ -15,7 +15,6 @@ use EBox::Sudo;
 
 use Try::Tiny;
 
-my $CONFFILE = '/etc/pound/pound.cfg';
 
 # Method: _create
 #
@@ -48,7 +47,9 @@ sub dlllciasrouter_init
 
     # 初始化安裝
     try {
-    $self->setupLighttpd();
+    $self->initLighttpd();
+    $self->initApache();
+    $self->initDefaultPound();
 
     $self->model("LibraryDomainName")->initDefaultDomainName();
 
@@ -157,7 +158,89 @@ sub _setConf
 {
     my ($self) = @_;
 
-    my $lib = $self->getLibrary();
+    #  更新錯誤訊息
+    $self->updatePoundErrorMessage();
+    $self->updatePoundCfg();
+
+    #EBox::CGI::SaveChanges->saveAllModulesAction();
+}
+
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->model("PoundLibrary");
+}
+
+sub ipaddrToVMID
+{
+    my ($self, $ipaddr) = @_;
+
+    # 變成ID前幾碼
+    my @parts = split('\.', $ipaddr);
+    my $partC = $parts[2];
+    my $partD = $parts[3];
+    
+    # 重新組合
+        $partC = substr($partC, -1);
+    
+        if (length($partD) == 1) {
+            $partD = "0" . $partD;
+        }
+        else {
+            $partC = substr($partC, -2);
+        }
+     my $portHeader = $partC.$partD;
+     
+     return $portHeader;
+}
+
+# 20150519 Pulipuli Chen
+sub updatePoundErrorMessage
+{
+    my ($self) = @_;
+
+    my $mod = $self->model('ErrorMessage');
+
+    my @params = ();
+
+    my $address = $self->model('LibraryNetwork')->getExternalIpaddr();
+    push(@params, 'baseURL' => "http://" . $address . ":88");
+
+    push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
+    push(@params, 'homeText' => $mod->value('homeText'));
+    push(@params, 'homeURL' => $mod->value('homeURL'));
+    push(@params, 'aboutText' => $mod->value('aboutText'));
+    push(@params, 'aboutURL' => $mod->value('aboutURL'));    
+    push(@params, 'contactText' => $mod->value('contactText'));
+    push(@params, 'contactEMAIL' => $mod->value('contactEMAIL'));
+
+    my $errorMessage = $mod->value('errorMessage');
+    my $libEnc = $self->model("LibraryEncoding");
+    $errorMessage = $libEnc->unescapeFromUtf16($errorMessage);
+    push(@params, 'errorMessage' => $errorMessage);
+
+    $self->writeConfFile(
+        '/etc/pound/error.html',
+        "dlllciasrouter/error.html.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '777' }
+    );
+
+    $self->writeConfFile(
+        '/usr/share/zentyal/www/dlllciasrouter/css/styles.css',
+        "dlllciasrouter/styles.css.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '777' }
+    );
+}
+
+# 20150517 Pulipuli Chen
+sub updatePoundCfg
+{
+    my ($self) = @_;
+
+    
+    
 
     # ----------------------------
     # 設定
@@ -187,23 +270,7 @@ sub _setConf
     #my $fileTemp = "/tmp/error.html";
     #my $file = "/tmp/error.html";
 
-    my $address = "127.0.0.1";
-    if ($settings->value("address") eq "address_extIface")
-    {
-        my $network = EBox::Global->modInstance('network');
-        foreach my $if (@{$network->ExternalIfaces()}) {
-            if ($network->ifaceIsExternal($if)) {
-                $address = $network->ifaceAddress($if);
-            }
-        }
-    }
-    else
-    {
-        $address = $settings->value("address");
-    }
-
-    #  更新錯誤訊息
-    $self->updateErrorMessage();
+    my $address = $settings->getExtIPAddress();
 
     my $restarterIP;
     if ($settings->row->elementExists('restarterIP')) {
@@ -226,14 +293,74 @@ sub _setConf
     # Back End
     # ----------------------------
 
-    my $services = $self->model('VMServer');
-    my $libRedir = $self->model('LibraryRedirect');
-
+    
     # Iterate over table
     #my @paramsArray = ();
     my $domainHash = (); 
     my $vmHash = ();
     my $i = 0;
+
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
+
+    # ----------------------------
+    # 轉址
+    # ----------------------------
+
+    # Iterate over table
+    my @redirArray = $self->getURLRedirectParam();
+
+    # ----------------------------
+    # 準備把值傳送到設定檔去
+    # ----------------------------
+
+    my @servicesParams = ();
+    push(@servicesParams, 'address' => $address);
+    push(@servicesParams, 'port' => $port);
+    push(@servicesParams, 'alive' => $alive);
+    push(@servicesParams, 'timeout' => $timeout);
+    #push(@servicesParams, 'enableError' => $enableError);
+    #push(@servicesParams, 'errorURL' => $errorURL);
+    #push(@servicesParams, 'file' => $file);
+
+    push(@servicesParams, 'restarterIP' => $restarterIP);
+    push(@servicesParams, 'restarterPort' => $restarterPort);
+
+    #push(@servicesParams, 'services' => \@paramsArray);
+    push(@servicesParams, 'domainHash' => $domainHash);
+
+    push(@servicesParams, 'redir' => \@redirArray);
+    
+    $self->writeConfFile(
+        '/etc/pound/pound.cfg',
+        "dlllciasrouter/pound.cfg.mas",
+        \@servicesParams,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    my @vmParams = ();
+    push(@vmParams, 'vmHash' => $vmHash);
+    push(@vmParams, 'notifyEmail' => $notifyEmail);
+    push(@vmParams, 'senderEmail' => $senderEmail);
+    $self->writeConfFile(
+        '/etc/pound/vmid-config.php',
+        #'/var/www/vmid-config.php',
+        "dlllciasrouter/vmid-config.php.mas",
+        \@vmParams,
+        { uid => '0', gid => '0', mode => '770' }
+    );
+
+}   # sub updatePoundCfg
+
+sub getServiceParam
+{
+    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
+
+    my $libRedir = $self->model('LibraryRedirect');
+    my $lib = $self->getLibrary();
+
+    my $services = $self->model($modName);
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
@@ -378,16 +505,18 @@ sub _setConf
 
             }   # for my $dnId (@{$otherDN->ids()}) {
         }   # if ($row->elementExists('otherDomainName')) {
-        
+    }   # for my $id (@{$services->ids()}) {}
 
+    return ($domainHash, $vmHash, $i);
+}
 
-    }
-
-    # ----------------------------
-    # 轉址
-    # ----------------------------
+# 20150519 Pulipuli Chen
+sub getURLRedirectParam
+{
+    my ($self) = @_;
 
     my $redirect = $self->model('URLRedirect');
+    my $lib = $self->getLibrary();
 
     # Iterate over table
     my @redirArray = ();
@@ -409,141 +538,7 @@ sub _setConf
         });
     }
 
-    # ----------------------------
-    # 準備把值傳送到設定檔去
-    # ----------------------------
-
-    my @servicesParams = ();
-    push(@servicesParams, 'address' => $address);
-    push(@servicesParams, 'port' => $port);
-    push(@servicesParams, 'alive' => $alive);
-    push(@servicesParams, 'timeout' => $timeout);
-    #push(@servicesParams, 'enableError' => $enableError);
-    #push(@servicesParams, 'errorURL' => $errorURL);
-    #push(@servicesParams, 'file' => $file);
-
-    push(@servicesParams, 'restarterIP' => $restarterIP);
-    push(@servicesParams, 'restarterPort' => $restarterPort);
-
-    #push(@servicesParams, 'services' => \@paramsArray);
-    push(@servicesParams, 'domainHash' => $domainHash);
-
-    push(@servicesParams, 'redir' => \@redirArray);
-    
-    $self->writeConfFile(
-        $CONFFILE,
-        "dlllciasrouter/pound.cfg.mas",
-        \@servicesParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    my @vmParams = ();
-    push(@vmParams, 'vmHash' => $vmHash);
-    push(@vmParams, 'notifyEmail' => $notifyEmail);
-    push(@vmParams, 'senderEmail' => $senderEmail);
-    $self->writeConfFile(
-        '/etc/pound/vmid-config.php',
-        #'/var/www/vmid-config.php',
-        "dlllciasrouter/vmid-config.php.mas",
-        \@vmParams,
-        { uid => '0', gid => '0', mode => '770' }
-    );
-
-
-    # ----------------------------
-    # 設定pound自動啟動跟apache
-    # ----------------------------
-    my @nullParams = ();
-
-    if (-e '/etc/apache2/ports.conf') {
-        $self->writeConfFile(
-            '/etc/apache2/ports.conf',
-            "dlllciasrouter/ports.conf.mas",
-            \@nullParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
-    }
-
-    if ( !(-e '/etc/default/pound') ) {
-        throw EBox::Exceptions::Internal("You have not install pound! Cannot found /etc/default/pound ");
-    }
-
-    $self->writeConfFile(
-        '/etc/default/pound',
-        "dlllciasrouter/default-pound.mas",
-        \@nullParams,
-        { uid => '0', gid => '0', mode => '740' }
-    );
-
-    #EBox::CGI::SaveChanges->saveAllModulesAction();
-}
-
-sub getLibrary
-{
-    my ($self) = @_;
-    return $self->model("PoundLibrary");
-}
-
-sub ipaddrToVMID
-{
-    my ($self, $ipaddr) = @_;
-
-    # 變成ID前幾碼
-    my @parts = split('\.', $ipaddr);
-    my $partC = $parts[2];
-    my $partD = $parts[3];
-    
-    # 重新組合
-        $partC = substr($partC, -1);
-    
-        if (length($partD) == 1) {
-            $partD = "0" . $partD;
-        }
-        else {
-            $partC = substr($partC, -2);
-        }
-     my $portHeader = $partC.$partD;
-     
-     return $portHeader;
-}
-
-sub updateErrorMessage
-{
-    my ($self) = @_;
-
-    my $mod = $self->model('ErrorMessage');
-
-    my @params = ();
-
-    my $address = $self->model('LibraryNetwork')->getExternalIpaddr();
-    push(@params, 'baseURL' => "http://" . $address . ":88");
-
-    push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
-    push(@params, 'homeText' => $mod->value('homeText'));
-    push(@params, 'homeURL' => $mod->value('homeURL'));
-    push(@params, 'aboutText' => $mod->value('aboutText'));
-    push(@params, 'aboutURL' => $mod->value('aboutURL'));    
-    push(@params, 'contactText' => $mod->value('contactText'));
-    push(@params, 'contactEMAIL' => $mod->value('contactEMAIL'));
-
-    my $errorMessage = $mod->value('errorMessage');
-    my $libEnc = $self->model("LibraryEncoding");
-    $errorMessage = $libEnc->unescapeFromUtf16($errorMessage);
-    push(@params, 'errorMessage' => $errorMessage);
-
-    $self->writeConfFile(
-        '/etc/pound/error.html',
-        "dlllciasrouter/error.html.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '777' }
-    );
-
-    $self->writeConfFile(
-        '/usr/share/zentyal/www/dlllciasrouter/css/styles.css',
-        "dlllciasrouter/styles.css.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '777' }
-    );
+    return @redirArray;
 }
 
 # 20150517 Pulipuli Chen
@@ -559,7 +554,7 @@ sub initInstall
     }
 }
 
-sub setupLighttpd
+sub initLighttpd
 {
     my ($self, $packageName) = @_;
 
@@ -575,7 +570,7 @@ sub setupLighttpd
     system('chmod 744  /usr/share/zentyal/www/dlllciasrouter');
 }
 
-# 20150518
+# 20150519 Pulipuli Chen
 sub setConfSSH
 {
     my ($self, $port) = @_;
@@ -594,5 +589,49 @@ sub setConfSSH
 
     EBox::Sudo::root("service ssh restart");
 }
+
+# 20150519 Pulipuli Chen
+sub initApache
+{
+     my ($self) = @_;
+
+    if (-e '/etc/apache2/ports.conf') {
+
+        my @nullParams = ();
+        $self->writeConfFile(
+            '/etc/apache2/ports.conf',
+            "dlllciasrouter/ports.conf.mas",
+            \@nullParams,
+            { uid => '0', gid => '0', mode => '644' }
+        );
+    }
+}
+
+# 20150519 Pulipuli Chen
+sub initDefaultPound
+{
+     my ($self) = @_;
+
+    if ( !(-e '/etc/default/pound') ) {
+        throw EBox::Exceptions::Internal("You have not install pound! Cannot found /etc/default/pound ");
+    }
+
+    my @nullParams = ();
+    $self->writeConfFile(
+        '/etc/default/pound',
+        "dlllciasrouter/default-pound.mas",
+        \@nullParams,
+        { uid => '0', gid => '0', mode => '740' }
+    );
+}
+
+# 20150519 Pulipuli Chen
+# 讀取指定的Model
+sub loadLibrary
+{
+    my ($self, $library) = @_;
+    return $self->model($library);
+}
+
 
 1;

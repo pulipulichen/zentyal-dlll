@@ -287,4 +287,20 @@ sub initServicePort
     }
 }
 
+# 20150519 Pulipuli Chen
+sub getExtIPAddress
+{
+    my ($self) = @_;
+
+    my $address = "127.0.0.1";
+    if ($self->value("address") eq "address_extIface") {
+        $address = $self->loadLibrary("LibraryNetwork")->getExternalIpaddr();
+    }
+    else {
+        $address = $self->value("address");
+    }
+
+    return $address;
+}
+
 1;
