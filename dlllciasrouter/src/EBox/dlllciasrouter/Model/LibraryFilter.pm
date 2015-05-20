@@ -47,8 +47,9 @@ sub initZentyalAdminFilter
         'decision' => 'accept',
         'source_selected' => 'source_object',
         'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id(),
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciastouer-admin'),
-        'description' => __("Zentyal Webadmin & SSH"),
+        #'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciastouer-admin'),
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('any'),
+        'description' => __("Zentyal Administrator"),
     );
 
     $self->addExternalToEBoxRule(%param);
