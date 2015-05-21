@@ -172,7 +172,7 @@ sub initBlackListMember
 {
     my ($self) = @_;
 
-    my $objectRow = $self->getObjectRow('Black-list');
+    my $objectRow = $self->getObjectRow('Black-List');
 }
 
 ##
