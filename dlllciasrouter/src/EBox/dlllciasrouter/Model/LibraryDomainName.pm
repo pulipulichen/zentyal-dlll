@@ -93,8 +93,15 @@ sub addDomainNameWithIP
 
     # 刪掉多餘的Hostname
     my $hostnameTable = $domainRow->subModel("hostnames");
-    my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+    #my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+    my $zentyalHostnameID;
+    for $zentyalHostnameID (@{$hostnameTable->ids()}) {
+        last;
+    }
     my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+    #if (!defined($zentyalRow)) {
+    #    $zentyalRow = $hostnameTable->row();
+    #}
     my $zentyalIpTable;
     if (defined($zentyalRow)) {
         $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
