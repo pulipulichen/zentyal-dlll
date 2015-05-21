@@ -953,8 +953,8 @@ sub getServerRedirectParamDMZ
         destination_port_selected => "destination_port_same",
 
         description => $domainName. " (" . $localIpaddr . "): " . $desc . '(DMZ)',
-        snat => 0,
-        log => 0,
+        snat => 1,
+        log => 1,
     );
 
     return %param;
@@ -998,7 +998,7 @@ sub getServerRedirectParamOrigin
         destination_port_other => $intPort,
 
         description => $domainName. " (" . $localIpaddr . "): " . $desc . '(Original)',
-        snat => 0,
+        snat => 1,
         log => 1,
     );
 
@@ -1041,7 +1041,7 @@ sub getServerRedirectParamZentyal
         destination_port_other => $intPort,
 
         description => $domainName. " (" . $localIpaddr . "): " . $desc . '(Zentyal)',
-        snat => 0,
+        snat => 1,
         log => 1,
     );
 
