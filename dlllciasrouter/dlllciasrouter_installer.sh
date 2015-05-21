@@ -13,8 +13,10 @@ else
 fi
 
 if ! which pound > /dev/null; then
-    sudo apt-get -y --force-yes update
-    sudo apt-get -y --force-yes install zentyal-network zentyal-objects zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp pound lighttpd
+    if ! which lighttpd > /dev/null; then
+        sudo apt-get -y --force-yes update
+        sudo apt-get -y --force-yes install zentyal-network zentyal-objects zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp pound lighttpd
+    fi
 fi
 
 # 檢查模組的啟用狀態
