@@ -95,13 +95,20 @@ sub addDomainNameWithIP
     my $hostnameTable = $domainRow->subModel("hostnames");
     my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
     my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
-    my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-    $zentyalIpTable->removeAll();
+    my $zentyalIpTable;
+    if (defined($zentyalRow)) {
+        $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+        $zentyalIpTable->removeAll();
+    }
 
     # 幫ipTable加上指定的IP
-    $ipTable->addRow(
+    $id = $ipTable->addRow(
         ip => , $ipaddr
     );
+    if (!defined($zentyalRow)) {
+        $zentyalRow = $hostnameTable->row($id);
+        $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+    }
 
     # 幫zentyalIpTalbe加上指定的IP
     $zentyalIpTable->addRow(
