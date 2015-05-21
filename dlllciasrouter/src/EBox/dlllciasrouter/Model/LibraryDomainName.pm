@@ -91,32 +91,30 @@ sub addDomainNameWithIP
     $ipTable = $domainRow->subModel("ipAddresses");
     $ipTable->removeAll();
 
+    # 幫ipTable加上指定的IP
+    $ipTable->addRow(
+        ip => , $ipaddr
+    );
+
     # 刪掉多餘的Hostname
     my $hostnameTable = $domainRow->subModel("hostnames");
     #my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
     my $zentyalHostnameID;
+    my $zentyalRow;
     for $zentyalHostnameID (@{$hostnameTable->ids()}) {
-        last;
+        $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+        if (defined($zentyalRow)) {
+            last;
+        }
     }
-    my $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+
     #if (!defined($zentyalRow)) {
     #    $zentyalRow = $hostnameTable->row();
     #}
-    my $zentyalIpTable;
-    if (defined($zentyalRow)) {
-        $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-        $zentyalIpTable->removeAll();
-    }
-
-    # 幫ipTable加上指定的IP
-    $id = $ipTable->addRow(
-        ip => , $ipaddr
-    );
-    if (!defined($zentyalRow)) {
-        $zentyalRow = $hostnameTable->row($id);
-        $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-    }
-
+    
+    my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+    $zentyalIpTable->removeAll();
+    
     # 幫zentyalIpTalbe加上指定的IP
     $zentyalIpTable->addRow(
         ip => , $ipaddr
