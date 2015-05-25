@@ -567,8 +567,8 @@ sub createFieldProtocolOnlyForLAN
     my ($self, $protocol, $enable) = @_;
     my $field = new EBox::Types::Boolean(
             fieldName => 'redir'.$protocol.'_secure',
-            printableName => __('Only For Administrator Network'),
-            help => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator Network Setting') . '</a>',
+            printableName => __('Only For Administrator List'),
+            help => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator List Setting') . '</a>',
             editable => 1,
             optional => 0,
             defaultValue => $enable,
@@ -1359,8 +1359,8 @@ sub createFieldPortOnlyForLan
     my ($self, $help) = @_;
     my $field = new EBox::Types::Boolean(
             'fieldName' => 'secure',
-            'printableName' => __('Only For Administrator Network'),
-            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator Network Setting') . '</a>',
+            'printableName' => __('Only For Administrator List'),
+            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator List Setting') . '</a>',
             'editable' => 1,
             optional=>0,
         );
@@ -1391,7 +1391,7 @@ sub createFieldPortEnableLog
 # 開啟記錄按鈕
 sub createFieldAttachedFilesButton
 {
-    my ($self, $backView, $hiddenOnSetter) = @_;
+    my ($self, $backView) = @_;
     my $field = new EBox::Types::HasMany(
             'fieldName' => 'attachedFiles',
             'printableName' => __('Files'),
@@ -1399,7 +1399,27 @@ sub createFieldAttachedFilesButton
             'view' => '/dlllciasrouter/View/AttachedFiles',
             'backView' => $backView,
             'size' => '1',
-            'hiddenOnSetter' => $hiddenOnSetter,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 0,
+            'help' => __('You can configure other redirection at following table. You have to add this row first.'),
+            #'parent' =>  $self->loadLibrary('RouterSettings'),
+       );
+    return $field;
+}
+
+# 20150515 Pulipuli Chen
+# 開啟記錄按鈕
+sub createFieldAttachedFilesButtonShow
+{
+    my ($self, $backView) = @_;
+    my $field = new EBox::Types::HasMany(
+            'fieldName' => 'attachedFiles',
+            'printableName' => __('Files'),
+            'foreignModel' => 'AttachedFiles',
+            'view' => '/dlllciasrouter/View/AttachedFiles',
+            'backView' => $backView,
+            'size' => '1',
+            'hiddenOnSetter' => 1,
             'hiddenOnViewer' => 0,
             #'parent' =>  $self->loadLibrary('RouterSettings'),
        );

@@ -55,16 +55,40 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());
 
     # ----------------------------
-    push(@fields, $fieldsFactory->createFieldHr('hr_contact'));
+    #push(@fields, $fieldsFactory->createFieldHr('hr_contact'));
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_contact', __('Management Information')));
 
     push(@fields, $fieldsFactory->createFieldContactName());
     push(@fields, $fieldsFactory->createFieldContactEmail());
     push(@fields, $fieldsFactory->createFieldDescription());
     push(@fields, $fieldsFactory->createFieldDescriptionHTML());
+
+    push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView));
+
     push(@fields, $fieldsFactory->createFieldExpiryDate($options->{expiryDate}));
 
+    push(@fields, $fieldsFactory->createFieldCreateDateData());
+    push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
+    
+    
+
+    # -------------------------------------
+    # hardware
+
+    if ($options->{enableHardware} == 1) {
+        #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_hardware', __('Management Information')));
+
+        push(@fields, $fieldsFactory->createFieldHardwareCPU());
+        push(@fields, $fieldsFactory->createFieldHardwareRAM());
+        push(@fields, $fieldsFactory->createFieldHardwareDisk());
+        push(@fields, $fieldsFactory->createFieldHardwareDisplay());
+
+        #push(@fields, $fieldsFactory->createFieldHr('hr_hardd'));
+    }
+
     # ----------------------------
-    push(@fields, $fieldsFactory->createFieldHr('hr_pound'));
+    #push(@fields, $fieldsFactory->createFieldHr('hr_pound'));
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_pound', __('Pound Network Settings')));
 
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
 
@@ -80,22 +104,13 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldPoundOnlyForLAN());
     push(@fields, $fieldsFactory->createFieldEmergencyRestarter());
 
-    push(@fields, $fieldsFactory->createFieldHr('hr1'));
+    #push(@fields, $fieldsFactory->createFieldHr('hr1'));
 
-    # -------------------------------------
-    # hardware
-
-    if ($options->{enableHardware} == 1) {
-        push(@fields, $fieldsFactory->createFieldHardwareCPU());
-        push(@fields, $fieldsFactory->createFieldHardwareRAM());
-        push(@fields, $fieldsFactory->createFieldHardwareDisk());
-        push(@fields, $fieldsFactory->createFieldHardwareDisplay());
-
-        push(@fields, $fieldsFactory->createFieldHr('hr_hardd'));
-    }
         
     # --------------------------
     # HTTP Redirect Fields 
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_http', __('HTTP Network Settings')));
+
     push(@fields, $fieldsFactory->createFieldHTTPRedirect($options->{enableHTTP}));
     push(@fields, $fieldsFactory->createFieldHTTPOnlyForLAN());
     push(@fields, $fieldsFactory->createFieldHTTPLog());
@@ -103,11 +118,13 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldHTTPInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("HTTP", 0, "http"));
     push(@fields, $fieldsFactory->createFieldHTTPNote());
-    push(@fields, $fieldsFactory->createFieldHr('hr_http'));
+    #push(@fields, $fieldsFactory->createFieldHr('hr_http'));
 
 
     # ----------------------
     # HTTPS Redirect Fields
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_https', __('HTTPS Network Settings')));
+
     push(@fields, $fieldsFactory->createFieldHTTPSRedirect($options->{enableHTTPS}));
     push(@fields, $fieldsFactory->createFieldHTTPSOnlyForLAN());
     push(@fields, $fieldsFactory->createFieldHTTPSLog());
@@ -115,10 +132,12 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldHTTPSInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("HTTPS", 0, "https"));
     push(@fields, $fieldsFactory->createFieldHTTPSNote());
-    push(@fields, $fieldsFactory->createFieldHr('hr_https'));
+    #push(@fields, $fieldsFactory->createFieldHr('hr_https'));
 
     # --------------------------------
     # SSH Redirect Fields
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_ssh', __('SSH Network Settings')));
+
     push(@fields, $fieldsFactory->createFieldSSHRedirect($options->{enableSSH}));
     push(@fields, $fieldsFactory->createFieldSSHOnlyForLAN());
     push(@fields, $fieldsFactory->createFieldSSHLog());
@@ -126,10 +145,12 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldSSHInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("SSH", 0, "none"));
     push(@fields, $fieldsFactory->createFieldSSHNote());
-    push(@fields, $fieldsFactory->createFieldHr('hr_ssh'));
+    #push(@fields, $fieldsFactory->createFieldHr('hr_ssh'));
 
     # --------------------------------
     # RDP Redirect Fields
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_rdp', __('RDP Network Settings')));
+
     push(@fields, $fieldsFactory->createFieldRDPRedirect($options->{enableRDP}));
     push(@fields, $fieldsFactory->createFieldRDPOnlyForLAN());
     push(@fields, $fieldsFactory->createFieldRDPLog());
@@ -137,7 +158,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldRDPInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("RDP", 0, "none"));
     push(@fields, $fieldsFactory->createFieldRDPNote());
-    push(@fields, $fieldsFactory->createFieldHr('hr_rdp'));
+    #push(@fields, $fieldsFactory->createFieldHr('hr_rdp'));
 
     # --------------------------------
 
@@ -154,11 +175,11 @@ sub getDataTable
     # Date Display
 
     push(@fields, $fieldsFactory->createFieldCreateDateDisplay());
-    push(@fields, $fieldsFactory->createFieldCreateDateData());
-    push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
+    #push(@fields, $fieldsFactory->createFieldCreateDateData());
+    #push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
     push(@fields, $fieldsFactory->createFieldDisplayContactLink());
 
-    push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView, 1));
+    #push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView, 1));
     push(@fields, $fieldsFactory->createFieldLogsLink());
 
     # ----------------------------------
@@ -198,7 +219,7 @@ sub getDataTable
 ##
 sub serverAddedRowNotify
 {
-    my ($self, $mod, $row) = @_;
+    my ($self, $row, $options) = @_;
 
     try {
 
@@ -207,6 +228,7 @@ sub serverAddedRowNotify
     my $lib = $self->getLibrary();
     my $libDN = $self->loadLibrary('LibraryDomainName');
     $libDN->updateDomainNameLink($row, 1);
+    $self->updateNetworkDisplay($row, $options->{enableVMID});
     
     my $libCT = $self->loadLibrary('LibraryContact');
     $libCT->setCreateDate($row);
@@ -225,22 +247,21 @@ sub serverAddedRowNotify
     $libREDIR->addRedirects($row);
 
     my $libMAC = $self->loadLibrary('LibraryMAC');
-    $libMAC->updateNetworkDisplay($row);
     $libMAC->addDHCPfixedIPMember($row);
 
     $row->store();
     #$ROW_NEED_UPDATE = 0;
 
     } catch {
-        #$self->getLibrary()->show_exceptions($_ . "( LibraryServers->serverAddedRowNotify() )");
-        $mod->setMessage($_ . '( LibraryServers->updatedRowNotify() )', 'error');
+        $self->getLibrary()->show_exceptions($_ . "( LibraryServers->serverAddedRowNotify() )");
+        #$mod->setMessage($_ . '( LibraryServers->updatedRowNotify() )', 'error');
     };
 }
 
 
 sub serverDeletedRowNotify
 {
-    my ($self, $row) = @_;
+    my ($self, $row, $options) = @_;
 
     try {
 
@@ -262,7 +283,7 @@ sub serverDeletedRowNotify
 
 sub serverUpdatedRowNotify
 {
-    my ($self, $row, $oldRow) = @_;
+    my ($self, $row, $oldRow, $options) = @_;
 
     my $lib = $self->getLibrary();
 
@@ -271,6 +292,7 @@ sub serverUpdatedRowNotify
         my $libDN = $self->loadLibrary('LibraryDomainName');
         $self->deletedRowNotify($oldRow);
         $libDN->updateDomainNameLink($row, 1);
+        $self->updateNetworkDisplay($row, $options->{enableVMID});
     
         my $libREDIR = $self->loadLibrary('LibraryRedirect');
         $libREDIR->updateRedirectPorts($row);
@@ -289,7 +311,6 @@ sub serverUpdatedRowNotify
         $libREDIR->addRedirects($row);
 
         my $libMAC = $self->loadLibrary('LibraryMAC');
-        $libMAC->updateNetworkDisplay($row);
         $libMAC->removeDHCPfixedIPMember($oldRow);
         $libMAC->addDHCPfixedIPMember($row);
 
@@ -323,6 +344,59 @@ sub isDomainNameEnable
     }
 
     return ($isEnable && $isBound);
+}
+
+# 20150526 Pulipuli Chen
+sub getVMID
+{
+    my ($self, $row) = @_;
+    
+    my $vmid;
+    try {
+        $vmid = $row->valueByName("vmid");
+    }
+    catch {
+        if ($row->elementExists("ipaddr") == 1) {
+            my $ipaddr = $row->valueByName("vmid");
+            my @parts = split('\.', $ipaddr);
+            my $partA = $parts[0];
+            my $partB = $parts[1];
+            my $partC = $parts[2];
+            my $partD = $parts[3];
+            if ($partD < 10) {
+                $partD = "0" + $partD;
+            }
+            $vmid = $partB + $partC + $partD;
+        }
+    };
+    return $vmid;
+}
+
+
+##
+# 更新NetworkDisplay欄位
+# 顯示IP跟MAC
+# @param $row 欄
+##
+sub updateNetworkDisplay
+{
+    my ($self, $row, $enableVMID) = @_;
+
+    my $ipaddr = $row->valueByName('ipaddr');
+
+    if ($enableVMID == 1) {
+        my $vmid = $self->getVMID($row);
+        $ipaddr = $ipaddr . ' <br /> VMID: ' . $vmid;
+    }
+
+    my $macaddr = $row->valueByName('macaddr');
+    if (defined($macaddr) && $macaddr ne '') {
+        $ipaddr = $ipaddr . ' <br /> MAC: ' . $macaddr;
+    }
+    
+    $ipaddr = '<span>' . $ipaddr . '</span>';
+
+    $row->elementByName('network_display')->setValue($ipaddr);
 }
 
 1;

@@ -46,7 +46,7 @@ sub initZentyalAdminFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_object',
-        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id(),
+        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id(),
         #'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciastouer-admin'),
         'service' => $self->loadLibrary("LibraryService")->getServiceId('any'),
         'description' => __("Zentyal Administrator"),

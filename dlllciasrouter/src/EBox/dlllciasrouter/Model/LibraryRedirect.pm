@@ -543,7 +543,7 @@ sub getRedirectParameterSecure
     my $localIpaddr = $row->valueByName('ipaddr');
 
     #my $source = $self->getSecureIpSource();
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     return (
         interface => $iface,
@@ -933,7 +933,7 @@ sub getServerRedirectParamDMZ
     my $source = $self->getSecureIpSource();
 
     my $intPort = $row->valueByName("port");
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %param = (
         interface => $iface,
@@ -974,7 +974,7 @@ sub getServerRedirectParamOrigin
     my $source = $self->getSecureIpSource();
 
     my $intPort = $row->valueByName("port");
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %param = (
         interface => $iface,
@@ -1017,7 +1017,7 @@ sub getServerRedirectParamZentyal
     my $libNET = $self->loadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
     #my $source = $self->getSecureIpSource();
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my $intPort = $row->valueByName("port");
 
@@ -1056,7 +1056,7 @@ sub setupZentyalRedirect
     return;
     my $libNET = $self->loadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %paramAdmin = (
         interface => $iface,

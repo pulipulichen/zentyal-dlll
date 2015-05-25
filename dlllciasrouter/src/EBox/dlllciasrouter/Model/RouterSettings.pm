@@ -75,7 +75,7 @@ sub _table
 
     push(@fields, new EBox::Types::Port(
               fieldName     => 'webadminPort',
-              printableName => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator Network') . ")",
+              printableName => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator List') . ")",
               editable      => 1,
               unique        => 1,
               defaultValue => 64443,
@@ -84,16 +84,16 @@ sub _table
 
     push(@fields, new EBox::Types::Port(
             fieldName     => 'adminPort',
-            printableName => __('Zentyal SSH Port. ') . "(" . __('Only For Administrator Network') . ")",
+            printableName => __('Zentyal SSH Port. ') . "(" . __('Only For Administrator List') . ")",
             editable      => 1,
             unique        => 1,
             defaultValue => 64422,
             optional => 0,
         ));
 
-    my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-Network')->id();
+    my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
     my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR NETWORK'), $editAdminNet, 1));
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR LIST'), $editAdminNet, 1));
 
     my $blObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Black-List')->id();
     my $editBL = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$blObjectID.'/members&backview=/Objects/View/MemberTable';

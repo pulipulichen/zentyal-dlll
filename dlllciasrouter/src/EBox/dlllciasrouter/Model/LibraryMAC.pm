@@ -25,25 +25,6 @@ sub loadLibrary
     return $self->parentModule()->model($library);
 }
 
-##
-# 更新NetworkDisplay欄位
-# 顯示IP跟MAC
-# @param $row 欄
-##
-sub updateNetworkDisplay
-{
-    my ($self, $row) = @_;
-
-    my $ipaddr = $row->valueByName('ipaddr');
-    my $macaddr = $row->valueByName('macaddr');
-    if (defined($macaddr) && $macaddr ne '') {
-        $ipaddr = $ipaddr . ' <br /> (' . $macaddr . ')';
-    }
-    
-    $ipaddr = '<span>' . $ipaddr . '</span>';
-
-    $row->elementByName('network_display')->setValue($ipaddr);
-}
 
 ##
 # 從Objects當中找出DHCP-fixed-IP的成員名單
@@ -147,7 +128,7 @@ sub initAdministorNetworkMember
     my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
     my $ip_broadcast = EBox::NetWrappers::ip_broadcast($address, $sourceMask);
 
-    my $objectRow = $self->getObjectRow('Administrator-Network');
+    my $objectRow = $self->getObjectRow('Administrator-List');
     my $memberModel = $objectRow->subModel('members');
     # 先移除既有的
     my $id = $memberModel->findId('name' => 'default');

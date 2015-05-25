@@ -18,7 +18,7 @@ use EBox::Global;
 #
 sub _description
 {
-    my $pageTitle = 'CIAS-DLLL Router Setting';
+    my $pageTitle = 'DLLL-CIAS Router Setting';
 
     my $description =
       {

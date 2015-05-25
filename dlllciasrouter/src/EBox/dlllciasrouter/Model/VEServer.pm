@@ -28,9 +28,10 @@ sub getOptions
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
     $options->{enableHTTPS} = 0;
-    $options->{enableSSH} = 0;
+    $options->{enableSSH} = 1;
     $options->{enableRDP} = 0;
     $options->{enableHardware} = 1;
+    $options->{enableVMID} = 0;
 
     return $options;
 }
@@ -88,7 +89,7 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
-    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($self, $row);
+    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row, $self->getOptions());
     $ROW_NEED_UPDATE = 0;
 }
 
@@ -97,7 +98,7 @@ sub addedRowNotify
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
-    $self->loadLibrary("LibraryServers")->serverDeletedRowNotify($row);
+    $self->loadLibrary("LibraryServers")->serverDeletedRowNotify($row, $self->getOptions());
 }
 
 # -------------------------------------------
@@ -109,7 +110,7 @@ sub updatedRowNotify
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
-        $self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
+        $self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow, $self->getOptions());
         $ROW_NEED_UPDATE = 0;
     }
 }
