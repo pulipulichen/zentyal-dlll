@@ -49,6 +49,7 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldWebLinkButton($tableName));
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('MAIN SERVER SETTING'), $configView, 0));
+    push(@fields, $fieldsFactory->createFieldDescriptionDisplay());
 
     my $pageTitle = __('Main Server');
 

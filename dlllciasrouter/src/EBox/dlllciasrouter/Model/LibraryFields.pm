@@ -463,6 +463,20 @@ sub createFieldDescriptionHTML
     return $field;
 }
 
+sub createFieldDescriptionDisplay
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::HTML(
+            fieldName => 'description_display',
+            printableName => __(''),
+            editable => 0,
+            optional=>0,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 0,
+        );
+    return $field;
+}
+
 
 sub createFieldExpiryDate
 {

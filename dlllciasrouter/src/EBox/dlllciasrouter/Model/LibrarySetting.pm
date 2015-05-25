@@ -150,7 +150,10 @@ sub updatedRowNotify
     if ($row->elementExists($fieldName)) {
         $row->elementByName($fieldName)->setValue($button);
     }
+
+    # 儲存他
     $row->store();
+
 
     # 更新另外一個模組的資料
     my $headerModule = $options->{moduleName} . 'Header';
@@ -158,14 +161,22 @@ sub updatedRowNotify
     my $header = $self->parentModule->model($headerModule);
     $header->setValue($headerFieldName, $button);
 
+    # 設定敘述
+    my $desc = $row->valueByName('description');
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    $desc = $libEnc->unescapeFromUtf16($desc);
+    #$desc = $libEnc->stripsHtmlTags($desc);
+    $desc = "<span>" . $desc . "</span>";
+    $header->setValue("description_display", $desc);
+
     # 設定Virtual Interface
     #$extMask = $self->loadLibrary('LibraryNetwork')->bitwiseShiftMask($extMask);
     $self->loadLibrary('LibraryNetwork')->setVirtualInterface(
         $options->{moduleName}, $extIp, $extMask);
 
     } catch {
-        #$self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');
-        $mod->setMessage($_ . '( LibrarySetting->updatedRowNotify() )', 'warning');
+        $self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');
+        #$mod->setMessage($_ . '( LibrarySetting->updatedRowNotify() )', 'warning');
     };
 }
 
