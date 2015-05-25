@@ -1,1 +1,1 @@
-sudo dpkg -r zentyal-dlll-cias-router
+sudo dpkg -r zentyal-dlllciasrouter

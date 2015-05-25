@@ -48,8 +48,19 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldConfigEnable());
     push(@fields, $fieldsFactory->createFieldDomainName());
     push(@fields, $fieldsFactory->createFieldDomainNameLink());
-    push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
+    push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
 
+    if ($options->{enableVMID} == 0) {
+        push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
+    }
+    else {
+        push(@fields, $fieldsFactory->createFieldInternalVirtualMachineIdentify(1,$options->{IPHelp}));
+        push(@fields, $fieldsFactory->createFieldInternalIPAddressHide(1,$options->{IPHelp}));
+    }
+    
+
+    push(@fields, $fieldsFactory->createFieldNetworkDisplay());
+    
     push(@fields, $fieldsFactory->createFieldMACAddr());
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView));
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());
@@ -90,9 +101,6 @@ sub getDataTable
     #push(@fields, $fieldsFactory->createFieldHr('hr_pound'));
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_pound', __('Pound Network Settings')));
 
-    push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
-
-    push(@fields, $fieldsFactory->createFieldNetworkDisplay());
         
     #push(@fields, $fieldsFactory->createFieldRedirectToHTTPS());
 
@@ -349,29 +357,72 @@ sub isDomainNameEnable
 # 20150526 Pulipuli Chen
 sub getVMID
 {
-    my ($self, $row) = @_;
+    my ($self, $ipaddr) = @_;
     
     my $vmid;
-    try {
-        $vmid = $row->valueByName("vmid");
+
+    my @parts = split('\.', $ipaddr);
+    my $partA = $parts[0];
+    my $partB = $parts[1];
+    my $partC = $parts[2];
+    my $partD = $parts[3];
+    if ($partD < 10) {
+        $partD = "0" . $partD;
     }
-    catch {
-        if ($row->elementExists("ipaddr") == 1) {
-            my $ipaddr = $row->valueByName("vmid");
-            my @parts = split('\.', $ipaddr);
-            my $partA = $parts[0];
-            my $partB = $parts[1];
-            my $partC = $parts[2];
-            my $partD = $parts[3];
-            if ($partD < 10) {
-                $partD = "0" + $partD;
-            }
-            $vmid = $partB + $partC + $partD;
-        }
-    };
+    $vmid = $partB . $partC . $partD;
+
     return $vmid;
 }
 
+# 20150526 Pulipuli Chen
+sub getIPAddr
+{
+    my ($self, $vmid) = @_;
+    
+    my $ipaddr; # = $row->valueByName("ipaddr");
+    #if (!defined($ipaddr)) {
+        #my $vmid = $row->valueByName("vmid");
+        #my $vmid = $row->valueByName("vmIdentify_vmid");
+        $vmid = "" + $vmid;
+        my $partA = 10;
+        my $partB = substr($vmid, 0, 1);
+        my $partC = substr($vmid, 1, 1);
+        my $partD = substr($vmid, 2, 2);
+        if (substr($partD, 0, 1) == "0") {
+            $partD = substr($partD, 1, 1);
+        }
+        $ipaddr = $partA . "." . $partB . "." . $partC . "." . $partD;
+    #}
+    return $ipaddr;
+}
+
+# 20150526 Pulipuli Chen
+sub updateVMIDIPAddr
+{
+    my ($self, $row) = @_;
+    
+    my $ipaddr = $row->valueByName("vmIdentify");
+
+    if (length($ipaddr) < 5) {
+        #是VMID
+        $ipaddr = $self->getIPAddr($ipaddr);
+    }
+    $row->elementByName("ipaddr")->setValue($ipaddr);
+
+#    if (defined($row->valueByName("ipaddr"))) {
+#        return;
+#    }
+#    else {
+#        my $ipaddr;
+#        if (defined($row->valueByName("vmIdentify_ipaddr"))) {
+#            $ipaddr = $row->valueByName("vmIdentify_ipaddr");
+#        }
+#        else {
+#            $ipaddr = $self->getIPAddr($row);
+#        }
+#        $row->elementByName("ipaddr")->setValue($ipaddr);
+#    }
+}
 
 ##
 # 更新NetworkDisplay欄位
@@ -385,13 +436,13 @@ sub updateNetworkDisplay
     my $ipaddr = $row->valueByName('ipaddr');
 
     if ($enableVMID == 1) {
-        my $vmid = $self->getVMID($row);
-        $ipaddr = $ipaddr . ' <br /> VMID: ' . $vmid;
+        my $vmid = $self->getVMID($ipaddr);
+        $ipaddr = $ipaddr . ' <br /> <strong>VMID:</strong> ' . $vmid;
     }
 
     my $macaddr = $row->valueByName('macaddr');
     if (defined($macaddr) && $macaddr ne '') {
-        $ipaddr = $ipaddr . ' <br /> MAC: ' . $macaddr;
+        $ipaddr = $ipaddr . ' <br /> <strong>MAC:</strong> ' . $macaddr;
     }
     
     $ipaddr = '<span>' . $ipaddr . '</span>';

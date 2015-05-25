@@ -174,6 +174,40 @@ sub createFieldInternalIPAddress
     return $field;
 }
 
+#20150526 Pulipuli Chen
+sub createFieldInternalVirtualMachineIdentify
+{
+    my ($self, $unique, $help) = @_;
+    my $field = new EBox::Types::Union(
+            'fieldName' => 'vmIdentify',
+            'printableName' => __('Virtual Machine Identify'),
+            'unique' => 1,
+            'help' => __($help),
+            'subtypes' =>
+            [
+                new EBox::Types::HostIP(
+                    #'fieldName' => 'ipaddr',
+                    'fieldName' => 'vmIdentify_ipaddr',
+                    'printableName' => __('Internal IP Address'),
+                    'editable' => 1,
+                    'unique' => $unique,
+                    
+                ),
+                new EBox::Types::Port(
+                    #'fieldName' => 'vmid',
+                    'fieldName' => 'vmIdentify_vmid',
+                    'printableName' => __('VMID'),
+                    'editable' => 1,
+                ),
+            ],
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+
+    return $field;
+}
+
+#20150526 Pulipuli Chen
 sub createFieldInternalIPAddressHideView
 {
     my ($self, $unique, $help) = @_;
@@ -185,6 +219,25 @@ sub createFieldInternalIPAddressHideView
             'unique' => $unique,
             'help' => __($help),
             'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+
+    return $field;
+}
+
+#20150526 Pulipuli Chen
+sub createFieldInternalIPAddressHide
+{
+    my ($self, $unique, $help) = @_;
+
+    my $field = new EBox::Types::HostIP(
+            'fieldName' => 'ipaddr',
+            'printableName' => __('Internal IP Address'),
+            'editable' => 1,
+            'optional'=>1,
+            'unique' => $unique,
+            'help' => __($help),
+            'hiddenOnSetter' => 1,
             'hiddenOnViewer' => 1,
         );
 

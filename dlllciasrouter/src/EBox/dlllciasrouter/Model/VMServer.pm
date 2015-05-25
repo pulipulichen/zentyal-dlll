@@ -31,7 +31,7 @@ sub getOptions
     $options->{enableSSH} = 1;
     $options->{enableRDP} = 0;
     $options->{enableHardware} = 0;
-    $options->{enableVMID} = 0;
+    $options->{enableVMID} = 1;
 
     return $options;
 }
@@ -87,6 +87,7 @@ my $ROW_NEED_UPDATE = 0;
 sub addedRowNotify
 {
     my ($self, $row) = @_;
+    $self->loadLibrary("LibraryServers")->updateVMIDIPAddr($row);
     $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
     $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row, $self->getOptions());
@@ -106,6 +107,8 @@ sub deletedRowNotify
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
+
+    $self->loadLibrary("LibraryServers")->updateVMIDIPAddr($row);
     $self->checkInternalIP($row);
 
     if ($ROW_NEED_UPDATE == 0) {

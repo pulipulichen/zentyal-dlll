@@ -79,6 +79,8 @@ sub getDataTable
             }
         };
 
+    push(@fields, $fieldsFactory->createFieldDescription());
+
     return $dataTable;
 }
 
@@ -123,7 +125,6 @@ sub updatedRowNotify
     $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $extPort));
 
     # 設定按鈕
-
     my $domainName = $row->valueByName('domainName');
     my $scheme = $row->valueByName('redirMain_scheme');
 
