@@ -95,9 +95,9 @@ sub _table
     my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR LIST'), $editAdminNet, 1));
 
-    my $blObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Black-List')->id();
+    my $blObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Blacklist')->id();
     my $editBL = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$blObjectID.'/members&backview=/Objects/View/MemberTable';
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_bl", __('EDIT BLACK LIST'), $editBL, 1));
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_bl", __('EDIT BLACKLIST'), $editBL, 1));
 
     my $html = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_sessions">Administrator Sessions Logs</a>';
         #. ' <a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_actions">Configuration Changes Logs</a>';

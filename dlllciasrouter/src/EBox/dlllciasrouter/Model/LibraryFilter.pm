@@ -63,9 +63,9 @@ sub initBlackListFilter
     my %param = (
         'decision' => 'deny',
         'source_selected' => 'source_object',
-        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Black-List')->id(),
+        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Blacklist')->id(),
         'service' => $self->loadLibrary("LibraryService")->getServiceId('any'),
-        'description' => __("Black List"),
+        'description' => __("Blacklist"),
     );
 
     my $id = $self->addExternalToEBoxRule(%param);
