@@ -58,14 +58,28 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldDomainName());
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
     push(@fields, $fieldsFactory->createFieldExternalIPAddressWithSubmask(1, ""));
-    push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('Main', $options->{externalPortDefaultValue}));
     push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
 
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_main', __('Main Network Settings')));
+
+    push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('Main', $options->{externalPortDefaultValue}));    
     push(@fields, $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}));
     push(@fields, $fieldsFactory->createFieldProtocolScheme('Main', 0, $options->{poundScheme}));
+    
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_ssh', __('SSH Network Settings')));
+
+    push(@fields, $fieldsFactory->createFieldSSHRedirect($options->{enableSSH}));
+    push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('SSH', $options->{externalSSHPortDefaultValue}));    
+    push(@fields, $fieldsFactory->createFieldSSHInternalPort());
+
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_desc', __('Description')));
+    push(@fields, $fieldsFactory->createFieldDescription());
+
+    my $filePath = "/dlllciasrouter/View/AttachedFiles?directory=".$tableName."/keys/rs1/attachedFiles&backview=/dlllciasrouter/View/". $tableName;
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_attachedFiles", __('UPLOAD FILE'), $filePath, 1));
 
     my $logBtn = '  <a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_actions&filter-model='.$tableName.'">Logs</a>';
-    
+
     my $dataTable = {
             'tableName' => $tableName,
             'pageTitle' => $options->{pageTitle},
@@ -79,7 +93,6 @@ sub getDataTable
             }
         };
 
-    push(@fields, $fieldsFactory->createFieldDescription());
 
     return $dataTable;
 }
@@ -116,13 +129,26 @@ sub updatedRowNotify
     my $libREDIR = $self->loadLibrary('LibraryRedirect');
     my $tableName = $options->{moduleName} . "Setting";
     my $extPort = $row->valueByName('redirMain_extPort');
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamDMZ($oldRow, $tableName, $extPort));
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $extPort));
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $extPort));
-
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamDMZ($row, $tableName, $extPort));
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $extPort));
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $extPort));
+    my $intPort = $row->valueByName("port");
+    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamDMZ($oldRow, $tableName, $extPort, $intPort, 'Main'));
+    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $extPort, $intPort, 'Main'));
+    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $extPort, $intPort, 'Main'));
+    
+    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamDMZ($row, $tableName, $extPort, $intPort, 'Main'));
+    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $extPort, $intPort, 'Main'));
+    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $extPort, $intPort, 'Main'));
+    
+    my $SSHextPort = $row->valueByName('redirSSH_extPort');
+    my $SSHintPort = $row->valueByName("redirSSH_intPort");
+    if ($intPort eq 'redirSSH_default') {
+        $intPort = 22;
+    }
+    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
+    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
+    
+    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
+    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
+    
 
     # 設定按鈕
     my $domainName = $row->valueByName('domainName');
@@ -130,6 +156,11 @@ sub updatedRowNotify
 
     my $intIpaddr = $row->valueByName('ipaddr');
     my $logButton = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$intIpaddr.'">LOGS</a>';
+
+    my $sshLink = "";
+    if ($row->valueByName('redirSSH_enable') == 1) {
+        $sshLink =  "<br />" . "ssh://" . $domainName . ":" . $options->{externalSSHPortDefaultValue} . "/";
+    }
 
     my $button = '<span></span>';
     if ($scheme ne "none") {
@@ -140,10 +171,10 @@ sub updatedRowNotify
         my $link = $scheme . "://" . $domainName . $port . "/";
         my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
         my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>';
-        $button = "<span>" . $buttonBtn . " " . $logButton . "<br/>" . $buttonLink . "</span>";
+        $button = "<span>" . $buttonBtn . " " . $logButton . "<br/>"  . $buttonLink . $sshLink . "</span>";
     }   # if ($shceme ne "none") {}
     else {
-        $button = $logButton;
+        $button = $logButton . $sshLink;
     }
 
     my $fieldName = $tableName . '_web_button';

@@ -47,6 +47,8 @@ sub getOptions
     $options->{poundScheme} = 'https';
     $options->{internalPortDefaultValue} = 443;
     $options->{externalPortDefaultValue} = 61000;
+    $options->{enableSSH} = 1;
+    $options->{externalSSHPortDefaultValue} = 61002;
     return $options;
 }
 

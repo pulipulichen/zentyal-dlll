@@ -1191,6 +1191,25 @@ sub createFieldLink
 # ------------------------------------
 
 ##
+# 20150526 Pulipuli Chen
+# 記錄伺服器位置
+##
+sub createFieldPhysicalLocation
+{
+    my ($self) = @_;
+
+    my $field = new EBox::Types::Text(
+            fieldName => 'physicalLocation',
+            printableName => __('Physical Location'),
+            editable => 1,
+            #defaultValue => '',
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
+##
 # 20150506 Pulipuli Chen
 # 記錄伺服器CPU
 ##

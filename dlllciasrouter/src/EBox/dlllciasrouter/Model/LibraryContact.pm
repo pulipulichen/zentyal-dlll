@@ -180,11 +180,13 @@ sub setHardwareDisplay
         return;
     }
 
+    my $location = $row->valueByName('physicalLocation');
     my $cpu = $row->valueByName('hardwareCPU');
     my $ram = $row->valueByName('hardwareRAM');
     my $disk = $row->valueByName('hardwareDisk');
 
     my $link = '';
+    $link = $link . "@" . $location . "<br />";
     $link = $link . "CPU: " . $cpu . "<br />";
     $link = $link . "RAM: " . $ram . "<br />";
     $link = $link . "Disk: " . $disk;

@@ -16,6 +16,9 @@ sub getOptions
 {
     my $options = ();
     $options->{moduleName} = 'VEServer';
+    $options->{help} = '<div class="tip"><p><strong>VMID and IP address mapping:</strong></p>
+<p>VMID <span style="background-color: #00ffff;">1</span><span style="background-color: ##ffCCEE;">0</span><span style="background-color: #00ff00;">01</span> = IP 10.<span style="background-color: #00ffff;">1</span>.<span style="background-color: ##ffCCEE;">0</span>.<span style="background-color: #00ff00;">1</span></p>
+<p>VMID&nbsp;<span style="background-color: #00ffff;">3</span><span style="background-color: ##ffCCEE;">1</span><span style="background-color: #00ff00;">24</span>&nbsp;= IP 10.<span style="background-color: #00ffff;">3</span>.<span style="background-color: ##ffCCEE;">1</span>.<span style="background-color: #00ff00;">24</span></p></div>';
     return $options;
 }
 

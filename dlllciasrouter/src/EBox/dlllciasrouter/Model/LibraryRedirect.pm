@@ -921,7 +921,7 @@ sub getProtocolHint
 # 20150516 Pulipuli Chen
 sub getServerRedirectParamDMZ
 {
-    my ($self, $row, $desc, $extPort) = @_;
+    my ($self, $row, $desc, $extPort, $intPort) = @_;
 
     my $domainName = $row->valueByName("domainName");
     #my $destIpaddr = $row->elementByName("extIpaddr")->ip();
@@ -932,7 +932,7 @@ sub getServerRedirectParamDMZ
     my $iface = $libNET->getExternalIface();
     my $source = $self->getSecureIpSource();
 
-    my $intPort = $row->valueByName("port");
+    #my $intPort = $row->valueByName("port");
     my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %param = (
@@ -962,7 +962,7 @@ sub getServerRedirectParamDMZ
 
 sub getServerRedirectParamOrigin
 {
-    my ($self, $row, $desc, $extPort) = @_;
+    my ($self, $row, $desc, $extPort, $intPort, $protocol) = @_;
 
     my $domainName = $row->valueByName("domainName");
     #my $destIpaddr = $row->elementByName("extIpaddr")->ip();
@@ -973,7 +973,7 @@ sub getServerRedirectParamOrigin
     my $iface = $libNET->getExternalIface();
     my $source = $self->getSecureIpSource();
 
-    my $intPort = $row->valueByName("port");
+    #my $intPort = $row->valueByName("port");
     my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %param = (
@@ -997,7 +997,7 @@ sub getServerRedirectParamOrigin
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
 
-        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(Original)',
+        description => $domainName. " (" . $localIpaddr . "): " . $desc . '('. $protocol .' Original)',
         snat => 1,
         log => 1,
     );
@@ -1007,7 +1007,7 @@ sub getServerRedirectParamOrigin
 
 sub getServerRedirectParamZentyal
 {
-    my ($self, $row, $desc, $extPort) = @_;
+    my ($self, $row, $desc, $extPort, $intPort, $protocol) = @_;
 
     my $domainName = $row->valueByName("domainName");
     #my $destIpaddr = $row->elementByName("extIpaddr")->ip();
@@ -1019,7 +1019,7 @@ sub getServerRedirectParamZentyal
     #my $source = $self->getSecureIpSource();
     my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
-    my $intPort = $row->valueByName("port");
+    #my $intPort = $row->valueByName("port");
 
     my %param = (
         interface => $iface,
@@ -1040,7 +1040,7 @@ sub getServerRedirectParamZentyal
         destination_port_selected => "destination_port_other",
         destination_port_other => $intPort,
 
-        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(Zentyal)',
+        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(' . $protocol . ' Zentyal)',
         snat => 1,
         log => 1,
     );
