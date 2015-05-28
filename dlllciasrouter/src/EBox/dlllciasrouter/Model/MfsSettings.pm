@@ -133,6 +133,9 @@ sub initServicePort
     # MooseFS
     $libServ->addServicePort("dlllciastouer-admin", 9425, 1);
 
+    $libServ->addServicePort("MFS", 9420, 1);
+    $libServ->addServicePort("MFS", 9421, 1);
+
     #nfs
     $libServ->addServicePort("NFS", 111, 1);
     $libServ->addServicePort("NFS", 2049, 1);

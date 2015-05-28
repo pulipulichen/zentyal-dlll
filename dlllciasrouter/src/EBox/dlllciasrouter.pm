@@ -61,6 +61,7 @@ sub dlllciasrouter_init
     $self->model("LibraryService")->getPoundService();
     $self->model("LibraryService")->getZentyalAdminService();
     $self->model("LibraryService")->getNFSService();
+    $self->model("LibraryService")->getMFSService();
 
     $self->model("RouterSettings")->initServicePort();
     $self->model("MfsSettings")->initServicePort();
@@ -73,6 +74,7 @@ sub dlllciasrouter_init
     $self->model("LibraryFilter")->initZentyalAdminFilter();
     $self->model("LibraryFilter")->initBlackListFilter();
     $self->model("LibraryFilter")->initNFSFilter();
+    $self->model("LibraryFilter")->initMFSFilter();
     $self->model("LibraryFilter")->initPoundFilter();
     $self->model("LibraryFilter")->initPoundLogFilter();
 

@@ -68,6 +68,16 @@ sub getNFSService
     return $self->initService($name, $desc);
 }
 
+# 20150528 Pulipuli Chen
+sub getMFSService
+{
+    my ($self) = @_;
+
+    my $name = "MFS";
+    my $desc = __("MooseFS ");
+    return $self->initService($name, $desc);
+}
+
 # 20150518 Pulipuli Chen
 sub initService
 {

@@ -44,11 +44,12 @@ sub initZentyalAdminFilter
     my ($self) = @_;
 
     my %param = (
-        'decision' => 'accept',
+        'decision' => 'deny',
         'source_selected' => 'source_object',
         'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id(),
+        'source_inverseMatch' => 1, 
         #'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciastouer-admin'),
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('any'),
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
         'description' => __("Zentyal Administrator"),
     );
 
@@ -126,6 +127,21 @@ sub initNFSFilter
         'source_selected' => 'source_any',
         'service' => $self->loadLibrary("LibraryService")->getServiceId('NFS'),
         'description' => __("Network File System"),
+    );
+
+    $self->addInternalToEBoxRule(%param);
+}
+
+# 20150528 Pulipuli Chen
+sub initMFSFilter
+{
+    my ($self) = @_;
+
+    my %param = (
+        'decision' => 'accept',
+        'source_selected' => 'source_any',
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('MFS'),
+        'description' => __("MooseFS"),
     );
 
     $self->addInternalToEBoxRule(%param);
