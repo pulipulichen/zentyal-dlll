@@ -50,7 +50,8 @@ sub dlllciasrouter_init
     $self->initLighttpd();
     $self->initApache();
     $self->initMooseFS();
-    $self->initNFS();
+    $self->initNFSServer();
+    $self->initNFSClient();
 
     $self->initDefaultPound();
 
@@ -146,17 +147,18 @@ sub _daemons
     $i++;
 
     # 20150528 Pulipuli Chen 加入MooseFS的控制
-    $daemons[$i] = {
-                name => 'moosefs-cgiserv',
-                type => 'init.d',
-                pidfiles => ['/var/lib/mfs/.mfscgiserv.lock']
-            };
-    $i++;
     
     $daemons[$i] = {
                 name => 'moosefs-master',
                 type => 'init.d',
                 pidfiles => ['/var/lib/mfs/.mfsmaster.lock']
+            };
+    $i++;
+
+    $daemons[$i] = {
+                name => 'moosefs-cgiserv',
+                type => 'init.d',
+                pidfiles => ['/var/lib/mfs/.mfscgiserv.lock']
             };
     $i++;
 
@@ -776,7 +778,8 @@ sub initNFSServer
 
     my @params = ();
     my @nfsServers = [];    # 稍後要從StorageServer取出細節
-    push(@hddParams, 'servers' => \@nfsServers);
+    push(@params, 'servers' => \@nfsServers);
+
     $self->writeConfFile(
         '/etc/exports',
         "dlllciasrouter/nfs-server/exports.mas",
@@ -786,11 +789,14 @@ sub initNFSServer
 
 }
 
+# 20150528 Pulipuli Chen
 sub initNFSClient
 {
     my ($self) = @_;
 
     my @mountParams = ();
+    my @nfsServers = [];    # 稍後要從StorageServer取出細節
+    push(@mountParams, 'servers' => \@nfsServers);
     $self->writeConfFile(
         '/opt/mfschunkservers/nfs-mount.sh',
         "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
@@ -800,8 +806,8 @@ sub initNFSClient
 
     my @params = ();
     $self->writeConfFile(
-        '/opt/mfschunkservers/nfs-mount.sh',
-        "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
+        '/opt/mfschunkservers/nfs-umount.sh',
+        "dlllciasrouter/nfs-client/nfs-umount.sh.mas",
         \@params,
         { uid => '0', gid => '0', mode => '755' }
     );

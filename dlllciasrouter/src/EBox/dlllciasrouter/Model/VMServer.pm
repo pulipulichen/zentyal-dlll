@@ -32,6 +32,7 @@ sub getOptions
     $options->{enableRDP} = 0;
     $options->{enableHardware} = 0;
     $options->{enableVMID} = 1;
+    $options->{enableKVM} = 0;
 
     return $options;
 }

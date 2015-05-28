@@ -31,6 +31,7 @@ sub getOptions
     $options->{tableName} = "MfsSetting";
     $options->{printableName} = __("MFS Setting");
     $options->{localhostSize} = "1GiB";
+    $options->{chunkserverVMurl} = "http://www.google.com.tw/";
 
     return $options;
 }
@@ -51,10 +52,14 @@ sub _table
 
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
     my $options = $self->getOptions();
+    my $tableName = $options->{tableName};
 
     my @fields = ();
     #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
 
+    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $cgiserv = "http://" . $address . ":9425/";
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_mfsInfo", __('MFS INFO'), $cgiserv, 1));
     
     push(@fields, new EBox::Types::Text(
               fieldName     => 'localhostSize',
@@ -65,6 +70,13 @@ sub _table
               optional => 0,
              ));
     
+    
+    # Chunkserver OpenVZ Template
+    my $downloadVM = '<a class="btn btn-icon btn-download" title="configure" target="_blank" href="' . $options->{chunkserverVMurl} . '">Download</a>';
+    push(@fields, $fieldsFactory->createFieldTitledHTMLDisplay($options->{tableName} . "_download_chunkserver"
+        , __('MooseFS Chunkserver & Metalogger OpenVZ Template')
+        , $downloadVM));
+
     my $dataTable = {
             'tableName' => $options->{tableName},
             'pageTitle' => '',

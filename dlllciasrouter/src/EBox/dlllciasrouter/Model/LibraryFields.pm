@@ -1248,6 +1248,25 @@ sub createFieldHardwareRAM
 }
 
 ##
+# 20150528 Pulipuli Chen
+# 記錄伺服器是否啟用KVM
+##
+sub createFieldHardwareKVM
+{
+    my ($self) = @_;
+
+    my $field = new EBox::Types::Boolean(
+            fieldName => 'hardwareKVM',
+            printableName => __('Enable KVM'),
+            editable => 1,
+            defaultValue => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
+##
 # 20150512 Pulipuli Chen
 # 水平線
 ##
@@ -1635,6 +1654,23 @@ sub createFieldServerLinkButton
             'optional'=>0,
             "defaultValue" => "<span></span>",
             'help' => '<a href="'.$link.'" class="btn btn-icon btn-log">'.$text.'</a>',
+        );
+
+    return $field;
+}
+
+# 20150528 Pulipuli Chen
+# 建立標題有文字的HTML文字網頁
+sub createFieldTitledHTMLDisplay
+{
+    my ($self, $fieldName, $title, $html) = @_;
+    my $field = new EBox::Types::HTML(
+            "fieldName" => $fieldName . "_config_button",
+            "printableName" => $title,
+            "editable" => 0,
+            "optional"=> 0,
+            "defaultValue" => "<span></span>",
+            "help" => $html,
         );
 
     return $field;
