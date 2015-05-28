@@ -33,6 +33,8 @@ sub getOptions
     $options->{enableHardware} = 1;
     $options->{enableVMID} = 0;
     $options->{enableKVM} = 0;
+    $options->{enableMount} = 1;
+    $options->{defaultMountType} = 'nfs';
 
     return $options;
 }

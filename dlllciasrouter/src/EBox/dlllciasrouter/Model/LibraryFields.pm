@@ -1676,4 +1676,87 @@ sub createFieldTitledHTMLDisplay
     return $field;
 }
 
+# --------------------------------------------
+
+##
+# 20150528 Pulipuli Chen
+# 記錄NAS是否啟用Mount
+##
+sub createFieldMountEnable
+{
+    my ($self) = @_;
+
+    my $field = new EBox::Types::Boolean(
+            fieldName => 'mountEnable',
+            printableName => __('Mount Enable'),
+            editable => 1,
+            defaultValue => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
+##
+# 20150528 Pulipuli Chen
+# mount類型
+##
+sub createFieldMountType
+{
+    my ($self, $defaultValue) = @_;
+
+    my $field = new EBox::Types::Select(
+            fieldName => 'mountType',
+            printableName => __('Mount Type'),
+            'populate' => \&_populateFieldMountType,
+            editable => 1,
+            defaultValue => $defaultValue,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
+##
+# 20150528 Pulipuli Chen
+# mount類型
+##
+sub _populateFieldMountType
+{
+    # life time values must be in hours
+    return  [
+                {
+                    value => 'nfs',
+                    printableValue => __('NFS'),
+                },
+                {
+                    value => 'cifs',
+                    printableValue => __('Samba (CIFS))'),
+                },
+            ];
+}
+
+
+##
+# 20150512 Pulipuli Chen
+# 連接埠輸入欄位
+##
+sub createFieldMountOption
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::Text(
+            'fieldName' => 'mountOption',
+            'printableName' => __('Options'),
+            'help' => "Option is the <u>underline</u> part. For example: <br />" 
+                . " NFS: mount -t nfs <u>10.6.1.1:/mnt/nfs</u> /opt/mfschunkservers/10.6.1.1 <br />"
+                . " Samba (CIFS)): mount -t cifs <u>-o username=&quot;Username&quot;,password=&quot;Password&quot; //10.6.1.1/mnt/smb</u> /opt/mfschunkservers/10.6.1.1",
+            'editable' => 1,
+            'optional' => 1,
+            'unique' => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+    return $field;
+}
+
 1;

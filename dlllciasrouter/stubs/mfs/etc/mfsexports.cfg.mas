@@ -1,7 +1,7 @@
 <%args>
 </%args>
 # Allow everything but "meta".
-*			/	rw,alldirs,maproot=0:0
+10.0.0.0/8			/	rw,alldirs,maproot=0:0
 
 # Allow "meta".
 *			.	rw

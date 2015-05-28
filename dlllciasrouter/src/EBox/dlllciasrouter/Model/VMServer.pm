@@ -33,6 +33,7 @@ sub getOptions
     $options->{enableHardware} = 0;
     $options->{enableVMID} = 1;
     $options->{enableKVM} = 0;
+    $options->{enableMount} = 0;
 
     return $options;
 }

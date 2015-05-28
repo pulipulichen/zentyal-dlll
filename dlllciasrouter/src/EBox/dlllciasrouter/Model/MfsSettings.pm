@@ -28,8 +28,9 @@ sub getOptions
     my ($self) = @_;
 
     my $options = ();
-    $options->{tableName} = "MfsSetting";
+    $options->{tableName} = "MfsSettings";
     $options->{printableName} = __("MFS Setting");
+    $options->{enableMooseFS} = 1;
     $options->{localhostSize} = "1GiB";
     $options->{chunkserverVMurl} = "http://www.google.com.tw/";
 
@@ -61,6 +62,15 @@ sub _table
     my $cgiserv = "http://" . $address . ":9425/";
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_mfsInfo", __('MFS INFO'), $cgiserv, 1));
     
+    push(@fields, new EBox::Types::Boolean(
+              fieldName     => 'mfsEnable',
+              printableName => __('Enable MooseFS '),
+              editable      => 1,
+              unique        => 1,
+              defaultValue => $options->{enableMooseFS},
+              optional => 0,
+             ));
+
     push(@fields, new EBox::Types::Text(
               fieldName     => 'localhostSize',
               printableName => __('Localhost Size '),

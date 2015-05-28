@@ -44,7 +44,7 @@ sub getZentyalAdminService
     my ($self) = @_;
 
     my $name = "dlllciastouer-admin";
-    my $desc = __("Zentyal Webadmin & SSH");
+    my $desc = __("Zentyal Webadmin, SSH & MooseFS");
     return $self->initService($name, $desc);
 }
 

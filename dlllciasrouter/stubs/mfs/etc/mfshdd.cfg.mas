@@ -1,6 +1,6 @@
 <%args>
     $size
-    $servers
+    @paths
 </%args>
 # This file keeps definitions of mounting points (paths) of hard drives to use with chunk server.
 # A path may begin with extra '*', which means this hard drive is 'marked for removal' and all data will be replicated to other hard drives (usually on other chunkservers).
@@ -23,6 +23,9 @@
 # use hard drive '/mnt/hd4', but use only 1.5TiB on it:
 #/mnt/hd4 1.5TiB
 /opt/mfschunkservers/localhost/ <% $size %>
-# while (my ($server) = each ($servers)) {
-# print "$server\n";
-# } 
+
+% if (@paths) {
+% for my $path (@paths) {  	
+%   print $path . "\n";
+% } #for my $path (@paths) {  	
+% } #if (@paths) {

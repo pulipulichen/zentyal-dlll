@@ -1,6 +1,8 @@
 <%args>
-    $servers
+    @servers
 </%args>
-% while (my ($ipaddr, $path) = each ($servers)) {  	
-mount -t nfs <% $ipaddr %>:<% path %>  /opt/mfschunkservers/<% ipaddr %>
-% }
+% if (@servers) {
+% for my $server (@servers) {  	
+%   print $server . "\n";
+% } #for my $server (@servers) {  	
+% } #if (@servers) {

@@ -102,6 +102,15 @@ sub getDataTable
     }
 
     # ----------------------------
+    if ($options->{enableMount} == 1) {
+        push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_mount', __('Mount Settings')));
+
+        push(@fields, $fieldsFactory->createFieldMountEnable());
+        push(@fields, $fieldsFactory->createFieldMountType($options->{defaultMountType}));
+        push(@fields, $fieldsFactory->createFieldMountOption());
+    }
+
+    # ----------------------------
     #push(@fields, $fieldsFactory->createFieldHr('hr_pound'));
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_pound', __('Pound Network Settings')));
 
@@ -447,6 +456,14 @@ sub updateNetworkDisplay
     my $macaddr = $row->valueByName('macaddr');
     if (defined($macaddr) && $macaddr ne '') {
         $ipaddr = $ipaddr . ' <br /> <strong>MAC:</strong> ' . $macaddr;
+    }
+
+    if ($row->elementExists("mountEnable") 
+        && $row->valueByName("mountEnable") == 1
+        && defined($row->valueByName("mountOption")) ) {
+        my $type = $row->valueByName("mountType");
+        $type = uc($type);
+        $ipaddr = $ipaddr . "<br />[".$type."]";
     }
     
     $ipaddr = '<span>' . $ipaddr . '</span>';
