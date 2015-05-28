@@ -1,0 +1,3 @@
+<%args>
+</%args>
+/mnt/mfs 10.0.0.0/8(rw,fsid=0,sync,no_root_squash,subtree_check)

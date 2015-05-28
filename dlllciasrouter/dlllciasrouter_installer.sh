@@ -1,3 +1,4 @@
+# 啟用Sudo
 sudo ls >> /dev/null
 
 # 必須要設定內部網路
@@ -8,16 +9,50 @@ if ! echo `ifconfig` | grep 10.0.0.254  > /dev/null; then
     echo "IP adress: 10.0.0.254"
     echo "Netmask: 255.0.0.0"
     exit
-else
-    echo "Internal Network is ready."
+fi
+echo "Internal Network is ready."
+
+# 加入MFS所需要的設定
+if ! echo `cat /etc/hosts` | grep mfsmaster  > /dev/null; then
+    sudo -- sh -c "echo '10.0.0.254      mfsmaster' >> /etc/hosts"
+fi
+echo "Hostname \"mfsmaster\" is ready."
+
+# moosefs的資料庫
+if ! [ -f /etc/apt/sources.list.d/moosefs.list ] ; then
+    wget -O - http://ppa.moosefs.com/apt/moosefs.key | sudo apt-key add -
+    echo deb http://ppa.moosefs.com/stable/apt/ubuntu/trusty trusty main | sudo tee /etc/apt/sources.list.d/moosefs.list
+fi
+echo "MooseFS apt repository is ready."
+
+# 要加入mfs
+if ! id mfs > /dev/null 2>&1 ; then
+    sudo useradd mfs
+fi
+echo "User mfs added."
+
+# 建立 mfs 所需要的目錄
+if ! [ -d /mnt/mfs ] ; then
+    sudo mkdir -p /mnt/mfs
 fi
 
-if ! which pound > /dev/null; then
-    if ! which lighttpd > /dev/null; then
-        sudo apt-get -y --force-yes update
-        sudo apt-get -y --force-yes install zentyal-network zentyal-objects zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp pound lighttpd
-    fi
+if ! [ -d /opt/mfschunkservers/localhost ] ; then
+    sudo mkdir -p /opt/mfschunkservers/localhost
+    #sudo chown mfs:mfs /opt/mfschunkservers/localhost
 fi
+echo "MooseFS directories are ready."
+ 
+# 設定安裝的東西
+if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-master ] && [ -f /etc/init.d/nfs-kernel-server ] ) ; then
+    sudo apt-get -y --force-yes update
+    sudo apt-get -y --force-yes install zentyal-network zentyal-objects \
+zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
+pound lighttpd \
+moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
+nfs-kernel-server nfs-common
+
+fi
+echo "All modules are installed."
 
 # 檢查模組的啟用狀態
 #echo "Check module enabled...";
@@ -43,7 +78,13 @@ if [ "$DISABLED_MODULES" != "" ] ; then
     echo "You have to enable "$DISABLED_MODULES"in Zentyal before you install DLLL-CIAS Router."
     exit
 else
-    echo "All modules enabled."
+    echo "All modules are enabled."
+fi
+
+# 如果要測試，做到這邊即可
+if [ -f ~/zentyal-dlll/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb ] ; then
+    echo "Test complete"
+    exit
 fi
 
 cd /tmp

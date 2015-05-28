@@ -49,6 +49,9 @@ sub dlllciasrouter_init
     try {
     $self->initLighttpd();
     $self->initApache();
+    $self->initMooseFS();
+    $self->initNFS();
+
     $self->initDefaultPound();
 
     $self->model("LibraryLogs")->enableLogs();
@@ -116,40 +119,70 @@ sub _daemons
 
     $self->dlllciasrouter_init();
 
-    my $daemons;
+    my @daemons = [];
+    my $i = 0;
 
     if (-e '/var/run/apache2.pid') {
-        $daemons = [{
-                name => 'pound',
-                type => 'init.d',
-                pidfiles => ['/var/run/pound.pid']
-            }, 
-            {
-                name => 'lighttpd',
-                type => 'init.d',
-                pidfiles => ['/var/run/lighttpd.pid']
-            }, 
-            {
+        $daemons[$i] = {
                 name => 'apache2',
                 type => 'init.d',
                 pidfiles => ['/var/run/apache2.pid']
-            }
-        ];
+            };
+        $i++;
     }
-    else {
-        $daemons = [{
+    
+    $daemons[$i] = {
                 name => 'pound',
                 type => 'init.d',
                 pidfiles => ['/var/run/pound.pid']
-            },
-            {
+            };
+    $i++;
+
+    $daemons[$i] = {
                 name => 'lighttpd',
                 type => 'init.d',
                 pidfiles => ['/var/run/lighttpd.pid']
-            }];
-    }
+            };
+    $i++;
+
+    # 20150528 Pulipuli Chen 加入MooseFS的控制
+    $daemons[$i] = {
+                name => 'moosefs-cgiserv',
+                type => 'init.d',
+                pidfiles => ['/var/lib/mfs/.mfscgiserv.lock']
+            };
+    $i++;
     
-    return $daemons;
+    $daemons[$i] = {
+                name => 'moosefs-master',
+                type => 'init.d',
+                pidfiles => ['/var/lib/mfs/.mfsmaster.lock']
+            };
+    $i++;
+
+    $daemons[$i] = {
+                name => 'moosefs-chunkserver',
+                type => 'init.d',
+                pidfiles => ['/var/lib/mfs/.mfschunkserver.lock']
+            };
+    $i++;
+
+    $daemons[$i] = {
+                name => 'moosefs-metalogger',
+                type => 'init.d',
+                pidfiles => ['/var/lib/mfs/.mfsmetalogger.lock']
+            };
+    $i++;
+    
+    # -------------------
+
+    $daemons[$i] = {
+                name => 'nfs-kernel-server',
+                type => 'init.d',
+                pidfiles => ['/var/run/nfsd.pid']
+            };
+    $i++;
+    return \@daemons;
 }
 
 # Method: _setConf
@@ -637,5 +670,141 @@ sub loadLibrary
     return $self->model($library);
 }
 
+# 20150527 Pulipuli Chen
+sub initMooseFS
+{
+    my ($self) = @_;
+
+    my @params = ();
+    $self->writeConfFile(
+        '/var/lib/mfs/metadata.mfs',
+        "dlllciasrouter/mfs/lib/metadata.mfs.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    # 變更權限 
+    system('chown mfs:mfs  /var/lib/mfs/metadata.mfs');
+
+    # ---------------------------------------------------------
+
+    $self->writeConfFile(
+        '/etc/default/moosefs-cgiserv',
+        "dlllciasrouter/mfs/default/moosefs-cgiserv.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/default/moosefs-chunkserver',
+        "dlllciasrouter/mfs/default/moosefs-chunkserver.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/default/moosefs-master',
+        "dlllciasrouter/mfs/default/moosefs-master.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/default/moosefs-metalogger',
+        "dlllciasrouter/mfs/default/moosefs-metalogger.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    # --------------------------------------------
+
+    $self->writeConfFile(
+        '/etc/mfs/mfschunkserver.cfg',
+        "dlllciasrouter/mfs/etc/mfschunkserver.cfg.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/mfs/mfsexports.cfg',
+        "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/mfs/mfsmaster.cfg',
+        "dlllciasrouter/mfs/etc/mfsmaster.cfg.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/mfs/mfsmetalogger.cfg',
+        "dlllciasrouter/mfs/etc/mfsmetalogger.cfg.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/mfs/mfsmount.cfg',
+        "dlllciasrouter/mfs/etc/mfsmount.cfg.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+    $self->writeConfFile(
+        '/etc/mfs/mfstopology.cfg',
+        "dlllciasrouter/mfs/etc/mfstopology.cfg.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    # -------------------------------------
+
+    my @hddParams = ();
+    my $mfsMod = $self->model("MfsSettings");
+    push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
+    my @nfsServers = [];    # 稍後要從StorageServer取出細節
+    push(@hddParams, 'servers' => \@nfsServers);
+    $self->writeConfFile(
+        '/etc/mfs/mfshdd.cfg',
+        "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
+        \@hddParams,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    system('sudo mfsmount');
+}
+
+# 20150528 Pulipuli Chen
+sub initNFSServer
+{
+    my ($self) = @_;
+
+    my @params = ();
+    my @nfsServers = [];    # 稍後要從StorageServer取出細節
+    push(@hddParams, 'servers' => \@nfsServers);
+    $self->writeConfFile(
+        '/etc/exports',
+        "dlllciasrouter/nfs-server/exports.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+}
+
+sub initNFSClient
+{
+    my ($self) = @_;
+
+    my @mountParams = ();
+    $self->writeConfFile(
+        '/opt/mfschunkservers/nfs-mount.sh',
+        "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
+        \@mountParams,
+        { uid => '0', gid => '0', mode => '755' }
+    );
+
+    my @params = ();
+    $self->writeConfFile(
+        '/opt/mfschunkservers/nfs-mount.sh',
+        "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '755' }
+    );
+}
 
 1;

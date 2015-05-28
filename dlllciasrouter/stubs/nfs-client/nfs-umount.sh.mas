@@ -1,0 +1,3 @@
+<%args>
+</%args>
+umount /opt/mfschunkservers/*

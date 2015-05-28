@@ -29,8 +29,9 @@ models:
     - LibraryNetwork
     - LibraryRedirect
     - LibraryContact
-    - StorageServerSetting
-    - StorageServerHeader
+#    - StorageServerSetting
+#    - StorageServerHeader
+    - MfsSettings
     - StorageServer
     - VEServerSetting
     - VEServerHeader
@@ -46,7 +47,8 @@ models:
     
 composites:
     SettingComposite: [RouterLinks, RouterSettings]
-    StorageServerComposite: [StorageServerHeader, StorageServer]
+    #StorageServerComposite: [StorageServerHeader, StorageServer]
+    StorageServerComposite: [MfsSettings, StorageServer]
     VEServerComposite: [VEServerHeader, VEServer]
     VMServerComposite: [VEServerHeader, VMServer]
     OtherRoutingSettingComposite: [DNS, URLRedirect]
