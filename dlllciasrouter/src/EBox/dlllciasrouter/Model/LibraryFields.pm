@@ -1759,4 +1759,23 @@ sub createFieldMountOption
     return $field;
 }
 
+##
+# 20150528 Pulipuli Chen
+# 記錄資料是否變更
+##
+sub createFieldConfigChanged
+{
+    my ($self, $fieldName) = @_;
+
+    my $field = new EBox::Types::Boolean(
+            fieldName => $fieldName . "_changed",
+            printableName => __($fieldName . ' Changed'),
+            editable => 1,
+            defaultValue => 1,
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
 1;

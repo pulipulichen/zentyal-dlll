@@ -87,6 +87,9 @@ sub _table
         , __('MooseFS Chunkserver & Metalogger OpenVZ Template')
         , $downloadVM));
 
+    # 20150529 變更記錄
+    push(@fields, $fieldsFactory->createFieldConfigChanged($tableName));    
+
     my $dataTable = {
             'tableName' => $options->{tableName},
             'pageTitle' => '',
@@ -119,7 +122,7 @@ sub loadLibrary
 
 # -----------------------
 
-# 20150518 Pulipuli Chen
+# 20150529 Pulipuli Chen
 # 只有第一次執行會用到
 sub initServicePort
 {
@@ -144,6 +147,26 @@ sub initServicePort
     } catch {
         $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');
     }
+}
+
+# 20150529 Pulipuli Chen
+sub setMfsChanged
+{
+    my ($self, $changed) = @_;
+
+    my $options = $self->getOptions();
+    my $tableName = $options->{tableName};
+    $self->elementByName($tableName . "_changed").setValue($changed);
+}
+
+# 20150529 Pulipuli Chen
+set isMfsChanged
+{
+    my ($self) = @_;
+
+    my $options = $self->getOptions();
+    my $tableName = $options->{tableName};
+    return $self->value($tableName . "_changed");
 }
 
 1;
