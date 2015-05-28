@@ -116,6 +116,35 @@ sub addExternalToEBoxRule
     return $id;
 }
 
+# 20150528 Pulipuli Chen
+sub initNFSFilter
+{
+    my ($self) = @_;
+
+    my %param = (
+        'decision' => 'accept',
+        'source_selected' => 'source_any',
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('NFS'),
+        'description' => __("Network File System"),
+    );
+
+    $self->addInternalToEBoxRule(%param);
+}
+
+# 20150518 Pulipuli Chen
+sub addInternalToEBoxRule
+{
+    my ($self, %param) = @_;
+
+    my $network = EBox::Global->modInstance('firewall');
+    my $ruleTable = $network->model('InternalToEBoxRuleTable');
+    my $id = $ruleTable->findId('description'=>$param{description});
+    if (!defined($id)) {
+        $id = $ruleTable->addRow(%param)
+    }
+    return $id;
+}
+
 sub moveRuleToTop
 {
     my ($self, %param) = @_;

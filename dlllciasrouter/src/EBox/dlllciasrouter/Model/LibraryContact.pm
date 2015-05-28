@@ -187,6 +187,14 @@ sub setHardwareDisplay
 
     my $link = '';
     $link = $link . "@" . $location . "<br />";
+    if ($row->elementExists("hardwareKVM") == 1) {
+        my $kvm = "[KVM enabled]";
+        if ($row->valueByName("hardwareKVM") == 0) {
+            $kvm = "";
+        }
+        $link = $link . $kvm;
+    }
+
     $link = $link . "CPU: " . $cpu . "<br />";
     $link = $link . "RAM: " . $ram . "<br />";
     $link = $link . "Disk: " . $disk;

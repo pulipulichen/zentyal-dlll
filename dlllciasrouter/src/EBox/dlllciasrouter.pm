@@ -60,8 +60,10 @@ sub dlllciasrouter_init
 
     $self->model("LibraryService")->getPoundService();
     $self->model("LibraryService")->getZentyalAdminService();
+    $self->model("LibraryService")->getNFSService();
 
     $self->model("RouterSettings")->initServicePort();
+    $self->model("MfsSettings")->initServicePort();
     
 
     $self->model('LibraryMAC')->initAdministorNetworkMember();
@@ -70,6 +72,7 @@ sub dlllciasrouter_init
 
     $self->model("LibraryFilter")->initZentyalAdminFilter();
     $self->model("LibraryFilter")->initBlackListFilter();
+    $self->model("LibraryFilter")->initNFSFilter();
     $self->model("LibraryFilter")->initPoundFilter();
     $self->model("LibraryFilter")->initPoundLogFilter();
 
@@ -203,8 +206,9 @@ sub _setConf
     $self->updatePoundCfg();
     $self->updateMountServers();
     if ($self->model("MfsSettings")->value("mfsEnable") == 1) {
-        $self->restartMooseFS();
-        $self->remountChunkserver();
+        # 20150528 測試使用，先關閉
+        #$self->restartMooseFS();
+        #$self->remountChunkserver();
     }
     else {
         $self->stopMount();
@@ -780,6 +784,13 @@ sub initNFSServer
         { uid => '0', gid => '0', mode => '644' }
     );
 
+    $self->writeConfFile(
+        '/etc/default/nfs-kernel-server',
+        "dlllciasrouter/nfs-server/nfs-kernel-server.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
 }
 
 # 20150528 Pulipuli Chen
@@ -881,9 +892,10 @@ sub restartMooseFS
 # 20150528 Pulipuli Chen
 sub remountChunkserver
 {
+    system('sudo service moosefs-chunkserver stop');
     system('sudo /opt/mfschunkservers/nfs-umount.sh');
     system('sudo /opt/mfschunkservers/nfs-mount.sh');
-    system('sudo service moosefs-chunkserver restart');
+    system('sudo service moosefs-chunkserver start');
     system('sudo mfsmount');
     system('sudo service nfs-kernel-server restart');
 }

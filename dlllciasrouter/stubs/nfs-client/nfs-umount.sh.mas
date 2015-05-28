@@ -1,4 +1,3 @@
 <%args>
 </%args>
-umount /mnt/mfs
-umount /opt/mfschunkservers/*
+umount /opt/mfschunkservers/10.*

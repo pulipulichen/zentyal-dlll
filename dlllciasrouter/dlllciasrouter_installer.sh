@@ -40,6 +40,7 @@ if ! [ -d /opt/mfschunkservers/localhost ] ; then
     sudo mkdir -p /opt/mfschunkservers/localhost
     #sudo chown mfs:mfs /opt/mfschunkservers/localhost
 fi
+sudo chown -R mfs:mfs /var/lib/mfs
 echo "MooseFS directories are ready."
  
 # 設定安裝的東西

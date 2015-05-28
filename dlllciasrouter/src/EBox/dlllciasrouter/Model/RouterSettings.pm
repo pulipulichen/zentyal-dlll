@@ -307,8 +307,7 @@ sub initServicePort
 
     $libServ->addServicePort("dlllciastouer-admin", $self->value('webadminPort'), 1);
     $libServ->addServicePort("dlllciastouer-admin", $self->value('adminPort'), 1);
-    # MooseFS
-    $libServ->addServicePort("dlllciastouer-admin", 9425, 1);
+
     } catch {
         $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');
     }

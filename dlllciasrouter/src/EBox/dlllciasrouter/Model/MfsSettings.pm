@@ -119,4 +119,28 @@ sub loadLibrary
 
 # -----------------------
 
+# 20150518 Pulipuli Chen
+# 只有第一次執行會用到
+sub initServicePort
+{
+    my ($self) = @_;
+
+    try
+    {
+
+    my $libServ = $self->loadLibrary("LibraryService");
+
+    # MooseFS
+    $libServ->addServicePort("dlllciastouer-admin", 9425, 1);
+
+    #nfs
+    $libServ->addServicePort("NFS", 111, 1);
+    $libServ->addServicePort("NFS", 2049, 1);
+    $libServ->addServicePort("NFS", 4002, 1);
+
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');
+    }
+}
+
 1;

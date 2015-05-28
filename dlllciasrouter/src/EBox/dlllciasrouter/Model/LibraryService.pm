@@ -58,6 +58,16 @@ sub getPoundService
     return $self->initService($name, $desc);
 }
 
+# 20150528 Pulipuli Chen
+sub getNFSService
+{
+    my ($self) = @_;
+
+    my $name = "NFS";
+    my $desc = __("Network File System");
+    return $self->initService($name, $desc);
+}
+
 # 20150518 Pulipuli Chen
 sub initService
 {
