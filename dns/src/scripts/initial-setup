@@ -1,5 +1,0 @@
-#!/bin/bash
-
-chmod g+w /etc/bind
-
-exit 0
