@@ -23,8 +23,8 @@ sub getOptions
                 . 'the 3rd part should be 1, and <br />'
                 . 'the 4th part should be between 1~99. <br />'
                 . 'Example: 10.6.1.4';
-    $options->{poundScheme} = 'https';
-    $options->{internalPortDefaultValue} = 443;
+    $options->{poundScheme} = 'http';
+    $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
     $options->{enableHTTPS} = 0;

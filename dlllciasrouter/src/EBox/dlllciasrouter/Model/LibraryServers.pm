@@ -330,6 +330,7 @@ sub serverUpdatedRowNotify
             $libDN->addDomainName($row->valueByName('domainName'));
         }
 
+        $libREDIR->deleteRedirects($row);
         $libREDIR->addRedirects($row);
 
         my $libMAC = $self->loadLibrary('LibraryMAC');
