@@ -783,8 +783,14 @@ sub initNFSServer
 {
     my ($self) = @_;
 
+    my @paths = [];    # 稍後要從StorageServer取出細節
+
     my @params = ();
 
+    # 從這邊取得資料出來
+    #my $expMod = $self->model("ExportSettings");
+    push(@params, 'paths' => @paths);
+    
     $self->writeConfFile(
         '/etc/exports',
         "dlllciasrouter/nfs-server/exports.mas",

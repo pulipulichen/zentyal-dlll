@@ -77,7 +77,6 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldAttachedFilesButton($backView));
 
     push(@fields, $fieldsFactory->createFieldExpiryDate($options->{expiryDate}));
-
     push(@fields, $fieldsFactory->createFieldCreateDateData());
     push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
     

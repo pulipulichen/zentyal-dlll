@@ -13,6 +13,7 @@ use EBox::Types::Port;
 use EBox::Types::Text;
 use EBox::Types::HTML;
 use EBox::Types::Boolean;
+use EBox::Types::IPRange;
 use EBox::Types::Union;
 use EBox::Types::Union::Text;
 use EBox::Types::Select;
@@ -37,7 +38,7 @@ sub getOptions
     $options->{tableName} = "ExportsSetting";
     $options->{printableName} = __("Exports");
     $options->{printableRowName} = __("Export");
-
+    $options->{expiryDate} = __("NEVER");
     return $options;
 }
 
@@ -51,6 +52,56 @@ sub _table
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
     my @fields = ();
 
+    push(@fields, $fieldsFactory->createFieldConfigEnable());
+
+    push(@fields, new EBox::Types::Text(
+              'fieldName'     => 'dir',
+              'printableName' => __('Share Directory '),
+              "editable" => 1,
+             ));
+
+    # http://linux.vbird.org/linux_server/0330nfs.php#nfsserver_exports
+    # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Deployment_Guide/s1-nfs-server-config-exports.html
+
+    # 範圍
+    push(@fields, new EBox::Types::Text(
+            'fieldName'     => 'host',
+            'printableName' => __('Share Network'),
+            "editable" => 1,
+            'defaultValue' => "10.0.0.0/8",
+            "help" => __("Single host: IP, 10.0.0.254. <br />" 
+                . "Wildcard (*) with domain name: *.excample.com. <br />"
+                . "IP networks: 10.0.0.0/8"),
+        ));
+
+    push(@fields, new EBox::Types::Boolean(
+            'fieldName'     => 'readOnly',
+            'printableName' => __('Read Only'),
+            "editable" => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        ));
+    push(@fields, new EBox::Types::Select(
+            'fieldName' => 'squash',
+            'printableName' => __("Squash"),
+            'populate' => \&_populateFieldSquash,
+            "editable" => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        ));
+
+    push(@fields, $fieldsFactory->createFieldContactName());
+    push(@fields, $fieldsFactory->createFieldContactEmail());
+    push(@fields, $fieldsFactory->createFieldDisplayContactLink());
+
+    push(@fields, $fieldsFactory->createFieldDescription());
+    push(@fields, $fieldsFactory->createFieldDescriptionHTML());
+
+    push(@fields, $fieldsFactory->createFieldExpiryDate($options->{expiryDate}));
+    push(@fields, $fieldsFactory->createFieldCreateDateData());
+    push(@fields, $fieldsFactory->createFieldCreateDateDisplay());
+    push(@fields, $fieldsFactory->createFieldDisplayLastUpdateDate());
+    
 
     my $dataTable =
     {
@@ -66,6 +117,25 @@ sub _table
     };
 
     return $dataTable;
+}
+
+# 20150529 Pulipuli
+sub _populateFieldSquash 
+{
+    return [
+                {
+                    value => 'no_root_squash',
+                    printableValue => __('no_root_squash: Allow original root permission'),
+                },
+                {
+                    value => 'root_squash',
+                    printableValue => __('root_squash: Root will be squashed to "nfsnobody".'),
+                },
+                {
+                    value => 'all_squash',
+                    printableValue => __('all_squash: Any user will be squashed to "nfsnobody".'),
+                },
+            ];
 }
 
 # -----------------------------------------
@@ -103,9 +173,15 @@ sub addedRowNotify
     $ROW_NEED_UPDATE = 1;
 
     my $lib = $self->getLibrary();
+    my $libCT = $self->loadLibrary('LibraryContact');
     try 
     {
+        $libCT->setCreateDate($row);
+        $libCT->setUpdateDate($row);
+        $libCT->setContactLink($row);
+        $libCT->setDescriptionHTML($row);
 
+        $row->store();
     } catch {
         $lib->show_exceptions($_ . "(ExportsSetting->updateRowNotify())");
     };
@@ -128,6 +204,7 @@ sub deletedRowNotify
 sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
+    my $libCT = $self->loadLibrary('LibraryContact');
     my $lib = $self->getLibrary();
 
     if ($ROW_NEED_UPDATE == 0) {
@@ -135,7 +212,12 @@ sub updatedRowNotify
         
         try 
         {
-            
+            $libCT->setCreateDate($row);
+            $libCT->setUpdateDate($row);
+            $libCT->setContactLink($row);
+            $libCT->setDescriptionHTML($row);
+
+            $row->store();
         } catch {
             $lib->show_exceptions($_ . "(ExportsSetting->updateRowNotify())");
         };
