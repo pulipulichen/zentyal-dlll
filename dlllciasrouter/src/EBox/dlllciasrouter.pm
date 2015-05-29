@@ -81,6 +81,14 @@ sub dlllciasrouter_init
     $self->model("LibraryFilter")->initPoundFilter();
     $self->model("LibraryFilter")->initPoundLogFilter();
 
+    # 清楚未註冊的帳號
+    #my $remoteservices = EBox::Global->getInstance()->modInstance('remoteservices');
+    #$remoteservices->_removeSubscriptionData();
+
+    # 登入
+    #$remoteservices->registerAdditionalCommunityServer("user\@email", "password", "zentyal");
+    
+
     } catch {
         $self->model("PoundLibrary")->show_exceptions($_ . '( dlllciasrouter->dlllciasrouter_init() )');
     };
