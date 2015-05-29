@@ -81,6 +81,14 @@ sub _table
             'hiddenOnSetter' => 0,
             'hiddenOnViewer' => 1,
         ));
+    push(@fields, new EBox::Types::Boolean(
+            'fieldName'     => 'async',
+            'printableName' => __('Async'),
+            "editable" => 1,
+            "defaultValue" => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        ));
     push(@fields, new EBox::Types::Select(
             'fieldName' => 'squash',
             'printableName' => __("Squash"),

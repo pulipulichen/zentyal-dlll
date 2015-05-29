@@ -5,10 +5,10 @@
 ###############################################
 
 # user to run daemon as (default is mfs)
-WORKING_USER = root
+# WORKING_USER = mfs
 
 # group to run daemon as (optional - if empty then default user group will be used)
-WORKING_GROUP = root
+# WORKING_GROUP = mfs
 
 # name of process to place in syslog messages (default is mfschunkserver)
 # SYSLOG_IDENT = mfschunkserver

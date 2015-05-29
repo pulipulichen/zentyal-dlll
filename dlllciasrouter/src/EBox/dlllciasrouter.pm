@@ -206,21 +206,23 @@ sub _setConf
     #  更新錯誤訊息
     $self->updatePoundErrorMessage();
     $self->updatePoundCfg();
-    my $mountChanged =  $self->updateMountServers();
+    my $mountChanged = $self->updateMountServers();
     if ($self->model("MfsSettings")->value("mfsEnable") == 1) {
         # 20150528 測試使用，先關閉
         if ($mountChanged == 1) {
             $self->restartMooseFS();
             $self->remountChunkserver();
         }
+
+        my $exportChanged =  $self->updateNFSExports();
+        if ($exportChanged == 1) {
+            $self->restartNFSServer();
+        }
     }
     else {
         $self->stopMount();
     }
-    my $exportChanged =  $self->updateNFSExports();
-    if ($exportChanged == 1) {
-        $self->restartNFSServer();
-    }
+    
     
 
     #EBox::CGI::SaveChanges->saveAllModulesAction();
@@ -771,10 +773,16 @@ sub initMooseFS
     );
     
     try {
-        system('sudo service moosefs-master start');
-        system('sudo service moosefs-metalogger start');
-        system('sudo service moosefs-cgiserv start');
-        system('sudo mfsmount');
+        if (readpipe("sudo netstat -plnt | grep '/mfsmaster'") eq "") {
+            system('sudo service moosefs-master start');
+            system('sudo service moosefs-metalogger start');
+        }
+        if (readpipe("sudo netstat -plnt | grep ':9425'") eq "") {
+            system('sudo service moosefs-cgiserv start');
+        }
+        if (readpipe("sudo netstat -plnt | grep '/mfsmount'") eq "") {
+            system('sudo mfsmount');
+        }
     } catch {};
 }
 
@@ -783,20 +791,7 @@ sub initNFSServer
 {
     my ($self) = @_;
 
-    my @paths = [];    # 稍後要從StorageServer取出細節
-
     my @params = ();
-
-    # 從這邊取得資料出來
-    #my $expMod = $self->model("ExportSettings");
-    push(@params, 'paths' => @paths);
-    
-    $self->writeConfFile(
-        '/etc/exports',
-        "dlllciasrouter/nfs-server/exports.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
 
     $self->writeConfFile(
         '/etc/default/nfs-kernel-server',
@@ -804,23 +799,12 @@ sub initNFSServer
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-
 }
 
 # 20150528 Pulipuli Chen
 sub initNFSClient
 {
     my ($self) = @_;
-
-    #my @mountParams = ();
-    #my @nfsServers = [];    # 稍後要從StorageServer取出細節
-    #push(@mountParams, 'servers' => \@nfsServers);
-    #$self->writeConfFile(
-#        '/opt/mfschunkservers/nfs-mount.sh',
-#        "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
-#        \@mountParams,
-#        { uid => '0', gid => '0', mode => '755' }
-#    );
 
     my @params = ();
     $self->writeConfFile(
@@ -834,26 +818,79 @@ sub initNFSClient
 # 20150528 Pulipuli Chen
 sub updateNFSExports
 {
+    # 從這邊取得資料出來
+    #my $expMod = $self->model("ExportSettings");
     my ($self) = @_;
 
-    my @paths = [];    # 稍後要從StorageServer取出細節
+    my $mod = $self->model("ExportsSetting");
+
+    my $dirs = ();
+    # 第一次迴圈，先取出資料出來
+    for my $id (@{$mod->ids()}) {
+        my $row = $mod->row($id);
+
+        # /mnt/mfs/pve 10.6.0.0/24(rw,fsid=0,async,no_root_squash,subtree_check)
+        my $host = $row->valueByName("host");
+        my $ro = $row->valueByName("readOnly");
+        if ($ro == 1) {
+            $ro = "ro";
+        }
+        else {
+            $ro = "rw";
+        }
+        my $async = $row->valueByName("async");
+        if ($async == 1) {
+            $async = "async";
+        }
+        else {
+            $async = "sync";
+        }
+        my $squash = $row->valueByName("squash");
+        
+        my $hostConfig = $host."(".$ro.",fsid=0,".$async.",".$squash.",subtree_check".")\t";
+
+        # ---------------------
+
+        my $dir = $row->valueByName("dir");
+        my $dirPath = "/mnt/mfs/".$dir;
+
+        if (! -d $dirPath) {
+            system('sudo mkdir -p ' . $dirPath);
+        }
+
+        if ( ! exists $dirs->{$dir} ) {
+            $dirs->{$dir} = $dirPath."\t";
+        }
+        $dirs->{$dir} = $dirs->{$dir} . $hostConfig;
+    }
+
+    my @paths = ();    # 稍後要從StorageServer取出細節
+    # 第二次迴圈
+    while (my ($dir, $path) = each(%$dirs)) {
+        $paths[@paths] = $path;
+    }
 
     my @params = ();
 
     # 從這邊取得資料出來
     #my $expMod = $self->model("ExportSettings");
-
-
     push(@params, 'paths' => @paths);
+    
+    my $nfsChanged = $self->checkConfigChange(
+        '/etc/exports',
+        "dlllciasrouter/nfs-server/exports.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
 
-    my $changed = $self->checkConfigChange(
+    my $mfsChanged = $self->checkConfigChange(
         '/etc/mfs/mfsexports.cfg',
         "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
 
-    return $changed;
+    return ($nfsChanged == 1 || $mfsChanged == 1 );
 }
 
 # 20150528 Pulipuli Chen
@@ -882,6 +919,7 @@ sub updateMountServers
         my $path = "/opt/mfschunkservers/" . $ipaddr;
         if (!-d $path) {
             system('sudo mkdir -p ' . $path);
+            system('sudo chown mfs:mfs ' . $path);
         }
 
         # mount -t cifs -o username="Username",password="Password" //10.6.1.1/mnt/smb /opt/mfschunkservers/10.6.1.1
