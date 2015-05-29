@@ -131,7 +131,7 @@ sub initServicePort
     my $libServ = $self->loadLibrary("LibraryService");
 
     # MooseFS
-    $libServ->addServicePort("dlllciastouer-admin", 9425, 1);
+    $libServ->addServicePort("dlllciasrouter-admin", 9425, 1);
 
     $libServ->addServicePort("MFS", 9420, 0);
     $libServ->addServicePort("MFS", 9421, 0);

@@ -48,7 +48,7 @@ sub initZentyalAdminFilter
         'source_selected' => 'source_object',
         'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id(),
         'source_inverseMatch' => 1, 
-        #'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciastouer-admin'),
+        #'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
         'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
         'description' => __("Zentyal Administrator"),
     );

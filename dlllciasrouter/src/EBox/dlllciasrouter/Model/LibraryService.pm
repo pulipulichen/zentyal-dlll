@@ -43,7 +43,7 @@ sub getZentyalAdminService
 {
     my ($self) = @_;
 
-    my $name = "dlllciastouer-admin";
+    my $name = "dlllciasrouter-admin";
     my $desc = __("Zentyal Webadmin, SSH & MooseFS");
     return $self->initService($name, $desc);
 }
@@ -120,12 +120,11 @@ sub getServiceId
 
     # 建立 Service
     my $row = $self->getService($name);
-    if (defined($row)) {
-        return $row->id();
-    }
-    else {
+    if (!defined($row)) {
         return undef;
     }
+    my $id = $row->id();
+    return $id;
 }
 
 # 20150518 Pulipuli Chen

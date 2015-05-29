@@ -256,11 +256,11 @@ sub updatedRowNotify
 
     my $libServ = $self->loadLibrary("LibraryService");
 
-    $libServ->updateServicePort("dlllciastouer-admin"
+    $libServ->updateServicePort("dlllciasrouter-admin"
         , $oldRow->valueByName("webadminPort")
         , $row->valueByName("webadminPort")
         , 1);
-    $libServ->updateServicePort("dlllciastouer-admin"
+    $libServ->updateServicePort("dlllciasrouter-admin"
         , $oldRow->valueByName("adminPort")
         , $row->valueByName("adminPort")
         , 1);
@@ -305,8 +305,8 @@ sub initServicePort
     $libServ->addServicePort("dlllciasrouter-pound", $self->value('port'), 0);
     $libServ->addServicePort("dlllciasrouter-pound", 88, 0); # lighttpd
 
-    $libServ->addServicePort("dlllciastouer-admin", $self->value('webadminPort'), 1);
-    $libServ->addServicePort("dlllciastouer-admin", $self->value('adminPort'), 1);
+    $libServ->addServicePort("dlllciasrouter-admin", $self->value('webadminPort'), 1);
+    $libServ->addServicePort("dlllciasrouter-admin", $self->value('adminPort'), 1);
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');

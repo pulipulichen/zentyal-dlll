@@ -49,9 +49,12 @@ sub dlllciasrouter_init
     try {
     $self->initLighttpd();
     $self->initApache();
-    $self->initMooseFS();
-    $self->initNFSServer();
     $self->initNFSClient();
+    $self->initMooseFS();
+    $self->startMooseFS();
+    $self->initNFSServer();
+    $self->startNFSServer();
+    
 
     $self->initDefaultPound();
 
@@ -702,7 +705,7 @@ sub initMooseFS
     my ($self) = @_;
 
     my @params = ();
-    $self->writeConfFile(
+    $self->writeConfFileOnce(
         '/var/lib/mfs/metadata.mfs',
         "dlllciasrouter/mfs/lib/metadata.mfs.mas",
         \@params,
@@ -741,41 +744,85 @@ sub initMooseFS
 
     # --------------------------------------------
 
-    $self->writeConfFile(
+    $self->writeConfFileOnce(
         '/etc/mfs/mfschunkserver.cfg',
         "dlllciasrouter/mfs/etc/mfschunkserver.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFile(
+    $self->writeConfFileOnce(
         '/etc/mfs/mfsmaster.cfg',
         "dlllciasrouter/mfs/etc/mfsmaster.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFile(
+    $self->writeConfFileOnce(
         '/etc/mfs/mfsmetalogger.cfg',
         "dlllciasrouter/mfs/etc/mfsmetalogger.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFile(
+    $self->writeConfFileOnce(
         '/etc/mfs/mfsmount.cfg',
         "dlllciasrouter/mfs/etc/mfsmount.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFile(
+    $self->writeConfFileOnce(
         '/etc/mfs/mfstopology.cfg',
         "dlllciasrouter/mfs/etc/mfstopology.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    
+
+    if (! -e '/etc/mfs/mfsexports.cfg') {
+        my @mfsParams = ();
+        $self->writeConfFileOnce(
+            '/etc/mfs/mfsexports.cfg',
+            "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
+            \@mfsParams,
+            { uid => '0', gid => '0', mode => '644' }
+        );
+    }
+
+    if (! -e '/etc/exports') {
+        my @nfsParams = ();
+        push(@nfsParams, 'paths' => []);
+        
+        $self->writeConfFileOnce(
+            '/etc/exports',
+            "dlllciasrouter/nfs-server/exports.mas",
+            \@nfsParams,
+            { uid => '0', gid => '0', mode => '644' }
+        );
+    }
+
+    if (! -e '/etc/mfs/mfshdd.cfg') {
+        my @hddParams = ();
+        my $mfsMod = $self->model("MfsSettings");
+        push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
+        push(@hddParams, 'paths' => []);
+        $self->writeConfFileOnce(
+            '/etc/mfs/mfshdd.cfg',
+            "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
+            \@hddParams,
+            { uid => '0', gid => '0', mode => '644' }
+        );
+    }
+}
+
+# 20150529 Pulipuli Chen
+sub startMooseFS
+{    
+    my ($self) = @_;
     try {
         if (readpipe("sudo netstat -plnt | grep '/mfsmaster'") eq "") {
             system('sudo service moosefs-master start');
             system('sudo service moosefs-metalogger start');
+        }
+        if (readpipe("sudo netstat -plnt | grep '/mfschunkserve'") eq "") {
+            system('sudo service moosefs-chunkserver start');
+            #system("echo 'chunkserver start a'");
         }
         if (readpipe("sudo netstat -plnt | grep ':9425'") eq "") {
             system('sudo service moosefs-cgiserv start');
@@ -783,7 +830,9 @@ sub initMooseFS
         if (readpipe("sudo netstat -plnt | grep '/mfsmount'") eq "") {
             system('sudo mfsmount');
         }
-    } catch {};
+    } catch {
+        $self->model("PoundLibrary")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
+    };
 }
 
 # 20150528 Pulipuli Chen
@@ -808,18 +857,57 @@ sub initNFSServer
     );
 }
 
+# 20150529 Pulipuli Chen
+sub startNFSServer
+{
+    if (readpipe("sudo netstat -plnt | grep '/rpc.mountd'") eq "") {
+        system('sudo service nfs-kernel-server start');
+    }
+}
+
 # 20150528 Pulipuli Chen
 sub initNFSClient
 {
     my ($self) = @_;
 
+    if (! -e '/opt/mfschunkservers/nfs-mount.sh') {
+        my @mountParams = ();
+        push(@mountParams, 'servers' => []);
+        $self->writeConfFileOnce(
+            '/opt/mfschunkservers/nfs-mount.sh',
+            "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
+            \@mountParams,
+            { uid => '0', gid => '0', mode => '755' }
+        );
+    }
+
     my @params = ();
-    $self->writeConfFile(
+    $self->writeConfFileOnce(
         '/opt/mfschunkservers/nfs-umount.sh',
         "dlllciasrouter/nfs-client/nfs-umount.sh.mas",
         \@params,
         { uid => '0', gid => '0', mode => '755' }
     );
+
+    $self->writeConfFileOnce(
+        '/opt/mfschunkservers/mfs-clear-metaid.sh',
+        "dlllciasrouter/nfs-client/mfs-clear-metaid.sh.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '755' }
+    );
+}
+
+sub writeConfFileOnce
+{
+    my ($self, $file, $compname, $params, $defaults) = @_;
+    if (! -e $file) {
+        $self->writeConfFile(
+            $file,
+            $compname,
+            $params,
+            $defaults
+        );
+    }
 }
 
 # 20150528 Pulipuli Chen
@@ -994,7 +1082,10 @@ sub checkConfigChange
 
     my $changed = 0;
 
-    my $originVersion = read_file( $file ) ;
+    my $originVersion = "";
+    if (-e $file) {
+       $originVersion = read_file( $file ) ;
+    }
 
     $self->writeConfFile(
         $file,
@@ -1027,6 +1118,13 @@ sub remountChunkserver
     system('sudo /opt/mfschunkservers/nfs-umount.sh');
     system('sudo /opt/mfschunkservers/nfs-mount.sh');
     system('sudo service moosefs-chunkserver start');
+    #system("echo 'chunkserver start b'");
+    if (readpipe("sudo netstat -plnt | grep '/mfschunkserve'") eq "") {
+        # 修復後重新掛載
+        system('sudo /opt/mfschunkservers/mfs-clear-metaid.sh');
+        system('sudo service moosefs-chunkserver start');
+        #system("echo 'chunkserver start c'");
+    }
     system('sudo mfsmount');
 }
 
