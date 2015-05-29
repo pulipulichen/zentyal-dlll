@@ -14,7 +14,7 @@ use EBox::Exceptions::Internal;
 use EBox::Sudo;
 
 use Try::Tiny;
-
+use File::Slurp;
 
 # Method: _create
 #
@@ -206,14 +206,20 @@ sub _setConf
     #  更新錯誤訊息
     $self->updatePoundErrorMessage();
     $self->updatePoundCfg();
-    $self->updateMountServers();
+    my $mountChanged =  $self->updateMountServers();
     if ($self->model("MfsSettings")->value("mfsEnable") == 1) {
         # 20150528 測試使用，先關閉
-        #$self->restartMooseFS();
-        #$self->remountChunkserver();
+        if ($mountChanged == 1) {
+            $self->restartMooseFS();
+            $self->remountChunkserver();
+        }
     }
     else {
         $self->stopMount();
+    }
+    my $exportChanged =  $self->updateNFSExports();
+    if ($exportChanged == 1) {
+        $self->restartNFSServer();
     }
     
 
@@ -740,12 +746,6 @@ sub initMooseFS
         { uid => '0', gid => '0', mode => '644' }
     );
     $self->writeConfFile(
-        '/etc/mfs/mfsexports.cfg',
-        "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFile(
         '/etc/mfs/mfsmaster.cfg',
         "dlllciasrouter/mfs/etc/mfsmaster.cfg.mas",
         \@params,
@@ -769,7 +769,13 @@ sub initMooseFS
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-
+    
+    try {
+        system('sudo service moosefs-master start');
+        system('sudo service moosefs-metalogger start');
+        system('sudo service moosefs-cgiserv start');
+        system('sudo mfsmount');
+    } catch {};
 }
 
 # 20150528 Pulipuli Chen
@@ -820,6 +826,31 @@ sub initNFSClient
 }
 
 # 20150528 Pulipuli Chen
+sub updateNFSExports
+{
+    my ($self) = @_;
+
+    my @paths = [];    # 稍後要從StorageServer取出細節
+
+    my @params = ();
+
+    # 從這邊取得資料出來
+    #my $expMod = $self->model("ExportSettings");
+
+
+    push(@params, 'paths' => @paths);
+
+    my $changed = $self->checkConfigChange(
+        '/etc/mfs/mfsexports.cfg',
+        "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    return $changed;
+}
+
+# 20150528 Pulipuli Chen
 sub updateMountServers
 {
     my ($self) = @_;
@@ -856,9 +887,14 @@ sub updateMountServers
 
     # -----------------------------------
 
+    my $mountChanged = 0;
+
     my @mountParams = ();
     push(@mountParams, 'servers' => @servers);
-    $self->writeConfFile(
+
+    
+    #$self->writeConfFile(
+    my $nfsmountChanged = $self->checkConfigChange(
         '/opt/mfschunkservers/nfs-mount.sh',
         "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
         \@mountParams,
@@ -873,14 +909,47 @@ sub updateMountServers
     my $mfsMod = $self->model("MfsSettings");
     push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
     push(@hddParams, 'paths' => @paths);
-    $self->writeConfFile(
+
+    
+    #$self->writeConfFile(
+    my $mfshddChanged = $self->checkConfigChange(
         '/etc/mfs/mfshdd.cfg',
         "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
         \@hddParams,
         { uid => '0', gid => '0', mode => '644' }
     );
 
+    if ($nfsmountChanged == 1 || $mfshddChanged == 1) {
+        $mountChanged = 1;
+    }
+
+    return $mountChanged;
     #system('sudo mfsmount');
+}
+
+# 20150529 Pulipuli Chen
+sub checkConfigChange
+{
+    my ($self, $file, $compname, $params, $defaults) = @_;
+
+    my $changed = 0;
+
+    my $originVersion = read_file( $file ) ;
+
+    $self->writeConfFile(
+        $file,
+        $compname,
+        $params,
+        $defaults
+    );
+
+    my $writtenVersion = read_file( $file ) ;
+
+    if ($originVersion ne $writtenVersion) {
+        $changed = 1;
+    }
+
+    return $changed;
 }
 
 # 20150528 Pulipuli Chen
@@ -899,7 +968,13 @@ sub remountChunkserver
     system('sudo /opt/mfschunkservers/nfs-mount.sh');
     system('sudo service moosefs-chunkserver start');
     system('sudo mfsmount');
-    system('sudo service nfs-kernel-server restart');
+}
+
+# 20150528 Pulipuli Chen
+sub restartNFSServer
+{
+    #system('sudo service nfs-kernel-server restart');
+    system('sudo exportfs -r');
 }
 
 # 20150528 Pulipuli Chen

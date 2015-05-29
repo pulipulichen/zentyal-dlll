@@ -1,3 +1,9 @@
 <%args>
+    @paths
 </%args>
-/mnt/mfs 10.0.0.0/8(rw,fsid=0,sync,no_root_squash,subtree_check)
+/mnt/mfs/pve 10.6.0.0/24(rw,fsid=0,async,no_root_squash,subtree_check)
+% if (@paths) {
+% for my $path (@paths) {  	
+%   print $path . "\n";
+% } #for my $path (@paths) {  	
+% } #if (@paths) {

@@ -92,10 +92,6 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
-    if ($row->valueByName("mountEnable") == 1) {
-        $self->loadLibrary("MfsSettings")->setMfsChanged(1);
-    }
-
     $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row, $self->getOptions());
     $ROW_NEED_UPDATE = 0;
 }
@@ -105,9 +101,6 @@ sub addedRowNotify
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
-    if ($row->valueByName("mountEnable") == 1) {
-        $self->loadLibrary("MfsSettings")->setMfsChanged(1);
-    }
     $self->loadLibrary("LibraryServers")->serverDeletedRowNotify($row, $self->getOptions());
 }
 
@@ -120,11 +113,6 @@ sub updatedRowNotify
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
-
-        if ( ( $row->valueByName("mountEnable") != $oldRow->valueByName("mountEnable") )) {
-            $self->loadLibrary("MfsSettings")->setMfsChanged(1);
-        }
-
         $self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow, $self->getOptions());
         $ROW_NEED_UPDATE = 0;
     }

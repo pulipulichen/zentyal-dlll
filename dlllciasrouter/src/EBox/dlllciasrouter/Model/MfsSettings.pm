@@ -32,7 +32,7 @@ sub getOptions
     $options->{printableName} = __("MFS Setting");
     $options->{enableMooseFS} = 1;
     $options->{localhostSize} = "1GiB";
-    $options->{chunkserverVMurl} = "http://www.google.com.tw/";
+    $options->{chunkserverVMurl} = "https://mega.co.nz/#!A5oA3CJA";
 
     return $options;
 }
@@ -86,9 +86,6 @@ sub _table
     push(@fields, $fieldsFactory->createFieldTitledHTMLDisplay($options->{tableName} . "_download_chunkserver"
         , __('MooseFS Chunkserver & Metalogger OpenVZ Template')
         , $downloadVM));
-
-    # 20150529 變更記錄
-    push(@fields, $fieldsFactory->createFieldConfigChanged($tableName));    
 
     my $dataTable = {
             'tableName' => $options->{tableName},
@@ -147,26 +144,6 @@ sub initServicePort
     } catch {
         $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');
     }
-}
-
-# 20150529 Pulipuli Chen
-sub setMfsChanged
-{
-    my ($self, $changed) = @_;
-
-    my $options = $self->getOptions();
-    my $tableName = $options->{tableName};
-    $self->elementByName($tableName . "_changed").setValue($changed);
-}
-
-# 20150529 Pulipuli Chen
-set isMfsChanged
-{
-    my ($self) = @_;
-
-    my $options = $self->getOptions();
-    my $tableName = $options->{tableName};
-    return $self->value($tableName . "_changed");
 }
 
 1;
