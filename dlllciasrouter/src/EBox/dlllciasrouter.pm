@@ -864,33 +864,36 @@ sub updateNFSExports
         $dirs->{$dir} = $dirs->{$dir} . $hostConfig;
     }
 
-    my @paths = ();    # 稍後要從StorageServer取出細節
+    my @paths = [];    # 稍後要從StorageServer取出細節
+    my $i = 0;
     # 第二次迴圈
     while (my ($dir, $path) = each(%$dirs)) {
-        $paths[@paths] = $path;
+        $paths[$i] = $path;
+        $i++;
     }
 
-    my @params = ();
-
+    my @nfsParams = ();
     # 從這邊取得資料出來
     #my $expMod = $self->model("ExportSettings");
-    push(@params, 'paths' => @paths);
+    push(@nfsParams, 'paths' => @paths);
+    #push(@nfsParams, 'paths' => []);
     
     my $nfsChanged = $self->checkConfigChange(
         '/etc/exports',
         "dlllciasrouter/nfs-server/exports.mas",
-        \@params,
+        \@nfsParams,
         { uid => '0', gid => '0', mode => '644' }
     );
 
+    my @mfsParams = ();
     my $mfsChanged = $self->checkConfigChange(
         '/etc/mfs/mfsexports.cfg',
         "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
-        \@params,
+        \@mfsParams,
         { uid => '0', gid => '0', mode => '644' }
     );
 
-    return ($nfsChanged == 1 || $mfsChanged == 1 );
+    #return ($nfsChanged == 1 || $mfsChanged == 1 );
 }
 
 # 20150528 Pulipuli Chen
