@@ -1,0 +1,37 @@
+class: 'EBox::DNS'
+
+enabledepends:
+    - network
+
+depends:
+    - network
+
+models:
+    - DomainTable
+    - HostIpTable
+    - DomainIpTable
+    - HostnameTable
+    - AliasTable
+    - MailExchanger
+    - NameServer
+    - Text
+    - Services
+    - Forwarder
+    - Settings
+
+composites:
+    Global: [Settings, Forwarder, DomainTable]
+
+modeldepends:
+    MailExchanger:
+        dns/HostnameTable: [ownerDomain]
+    NameServer:
+        dns/HostnameTable: [ownerDomain]
+    Services:
+        dns/HostnameTable: [ownerDomain]
+    Text:
+        dns/HostnameTable: [ownerDomain]
+
+foreign:
+    HostnameTable: [HostIpTable, AliasTable]
+    DomainTable: [DomainIpTable, HostnameTable, MailExchanger, NameServer, Text, Services]
