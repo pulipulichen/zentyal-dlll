@@ -799,6 +799,13 @@ sub initNFSServer
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
+
+    $self->writeConfFile(
+        '/etc/default/nfs-common',
+        "dlllciasrouter/nfs-server/nfs-common.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
 }
 
 # 20150528 Pulipuli Chen
@@ -871,6 +878,11 @@ sub updateNFSExports
         $paths[$i] = $path;
         $i++;
     }
+    
+    my $pveDirPath = "/mnt/mfs/pve";
+    if (! -d $pveDirPath) {
+        system('sudo mkdir -p ' . $pveDirPath);
+    }
 
     my @nfsParams = ();
     # 從這邊取得資料出來
@@ -885,6 +897,7 @@ sub updateNFSExports
         { uid => '0', gid => '0', mode => '644' }
     );
 
+    # 20150529 本來是要修改的……後來還是算了吧
     my @mfsParams = ();
     my $mfsChanged = $self->checkConfigChange(
         '/etc/mfs/mfsexports.cfg',
@@ -893,7 +906,7 @@ sub updateNFSExports
         { uid => '0', gid => '0', mode => '644' }
     );
 
-    #return ($nfsChanged == 1 || $mfsChanged == 1 );
+    return ($nfsChanged == 1 || $mfsChanged == 1 );
 }
 
 # 20150528 Pulipuli Chen
@@ -1021,7 +1034,7 @@ sub remountChunkserver
 sub restartNFSServer
 {
     #system('sudo service nfs-kernel-server restart');
-    system('sudo exportfs -r');
+    system('sudo exportfs -ar');
 }
 
 # 20150528 Pulipuli Chen
