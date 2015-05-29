@@ -1741,15 +1741,15 @@ sub _populateFieldMountType
 # 20150529 Pulipuli Chen
 # 連接埠輸入欄位
 ##
-sub createFieldMountOption
+sub createFieldMountPath
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'mountOption',
-            'printableName' => __('Options'),
+            'fieldName' => 'mountPath',
+            'printableName' => __('Path'),
             'help' => "Option is the <u>underline</u> part. For example: <br />" 
-                . " NFS: mount -t nfs <u>10.6.1.1:/mnt/nfs</u> /opt/mfschunkservers/10.6.1.1 <br />"
-                . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;password&quot; <u>//10.6.1.1/cifs</u> /opt/mfschunkservers/10.6.1.1",
+                . " NFS: mount -t nfs 10.6.1.1:<u>/mnt/nfs</u> /opt/mfschunkservers/10.6.1.1 <br />"
+                . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;password&quot; //10.6.1.1<u>/cifs</u> /opt/mfschunkservers/10.6.1.1",
             'editable' => 1,
             'optional' => 1,
             'hiddenOnSetter' => 0,
@@ -1762,13 +1762,13 @@ sub createFieldMountOption
 # 20150529 Pulipuli Chen
 # 連接埠輸入欄位
 ##
-sub createFieldMountCIFSUsername
+sub createFieldMountUsername
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'cifsUsername',
-            'printableName' => __('CIFS Username'),
-            'help' => "Option is the <u>underline</u> part. For example: <br />" 
+            'fieldName' => 'mountUsername',
+            'printableName' => __('Username'),
+            'help' => "Username is the <u>underline</u> part. For example: <br />" 
                 . " Samba (CIFS)): mount -t cifs -o username=&quot;<u>user</u>&quot;,password=&quot;password&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
             'editable' => 1,
             'optional' => 1,
@@ -1782,13 +1782,13 @@ sub createFieldMountCIFSUsername
 # 20150529 Pulipuli Chen
 # 連接埠輸入欄位
 ##
-sub createFieldMountCIFSPassword
+sub createFieldMountPassword
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'cifsPassword',
-            'printableName' => __('CIFS Password'),
-            'help' => "Option is the <u>underline</u> part. For example: <br />" 
+            'fieldName' => 'mountPassword',
+            'printableName' => __('Password'),
+            'help' => "Password is the <u>underline</u> part. For example: <br />" 
                 . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;<u>password</u>&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
             'editable' => 1,
             'optional' => 1,

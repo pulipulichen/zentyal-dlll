@@ -32,7 +32,7 @@ sub getOptions
     $options->{printableName} = __("MFS Setting");
     $options->{enableMooseFS} = 1;
     $options->{localhostSize} = "1GiB";
-    $options->{chunkserverVMurl} = "https://mega.co.nz/#!A5oA3CJA";
+    $options->{chunkserverVMurl} = "https://app.box.com/s/cs3x2ocj90cacr3hzx66v832gvmqrfh1";
 
     return $options;
 }

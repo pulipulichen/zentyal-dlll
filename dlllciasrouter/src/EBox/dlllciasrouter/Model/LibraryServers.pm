@@ -106,9 +106,9 @@ sub getDataTable
 
         push(@fields, $fieldsFactory->createFieldMountEnable());
         push(@fields, $fieldsFactory->createFieldMountType($options->{defaultMountType}));
-        push(@fields, $fieldsFactory->createFieldMountOption());
-        push(@fields, $fieldsFactory->createFieldMountCIFSUsername());
-        push(@fields, $fieldsFactory->createFieldMountCIFSPassword());
+        push(@fields, $fieldsFactory->createFieldMountPath());
+        push(@fields, $fieldsFactory->createFieldMountUsername());
+        push(@fields, $fieldsFactory->createFieldMountPassword());
     }
 
     # ----------------------------
@@ -462,7 +462,7 @@ sub updateNetworkDisplay
 
     if ($row->elementExists("mountEnable") 
         && $row->valueByName("mountEnable") == 1
-        && defined($row->valueByName("mountOption")) ) {
+        && defined($row->valueByName("mountPath")) ) {
         my $type = $row->valueByName("mountType");
         $type = uc($type);
         $ipaddr = $ipaddr . "<br />[".$type."]";

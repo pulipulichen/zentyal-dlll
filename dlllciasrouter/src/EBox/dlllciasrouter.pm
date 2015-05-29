@@ -1011,17 +1011,20 @@ sub updateMountServers
     for my $id (@{$mod->ids()}) {
         my $row = $mod->row($id);
 
-        if ($row->valueByName("mountEnable") == 0 || !defined($row->valueByName("mountOption")) ) {
+        if ($row->valueByName("mountEnable") == 0 || !defined($row->valueByName("mountPath")) ) {
             next;
         }
 
         my $ipaddr = $row->valueByName("ipaddr");
         my $type = $row->valueByName("mountType");
-        my $option = $row->valueByName("mountOption");
+        my $option = $row->valueByName("mountPath");
         if ($type eq "cifs") {
             my $username = $row->valueByName("cifsUsername");
             my $password = $row->valueByName("cifsPassword");
-            $option = 'username="'.$username.'",password="'.$password.'" ' . $option;
+            $option = 'username="'.$username.'",password="'.$password.'" //' . $ipaddr . $option;
+        }
+        elsif ($type eq "nfs") {
+            $option = $ipaddr . ":" . $option;
         }
         
         # 如果沒有目錄，則新增目錄
