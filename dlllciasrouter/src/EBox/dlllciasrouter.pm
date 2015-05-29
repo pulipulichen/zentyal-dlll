@@ -1018,6 +1018,11 @@ sub updateMountServers
         my $ipaddr = $row->valueByName("ipaddr");
         my $type = $row->valueByName("mountType");
         my $option = $row->valueByName("mountOption");
+        if ($type eq "cifs") {
+            my $username = $row->valueByName("cifsUsername");
+            my $password = $row->valueByName("cifsPassword");
+            $option = 'username="'.$username.'",password="'.$password.'" ' . $option;
+        }
         
         # 如果沒有目錄，則新增目錄
         my $path = "/opt/mfschunkservers/" . $ipaddr;

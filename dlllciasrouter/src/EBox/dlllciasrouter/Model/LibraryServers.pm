@@ -107,6 +107,8 @@ sub getDataTable
         push(@fields, $fieldsFactory->createFieldMountEnable());
         push(@fields, $fieldsFactory->createFieldMountType($options->{defaultMountType}));
         push(@fields, $fieldsFactory->createFieldMountOption());
+        push(@fields, $fieldsFactory->createFieldMountCIFSUsername());
+        push(@fields, $fieldsFactory->createFieldMountCIFSPassword());
     }
 
     # ----------------------------

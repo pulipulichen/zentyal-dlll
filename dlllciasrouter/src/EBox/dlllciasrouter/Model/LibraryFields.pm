@@ -1738,7 +1738,7 @@ sub _populateFieldMountType
 
 
 ##
-# 20150512 Pulipuli Chen
+# 20150529 Pulipuli Chen
 # 連接埠輸入欄位
 ##
 sub createFieldMountOption
@@ -1749,10 +1749,49 @@ sub createFieldMountOption
             'printableName' => __('Options'),
             'help' => "Option is the <u>underline</u> part. For example: <br />" 
                 . " NFS: mount -t nfs <u>10.6.1.1:/mnt/nfs</u> /opt/mfschunkservers/10.6.1.1 <br />"
-                . " Samba (CIFS)): mount -t cifs <u>-o username=&quot;Username&quot;,password=&quot;Password&quot; //10.6.1.1/mnt/smb</u> /opt/mfschunkservers/10.6.1.1",
+                . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;password&quot; <u>//10.6.1.1/cifs</u> /opt/mfschunkservers/10.6.1.1",
             'editable' => 1,
             'optional' => 1,
-            'unique' => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+    return $field;
+}
+
+##
+# 20150529 Pulipuli Chen
+# 連接埠輸入欄位
+##
+sub createFieldMountCIFSUsername
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::Text(
+            'fieldName' => 'cifsUsername',
+            'printableName' => __('CIFS Username'),
+            'help' => "Option is the <u>underline</u> part. For example: <br />" 
+                . " Samba (CIFS)): mount -t cifs -o username=&quot;<u>user</u>&quot;,password=&quot;password&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
+            'editable' => 1,
+            'optional' => 1,
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+    return $field;
+}
+
+##
+# 20150529 Pulipuli Chen
+# 連接埠輸入欄位
+##
+sub createFieldMountCIFSPassword
+{
+    my ($self) = @_;
+    my $field = new EBox::Types::Text(
+            'fieldName' => 'cifsPassword',
+            'printableName' => __('CIFS Password'),
+            'help' => "Option is the <u>underline</u> part. For example: <br />" 
+                . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;<u>password</u>&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
+            'editable' => 1,
+            'optional' => 1,
             'hiddenOnSetter' => 0,
             'hiddenOnViewer' => 1,
         );
