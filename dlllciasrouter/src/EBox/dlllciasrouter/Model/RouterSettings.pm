@@ -17,6 +17,8 @@ use EBox::Types::HTML;
 use EBox::Types::URI;
 use EBox::Types::Boolean;
 use EBox::Types::IPAddr;
+use EBox::Types::MailAddress;
+use EBox::Types::Password;
 
 use EBox::Network;
 
@@ -73,6 +75,8 @@ sub _table
     my @fields = ();
     #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
 
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ ZentyalPorts', __('Zentyal Ports')));
+
     push(@fields, new EBox::Types::Port(
               fieldName     => 'webadminPort',
               printableName => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator List') . ")",
@@ -90,6 +94,32 @@ sub _table
             defaultValue => 64422,
             optional => 0,
         ));
+
+    # ----------------------------------
+
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_cloudBackup', __('Zentyal Cloud Backup')));
+
+    push(@fields, new EBox::Types::MailAddress(
+              fieldName     => 'adminMail',
+              printableName => __('Account E-Mail Address '),
+              editable      => 1,
+              unique        => 1,
+              optional => 0,
+             ));
+
+    push(@fields, new EBox::Types::Password(
+              fieldName     => 'adminPassword',
+              printableName => __('Account Password '),
+              editable      => 1,
+              unique        => 1,
+              optional => 0,
+             ));
+
+    # ----------------------------------
+
+    
+
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_admin', __('Zentyal Administrator')));
 
     my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
     my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
@@ -273,6 +303,8 @@ sub updatedRowNotify
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
+
+    $self->setCloudConfigBackup($row);
 }
 
 sub setWebadminPort
@@ -327,6 +359,38 @@ sub getExtIPAddress
     }
 
     return $address;
+}
+
+# 20150605 Pulipuli Chen
+sub setCloudConfigBackup
+{
+    my ($self, $row) = @_;
+
+    my $email = $row->valueByName("adminMail");
+    my $password = $row->valueByName("adminPassword");
+
+    my $hostname = EBox::Global->modInstance('sysinfo')->hostName();
+
+    
+    # 清除未註冊的帳號
+    my $remoteservices = EBox::Global->getInstance()->modInstance('remoteservices');
+    #$remoteservices->_removeSubscriptionData();
+    my $username = $remoteservices->username();
+    if ($username ne $email) {
+        # 登入
+        try {
+            $remoteservices->registerAdditionalCommunityServer($email, $password, $hostname);
+        }
+        catch {
+            try {
+                $remoteservices->registerFirstCommunityServer($email, $password, $hostname);
+
+            }
+            catch {
+                $self->getLibrary()->show_exceptions("Your password is wrong. Please reset your password from <a href=\"https://remote.zentyal.com/reset/\" target=\"zentyal_remote\">Zentyal Remote</a>.");
+            };
+        };
+    }
 }
 
 1;
