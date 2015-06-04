@@ -14,7 +14,7 @@ sub getOptions
 {
     my $options = ();
     #$options->{pageTitle} = __('Storage Servers');
-    $options->{pageTitle} = __('Storage Servers');
+    $options->{pageTitle} = __('Distributed Storage');
     $options->{printableTableName} = __('Servers');
     $options->{printableRowName} = __('Server');
     $options->{tableName} = 'StorageServer';

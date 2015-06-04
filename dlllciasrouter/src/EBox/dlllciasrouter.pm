@@ -108,14 +108,15 @@ sub menu
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/SettingComposite',
                                       'text' => __('Settings')));
 
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VEServerComposite',
-                                      'text' => __('Virtual Environment Servers')));
-
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/StorageServerComposite',
-                                      'text' => __('Storage Servers')));
+                                      'text' => __('Distributed Storage')));
 
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VEServerComposite',
+                                      'text' => __('Virtual Environment')));
+
+    
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VMServerComposite',
-                                      'text' => __('Virtual Machine Servers')));
+                                      'text' => __('Virtual Machines')));
 
     
     #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',

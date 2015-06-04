@@ -54,9 +54,10 @@ sub _table
 
     push(@fields, $fieldsFactory->createFieldConfigEnable());
 
-    push(@fields, new EBox::Types::Text(
+    push(@fields, new EBox::Types::DomainName(
               'fieldName'     => 'dir',
               'printableName' => __('Share Directory '),
+              'help' => __("Use server's domain name."),
               "editable" => 1,
              ));
 

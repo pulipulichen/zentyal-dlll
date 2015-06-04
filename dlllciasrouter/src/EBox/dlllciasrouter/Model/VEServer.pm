@@ -14,7 +14,7 @@ sub getOptions
 {
     my $options = ();
     #$options->{pageTitle} = __('Virtual Environment Servers');
-    $options->{pageTitle} = __('Virtual Environment Servers');
+    $options->{pageTitle} = __('Virtual Environment');
     $options->{printableTableName} = __('Servers');
     $options->{printableRowName} = __('Server');
     $options->{tableName} = 'VEServer';
