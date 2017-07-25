@@ -61,6 +61,9 @@ sub _table
     my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
     my $cgiserv = "http://" . $address . ":9425/";
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_mfsInfo", __('MFS INFO'), $cgiserv, 1));
+
+    $cgiserv = "http://pulipulichen.github.io/zentyal-dlll/dlllciasrouter/documents/mfs-usage-instruction.md";
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_mfsUsageInstruction", __('MFS USAGE INSTRUCTION'), $cgiserv, 1));
     
     push(@fields, new EBox::Types::Boolean(
               fieldName     => 'mfsEnable',

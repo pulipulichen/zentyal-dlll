@@ -103,7 +103,7 @@ sub menu
                                       'text' => __('Settings')));
 
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/StorageServerComposite',
-                                      'text' => __('Distributed Storage')));
+                                      'text' => __('Storage')));
 
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VEServerComposite',
                                       'text' => __('Virtual Environment')));
