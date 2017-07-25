@@ -56,7 +56,6 @@ moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-clien
 nfs-kernel-server nfs-common \
 vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound
     sudo updatedb
-    mkdir -p ~/zentyal-dlll
 fi
 echo "All modules are installed."
 
@@ -97,12 +96,11 @@ fi
 # Setup GIT
 # -----------------------------------
 
-# -----------------------------------
+mkdir -p ~/zentyal-dlll
+cd ~
+wget https://pulipulichen.github.io/zentyal-dlll/dlllciasrouter/git-init.sh -O git-init.sh
+bash git-init.sh
 
-cd /tmp
-wget https://raw.githubusercontent.com/pulipulichen/zentyal-dlll/master/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
-#wget http://192.168.11.50/zentyal-dlll/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
-sudo dpkg -i zentyal-dlllciasrouter_3.4_all.deb
 sudo /etc/init.d/zentyal dlllciasrouter restart
 
 if ! echo `sudo /etc/init.d/zentyal dlllciasrouter status` | grep "$GREP_STR" > /dev/null; then
