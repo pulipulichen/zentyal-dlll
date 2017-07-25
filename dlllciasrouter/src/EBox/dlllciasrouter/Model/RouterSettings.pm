@@ -97,7 +97,9 @@ sub _table
 
     # ----------------------------------
 
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_cloudBackup', __('Zentyal Cloud Backup')));
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_cloudBackup', __('Zentyal Cloud Backup ')));
+
+    push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "cloudBackupHelp", "Configuration will be backup to  <a href=\"https://remote.zentyal.com/\" target=\"zentyal_remote\">Zentyal Remote</a> weekly.  Only keep 3 backup online."));
 
     push(@fields, new EBox::Types::MailAddress(
               fieldName     => 'adminMail',
@@ -114,6 +116,8 @@ sub _table
               unique        => 1,
               optional => 0,
              ));
+
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Cloud/Backup", 1));
 
     # ----------------------------------
 

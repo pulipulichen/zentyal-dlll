@@ -1036,11 +1036,23 @@ sub updateMountServers
             system('sudo mkdir -p ' . $path);
             system('sudo chown mfs:mfs ' . $path);
         }
+        my $mfsPath = $path . "/mfs";
 
         # mount -t cifs -o username="Username",password="Password" //10.6.1.1/mnt/smb /opt/mfschunkservers/10.6.1.1
         my $conf = "mount -t " . $type . " " . $option . " " . $path;
         $servers[$i] = $conf;
-        $paths[$i] = $path;
+        $paths[$i] = $mfsPath;
+
+        # 此處進行掛載
+        system('sudo ' + $conf + " &");
+        
+        my $isMounted = readpipe("mountpoint " . $path); #10.6.1.1 is not a mountpoint
+        # 建立掛載後的路徑 
+        if ($isMounted eq $path . " is a mountpoint" && !-d $mfsPath)
+            system('sudo mkdir -p ' . $mfsPath);
+            system('sudo chown mfs:mfs ' . $mfsPath);
+        }
+
         $i++;
     }   # for my $id (@{$mod->ids()}) {}
 
@@ -1127,12 +1139,13 @@ sub remountChunkserver
 {
     system('sudo service moosefs-chunkserver stop');
     system('sudo /opt/mfschunkservers/nfs-umount.sh');
-    system('sudo /opt/mfschunkservers/nfs-mount.sh');
+    #system('sudo /opt/mfschunkservers/nfs-mount.sh');
     system('sudo service moosefs-chunkserver start');
     #system("echo 'chunkserver start b'");
     if (readpipe("sudo netstat -plnt | grep '/mfschunkserve'") eq "") {
         # 修復後重新掛載
         system('sudo /opt/mfschunkservers/mfs-clear-metaid.sh');
+        
         system('sudo service moosefs-chunkserver start');
         #system("echo 'chunkserver start c'");
     }
