@@ -56,6 +56,22 @@ sub initZentyalAdminFilter
     $self->addExternalToEBoxRule(%param);
 }
 
+# 20170726 Pulipuli Chen
+# 設定DNS伺服器的防火牆
+sub initDNSServerFilter
+{
+    my ($self) = @_;
+
+    my %param = (
+        'decision' => 'accept',
+        'source_selected' => 'source_any',
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('DNS'),
+        'description' => __("DNS Server"),
+    );
+
+    $self->addExternalToEBoxRule(%param);
+}
+
 # 20150519 Pulipuli Chen
 sub initBlackListFilter
 {

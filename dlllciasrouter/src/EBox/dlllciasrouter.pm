@@ -80,6 +80,7 @@ sub dlllciasrouter_init
     $self->model("LibraryFilter")->initMFSFilter();
     $self->model("LibraryFilter")->initPoundFilter();
     $self->model("LibraryFilter")->initPoundLogFilter();
+    $self->model("LibraryFilter")->initDNSServerFilter();
 
     
 
