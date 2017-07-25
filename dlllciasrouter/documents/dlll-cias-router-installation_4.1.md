@@ -4,13 +4,13 @@ DLLL-CIAS Router Installation
 For Zentyal 4.1
 
 # Check external network is work
-1. 確定對外網路(eth0)跟對內網路(eth1)都有連線，**網路卡編號不可以搞錯**。特別是對外網路(eth0)，要設定IP、Gateway與DNS，最後要能夠ping到www.google.com。You can use network diagnostic tools to test your network. Network > Tools > Ping ![enter image description here](https://lh3.googleusercontent.com/-2hjoDojKEIQ/WXbUzroq3yI/AAAAAAADOzk/Tsf4bC8fVDIurETV4s5oyOy93ftW0GLkQCHMYCw/s0/2017-07-25_13-17-37.png)
-1. Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal) is work. 
-	- You can use network diagnostic tools to test your network. Network > Tools > Ping
-	- Ping: www.google.com.tw : If network is unreachable. Your DNS configuration is wrong.
-	- Ping: 8.8.8.8: If network is unreachable. Your Gateway configuration is wrong.
-	- Try to remove and add new gateway configuration. Sometimes work but reason is unknown.
-	- ![enter image description here](https://lh3.googleusercontent.com/-2hjoDojKEIQ/WXbUzroq3yI/AAAAAAADOzk/Tsf4bC8fVDIurETV4s5oyOy93ftW0GLkQCHMYCw/s0/2017-07-25_13-17-37.png)
+
+Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal) is work. 
+* You can use network diagnostic tools to test your network. Network > Tools > Ping
+* Ping: www.google.com.tw : If network is unreachable. Your DNS configuration is wrong.
+* Ping: 8.8.8.8: If network is unreachable. Your Gateway configuration is wrong.
+* Try to remove and add new gateway configuration. Sometimes work but reason is unknown.
+* ![enter image description here](https://lh3.googleusercontent.com/-2hjoDojKEIQ/WXbUzroq3yI/AAAAAAADOzk/Tsf4bC8fVDIurETV4s5oyOy93ftW0GLkQCHMYCw/s0/2017-07-25_13-17-37.png)
 
 
 # Enable SSH
