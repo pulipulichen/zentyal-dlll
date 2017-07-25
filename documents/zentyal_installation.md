@@ -36,7 +36,7 @@ Zentyal Installation
   - eht1: Static: 
       - IP address: 10.0.0.254
       - Netmask: 255.0.0.0
-      - Gateway: 10.0.0.254
+      - Gateway: 10.0.0.254 
       - Domain Name Server 1: 10.0.0.254
   - Finish ![enter image description here](https://lh3.googleusercontent.com/-VAqdauaXYhI/WXbHdrBes-I/AAAAAAADOzI/e61SKdwdA08bnksGdKi_AIqMvi9PKrAuwCHMYCw/s0/2017-07-25_12-20-40.png)
 28. Waiting for saving changes in modules... ![enter image description here](https://lh3.googleusercontent.com/-ZP7uRy67HxE/WXbH_O1wK3I/AAAAAAADOzM/P6PZqW7BjOMLDYehXTjzUqKnqjYMnkPAgCHMYCw/s0/2017-07-25_12-22-56.png)
