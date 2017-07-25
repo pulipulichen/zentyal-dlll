@@ -61,3 +61,4 @@ Zentyal Installation in desktop
 ![enter image description here](https://lh3.googleusercontent.com/-2ycU0GPFeH0/WXbIGkCF-dI/AAAAAAADOzQ/Er31VpCWuiYa-WNYdKGB8LGyMloFiwdIQCHMYCw/s0/2017-07-25_12-23-25.png)
 10. Finish 
 ![enter image description here](https://lh3.googleusercontent.com/-JNWjG6dK2xs/WXbIRtLLGBI/AAAAAAADOzU/D00isQXIe_QCeFxKJ45sr7wcSsd6iR61ACHMYCw/s0/2017-07-25_12-24-09.png)
+11. Reboot ![](https://lh3.googleusercontent.com/-FEpToAaAz5A/WXcSvJYEXeI/AAAAAAADO38/fCdjhBzOKxUNMUG06wdw6-bp_FD1qrSIQCHMYCw/s0/2017-07-25_17-41-44.png)

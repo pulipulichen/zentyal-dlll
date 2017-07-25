@@ -20,8 +20,11 @@ echo "Hostname \"mfsmaster\" is ready."
 
 # moosefs的資料庫
 if ! [ -f /etc/apt/sources.list.d/moosefs.list ] ; then
-    wget -O - http://ppa.moosefs.com/apt/moosefs.key | sudo apt-key add -
-    echo deb http://ppa.moosefs.com/stable/apt/ubuntu/trusty trusty main | sudo tee /etc/apt/sources.list.d/moosefs.list
+    wget http://ppa.moosefs.com/moosefs.key
+    sudo apt-key add moosefs.key
+    rm moosefs.key
+    echo "deb http://ppa.moosefs.com/moosefs-3/apt/ubuntu/trusty trusty main" | sudo tee /etc/apt/sources.list.d/moosefs.list
+    sudo apt-get update -y
 fi
 echo "MooseFS apt repository is ready."
 
@@ -50,8 +53,9 @@ if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-mas
 zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
 pound lighttpd \
 moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
-nfs-kernel-server nfs-common
-
+nfs-kernel-server nfs-common \
+vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound
+    sudo updatedb
 fi
 echo "All modules are installed."
 
