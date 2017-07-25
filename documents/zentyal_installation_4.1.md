@@ -37,21 +37,22 @@ Zentyal Installation in desktop
 3. Check following packages: 
 ![enter image description here](https://lh3.googleusercontent.com/-wCZ6LXL5xVw/WXcPl1WXR8I/AAAAAAADO3o/EmOyqUfrkvodOo-MifKJ-8W2nDLTP1pPgCHMYCw/s0/2017-07-25_17-28-20.png)
   - Server roles: DNS Server, DHCP Server, Firewall
-  - Additional services: Antivirus, Certifiaction Authority, HTTP Proxy, VPN
+  - Additional services: Certifiaction Authority, VPN
   - INSTALL
 4. Confirm packages to install: CONTINUE 
-![enter image description here](https://lh3.googleusercontent.com/-uIpaPTqa-Zs/WXbBIHowu9I/AAAAAAADOyw/17fusOvKLc8XOg3SdoD1rrbsBkP8ybCVQCHMYCw/s0/2017-07-25_11-53-40.png)
+![enter image description here](https://lh3.googleusercontent.com/-R98Fj-pUWGM/WXcP9VtD0wI/AAAAAAADO3w/RcO4xbpCcVoV2nc4-wi1HuBFqGEa3V9ZACHMYCw/s0/2017-07-25_17-29-54.png)
 5. Waiting for installing packages... 
 ![enter image description here](https://lh3.googleusercontent.com/-aazhbwnLCmM/WXbBW6ujo4I/AAAAAAADOy0/VlPV3J43ENkN_z-oANt4kZKfGv2UiqnugCHMYCw/s0/2017-07-25_11-54-38.png)
-6. Configure interface types: eth0 External / eth1 Internal: NEXT 
+6. Configure interface types:
+	- eth0 External 
+	- eth1 Internal
+	- NEXT
 ![enter image description here](https://lh3.googleusercontent.com/-p7VLsahseqQ/WXbGsfWfzaI/AAAAAAADOzE/wu12cgesvWY9MUVI98ngN0NFCrKH6N1RgCHMYCw/s0/2017-07-25_12-17-24.png)
 7. Network interfaces: 
   - eth0: DHCP or Static, depend on your network environment
   - eht1: Static: 
       - IP address: 10.0.0.254
       - Netmask: 255.0.0.0
-      - Gateway: 10.0.0.254 
-      - Domain Name Server 1: 10.0.0.254
   - Finish 
 ![enter image description here](https://lh3.googleusercontent.com/-VAqdauaXYhI/WXbHdrBes-I/AAAAAAADOzI/e61SKdwdA08bnksGdKi_AIqMvi9PKrAuwCHMYCw/s0/2017-07-25_12-20-40.png)
 8. Waiting for saving changes in modules... 
