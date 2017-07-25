@@ -5,7 +5,7 @@ zentyal-dlll
 
 ----
 
-Start
+Zentyal Installation
 ===============
 1. Download Zenetyal Server ISO: Current version is 5.0 on July 24, 2017
 http://www.zentyal.org/server/
@@ -34,6 +34,32 @@ For example: VirtualBox https://www.virtualbox.org/wiki/Downloads
 18. Wait for installation... ![enter image description here](https://lh3.googleusercontent.com/-y71RmBxJUXE/WXYSgYoXLcI/AAAAAAADOxM/eLw9oilGhA4621meOqtaEJuxT1wYmQv1gCHMYCw/s0/2017-07-24_23-28-37.png)
 19. Finish the installation: Continue  ![enter image description here](https://lh3.googleusercontent.com/-Qnd2lN11vvo/WXagP7zo4QI/AAAAAAADOxs/6tNG_FcLM80H5PTUkeqi9bieJ3vdRjXyACHMYCw/s0/2017-07-25_09-33-22.png)
 20. Reboot and waiting for installing Zentyal core packages ![enter image description here](https://lh3.googleusercontent.com/-ixPqe5aoopg/WXagm6IUObI/AAAAAAADOxw/JHiYED0pMBEA8bWFfeeyuejayAPKhRvzgCHMYCw/s0/2017-07-25_09-34-55.png)
+21. Zentyal login: zentyal & password ![enter image description here](https://lh3.googleusercontent.com/-hZ-h25aY2AY/WXahJeGdVyI/AAAAAAADOx0/OZq6i4b0lAsIEFpFXGZxxNffp1XYRg30gCHMYCw/s0/2017-07-25_09-37-12.png)
+22. Initial Setup: Continue ![enter image description here](https://lh3.googleusercontent.com/-r3NDXLENlrM/WXbAXAAEPiI/AAAAAAADOyk/wFrcQP7QkEAgIt0K8BnV2rwqmby7xcp7QCHMYCw/s0/2017-07-25_11-50-23.png)
+23. Check following packages: ![enter image description here](https://lh3.googleusercontent.com/-kLGWnef4meY/WXbA_aTD3LI/AAAAAAADOyo/7478ryFug6AR80OFDzG0OeZl7MqXRdEMwCHMYCw/s0/2017-07-25_11-53-04.png)
+  - Server roles: DNS Server, DHCP Server, Firewall
+  - Additional services: Antivirus, Certifiaction Authority, HTTP Proxy, VPN
+  - INSTALL
+24. Confirm packages to install: CONTINUE ![enter image description here](https://lh3.googleusercontent.com/-uIpaPTqa-Zs/WXbBIHowu9I/AAAAAAADOyw/17fusOvKLc8XOg3SdoD1rrbsBkP8ybCVQCHMYCw/s0/2017-07-25_11-53-40.png)
+25. Waiting for installing packages... ![enter image description here](https://lh3.googleusercontent.com/-aazhbwnLCmM/WXbBW6ujo4I/AAAAAAADOy0/VlPV3J43ENkN_z-oANt4kZKfGv2UiqnugCHMYCw/s0/2017-07-25_11-54-38.png)
+26. Configure interface types: eth0 External / eth1 Internal: NEXT ![enter image description here](https://lh3.googleusercontent.com/-p7VLsahseqQ/WXbGsfWfzaI/AAAAAAADOzE/wu12cgesvWY9MUVI98ngN0NFCrKH6N1RgCHMYCw/s0/2017-07-25_12-17-24.png)
+27. Network interfaces: 
+  - eth0: DHCP or Static, depend on your network environment
+  - eht1: Static: 
+      - IP address: 10.0.0.254
+      - Netmask: 255.0.0.0
+      - Gateway: 10.0.0.254
+      - Domain Name Server 1: 10.0.0.254
+  - Finish ![enter image description here](https://lh3.googleusercontent.com/-VAqdauaXYhI/WXbHdrBes-I/AAAAAAADOzI/e61SKdwdA08bnksGdKi_AIqMvi9PKrAuwCHMYCw/s0/2017-07-25_12-20-40.png)
+28. Waiting for saving changes in modules... ![enter image description here](https://lh3.googleusercontent.com/-ZP7uRy67HxE/WXbH_O1wK3I/AAAAAAADOzM/P6PZqW7BjOMLDYehXTjzUqKnqjYMnkPAgCHMYCw/s0/2017-07-25_12-22-56.png)
+29. Installation finished: Go to the dashboard ![enter image description here](https://lh3.googleusercontent.com/-2ycU0GPFeH0/WXbIGkCF-dI/AAAAAAADOzQ/Er31VpCWuiYa-WNYdKGB8LGyMloFiwdIQCHMYCw/s0/2017-07-25_12-23-25.png)
+30. Finish ![enter image description here](https://lh3.googleusercontent.com/-JNWjG6dK2xs/WXbIRtLLGBI/AAAAAAADOzU/D00isQXIe_QCeFxKJ45sr7wcSsd6iR61ACHMYCw/s0/2017-07-25_12-24-09.png)
+
+----
+
+DLLL-CIAS Router Installation
+===============
+1. 確定對外網路(eth0)跟對內網路(eth1)都有連線，**網路卡編號不可以搞錯**。特別是對外網路(eth0)，要設定IP、Gateway與DNS，最後要能夠ping到www.google.com。
 
 DLLL-CIAS Router直接安裝方法
 ===============
