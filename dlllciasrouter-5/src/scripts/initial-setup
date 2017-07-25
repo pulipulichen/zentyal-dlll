@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+### Actions to be executed when installing the module for the first time ###
+#sudo apt-get -y --force-yes install pound
+
+exit 0

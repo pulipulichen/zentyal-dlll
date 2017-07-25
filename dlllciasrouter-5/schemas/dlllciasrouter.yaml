@@ -1,0 +1,56 @@
+class: 'EBox::dlllciasrouter'
+
+depends:
+    - network
+    - dns
+    - firewall
+    - dhcp
+
+enabledepends:
+    - network
+    - dns
+    - firewall
+    - dhcp
+
+models:
+    - RouterSettings
+    - RouterLinks
+    - PoundLibrary
+    - PortRedirect
+    - URLRedirect
+    - DNS
+    - LibraryMAC
+    - LibraryService
+    - LibraryFilter
+    - LibraryLogs
+    - LibraryEncoding
+    - LibraryFields
+    - LibraryDomainName
+    - LibraryNetwork
+    - LibraryRedirect
+    - LibraryContact
+#    - StorageServerSetting
+#    - StorageServerHeader
+    - MfsSettings
+    - StorageServer
+    - VEServerSetting
+    - VEServerHeader
+    - VEServer
+    - VMServer
+    - ServerPortRedirect
+    - OtherDomainNames
+    - LibraryServers
+    - LibrarySetting
+    - LibraryHeader
+    - ErrorMessage
+    - AttachedFiles
+    - ExportsSetting
+    
+
+composites:
+    SettingComposite: [RouterLinks, RouterSettings]
+    #StorageServerComposite: [StorageServerHeader, StorageServer]
+    StorageServerComposite: [MfsSettings, StorageServer, ExportsSetting]
+    VEServerComposite: [VEServerHeader, VEServer]
+    VMServerComposite: [VEServerHeader, VMServer]
+    OtherRoutingSettingComposite: [DNS, URLRedirect]

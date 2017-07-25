@@ -49,6 +49,7 @@ sudo chown -R mfs:mfs /var/lib/mfs
 echo "[DCR] MooseFS directories are ready."
  
 # 設定安裝的東西
+sudo mkdir -p ~/zentyal-dlll
 if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-master ] && [ -f /etc/init.d/nfs-kernel-server ] ) ; then
     sudo apt-get -y update
     sudo apt-get -y install zentyal-network zentyal-objects \
@@ -56,6 +57,7 @@ zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
 pound lighttpd \
 moosefs-master moosefs-cli moosefs-chunkserver moosefs-metalogger moosefs-client moosefs-cgiserv \
 nfs-kernel-server nfs-common vim locate
-updatedb
+    sudo apt-get -y install libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound vim
+    sudo updatedb
 fi
 echo "All modules are installed."

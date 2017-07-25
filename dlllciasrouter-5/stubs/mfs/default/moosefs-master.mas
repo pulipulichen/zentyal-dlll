@@ -1,0 +1,10 @@
+<%args>
+</%args>
+# /etc/default/moosefs-master
+
+# Start moosefs-master from init.d script on boot.
+#   Only allowed values are "true" and "false".
+#   Undefined values default to "false".
+MFSMASTER_ENABLE=true
+
+DAEMON_OPTS=""

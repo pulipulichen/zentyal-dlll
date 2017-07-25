@@ -1,0 +1,8 @@
+<%args>
+    @servers
+</%args>
+% if (@servers) {
+% for my $server (@servers) {  	
+%   print $server . "\n";
+% } #for my $server (@servers) {  	
+% } #if (@servers) {

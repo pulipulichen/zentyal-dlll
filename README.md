@@ -2,6 +2,7 @@ zentyal-dlll
 ===============
 
 這是用開放原始碼的路由器作業系統Zentyal客製化而成的Zentyal-DLLL路由器系統
+http://pulipulichen.github.io/zentyal-dlll/
 
 ----
 Part 1. Zentyal Installation
@@ -30,15 +31,30 @@ DLLL-CIAS Router Installation
 5. SSH is work. 
 ![enter image description here](https://lh3.googleusercontent.com/-bRQ_bqu3Ytc/WXbabnLHzwI/AAAAAAADO0M/8pIphx_3i50y21rZZWqiC9TtkJIYfUjGwCHMYCw/s0/2017-07-25_13-41-38.png)
 
-----
+# Check modules is enable
+1. (Left menu) Module Status
+2. Ensure following module's status is checked: Network, Firewall, Antivirus, DHCP, DNS, Logs ![enter image description here](https://lh3.googleusercontent.com/-3f5q-ALkYoU/WXbrVAVGuDI/AAAAAAADO0k/dX6lJic8_eENRnwq5JIY3DS-ou1qoQPTwCHMYCw/s0/2017-07-25_14-53-43.png)
 
-# DLLLCIASROUTER installation
+# Setup development enviroment
 1. Use terminal. Type following command: 
-```` wget http://j.mp/dlllciasrouter -O d.sh; bash d.sh  ````
-( http://j.mp/dlllciasrouter is dlllciasrouter_installer.sh https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/dlllciasrouter_installer.sh )
+```` wget https://goo.gl/4LQhWL -O d.sh; bash d.sh  ````
+( https://goo.gl/4LQhWL is dlllciasrouter_installer.sh https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter-5/dlllciasrouter_development_installer.sh )
 ![enter image description here](https://lh3.googleusercontent.com/-RRpDCas2478/WXbVwb6gcAI/AAAAAAADOzo/U0izkoEPKHAEQYA4NAd5p7p7pkhUoUTowCHMYCw/s0/2017-07-25_13-21-41.png) 
 2. [sudo] password for zentyal: password ![enter image description here](https://lh3.googleusercontent.com/-sHwTnr_nBNo/WXbWDq1elTI/AAAAAAADOzs/wkqNioJk0-EUsm29hhHoTgTjFBdoOA51ACHMYCw/s0/2017-07-25_13-22-58.png)
 
+----
+
+# DLLLCIASROUTER installation (departed)
+1. Use terminal. Type following command: 
+```` wget https://goo.gl/yuG7pk -O d.sh; bash d.sh  ````
+( https://goo.gl/yuG7pk is dlllciasrouter_installer.sh http://pulipulichen.github.io/zentyal-dlll
+/dlllciasrouter-5/dlllciasrouter_installer.sh )
+![enter image description here](https://lh3.googleusercontent.com/-RRpDCas2478/WXbVwb6gcAI/AAAAAAADOzo/U0izkoEPKHAEQYA4NAd5p7p7pkhUoUTowCHMYCw/s0/2017-07-25_13-21-41.png) 
+2. [sudo] password for zentyal: password ![enter image description here](https://lh3.googleusercontent.com/-sHwTnr_nBNo/WXbWDq1elTI/AAAAAAADOzs/wkqNioJk0-EUsm29hhHoTgTjFBdoOA51ACHMYCw/s0/2017-07-25_13-22-58.png)
+
+---------------------
+
+# Following is drafts
 
 DLLL-CIAS Router直接安裝方法
 ===============
@@ -57,8 +73,8 @@ wget http://j.mp/dlllciasrouter -O d.sh; bash d.sh
 Zentyal模組編譯的方法
 ===============
 
-1. 登入Zentyal，身分非root，例如：admin
-2. 移動到上傳的位置，例如：/home/admin/
+1. 登入Zentyal，身分非root，例如：zentyal
+2. 移動到上傳的位置，例如：/home/zentyal/
 3. 移動到要編譯的位置，例如：/home/admin/pound
 4. 執行編譯 compile.sh
 5. 中途會要求管理者權限，請輸入你自己的密碼
@@ -69,7 +85,7 @@ Zentyal本機參考資源
 /usr/share/perl5/EBox/ 主要程式
 
 
-參考來源：[Zentyal 3.0動手做模組入門 / Zentyal 3.0 Module Development](http://pulipuli.blogspot.tw/2013/07/zentyal-30.html)
+參考來源：[Zentyal 3.0動手做模組入門 / Zentyal 3.0 Module Development]( http://pulipuli.blogspot.tw/2013/07/zentyal-30.html )
 
 以下操作適用於Zentyal 3
 
