@@ -59,19 +59,3 @@ nfs-kernel-server nfs-common vim locate
 updatedb
 fi
 echo "All modules are installed."
-
-# 如果要測試，做到這邊即可
-if [ -f ~/zentyal-dlll/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb ] ; then
-    echo "Test finish"
-    exit
-fi
-
-cd /tmp
-wget https://raw.githubusercontent.com/pulipulichen/zentyal-dlll/master/dlllciasrouter-5/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
-#wget http://192.168.11.50/zentyal-dlll/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.deb -O zentyal-dlllciasrouter_3.4_all.deb
-sudo dpkg -i zentyal-dlllciasrouter_3.4_all.deb
-sudo /etc/init.d/zentyal dlllciasrouter restart
-
-if ! echo `sudo /etc/init.d/zentyal dlllciasrouter status` | grep "$GREP_STR" > /dev/null; then
-    echo "Please enable DLLL-CIAS Router module in Zentyal."
-fi
