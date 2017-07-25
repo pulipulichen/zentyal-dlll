@@ -6,10 +6,10 @@ http://pulipulichen.github.io/zentyal-dlll/
 
 ----
 # Part 1. Zentyal Installation
-https://github.com/pulipulichen/zentyal-dlll/blob/master/documents/zentyal_installation_4.1.md
+https://github.com/pulipulichen/zentyal-dlll/tree/master/dlllciasrouter/documents/zentyal_installation_4.1.md
 
 # Part 2. DLLL-CIAS Router Installation
-https://github.com/pulipulichen/zentyal-dlll/blob/master/documents/dlll-cias-router-installation_4.1.md
+https://github.com/pulipulichen/zentyal-dlll/tree/master/dlllciasrouter/documents/dlll-cias-router-installation_4.1.md
 
 Tools
 ====

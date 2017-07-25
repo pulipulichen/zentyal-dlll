@@ -56,6 +56,7 @@ moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-clien
 nfs-kernel-server nfs-common \
 vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound
     sudo updatedb
+    mkdir -p ~/zentyal-dlll
 fi
 echo "All modules are installed."
 

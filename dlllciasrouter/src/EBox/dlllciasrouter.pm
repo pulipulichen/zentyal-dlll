@@ -1048,7 +1048,7 @@ sub updateMountServers
         
         my $isMounted = readpipe("mountpoint " . $path); #10.6.1.1 is not a mountpoint
         # 建立掛載後的路徑 
-        if ($isMounted eq $path . " is a mountpoint" && !-d $mfsPath)
+        if ($isMounted eq $path . " is a mountpoint" && !-d $mfsPath) {
             system('sudo mkdir -p ' . $mfsPath);
             system('sudo chown mfs:mfs ' . $mfsPath);
         }
