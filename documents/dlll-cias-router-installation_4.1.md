@@ -26,11 +26,11 @@ For Zentyal 4.1
 
 # Check modules is enable
 1. (Left menu) Module Status
-2. Ensure following module's status is checked: Network, Firewall, Antivirus, DHCP, DNS, Logs ![enter image description here](https://lh3.googleusercontent.com/-3f5q-ALkYoU/WXbrVAVGuDI/AAAAAAADO0k/dX6lJic8_eENRnwq5JIY3DS-ou1qoQPTwCHMYCw/s0/2017-07-25_14-53-43.png)
+2. Ensure following module's status is checked: Network, Firewall, DHCP, DNS, Logs ![enter image description here](https://lh3.googleusercontent.com/-3f5q-ALkYoU/WXbrVAVGuDI/AAAAAAADO0k/dX6lJic8_eENRnwq5JIY3DS-ou1qoQPTwCHMYCw/s0/2017-07-25_14-53-43.png)
 
 # Setup development enviroment
 1. Use terminal. Type following command: 
-```` wget https://goo.gl/4LQhWL -O d.sh; bash d.sh  ````
-( https://goo.gl/4LQhWL is dlllciasrouter_installer.sh https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter-5/dlllciasrouter_development_installer.sh )
+```` wget https://goo.gl/Z8t8tp -O d.sh; bash d.sh  ````
+( https://goo.gl/Z8t8tp is dlllciasrouter_installer.sh https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/dlllciasrouter_development_installer.sh )
 ![enter image description here](https://lh3.googleusercontent.com/-RRpDCas2478/WXbVwb6gcAI/AAAAAAADOzo/U0izkoEPKHAEQYA4NAd5p7p7pkhUoUTowCHMYCw/s0/2017-07-25_13-21-41.png) 
 2. [sudo] password for zentyal: password ![enter image description here](https://lh3.googleusercontent.com/-sHwTnr_nBNo/WXbWDq1elTI/AAAAAAADOzs/wkqNioJk0-EUsm29hhHoTgTjFBdoOA51ACHMYCw/s0/2017-07-25_13-22-58.png)

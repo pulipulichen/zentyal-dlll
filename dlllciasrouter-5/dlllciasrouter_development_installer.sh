@@ -61,3 +61,5 @@ nfs-kernel-server nfs-common vim locate
     sudo updatedb
 fi
 echo "All modules are installed."
+
+mkdir -p ~/zentyal-dlll
