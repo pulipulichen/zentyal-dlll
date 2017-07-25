@@ -63,6 +63,7 @@ sub dlllciasrouter_init
 
     $self->model("LibraryService")->getPoundService();
     $self->model("LibraryService")->getZentyalAdminService();
+    $self->model("LibraryService")->getDNSServerService();
     $self->model("LibraryService")->getNFSService();
     $self->model("LibraryService")->getMFSService();
 
@@ -75,12 +76,12 @@ sub dlllciasrouter_init
     $self->model("LibraryMAC")->initDHCPfixedIP();
 
     $self->model("LibraryFilter")->initZentyalAdminFilter();
-    $self->model("LibraryFilter")->initBlackListFilter();
+    $self->model("LibraryFilter")->initDNSServerFilter();
     $self->model("LibraryFilter")->initNFSFilter();
     $self->model("LibraryFilter")->initMFSFilter();
     $self->model("LibraryFilter")->initPoundFilter();
     $self->model("LibraryFilter")->initPoundLogFilter();
-    $self->model("LibraryFilter")->initDNSServerFilter();
+    $self->model("LibraryFilter")->initBlackListFilter();
 
     
 

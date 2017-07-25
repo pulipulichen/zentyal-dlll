@@ -335,14 +335,17 @@ sub initServicePort
 
     try
     {
-    $self->setWebadminPort($self->value("webadminPort"));
+        $self->setWebadminPort($self->value("webadminPort"));
 
-    my $libServ = $self->loadLibrary("LibraryService");
-    $libServ->addServicePort("dlllciasrouter-pound", $self->value('port'), 0);
-    $libServ->addServicePort("dlllciasrouter-pound", 88, 0); # lighttpd
+        my $libServ = $self->loadLibrary("LibraryService");
+        $libServ->addServicePort("dlllciasrouter-pound", $self->value('port'), 0);
+        $libServ->addServicePort("dlllciasrouter-pound", 88, 0); # lighttpd
 
-    $libServ->addServicePort("dlllciasrouter-admin", $self->value('webadminPort'), 1);
-    $libServ->addServicePort("dlllciasrouter-admin", $self->value('adminPort'), 1);
+        $libServ->addServicePort("dlllciasrouter-admin", $self->value('webadminPort'), 1);
+        $libServ->addServicePort("dlllciasrouter-admin", $self->value('adminPort'), 1);
+
+        #dns server
+        $libServ->addServicePort("dlllciasrouter-dns", 53, 1);
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');

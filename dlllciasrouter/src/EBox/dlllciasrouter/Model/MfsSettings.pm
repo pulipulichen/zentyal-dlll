@@ -131,20 +131,20 @@ sub initServicePort
     try
     {
 
-    my $libServ = $self->loadLibrary("LibraryService");
+        my $libServ = $self->loadLibrary("LibraryService");
 
-    # MooseFS
-    $libServ->addServicePort("dlllciasrouter-admin", 9425, 1);
+        # MooseFS
+        $libServ->addServicePort("dlllciasrouter-admin", 9425, 1);
 
-    $libServ->addServicePort("MFS", 9420, 0);
-    $libServ->addServicePort("MFS", 9421, 0);
+        $libServ->addServicePort("MFS", 9420, 0);
+        $libServ->addServicePort("MFS", 9421, 0);
 
-    #nfs
-    $libServ->addServicePort("NFS", 111, 0);
-    $libServ->addServicePort("NFS", 2049, 0);
-    $libServ->addServicePort("NFS", 4000, 0);
-    $libServ->addServicePort("NFS", 4001, 0);
-    $libServ->addServicePort("NFS", 4002, 0);
+        #nfs
+        $libServ->addServicePort("NFS", 111, 0);
+        $libServ->addServicePort("NFS", 2049, 0);
+        $libServ->addServicePort("NFS", 4000, 0);
+        $libServ->addServicePort("NFS", 4001, 0);
+        $libServ->addServicePort("NFS", 4002, 0);
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');

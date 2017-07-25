@@ -48,6 +48,16 @@ sub getZentyalAdminService
     return $self->initService($name, $desc);
 }
 
+# 20170726 Pulipuli Chen
+sub getDNSServerService
+{
+    my ($self) = @_;
+
+    my $name = "dlllciasrouter-dns";
+    my $desc = __("DNS Server");
+    return $self->initService($name, $desc);
+}
+
 # 20150518 Pulipuli Chen
 sub getPoundService
 {
