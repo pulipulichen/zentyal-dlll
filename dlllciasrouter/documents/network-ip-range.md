@@ -1,11 +1,12 @@
 # Network IP range #
 
-- Virtual Environment Server
+- Virtual Environment Server (Proxmox)
 	- Example: 10.6.0.55
 	- The 1st part should be 10, 
 	- the 2nd part should be 6, 
 	- the 3rd part should be 0, and 
 	- the 4th part should be between 1~99.
+		- 1~9: master-a
 - Storage Servers:
 	- Example: 10.6.1.4
 	- The 1st part should be 10, 

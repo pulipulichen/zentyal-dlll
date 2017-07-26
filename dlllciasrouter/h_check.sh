@@ -1,4 +1,7 @@
-cd ~/zentyal-dlll/dlllciasrouter
+if [ -d "~/zentyal-dlll/dlllciasrouter" ]; then
+  cd ~/zentyal-dlll/dlllciasrouter
+fi
+
 #perl -c src/EBox/*.pm
 #perl -c src/EBox/*/Model/*.pm
 #perl -c src/EBox/*/Composite/*.pm
@@ -12,7 +15,7 @@ cd ~/zentyal-dlll/dlllciasrouter
 #done
 
 echo "[h_check.sh] Start check pm files' syntax"
-echo "===="
+echo "----"
 
 find src/EBox/dlllciasrouter/Model/*.pm -mtime -0.02 -exec perl -c {} \;
 find src/EBox/dlllciasrouter/Composite/*.pm -mtime -0.02 -exec perl -c {} \;

@@ -52,10 +52,10 @@ sub checkInternalIP
     my $partD = $parts[3];
 
     if (!($partA == 10) 
-        || !($partB == 6) 
+        #|| !($partB == 6) 
         || !($partC == 0) 
         || !($partD > 0 && $partD < 100) ) {
-        my $message = __('Internal IP format error.' . $options->{IPHelp});
+        my $message = __('Internal IP format error. <br />' . $options->{IPHelp});
         $self->loadLibrary('PoundLibrary')->show_exceptions($message);
     }
 }

@@ -117,12 +117,15 @@ sub menu
     
     #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',
     #                                  'text' => __('Pound Back End')));
-    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/OtherRoutingSettingComposite',
-                                      'text' => __('Other Routing Setting')));
-    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/URLRedirect',
-    #                                  'text' => __('URL Redirect')));
-    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/DNS',
-    #                                  'text' => __('DNS')));
+    #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/OtherRoutingSettingComposite',
+    #                                  'text' => __('Other Routing Setting')));
+
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/DNS',
+                                      'text' => __('DNS')));
+
+    $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/URLRedirect',
+                                      'text' => __('URL Redirect')));
+    
     
     $root->add($folder);
 }

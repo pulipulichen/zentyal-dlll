@@ -134,7 +134,8 @@ sub addedRowNotify
     $libCT->setDescriptionHTML($row);
 
     if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-        $libDN->addDomainName($row->valueByName('domainName'));
+        #$libDN->addDomainName($row->valueByName('domainName'));
+        $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
     }
 
     $row->store();
@@ -174,7 +175,7 @@ sub updatedRowNotify
         {
             if ($row->valueByName("configEnable")) {
                 if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-                    $libDN->addDomainName($row->valueByName('domainName'));
+                    $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
                 }
             }
             else {
@@ -182,9 +183,8 @@ sub updatedRowNotify
             }
         } catch {
             my $lib = $self->getLibrary();
-            $lib->show_exceptions($_);
+            $lib->show_exceptions($_ . " ( DNS->updatedRowNotify() )");
         };
-        
 
         $row->store();
         $ROW_NEED_UPDATE = 0;

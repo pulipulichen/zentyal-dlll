@@ -37,6 +37,7 @@ models:
     - VEServerHeader
     - VEServer
     - VMServer
+    - VMServerHeader
     - ServerPortRedirect
     - OtherDomainNames
     - LibraryServers
@@ -52,5 +53,5 @@ composites:
     #StorageServerComposite: [StorageServerHeader, StorageServer]
     StorageServerComposite: [MfsSettings, StorageServer, ExportsSetting]
     VEServerComposite: [VEServerHeader, VEServer]
-    VMServerComposite: [VEServerHeader, VMServer]
+    VMServerComposite: [VMServerHeader, VMServer]
     OtherRoutingSettingComposite: [DNS, URLRedirect]
