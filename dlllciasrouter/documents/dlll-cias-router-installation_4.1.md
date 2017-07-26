@@ -40,7 +40,7 @@ Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal
 # Setup development enviroment
 1. Use terminal. Type following command: 
 ```` wget https://goo.gl/Z8t8tp -O d.sh; bash d.sh  ````
-( https://goo.gl/Z8t8tp is dlllciasrouter_installer.sh https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/dlllciasrouter_development_installer.sh )
+( https://goo.gl/Z8t8tp is dlllciasrouter_installer.sh https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/dlllciasrouter_installer.sh )
 ![enter image description here](https://lh3.googleusercontent.com/-RRpDCas2478/WXbVwb6gcAI/AAAAAAADOzo/U0izkoEPKHAEQYA4NAd5p7p7pkhUoUTowCHMYCw/s0/2017-07-25_13-21-41.png) 
 2. [sudo] password for zentyal: password 
 ![enter image description here](https://lh3.googleusercontent.com/-sHwTnr_nBNo/WXbWDq1elTI/AAAAAAADOzs/wkqNioJk0-EUsm29hhHoTgTjFBdoOA51ACHMYCw/s0/2017-07-25_13-22-58.png)
