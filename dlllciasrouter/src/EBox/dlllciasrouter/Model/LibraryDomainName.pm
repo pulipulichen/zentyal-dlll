@@ -132,34 +132,34 @@ sub deleteDomainName
 
     try {
 
-    # 先找找看有沒有
-    my $hasDomainName = 0;
+        # 先找找看有沒有
+        my $hasDomainName = 0;
 
-    if ($hasDomainName == 0 && $excludeModel ne 'PoundServices') {
-        $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
-        if ($hasDomainName == 0) {
-            $hasDomainName = $self->modelHasDomainName('OtherDomainNames', $domainName);
+        if ($hasDomainName == 0 && $excludeModel ne 'dlllciasrouter-pound') {
+            $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
+            if ($hasDomainName == 0) {
+                $hasDomainName = $self->modelHasDomainName('OtherDomainNames', $domainName);
+            }
         }
-    }
 
-    if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') {
-        $hasDomainName = $self->modelHasDomainName('URLRedirect', $domainName);
-    }
-    
-    if ($hasDomainName == 0 && $excludeModel ne 'DNS') {
-        $hasDomainName = $self->modelHasDomainName('DNS', $domainName);
-    }
-
-    if ($hasDomainName == 0) 
-    {
-        my $gl = EBox::Global->getInstance();
-        my $dns = $gl->modInstance('dns');
-        my $domModel = $dns->model('DomainTable');
-        my $id = $domModel->findId(domain => $domainName);
-        if (defined($id)) {
-            $domModel->removeRow($id);
+        if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') {
+            $hasDomainName = $self->modelHasDomainName('URLRedirect', $domainName);
         }
-    }
+
+        if ($hasDomainName == 0 && $excludeModel ne 'DNS') {
+            $hasDomainName = $self->modelHasDomainName('DNS', $domainName);
+        }
+
+        if ($hasDomainName == 0) 
+        {
+            my $gl = EBox::Global->getInstance();
+            my $dns = $gl->modInstance('dns');
+            my $domModel = $dns->model('DomainTable');
+            my $id = $domModel->findId(domain => $domainName);
+            if (defined($id)) {
+                $domModel->removeRow($id);
+            }
+        }
 
     } catch {
 
@@ -176,7 +176,7 @@ sub deleteDomainName
         #}
         #$self->deleteDomainName($domainName, $excludeModel);
 
-        $self->getLibrary()->show_exceptions($_ . '<a href="/DHCP/View/Interfaces">DHCP Module</a> (LibraryDomainName->deleteDomainName() )');
+        $self->getLibrary()->show_exceptions($_ . ' <a href="/DHCP/View/Interfaces">DHCP Module</a> (LibraryDomainName->deleteDomainName() )');
     };
 }
 
@@ -199,12 +199,19 @@ sub modelHasDomainName
 {
     my ($self, $modelName, $domainName) = @_;
 
-    my $model = $self->parentModule()->model($modelName);
-    my $domainNameId = $model->findId(
-        'domainName' => $domainName
-    );
+    try {
 
-    return defined($domainNameId);
+        my $model = $self->parentModule()->model($modelName);
+        my $domainNameId = $model->findId(
+            'domainName' => $domainName
+        );
+
+        return defined($domainNameId);
+    }
+    catch {
+        #$self->getLibrary()->show_exceptions($_ . ' (LibraryDomainName->modelHasDomainName() )');
+        return 0;
+    }
 }
 
 # -----------------------------------

@@ -47,46 +47,46 @@ sub dlllciasrouter_init
 
     # 初始化安裝
     try {
-    $self->initLighttpd();
-    $self->initApache();
-    $self->initNFSClient();
-    $self->initMooseFS();
-    $self->startMooseFS();
-    $self->initNFSServer();
-    $self->startNFSServer();
-    
+        $self->initLighttpd();
+        $self->initApache();
+        $self->initNFSClient();
+        $self->initMooseFS();
+        $self->startMooseFS();
+        $self->initNFSServer();
+        $self->startNFSServer();
 
-    $self->initDefaultPound();
 
-    $self->model("LibraryLogs")->enableLogs();
-    $self->model("LibraryDomainName")->initDefaultDomainName();
+        $self->initDefaultPound();
 
-    $self->model("LibraryService")->getPoundService();
-    $self->model("LibraryService")->getZentyalAdminService();
-    $self->model("LibraryService")->getDNSServerService();
-    $self->model("LibraryService")->getNFSService();
-    $self->model("LibraryService")->getMFSService();
+        $self->model("LibraryLogs")->enableLogs();
+        $self->model("LibraryDomainName")->initDefaultDomainName();
 
-    $self->model("RouterSettings")->initServicePort();
-    $self->model("MfsSettings")->initServicePort();
-    
+        $self->model("LibraryService")->getPoundService();
+        $self->model("LibraryService")->getZentyalAdminService();
+        $self->model("LibraryService")->getDNSServerService();
+        $self->model("LibraryService")->getNFSService();
+        $self->model("LibraryService")->getMFSService();
 
-    $self->model('LibraryMAC')->initAdministorNetworkMember();
-    $self->model('LibraryMAC')->initBlackListMember();
-    $self->model("LibraryMAC")->initDHCPfixedIP();
+        $self->model("RouterSettings")->initServicePort();
+        $self->model("MfsSettings")->initServicePort();
 
-    $self->model("LibraryFilter")->initZentyalAdminFilter();
-    $self->model("LibraryFilter")->initDNSServerFilter();
-    $self->model("LibraryFilter")->initNFSFilter();
-    $self->model("LibraryFilter")->initMFSFilter();
-    $self->model("LibraryFilter")->initPoundFilter();
-    $self->model("LibraryFilter")->initPoundLogFilter();
-    $self->model("LibraryFilter")->initBlackListFilter();
+
+        $self->model('LibraryMAC')->initAdministorNetworkMember();
+        $self->model('LibraryMAC')->initBlackListMember();
+        $self->model("LibraryMAC")->initDHCPfixedIP();
+
+        $self->model("LibraryFilter")->initZentyalAdminFilter();
+        $self->model("LibraryFilter")->initDNSServerFilter();
+        $self->model("LibraryFilter")->initNFSFilter();
+        $self->model("LibraryFilter")->initMFSFilter();
+        $self->model("LibraryFilter")->initPoundFilter();
+        $self->model("LibraryFilter")->initPoundLogFilter();
+        $self->model("LibraryFilter")->initBlackListFilter();
 
     
 
     } catch {
-        $self->model("PoundLibrary")->show_exceptions($_ . '( dlllciasrouter->dlllciasrouter_init() )');
+        $self->model("PoundLibrary")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() )');
     };
 }
 

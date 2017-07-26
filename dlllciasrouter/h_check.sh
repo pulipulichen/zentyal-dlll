@@ -12,6 +12,7 @@ cd ~/zentyal-dlll/dlllciasrouter
 #done
 
 echo "[h_check.sh] Start check pm files' syntax"
+echo "===="
 
 find src/EBox/dlllciasrouter/Model/*.pm -mtime -0.02 -exec perl -c {} \;
 find src/EBox/dlllciasrouter/Composite/*.pm -mtime -0.02 -exec perl -c {} \;

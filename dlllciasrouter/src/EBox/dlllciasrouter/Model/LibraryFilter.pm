@@ -65,7 +65,7 @@ sub initDNSServerFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_any',
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('DNS'),
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-dns'),
         'description' => __("DNS Server"),
     );
 

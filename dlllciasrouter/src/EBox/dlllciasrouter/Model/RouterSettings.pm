@@ -345,10 +345,10 @@ sub initServicePort
         $libServ->addServicePort("dlllciasrouter-admin", $self->value('adminPort'), 1);
 
         #dns server
-        $libServ->addServicePort("dlllciasrouter-dns", 53, 1);
+        $libServ->addServicePort("dlllciasrouter-dns", 53, 0);
 
     } catch {
-        $self->getLibrary()->show_exceptions($_ . '(RouterSettings->initServicePort())');
+        $self->getLibrary()->show_exceptions($_ . ' (RouterSettings->initServicePort())');
     }
 }
 
