@@ -57,7 +57,7 @@ sub checkInternalIP
         || !($partC == 1) 
         || !($partD > 0 && $partD < 100) ) {
         my $message = __('Internal IP format error. <br />' . $options->{IPHelp});
-        $self->loadLibrary('PoundLibrary')->show_exceptions($message);
+        $self->loadLibrary('LibraryToolkit')->show_exceptions($message);
     }
 }
 

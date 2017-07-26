@@ -26,14 +26,14 @@ sub loadLibrary
 }
 
 ##
-# 讀取PoundLibrary
+# 讀取LibraryToolkit
 # @author Pulipuli Chen
 # 20150514
 ##
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
+    return $self->parentModule()->model("LibraryToolkit");
 }
 
 # ------------------------------------------
@@ -211,7 +211,7 @@ sub moveRuleToTop
     }
     
 
-    #$self->loadLibrary('PoundLibrary')->show_exceptions("[] " . $param{description} . "-----" . $ruleTable->_rowOrder($id) . "[]");
+    #$self->loadLibrary('LibraryToolkit')->show_exceptions("[] " . $param{description} . "-----" . $ruleTable->_rowOrder($id) . "[]");
 }
 
 1;

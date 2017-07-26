@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::PoundLibrary;
+package EBox::dlllciasrouter::Model::LibraryToolkit;
 
 use base 'EBox::Model::DataTable';
 
@@ -34,13 +34,13 @@ use POSIX qw(strftime);
 use Try::Tiny;
 
 ##
-# 讀取PoundLibrary
+# 讀取LibraryToolkit
 # @author Pulipuli Chen
 ##
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
+    return $self->parentModule()->model("LibraryToolkit");
 }
 
 ##

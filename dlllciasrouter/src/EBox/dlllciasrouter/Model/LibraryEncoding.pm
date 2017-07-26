@@ -27,13 +27,13 @@ use HTML::Entities;
 #use HTML::Strip;
 
 ##
-# 讀取PoundLibrary
+# 讀取LibraryToolkit
 # @author Pulipuli Chen
 ##
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
+    return $self->parentModule()->model("LibraryToolkit");
 }
 
 ##

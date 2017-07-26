@@ -41,7 +41,7 @@ sub _table
 
     my $options = $self->getOptions();
 
-    my $lib = $self->parentModule()->model('PoundLibrary');
+    my $lib = $self->parentModule()->model('LibraryToolkit');
     my $fieldsFactory = $self->loadLibrary('LibraryFields');
 
     my @fields = ();

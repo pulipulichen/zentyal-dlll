@@ -228,14 +228,14 @@ sub initDHCPfixedIP
 }
 
 ##
-# 讀取PoundLibrary
+# 讀取LibraryToolkit
 # @author Pulipuli Chen
 # 20150514
 ##
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
+    return $self->parentModule()->model("LibraryToolkit");
 }
 
 1;

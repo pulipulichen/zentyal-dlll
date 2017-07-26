@@ -95,7 +95,7 @@ sub _table
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->parentModule()->model("PoundLibrary");
+    return $self->parentModule()->model("LibraryToolkit");
 }
 
 ##
