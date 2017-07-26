@@ -86,7 +86,7 @@ sub dlllciasrouter_init
     
 
     } catch {
-        $self->model("PoundLibrary")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() )');
+        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() )');
     };
 }
 
@@ -242,7 +242,7 @@ sub _setConf
 sub getLibrary
 {
     my ($self) = @_;
-    return $self->model("PoundLibrary");
+    return $self->model("LibraryToolkit");
 }
 
 sub ipaddrToVMID
@@ -839,7 +839,7 @@ sub startMooseFS
             system('sudo mfsmount');
         }
     } catch {
-        $self->model("PoundLibrary")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
+        $self->model("LibraryToolkit")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
     };
 }
 
