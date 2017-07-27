@@ -39,11 +39,12 @@ sub getOptions
     my $options = ();
     $options->{pageTitle} = __('VE Main Server Setting');
     $options->{moduleName} = 'VEServer';
-    $options->{IPHelp} = 'The 1st part should be 10, <br />'
-                . 'the 2nd part should be 6, <br />'
-                . 'the 3rd part should be 0, and <br />'
-                . 'the 4th part should be between 1~99. <br />'
-                . 'Example: 10.6.0.55';
+    $options->{IPHelp} = __('The 1st part should be') . ' 10, <br />'
+                . __('the 2nd part should be') . ' 6, <br />'
+                . __('the 3rd part should be') . ' 0, and <br />'
+                . __('the 4th part should be between') . ' 1~99. <br />'
+                . __('Example:') . ' 10.6.0.55'
+                . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-environment-server-proxmox" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'https';
     $options->{internalPortDefaultValue} = 8006;
     $options->{externalPortDefaultValue} = 60000;

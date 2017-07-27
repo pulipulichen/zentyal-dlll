@@ -164,11 +164,17 @@ sub createFieldInternalIPAddress
             printableName => __('Internal IP Address'),
             editable => 1,
             #'unique' => 1,
-            help => __('The 1st part should be 10, <br />'
-                . 'the 2nd part should be 1~5, <br />'
-                . 'the 3rd part should be 0~9, and <br />'
-                . 'the 4th part should be between 1~99. <br />'
-                . 'Example: 10.1.0.51'),
+            help => '
+VMID: <span style="background-color: #ffCCEE;">2</span><span style="background-color: #00ff00;">43</span> 
+= IP: 10.0.<span style="background-color: #ffCCEE;">2</span>.<span style="background-color: #00ff00;">43</span>
+<br />
+VMID: <span style="background-color: #00ffff;">1</span><span style="background-color: #ffCCEE;">0</span><span style="background-color: #00ff00;">01</span> 
+= IP: 10.<span style="background-color: #00ffff;">1</span>.<span style="background-color: #ffCCEE;">0</span>.<span style="background-color: #00ff00;">1</span>
+<br />
+VMID:&nbsp;<span style="background-color: #00ffff;">3</span><span style="background-color: #ffCCEE;">1</span><span style="background-color: #00ff00;">24</span>&nbsp;
+= IP: 10.<span style="background-color: #00ffff;">3</span>.<span style="background-color: #ffCCEE;">1</span>.<span style="background-color: #00ff00;">24</span>
+<br />
+<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-machine" target="_blank">' . __('More details') . '</a>',
         );
 
     return $field;
@@ -182,7 +188,7 @@ sub createFieldInternalVirtualMachineIdentify
             'fieldName' => 'vmIdentify',
             'printableName' => __('Virtual Machine Identify'),
             'unique' => 1,
-            'help' => __($help),
+            'help' => $help,
             'subtypes' =>
             [
                 new EBox::Types::Port(

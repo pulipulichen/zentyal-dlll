@@ -39,11 +39,12 @@ sub getOptions
     my $options = ();
     $options->{pageTitle} = __('Storage Main Server Setting');
     $options->{moduleName} = 'StorageServer';
-    $options->{IPHelp} = 'The 1st part should be 10, '
-                . 'the 2nd part should be 6, '
-                . 'the 3rd part should be 1, and '
-                . 'the 4th part should be between 1~99. '
-                . 'Example: 10.6.1.4';
+    $options->{IPHelp} = __('The 1st part should be') . ' 10, <br />'
+                . __('the 2nd part should be') . ' 6, <br />'
+                . __('the 3rd part should be') . ' 1, and <br />'
+                . __('the 4th part should be between') . ' 1~99. <br />'
+                . __('Example:') . ' 10.6.1.4'
+                . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'https';
     $options->{internalPortDefaultValue} = 443;
     $options->{externalPortDefaultValue} = 61000;

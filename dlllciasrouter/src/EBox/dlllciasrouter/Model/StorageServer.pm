@@ -18,11 +18,12 @@ sub getOptions
     $options->{printableTableName} = __('Servers');
     $options->{printableRowName} = __('Server');
     $options->{tableName} = 'StorageServer';
-    $options->{IPHelp} = 'The 1st part should be 10, <br />'
-                . 'the 2nd part should be 6, <br />'
-                . 'the 3rd part should be 1, and <br />'
-                . 'the 4th part should be between 1~99. <br />'
-                . 'Example: 10.6.1.4';
+    $options->{IPHelp} = __('The 1st part should be') . ' 10, <br />'
+                . __('the 2nd part should be') . ' 6, <br />'
+                . __('the 3rd part should be') . ' 1, and <br />'
+                . __('the 4th part should be between') . ' 1~99. <br />'
+                . __('Example:') . ' 10.6.1.4'
+                . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'http';
     $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = 'NEVER';
