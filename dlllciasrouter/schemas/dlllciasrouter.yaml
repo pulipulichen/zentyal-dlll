@@ -15,7 +15,7 @@ enabledepends:
 models:
     - RouterSettings
     - RouterLinks
-    - PoundLibrary
+    - LibraryToolkit
     - PortRedirect
     - URLRedirect
     - DNS

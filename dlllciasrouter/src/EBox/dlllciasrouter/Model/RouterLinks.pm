@@ -71,6 +71,11 @@ sub _table
             'uri' => '/Network/Objects',
             'icon' => 'icon-network',
         }, 
+        {
+            'text' => __('Network Diagnostic Tools'),
+            'uri' => '/Network/Diag',
+            'icon' => 'icon-network',
+        }, 
     );
 
     my $html = "";

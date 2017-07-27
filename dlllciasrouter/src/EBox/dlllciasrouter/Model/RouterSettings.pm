@@ -97,31 +97,35 @@ sub _table
 
     # ----------------------------------
 
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_cloudBackup', __('Zentyal Cloud Backup ')));
+    #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_cloudBackup', __('Zentyal Cloud Backup ')));
 
-    push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "cloudBackupHelp", "Configuration will be backup to  <a href=\"https://remote.zentyal.com/\" target=\"zentyal_remote\">Zentyal Remote</a> weekly.  Only keep 3 backup online."));
+    #push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "cloudBackupHelp", "Configuration will be backup to  <a href=\"https://remote.zentyal.com/\" target=\"zentyal_remote\">Zentyal Remote</a> weekly.  Only keep 3 backup online."));
 
-    push(@fields, new EBox::Types::MailAddress(
-              fieldName     => 'adminMail',
-              printableName => __('Account E-Mail Address '),
-              editable      => 1,
-              unique        => 1,
-              optional => 0,
-             ));
+    #push(@fields, new EBox::Types::MailAddress(
+    #          fieldName     => 'adminMail',
+    #          printableName => __('Account E-Mail Address '),
+    #          editable      => 1,
+    #          unique        => 1,
+    #          optional => 0,
+    #         ));
 
-    push(@fields, new EBox::Types::Password(
-              fieldName     => 'adminPassword',
-              printableName => __('Account Password '),
-              editable      => 1,
-              unique        => 1,
-              optional => 0,
-             ));
+    #push(@fields, new EBox::Types::Password(
+    #          fieldName     => 'adminPassword',
+    #          printableName => __('Account Password '),
+    #          editable      => 1,
+    #          unique        => 1,
+    #          optional => 0,
+    #         ));
 
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Cloud/Backup", 1));
+    #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Cloud/Backup", 1));
 
     # ----------------------------------
 
-    
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
+
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Backup?selected=local#backup_description", 1));
+
+    # ----------------------------------
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_admin', __('Zentyal Administrator')));
 

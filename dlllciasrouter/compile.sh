@@ -1,6 +1,8 @@
 sudo ls >> /dev/null
 
-cd ~/zentyal-dlll/dlllciasrouter
+if [ -d "~/zentyal-dlll/dlllciasrouter" ]; then
+  cd ~/zentyal-dlll/dlllciasrouter
+fi
 
 echo ""
 echo ""
