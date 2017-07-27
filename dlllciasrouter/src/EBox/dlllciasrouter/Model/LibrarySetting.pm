@@ -49,7 +49,8 @@ sub getDataTable
 
     my $tableName = $options->{moduleName} . "Setting";
     my $configView = '/dlllciasrouter/Composite/'. $options->{moduleName} . 'Composite';
-    push(@fields, $fieldsFactory->createFieldServerLinkButton($tableName, 'SERVERS', $configView));
+    push(@fields, $fieldsFactory->createFieldServerLinkButton($tableName, $options->{moduleName} . ' Management', $configView));
+
     push(@fields, $fieldsFactory->createFieldHr('hr_setting'));
 
 
@@ -63,13 +64,16 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_main', __('Main Network Settings')));
 
     push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('Main', $options->{externalPortDefaultValue}));    
+    push(@fields, $fieldsFactory->createFieldServerLinkButtonNewWindow($tableName, 'Change Zentyal Webadmin Port', "/dlllciasrouter/Composite/SettingComposite#RouterSettings_webadminPort_row"));
+
     push(@fields, $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}));
     push(@fields, $fieldsFactory->createFieldProtocolScheme('Main', 0, $options->{poundScheme}));
     
     push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_ssh', __('SSH Network Settings')));
 
     push(@fields, $fieldsFactory->createFieldSSHRedirect($options->{enableSSH}));
-    push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('SSH', $options->{externalSSHPortDefaultValue}));    
+    push(@fields, $fieldsFactory->createFieldProtocolExternalPortFixed('SSH', $options->{externalSSHPortDefaultValue}));
+    push(@fields, $fieldsFactory->createFieldServerLinkButtonNewWindow($tableName, 'Change Zentyal SSH Port', "/dlllciasrouter/Composite/SettingComposite#RouterSettings_adminPort_row"));
     push(@fields, $fieldsFactory->createFieldSSHInternalPort());
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_desc', __('Description')));

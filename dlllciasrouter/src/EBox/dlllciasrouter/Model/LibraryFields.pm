@@ -1647,8 +1647,12 @@ sub createFieldHTMLDisplay
 sub createFieldServerLinkButton
 {
     my ($self, $fieldName, $text, $link) = @_;
+
+    my $fullFieldName = $fieldName . "_" . $text . "_server_button";
+    $fullFieldName =~ s/\s/_/g;
+
     my $field = new EBox::Types::HTML(
-            'fieldName' => $fieldName . "_server_button",
+            'fieldName' => $fullFieldName,
             'printableName' => '',
             'editable' => 0,
             'optional'=>0,
@@ -1659,13 +1663,38 @@ sub createFieldServerLinkButton
     return $field;
 }
 
+# 20170727 Pulipuli Chen
+# 建立另開網頁連線的工具
+sub createFieldServerLinkButtonNewWindow
+{
+    my ($self, $fieldName, $text, $link) = @_;
+
+    my $fullFieldName = $fieldName . "_" . $text . "_server_button";
+    $fullFieldName =~ s/\s/_/g;
+
+    my $field = new EBox::Types::HTML(
+            'fieldName' => $fullFieldName,
+            'printableName' => '',
+            'editable' => 0,
+            'optional'=>0,
+            "defaultValue" => "<span></span>",
+            'help' => '<a href="'.$link.'" class="btn btn-icon btn-log" target="_blank">'.$text.'</a>',
+        );
+
+    return $field;
+}
+
 # 20150528 Pulipuli Chen
 # 建立標題有文字的HTML文字網頁
 sub createFieldTitledHTMLDisplay
 {
     my ($self, $fieldName, $title, $html) = @_;
+
+    my $fullFieldName = $fieldName . "_" . $title . "_config_button";
+    $fullFieldName =~ s/\s/_/g;
+
     my $field = new EBox::Types::HTML(
-            "fieldName" => $fieldName . "_config_button",
+            "fieldName" => $fullFieldName,
             "printableName" => $title,
             "editable" => 0,
             "optional"=> 0,

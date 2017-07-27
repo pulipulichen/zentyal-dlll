@@ -14,7 +14,7 @@ fi
 #	perl -c $f
 #done
 
-echo "[h_check.sh] Start check pm files' syntax"
+echo "[h_check.sh] Check syntax Start"
 echo "---------------------------------------"
 
 find src/EBox/dlllciasrouter/Model/*.pm -mtime -0.02 -exec perl -c {} \;

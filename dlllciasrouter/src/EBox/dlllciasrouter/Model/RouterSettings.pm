@@ -73,27 +73,6 @@ sub _table
     
 
     my @fields = ();
-    #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
-
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ ZentyalPorts', __('Zentyal Ports')));
-
-    push(@fields, new EBox::Types::Port(
-              fieldName     => 'webadminPort',
-              printableName => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator List') . ")",
-              editable      => 1,
-              unique        => 1,
-              defaultValue => 64443,
-              optional => 0,
-             ));
-
-    push(@fields, new EBox::Types::Port(
-            fieldName     => 'adminPort',
-            printableName => __('Zentyal SSH Port. ') . "(" . __('Only For Administrator List') . ")",
-            editable      => 1,
-            unique        => 1,
-            defaultValue => 64422,
-            optional => 0,
-        ));
 
     # ----------------------------------
 
@@ -121,8 +100,9 @@ sub _table
 
     # ----------------------------------
 
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
+    #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
 
+    # @TODO 20170727 這邊應該改成按下去就立刻備份的HTML
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Backup?selected=local#backup_description", 1));
 
     # ----------------------------------
@@ -141,6 +121,30 @@ sub _table
         #. ' <a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=audit_actions">Configuration Changes Logs</a>';
     $html = "<span>" . $html . "</span>";
     push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_zentyal_links", $html));
+
+    # -----------------------------------------------------------
+
+    #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmin', __('Zentyal Admin Configuration')));
+
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ ZentyalPorts', __('Zentyal Ports')));
+
+    push(@fields, new EBox::Types::Port(
+              fieldName     => 'webadminPort',
+              printableName => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator List') . ")",
+              editable      => 1,
+              unique        => 1,
+              defaultValue => 64443,
+              optional => 0,
+             ));
+
+    push(@fields, new EBox::Types::Port(
+            fieldName     => 'adminPort',
+            printableName => __('Zentyal SSH Port. ') . "(" . __('Only For Administrator List') . ")",
+            editable      => 1,
+            unique        => 1,
+            defaultValue => 64422,
+            optional => 0,
+        ));
 
     # ----------------------------------------------------------
 
