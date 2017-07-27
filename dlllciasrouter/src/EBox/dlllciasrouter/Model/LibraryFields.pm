@@ -644,7 +644,7 @@ sub createFieldProtocolOnlyForLAN
     my $field = new EBox::Types::Boolean(
             fieldName => 'redir'.$protocol.'_secure',
             printableName => __('Only For Administrator List'),
-            help => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator List Setting') . '</a>',
+            help => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
             editable => 1,
             optional => 0,
             defaultValue => $enable,
@@ -1494,7 +1494,7 @@ sub createFieldPortOnlyForLan
     my $field = new EBox::Types::Boolean(
             'fieldName' => 'secure',
             'printableName' => __('Only For Administrator List'),
-            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite" target="_blank">' . __('Administrator List Setting') . '</a>',
+            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
             'editable' => 1,
             optional=>0,
         );
