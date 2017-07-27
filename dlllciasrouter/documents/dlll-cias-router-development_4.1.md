@@ -1,15 +1,10 @@
-DLLL-CIAS Router Installation
+DLLL-CIAS Router Development
 =======
 
 For Zentyal 4.1
-
+You can edit DLLL-CIAS Router's source code in two method.
 
 ----------
-
-
-# Develop DLLL-CIAS Router #
-
-You can edit DLLL-CIAS Router's source code in two method.
 
 ## GitHub Repository (Recommanded)
 
@@ -41,19 +36,3 @@ You can edit DLLL-CIAS Router's source code in two method.
 	3. If you look following message: ````  * Restarting Zentyal module: dlllciasrouter                             [ OK ] ````, DLLL-CIAS Router module is compiled success. <br/> 
 ![](https://lh3.googleusercontent.com/-aB5PQQdE0LA/WXdsfRapp7I/AAAAAAADO6w/f8FjzBkt18IhxVgUZmvNBTABInAuxq7PACHMYCw/s0/2017-07-26_00-04-42.png)
 	4. Otherwise, it's something wrong. You must read whole message carefully to find out what's wrong. Then correct them and compile again.  
-
-----------
-
-# Development Tips
-
-## Mapping a model file from URL
-
-![](https://lh3.googleusercontent.com/-zz2M1LGMJ9U/WXhTL2hS6GI/AAAAAAADO8c/3lRt6qDxA1kahukD9P2_vmLzjZ2Pkvl1wCHMYCw/s0/2017-07-26_16-29-00.png)
-
-* If a URL is ````.../dlllciasrouter/View/VEServerSetting````, model file is [dlllciasrouter/Model/VEServerSetting.pm](https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/src/EBox/dlllciasrouter/Model/VEServerSetting.pm)
-
-## Check error logs
-
-* Zentyal logs: ```` ~/zentyal-dlll/dlllciasrouter/log.sh ````
-* Zentyal error logs: ```` ~/zentyal-dlll/dlllciasrouter/error.sh ````
-

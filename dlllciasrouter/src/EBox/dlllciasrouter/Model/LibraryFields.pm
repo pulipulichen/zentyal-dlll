@@ -1684,6 +1684,23 @@ sub createFieldServerLinkButtonNewWindow
     return $field;
 }
 
+# 20170727 Pulipuli Chen
+# 建立可以儲存網址的欄位
+sub createFieldURL
+{
+    my ($self, $title) = @_;
+
+    my $field = new EBox::Types::URI(
+        'fieldName' => 'url',
+        'printableName' => __($title),
+        'editable' => 1,
+        hiddenOnSetter => 0,
+        hiddenOnViewer => 1,
+    );
+
+    return $field;
+}
+
 # 20150528 Pulipuli Chen
 # 建立標題有文字的HTML文字網頁
 sub createFieldTitledHTMLDisplay

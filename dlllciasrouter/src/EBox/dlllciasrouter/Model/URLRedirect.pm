@@ -18,6 +18,7 @@ use EBox::Types::HTML;
 use EBox::Types::Date;
 use EBox::Types::Boolean;
 use EBox::Types::Text;
+use EBox::Types::URI;
 
 use POSIX qw(strftime);
 use Try::Tiny;
@@ -45,13 +46,7 @@ sub _table
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainNameUnique(),
         $fieldsFactory->createFieldBoundLocalDNS(),
-        new EBox::Types::Text(
-            'fieldName' => 'url',
-            'printableName' => __('Redirect URL'),
-            'editable' => 1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        ),
+        $fieldsFactory->createFieldURL('Redirect URL'),
         $fieldsFactory->createFieldDomainNameLink(),
         new EBox::Types::HTML(
             fieldName => 'urlLink',
