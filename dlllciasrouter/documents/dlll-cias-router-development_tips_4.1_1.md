@@ -11,12 +11,16 @@ For Zentyal 4.1
 
 # Test perl code online
 
-* Perl Online Compiler for testing: [https://www.tutorialspoint.com/execute_perl_online.php](https://www.tutorialspoint.com/execute_perl_online.php)
+* Perl Online Compiler for testing: 
+	* CodingGround: [https://www.tutorialspoint.com/execute_perl_online.php](https://www.tutorialspoint.com/execute_perl_online.php)
+	* CodePad: [http://codepad.org/](http://codepad.org/)
+	* ideone.com: [https://ideone.com/](https://ideone.com/)
 
 # Module reference
 
 From original code
 
+* [https://github.com/Zentyal/zentyal](https://github.com/Zentyal/zentyal)
 * [Zentyal 4.1](https://github.com/zentyal/zentyal/tree/4.1/main)
 * [Field types](https://github.com/zentyal/zentyal/tree/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types)
 	* Basic: one box

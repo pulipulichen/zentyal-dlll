@@ -1,0 +1,1 @@
+cat /var/log/zentyal/zentyal.log
