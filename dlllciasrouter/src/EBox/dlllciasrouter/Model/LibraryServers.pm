@@ -407,17 +407,15 @@ sub convertVMIDtoIPAddr
         $partB = substr($vmid, 0, 1);
         $partC = substr($vmid, 1, 1);
         $partD = substr($vmid, 2, 2);
-        if (substr($partD, 0, 1) == "0") {
-            $partD = substr($partD, 1, 1);
-        }
     }
-    eleif {
+    elsif (length($vmid) == 3) {
         $partB = '0';
         $partC = substr($vmid, 0, 1);
         $partD = substr($vmid, 1, 2);
-        if (substr($partD, 0, 1) == "0") {
-            $partD = substr($partD, 1, 1);
-        }
+    }
+
+    if (substr($partD, 0, 1) == "0") {
+        $partD = substr($partD, 1, 1);
     }
 
     $ipaddr = $partA . "." . $partB . "." . $partC . "." . $partD;

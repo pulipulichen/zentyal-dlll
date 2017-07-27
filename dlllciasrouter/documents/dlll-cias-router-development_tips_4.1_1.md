@@ -6,7 +6,7 @@ For Zentyal 4.1
 # Perl
 
 * String equal: `eq`
-* If else: `eleif`
+* If else: `elsif`
 
 # Mapping a model file from URL
 

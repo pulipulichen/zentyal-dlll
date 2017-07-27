@@ -58,11 +58,11 @@ sub checkInternalIP
     my $partD = $parts[3];
 
     if (!($partA == 10) 
-        #|| !(($partB == 9) || ($partB > 0 && $partB < 6)) 
-        || !($partB > 0 && $partB < 6) 
+        #|| !($partB > 0 && $partB < 6) 
+        || !($partB > -1 && $partB < 6) 
         || !($partC > -1 && $partC < 10) 
         || !($partD > 0 && $partD < 100) ) {
-        my $message = __('Internal IP format error. <br />' . $options->{IPHelp});
+        my $message = __('Internal IP ' . $ipaddr . '  format error.') . '<br />' . $options->{IPHelp};
         $self->loadLibrary('LibraryToolkit')->show_exceptions($message);
     }
 }

@@ -56,7 +56,7 @@ sub checkInternalIP
         || !($partB == 6) 
         || !($partC == 0) 
         || !($partD > 0 && $partD < 100) ) {
-        my $message = __('Internal IP format error. <br />' . $options->{IPHelp});
+        my $message = __('Internal IP ' . $ipaddr .  ' format error.' ) . '<br />' . $options->{IPHelp};
         $self->loadLibrary('LibraryToolkit')->show_exceptions($message);
     }
 }
