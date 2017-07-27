@@ -39,6 +39,7 @@ sub getLibrary
 # ------------------------------------------
 
 # 20150518 Pulipuli Chen
+# 取得"dlllciasrouter-admin"的服務資料
 sub getZentyalAdminService
 {
     my ($self) = @_;
@@ -49,6 +50,7 @@ sub getZentyalAdminService
 }
 
 # 20170726 Pulipuli Chen
+# 取得"dlllciasrouter-dns"的服務資料
 sub getDNSServerService
 {
     my ($self) = @_;
@@ -58,13 +60,25 @@ sub getDNSServerService
     return $self->initService($name, $desc);
 }
 
+# 20170727 Pulipuli Chen
+# 取得"dlllciasrouter-workplace"的服務資料
+sub getWorkplaceService
+{
+    my ($self) = @_;
+
+    my $name = "dlllciasrouter-workplace";
+    my $desc = __("Workplace");
+    return $self->initService($name, $desc);
+}
+
 # 20150518 Pulipuli Chen
+# 取得"dlllciasrouter-pound"的服務資料
 sub getPoundService
 {
     my ($self) = @_;
 
     my $name = "dlllciasrouter-pound";
-    my $desc = __("Reverse Proxy & Lighttpd.");
+    my $desc = __("Reverse Proxy & Lighttpd");
     return $self->initService($name, $desc);
 }
 
@@ -84,7 +98,7 @@ sub getMFSService
     my ($self) = @_;
 
     my $name = "MFS";
-    my $desc = __("MooseFS ");
+    my $desc = __("MooseFS");
     return $self->initService($name, $desc);
 }
 

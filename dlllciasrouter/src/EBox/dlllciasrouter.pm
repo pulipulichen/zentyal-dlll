@@ -64,6 +64,7 @@ sub dlllciasrouter_init
         $self->model("LibraryService")->getPoundService();
         $self->model("LibraryService")->getZentyalAdminService();
         $self->model("LibraryService")->getDNSServerService();
+        $self->model("LibraryService")->getWorkplaceService();
         $self->model("LibraryService")->getNFSService();
         $self->model("LibraryService")->getMFSService();
 

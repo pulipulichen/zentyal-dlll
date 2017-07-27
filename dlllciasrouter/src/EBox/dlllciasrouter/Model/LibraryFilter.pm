@@ -72,6 +72,36 @@ sub initDNSServerFilter
     $self->addExternalToEBoxRule(%param);
 }
 
+# 20170726 Pulipuli Chen
+# 設定工作場所的防火牆
+sub initWorkplaceFilter
+{
+    my ($self) = @_;
+
+    my %param = (
+        'decision' => 'accept',
+        'source_selected' => 'source_any',
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-workplace'),
+        'description' => __("Workplace"),
+    );
+
+    $self->addExternalToEBoxRule(%param);
+
+    my ($self) = @_;
+
+    my %param = (
+        'decision' => 'accept',
+        'source_selected' => 'source_object',
+        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id(),
+        #'source_inverseMatch' => 1, 
+        #'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
+        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
+        'description' => __("Zentyal Administrator"),
+    );
+
+    $self->addExternalToEBoxRule(%param);
+}
+
 # 20150519 Pulipuli Chen
 sub initBlackListFilter
 {
