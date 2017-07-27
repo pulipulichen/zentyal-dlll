@@ -867,13 +867,6 @@ sub getRedirectSecureLevel
     if ($row->elementExists('redir' . $protocol . '_secure')) {
         $secure = $row->valueByName('redir'.$protocol.'_secure');
     }
-
-    elsif ($row->elementExists('redir'.$protocol.'_secure_workplace')) {
-        $secure = $row->valueByName('redir'.$protocol.'_secure_workplace');
-        if ($secure == 1) {
-            $secure = 2;
-        }
-    }
     
     return $secure;
 }
