@@ -4,6 +4,10 @@ if [ -d "~/zentyal-dlll/dlllciasrouter" ]; then
   cd ~/zentyal-dlll/dlllciasrouter
 fi
 
+if [ -d "zentyal-dlll/dlllciasrouter" ]; then
+  cd zentyal-dlll/dlllciasrouter
+fi
+
 echo ""
 echo ""
 echo "---------------------------------------"

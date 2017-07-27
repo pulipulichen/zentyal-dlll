@@ -149,10 +149,11 @@ sub getExternalIface
 }
 
 # 20150517 Pulipuli Chen
+# 取得外部網路的netmask
 sub getExternalMask
 {
-    my ($self, $sourceMask) = @_;
-    $sourceMask || = '24';
+    my ($self) = @_;
+    my $sourceMask = '24';
 
     my $network = EBox::Global->modInstance('network');
     
@@ -169,6 +170,7 @@ sub getExternalMask
 sub getExternalMaskBit
 {
     my ($self) = @_;
+
     my $network = EBox::Global->modInstance('network');
     my $sourceMask = $self->getExternalMask();
     return EBox::NetWrappers::bits_from_mask($sourceMask);

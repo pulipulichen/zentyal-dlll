@@ -72,6 +72,7 @@ sub dlllciasrouter_init
 
 
         $self->model('LibraryMAC')->initAdministorNetworkMember();
+        $self->model('LibraryMAC')->initWorkplaceNetworkMember();
         $self->model('LibraryMAC')->initBlackListMember();
         $self->model("LibraryMAC")->initDHCPfixedIP();
 

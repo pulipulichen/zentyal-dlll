@@ -39,6 +39,7 @@ sub getLibrary
 # ------------------------------------------
 
 # 20150518 Pulipuli Chen
+# 允許管理者通行的防火牆規則
 sub initZentyalAdminFilter
 {
     my ($self) = @_;
@@ -55,6 +56,23 @@ sub initZentyalAdminFilter
 
     $self->addExternalToEBoxRule(%param);
 }
+
+# 20170727 Pulipuli Chen
+# 允許辦公室通行的防火牆規則
+# sub initWorkplaceFilter
+# {
+#     my ($self) = @_;
+
+#     my %param = (
+#         'decision' => 'accept',
+#         'source_selected' => 'source_object',
+#         'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id(),
+#         'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-workplace'),
+#         'description' => __("Zentyal Administrator"),
+#     );
+
+#     $self->addExternalToEBoxRule(%param);
+# }
 
 # 20170726 Pulipuli Chen
 # 設定DNS伺服器的防火牆

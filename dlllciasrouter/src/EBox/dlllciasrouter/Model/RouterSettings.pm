@@ -109,10 +109,17 @@ sub _table
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_admin', __('Zentyal Administrator')));
 
+    # 管理者清單的連結
     my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
     my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR LIST'), $editAdminNet, 1));
 
+    # 管理者清單的連結
+    my $workplaceObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id();
+    my $editWorkPlaceNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$workplaceObjectID.'/members&backview=/Objects/View/MemberTable';
+    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_workplaceNet", __('EDIT WORKPLACE LIST'), $editWorkPlaceNet, 1));
+
+    # 黑名單的連結
     my $blObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Blacklist')->id();
     my $editBL = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$blObjectID.'/members&backview=/Objects/View/MemberTable';
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_bl", __('EDIT BLACKLIST'), $editBL, 1));
