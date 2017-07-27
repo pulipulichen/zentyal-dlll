@@ -2,7 +2,9 @@ zentyal-dlll
 ===============
 
 這是用開放原始碼的路由器作業系統Zentyal客製化而成的Zentyal-DLLL路由器系統
-http://pulipulichen.github.io/zentyal-dlll/
+
+* https://github.com/pulipulichen/zentyal-dlll
+* http://pulipulichen.github.io/zentyal-dlll/
 
 ----
 # Part 1. Zentyal Installation
