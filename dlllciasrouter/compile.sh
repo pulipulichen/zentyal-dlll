@@ -20,6 +20,8 @@ sleep 1
 echo "2..."
 sleep 1
 echo "1..."
+echo ""
+
 rm -rf debs-ppa/*
 zentyal-package
 sudo dpkg -i debs-ppa/zentyal-*_all.deb

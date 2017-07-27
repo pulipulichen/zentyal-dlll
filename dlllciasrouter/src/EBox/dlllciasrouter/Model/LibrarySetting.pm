@@ -163,8 +163,10 @@ sub updatedRowNotify
 
     my $sshLink = "";
     if ($row->valueByName('redirSSH_enable') == 1) {
-        $sshLink =  "<br />" . "ssh://" . $domainName . ":" . $options->{externalSSHPortDefaultValue} . "/";
+        $sshLink =  '<br /><a href="ssh://' . $domainName . ":" . $options->{externalSSHPortDefaultValue} . '" target="_blank">' . "ssh://" . $domainName . ":" . $options->{externalSSHPortDefaultValue} . "</a>";
     }
+
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
 
     my $button = '<span></span>';
     if ($scheme ne "none") {
@@ -174,8 +176,13 @@ sub updatedRowNotify
         }
         my $link = $scheme . "://" . $domainName . $port . "/";
         my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
+
+        my $configView = '/dlllciasrouter/View/'.$options->{moduleName}.'Setting';
+        my $buttonConfigBtn = '<a href="' . $configView . '" class="btn btn-icon btn-config" style="padding-left: 40px !important;">Main Server Setting</a>';
         my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>';
-        $button = "<span>" . $buttonBtn . " " . $logButton . "<br/>"  . $buttonLink . $sshLink . "</span>";
+
+        $button = "<span>" . $buttonBtn . " " . $buttonConfigBtn . " " . $logButton . "<br/>"  . $buttonLink . $sshLink . "</span>";
+        $button = $button . "<div>" . $libEnc->unescapeFromUtf16($row->valueByName('description')) . "</div>";
     }   # if ($shceme ne "none") {}
     else {
         $button = $logButton . $sshLink;
@@ -189,7 +196,6 @@ sub updatedRowNotify
     # 儲存他
     $row->store();
 
-
     # 更新另外一個模組的資料
     my $headerModule = $options->{moduleName} . 'Header';
     my $headerFieldName = $headerModule . "_web_button";
@@ -198,11 +204,10 @@ sub updatedRowNotify
 
     # 設定敘述
     my $desc = $row->valueByName('description');
-    my $libEnc = $self->loadLibrary("LibraryEncoding");
     $desc = $libEnc->unescapeFromUtf16($desc);
     #$desc = $libEnc->stripsHtmlTags($desc);
     $desc = "<span>" . $desc . "</span>";
-    $header->setValue("description_display", $desc);
+    #$header->setValue("description_display", $desc);
 
     # 設定Virtual Interface
     #$extMask = $self->loadLibrary('LibraryNetwork')->bitwiseShiftMask($extMask);

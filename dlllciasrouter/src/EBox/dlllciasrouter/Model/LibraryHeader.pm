@@ -48,8 +48,8 @@ sub getDataTable
     my $configView = '/dlllciasrouter/View/'.$options->{moduleName}.'Setting';
 
     push(@fields, $fieldsFactory->createFieldWebLinkButton($tableName));
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('MAIN SERVER SETTING'), $configView, 0));
-    push(@fields, $fieldsFactory->createFieldDescriptionDisplay());
+    #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('MAIN SERVER SETTING'), $configView, 0));
+    #push(@fields, $fieldsFactory->createFieldDescriptionDisplay());
     if (defined($options->{help})) {
         my $help = $options->{help};
         $help = "<div>" . $help . "</div>";
