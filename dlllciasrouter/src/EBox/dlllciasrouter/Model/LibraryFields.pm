@@ -185,6 +185,12 @@ sub createFieldInternalVirtualMachineIdentify
             'help' => __($help),
             'subtypes' =>
             [
+                new EBox::Types::Port(
+                    #'fieldName' => 'vmid',
+                    'fieldName' => 'vmIdentify_vmid',
+                    'printableName' => __('VMID'),
+                    'editable' => 1,
+                ),
                 new EBox::Types::HostIP(
                     #'fieldName' => 'ipaddr',
                     'fieldName' => 'vmIdentify_ipaddr',
@@ -192,12 +198,6 @@ sub createFieldInternalVirtualMachineIdentify
                     'editable' => 1,
                     'unique' => $unique,
                     
-                ),
-                new EBox::Types::Port(
-                    #'fieldName' => 'vmid',
-                    'fieldName' => 'vmIdentify_vmid',
-                    'printableName' => __('VMID'),
-                    'editable' => 1,
                 ),
             ],
             hiddenOnSetter => 0,
@@ -332,7 +332,10 @@ sub createFieldMACAddr
             optional=>1,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            help => __('Set MAC to assign Internal IP by DHCP. For example: 00:A0:C9:14:C8:29' ),
+            help => __('Set MAC to assign Internal IP by DHCP. For example: 00:A0:C9:14:C8:29. '  )
+                . '<a href="https://lh3.googleusercontent.com/-KrrvguQ6wSg/WXmZXy9IXfI/AAAAAAADO90/qH3Je2-ekg8NCYQ_rko8xjLKzmsZnNyzACHMYCw/s0/2017-07-27_15-40-42.png" target="_blank">' 
+                    . __('How to find out MAC address?') 
+                . '</a>',
         );
 
     return $field;
@@ -585,7 +588,7 @@ sub createFieldBoundLocalDNSwithHR
             editable => 1,
             optional => 0,
             defaultValue => 1,
-            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'
+            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'
                 . "<br /> <hr />"),
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
@@ -602,7 +605,7 @@ sub createFieldBoundLocalDNS
             editable => 1,
             optional => 0,
             defaultValue => 1,
-            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. The other hand, this doamin name will be removed when service deletes.'),
+            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'),
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         );

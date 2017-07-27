@@ -853,6 +853,24 @@ sub isProtocolEnable
     return $enable;
 }
 
+sub getRedirectSecureLevel
+{
+    my ($self, $row, $protocol) = @_;
+
+    my $secure = 0;
+    if ($row->elementExists('redir'.$protocol.'_secure')) {
+        $secure = $row->valueByName('redir'.$protocol.'_secure');
+    }
+    elsif ($row->elementExists('redir'.$protocol.'_secure_workplace')) {
+        $secure = $row->valueByName('redir'.$protocol.'_secure_workplace');
+        if ($secure == 1) {
+            $secure = 2;
+        }
+    }
+    
+    return $secure;
+}
+
 sub getProtocolHint
 {
     my ($self, $row, $protocol) = @_;
@@ -875,17 +893,33 @@ sub getProtocolHint
         $protocolTitle = $protocolTitle . '*';
     }
 
-    my $secure = 0;
-    if ($row->elementExists('redir'.$protocol.'_secure')) {
-        $secure = $row->valueByName('redir'.$protocol.'_secure');
-    }
+    my $secure = getRedirectSecureLevel($row, $protocol);
+    
     if ($secure == 1) {
-        $protocolTitle = '[' .$protocolTitle . ']';
+        #$protocolTitle = '[' .$protocolTitle . ']';
+
+        $hint = '<span title="' . $protocolTitle . ' (for Administrator): ' . $extPort ." &gt; " . $intPort . '">' 
+            . "<strong>[".$protocolTitle."]</strong>: ". $extPort 
+            . "</span>";
+    }
+    elsif ($secure == 2) {
+        #$protocolTitle = '(' .$protocolTitle . ')';
+
+        $hint = '<span title="' . $protocolTitle . ' (for Workplace): ' . $extPort ." &gt; " . $intPort . '">' 
+            . "<strong>(".$protocolTitle.")</strong>: ". $extPort 
+            . "</span>";
+    }
+    else {
+        $hint = '<span title="' . $protocolTitle . ' (for public): ' . $extPort ." &gt; " . $intPort . '">' 
+            . "<strong>".$protocolTitle."</strong>: ". $extPort 
+            . "</span>";
     }
 
-    $hint = "<strong>".$protocolTitle."</strong>: "
-        #. "<br />" 
-        . $extPort ." &gt; " . $intPort."";
+#    $hint = "<strong>".$protocolTitle."</strong>: "
+#        #. "<br />" 
+#        #. $extPort ." &gt; " . $intPort."";
+#        . $extPort;
+#    $hint = '<span title="' . $protocolTitle . "(secure): " . $extPort ." &gt; " . $intPort . '">' . $hint .  '</span>';
     
     # 加入連結的部分
     my $scheme = "none";
