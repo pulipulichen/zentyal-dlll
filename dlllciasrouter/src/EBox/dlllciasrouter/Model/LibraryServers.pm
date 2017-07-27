@@ -389,25 +389,39 @@ sub getVMID
     return $vmid;
 }
 
-# 20150526 Pulipuli Chen
-sub getIPAddr
+# 20170727 Pulipuli Chen
+# IP對應表說明：https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-machine
+sub convertVMIDtoIPAddr
 {
     my ($self, $vmid) = @_;
     
-    my $ipaddr; # = $row->valueByName("ipaddr");
-    #if (!defined($ipaddr)) {
-        #my $vmid = $row->valueByName("vmid");
-        #my $vmid = $row->valueByName("vmIdentify_vmid");
-        $vmid = "" + $vmid;
-        my $partA = 10;
-        my $partB = substr($vmid, 0, 1);
-        my $partC = substr($vmid, 1, 1);
-        my $partD = substr($vmid, 2, 2);
+    my $ipaddr;
+        
+    $vmid = "" + $vmid;
+    my $partA = 10;
+    my $partB = '0';
+    my $partC = '1';
+    my $partD = '63';
+
+    if (length($vmid) == 4) {
+        $partB = substr($vmid, 0, 1);
+        $partC = substr($vmid, 1, 1);
+        $partD = substr($vmid, 2, 2);
         if (substr($partD, 0, 1) == "0") {
             $partD = substr($partD, 1, 1);
         }
-        $ipaddr = $partA . "." . $partB . "." . $partC . "." . $partD;
-    #}
+    }
+    eleif {
+        $partB = '0';
+        $partC = substr($vmid, 0, 1);
+        $partD = substr($vmid, 1, 2);
+        if (substr($partD, 0, 1) == "0") {
+            $partD = substr($partD, 1, 1);
+        }
+    }
+
+    $ipaddr = $partA . "." . $partB . "." . $partC . "." . $partD;
+
     return $ipaddr;
 }
 
@@ -420,7 +434,7 @@ sub updateVMIDIPAddr
 
     if (length($ipaddr) < 5) {
         #是VMID
-        $ipaddr = $self->getIPAddr($ipaddr);
+        $ipaddr = $self->convertVMIDtoIPAddr($ipaddr);
     }
     $row->elementByName("ipaddr")->setValue($ipaddr);
 

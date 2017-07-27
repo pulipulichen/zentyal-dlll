@@ -231,6 +231,9 @@ sub getPortHeader
     
     # 重新組合
     $partB = substr($partB, -1);
+    if ($partB eq "0") {
+        $partB = "";
+    }
 
     if (length($partD) == 1) {
         $partD = "0" . $partD;
@@ -256,14 +259,17 @@ sub getPortHeaderWithoutCheck
     my $partD = $parts[3];
 
     # 重新組合
-        $partB = substr($partB, -1);
-    
-        if (length($partD) == 1) {
-            $partD = "0" . $partD;
-        }
-        else {
-            $partB = substr($partB, -2);
-        }
+    $partB = substr($partB, -1);
+    if ($partB eq "0") {
+        $partB = "";
+    }
+
+    if (length($partD) == 1) {
+        $partD = "0" . $partD;
+    }
+    else {
+        $partB = substr($partB, -2);
+    }
      my $portHeader = $partB.$partC.$partD;
      
      return $portHeader;

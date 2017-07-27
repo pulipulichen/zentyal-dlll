@@ -1079,7 +1079,7 @@ sub createFieldOtherRedirectPortsHint
     my $field = new EBox::Types::Text(
             fieldName => 'redirOtherHelp',
             printableName => __('Other Redirect Ports'),
-            defaultValue => __('You can configure other redirection at following table. You have to add this row first.'),
+            defaultValue => __('You have to add this row before setting up other redirection at following table.'),
             editable => 0,
             optional=>0,
             hiddenOnSetter => 0,
@@ -1535,7 +1535,7 @@ sub createFieldAttachedFilesButton
             'size' => '1',
             'hiddenOnSetter' => 0,
             'hiddenOnViewer' => 0,
-            'help' => __('You can configure other redirection at following table. You have to add this row first.'),
+            'help' => __('You have to add this row before setting up other redirection at following table.'),
             #'parent' =>  $self->loadLibrary('RouterSettings'),
        );
     return $field;

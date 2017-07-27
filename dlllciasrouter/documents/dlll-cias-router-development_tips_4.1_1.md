@@ -3,6 +3,11 @@ DLLL-CIAS Router Development Tips
 
 For Zentyal 4.1
 
+# Perl
+
+* String equal: `eq`
+* If else: `eleif`
+
 # Mapping a model file from URL
 
 ![](https://lh3.googleusercontent.com/-zz2M1LGMJ9U/WXhTL2hS6GI/AAAAAAADO8c/3lRt6qDxA1kahukD9P2_vmLzjZ2Pkvl1wCHMYCw/s0/2017-07-26_16-29-00.png)
