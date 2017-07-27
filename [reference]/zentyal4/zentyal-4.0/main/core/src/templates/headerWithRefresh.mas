@@ -1,0 +1,28 @@
+<%args>
+$title
+$refreshTime => 60
+$destination
+$favicon => '/favicon.ico'
+</%args>
+<%init>
+use EBox::Gettext;
+</%init>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><% __('Zentyal') %> - <% $title %></title>
+<link href="/dynamic-data/css/public.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="<% $favicon %>" />
+<script type="text/javascript" src="/data/js/jquery.js">//</script>
+<script type="text/javascript" src="/data/js/common.js">//</script>
+<script type="text/javascript">
+<!--
+function timedRefresh(timeoutPeriod) {
+    setTimeout("location.href='<% $destination %>';",timeoutPeriod);
+}
+//   -->
+</script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+<body onload="javascript:timedRefresh(<% $refreshTime*1000 %>);">

@@ -1049,6 +1049,7 @@ sub getServerRedirectParamZentyal
 }
 
 # 20150528 Pulipuli Chen
+# @departed
 # 捨棄不用
 sub setupZentyalRedirect
 {

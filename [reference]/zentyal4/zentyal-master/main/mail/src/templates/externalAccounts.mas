@@ -1,0 +1,202 @@
+<%args>
+$params
+</%args>
+<%init>
+use EBox::Gettext;
+my @externalAccounts = @{ $params->{externalAccounts} };
+use JSON::XS;
+my $externalAccountsJS =  JSON::XS->new()->encode(\@externalAccounts);
+my $deleteActionText =  __('Delete external account');
+</%init>
+<%shared>
+my %printableName = (
+    externalAccount => __('External account'),
+    password        => __('Password'),
+    server          => __('Server'),
+    port            => __('Port'),
+    keep            => __("Don't delete retrieved mail from external server"),
+    protocol        => __('Protocol'),
+    fetchall        => __('Fetch already read messages'),
+   );
+
+
+</%shared>
+<h4><% __('Mail retrieval from external accounts') %></h4>
+% if (not $params->{externalRetrievalEnabled} ){
+<div class='warning'>
+<% __x(q{Mail retrieval from external accounts service is not enabled; until you {ub}enable it{ue} your changes won't have any effect.},
+        ub => "<a href='/Mail/Composite/General'>",
+        ue => "</a>"
+      )
+%>
+</div>
+% }
+<div id='error_userMailExternalAccount' class='error' style='display:none'></div>
+<div id='note_userMailExternalAccount' class='note' style='display:none'></div>
+<& .addAccount, params => $params &>
+<button type="button" class='btn btn-icon btn-add'
+   name='add' id='addlink_userMailExternalAccounts'
+         onClick='$(this).hide(); $("#userMailAddExternalAccount").show();return false'>
+    <% __('Add new') %>
+  </button>
+<& .accountsTable,
+   params  => $params,
+   show    => (@externalAccounts > 0)
+&>
+<script>
+$(function() {
+
+  var refreshList = function(userDN, externalAccounts) {
+     var i;
+     var deleteText = '<% $deleteActionText %>';
+     var trueImg  = '<div class="tcenter"><img src="/data/images/apply.gif" alt="yes"/></div>';
+     var falseImg = '<div class="tcenter"><img src="/data/images/deny-active.gif" alt="no"/></div>';
+     var table = $('#userMailExternalAccountsTable');
+     table.toggle(externalAccounts.length > 0);
+     var tbody = $('tbody', table);
+     tbody.detach();
+     tbody.children().remove();
+
+     for (i=0; i < externalAccounts.length; i++) {
+         var account = externalAccounts[i];
+         var html = '<tr>';
+         html += '<td>' + account['externalAccount'] + '</td>';
+         html += '<td>' + account['server'] + '</td>';
+         html += '<td>' + account['protocol'] + '</td>';
+         html += '<td>' + account['port'] + '</td>';
+         html += '<td>' + (account['keep'] ? trueImg : falseImg ) + '</td>';
+         html += '<td>' + (account['fetchall'] ? trueImg : falseImg ) + '</td>';
+         html += '<td class="tcenter"><a href="#">'
+         html += '<img src="/data/images/delete.gif" text="' + deleteText + '" alt="' + deleteText + '" ';
+         html +=  'data-userDN="' + userDN + '" data-account="' + account['externalAccount'] + '" />';
+         html += '</a></td>'
+         html += '</tr>';
+
+         var newRow = $(html);
+         tbody.append(newRow);
+     }
+
+     table.append(tbody);
+  };
+
+ Zentyal.Form.setupAjaxSubmit('#userMailAddExternalAccount', {
+            noteDiv: '#note_userMailExternalAccount',
+            errorDiv: '#error_userMailExternalAccount',
+            submitButton: '#userMailAddExternalAccount_submit',
+            success : function (response) {
+               if (response.success) {
+                   $("#userMailAddExternalAccount").hide();
+                   $('#addlink_userMailExternalAccounts').show();
+               }
+               if (('externalAccounts' in response) && ('userDN' in response)) {
+                   refreshList(response.userDN, response.externalAccounts);
+               }
+            }
+   });
+
+  $('#userMailExternalAccountsTable').on('click', 'a', function(event) {
+      event.preventDefault();
+      var url = '/Mail/DelExternalAccount';
+      var data = 'user=' +  event.target.getAttribute('data-userDN')
+      data += '&account=' + event.target.getAttribute('data-account');
+      $('#error_userMailExternalAccount').html('').hide();
+      $('#note_userMailExternalAccount').html('').hide();
+      $.ajax({
+         url: url,
+         data: data,
+         dataType: 'json',
+         error: function(jqXHR) {
+            $('#error_userMailExternalAccount').html(jqXHR.responseText).show();
+         },
+         success: function(response) {
+            if (response.success) {
+                $('#note_userMailExternalAccount').html(response.msg).show();
+                refreshList(response.userDN, response.externalAccounts);
+            } else {
+               $('#error_userMailExternalAccount').html(response.error).show();
+            }
+         }
+      });
+  });
+
+   refreshList('<% $params->{'user'}->dn() %>', <% $externalAccountsJS %>);
+});
+
+</script>
+
+
+<%def .accountsTable>
+<%args>
+$params
+</%args>
+<%init>
+my @tableOrder = qw(externalAccount server protocol port keep fetchall);
+my @columnTitles = map {
+   $printableName{$_}
+} @tableOrder;
+my $actionTitle = __('Action');
+</%init>
+<br/><br/>
+<table id='userMailExternalAccountsTable' class='dataTable' >
+<thead>
+%  foreach my $title (@columnTitles) {
+   <th class ='tleft'><% $title %></th>
+%  }
+   <th class='thOptions'><% $actionTitle %></th>
+</thead>
+<tbody></tbody>
+</table>
+</%def>
+
+
+<%def .addAccount>
+<%args>
+$params
+</%args>
+<%init>
+my $localAccount;
+if ((exists $params->{mail}) and (defined $params->{mail})) {
+   $localAccount =  $params->{mail};
+} else {
+   $localAccount = '';
+}
+</%init>
+<form action='/Mail/AddExternalAccount'  method='POST' id='userMailAddExternalAccount' style='display:none;'>
+<& /formTable.mas,
+   rows => [
+    [ name => 'user', input => 'hidden', value => $params->{'user'}->dn() ],
+    [ name => 'localAccount', id=>'userMailAddExternalAccount_localmail', input => 'hidden', value => $localAccount],
+    [ name => 'externalAccount', printableName => $printableName{'externalAccount'} ],
+    [ name => 'password', input =>'password', printableName => $printableName{'password'}  ],
+    [ name => 'mailServer', printableName => $printableName{'server'}],
+    [
+      name => 'mailProtocol', input => 'select',
+      printableName => $printableName{'protocol'},
+      options => [
+        {
+            value => 'pop3',
+            printableValue => 'POP3',
+        },
+        {
+            value => 'pop3s',
+            printableValue => __('Secure POP3'),
+        },
+        {
+            value => 'imap',
+            printableValue => 'IMAP',
+        },
+        {
+            value => 'imaps',
+            printableValue => __('Secure IMAP'),
+        },
+          ],
+    ],
+    [ name => 'port', printableName => $printableName{'port'} ],
+    [ name => 'keep', input => 'checkbox', printableName => $printableName{'keep'}],
+    [ name => 'fetchall', input => 'checkbox', printableName => $printableName{'fetchall'}],
+    [ name => 'addExternalAccount', id=> 'userMailAddExternalAccount_submit',  input => 'submit', value => __('Add')],
+  ]
+&>
+
+</form>
+</%def>

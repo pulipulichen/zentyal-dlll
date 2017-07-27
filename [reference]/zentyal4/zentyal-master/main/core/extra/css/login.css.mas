@@ -1,0 +1,132 @@
+<%args>
+    $logo_style
+    $body_background_color
+    $main_color
+    $loginin_padding_style
+    $error_color
+    $error_background
+    $error_border
+    $warn_color
+    $warn_background
+    $warn_border
+</%args>
+
+#login {
+    margin: 0px auto;
+    width: 350px;
+    padding: 40px 50px;
+    text-align: left;
+}
+fieldset#loginfieldset {
+    border: none;
+    padding-left: 15%;
+}
+fieldset#loginfieldset label {
+    float: left;
+    width: 88px;
+    font-size: 14px;
+    line-height: 24px;
+}
+fieldset{
+    margin:10px 0px;
+    width: 100%;
+}
+#login #reason{
+    border-color:<% $error_border %>;
+    background: <% $error_background %>;
+    color: <% $error_color %>;
+}
+#capsWarning, #ieWarning, #ffWarning, #reason {
+    text-align: left;
+    font-weight: normal;
+    border: 1px dashed <% $warn_border %>;
+    padding: 10px 15px;
+    font-size: 14px;
+    margin: 0 0 4px 0px;
+    background: <% $warn_background %>;
+    color: <% $warn_color %>;
+}
+body {
+    background-color: <% $body_background_color %>;
+    color: #000000;
+    font-family: Verdana, sans-serif;
+    behavior: url(/data/js/csshover.htc);
+    margin: 40px 0px 0px 0px
+}
+#logo{
+    margin-left: -30px;
+    margin-top: -20%;
+}
+#login h2{
+    color: #333;
+}
+label {
+    min-width: 100%;
+    font-size: 12px;
+    line-height: 24px;
+    color:#666;
+    margin: 10px 0px 0px;
+    float: left;
+}
+#footer {
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    bottom: 20px;
+    width: 100%
+
+}
+#footer a {
+    text-decoration: underline;
+    color: #888;
+}
+#footer a:active {
+    text-decoration: underline;
+    color: #888;
+}
+#footer a:hover {
+    text-decoration: none;
+    background: #888;
+    color: #fff;
+}
+input[type='password'], input[type='text'] {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 3px 3px 3px 3px;
+    color: #555555;
+    float: left;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    width: 100%;
+    transition: box-shadow 0.5s;
+    -webkit-transition: box-shadow 0.5s;
+}
+input[type='password']:focus, input[type='text']:focus{
+    box-shadow: 0px 0px 5px #999;
+    transition: box-shadow 0.5s;
+    -webkit-transition: box-shadow 0.5s;
+}
+input[type='submit'] {
+    background-color: #69BE28;
+    border-color: #46962D;
+    border-radius: 3px 3px 3px 3px;
+    border-style: solid;
+    border-width: 1px 2px 2px 1px;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    transition: background-color 0.5s;
+    -webkit-transition: background-color 0.5s;
+}
+input[type='submit']:hover {
+    background:#46962D
+    background-color:#46962D;
+    transition: background-color 0.5s;
+    -webkit-transition: background-color 0.5s;
+}

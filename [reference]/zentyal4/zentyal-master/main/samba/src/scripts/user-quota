@@ -1,0 +1,84 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2008-2013 Zentyal S.L.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# This is a external tool to set/get user quotas. It's a separated script
+# as we use the libquota-perl module. In order to use an API that must be run
+# as root and not as ebox user
+#
+# It's meant to be run by Zentyal.
+#
+# Parameters are:
+#
+# -q uidNumber  | -s uidNumber quota
+#
+# -q: query
+# -s: set
+# uidNumber: user uidNumber
+# quota: quota size in KB
+use Quota;
+use EBox::Config;
+use constant SAMBA_CONF_FILE => EBox::Config::etc() . 'samba.conf';
+use constant SAMBA_MOUNTPOINTS => 'quota_mountpoints';
+
+sub currentQuota
+{
+    my ($uidNumber) = @_;
+
+    my @quotaValues = Quota::query(Quota::getqcarg('/home'), $uidNumber);
+    if (@quotaValues) {
+        return $quotaValues[1];
+    } else {
+        return -1;
+    }
+}
+
+sub setCurrentQuota
+{
+    my ($uidNumber, $quota) = @_;
+    my $ok = Quota::setqlim(Quota::getqcarg('/home'), $uidNumber, $quota, $quota, 0, 0);
+   
+    if (not defined $ok) {
+        my $err = Quota::strerr();
+        die $err;
+    }
+    foreach my $fs (@{EBox::Config::list(SAMBA_MOUNTPOINTS)}) {
+        my $ok = Quota::setqlim(Quota::getqcarg($fs), $uidNumber, $quota, $quota, 0, 0);
+        if (not defined $ok) {
+            my $err = Quota::strerr();
+            die $err;
+        }
+    }
+}
+
+sub usage
+{
+    print "Usage: user-quota [options]\n";
+    print "  Options:\n";
+    print "     -q uidNumber            Print current quota\n";
+    print "     -s uidNumber quota      Sets quota for user\n";
+}
+
+if ($ARGV[0] eq '-s') {
+    setCurrentQuota($ARGV[1], $ARGV[2]);
+} elsif ($ARGV[0] eq '-q') {
+    print currentQuota($ARGV[1]);
+} else {
+    usage();
+    exit 1;
+}
+
+exit 0;

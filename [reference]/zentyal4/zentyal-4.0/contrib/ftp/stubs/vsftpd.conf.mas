@@ -1,0 +1,128 @@
+<%args>
+$anonymous
+$userHomes
+$chrootUsers
+$ssl
+</%args>
+<%init>
+use EBox::Gettext;
+</%init>
+# /etc/vsftpd.conf - vsftpd configuration file
+#
+# Run standalone
+listen=YES
+#
+# Allow anonymous FTP
+% if ($anonymous eq 'disabled') {
+anonymous_enable=NO
+% } else {
+anonymous_enable=YES
+% }
+anon_world_readable_only=YES
+#
+# Allow local users to log in
+% if ($userHomes) {
+local_enable=YES
+% } else {
+local_enable=NO
+% }
+#
+# Allow any form of FTP write command
+write_enable=YES
+#
+# Default umask is 077. You may wish to change this to 022,
+# if your users expect that (022 is used by most other ftpd)
+local_umask=022
+anon_umask=022
+#
+# Allow the anonymous FTP user to write files
+% if ($anonymous eq 'write') {
+anon_upload_enable=YES
+anon_mkdir_write_enable=YES
+# forbid renaming and removal of files
+anon_other_write_enable=NO
+% } else {
+anon_upload_enable=NO
+anon_mkdir_write_enable=NO
+anon_other_write_enable=NO
+% }
+#
+# Activate directory messages
+dirmessage_enable=YES
+#
+# Display directory listings with the time in your local time zone
+use_localtime=YES
+#
+# Activate logging of uploads/downloads
+xferlog_enable=YES
+#
+# Make sure PORT transfer connections originate from port 20 (ftp-data)
+connect_from_port_20=YES
+#
+# Uploaded anonymous files to be owned by a different user
+#chown_uploads=YES
+#chown_username=whoever
+#
+# Log file path
+#xferlog_file=/var/log/vsftpd.log
+#
+# Log file in standard ftpd xferlog format
+#xferlog_std_format=YES
+#
+# Customise the login banner string
+ftpd_banner=<% __('Welcome to Zentyal FTP service.') %>
+#
+# Use the contents of this file for the login banner
+#banner_file=/etc/vsftpd/banner
+#
+# Restrict local users to their home directories
+% if ($chrootUsers) {
+allow_writeable_chroot=YES
+chroot_local_user=YES
+% } else {
+chroot_local_user=NO
+% }
+#
+# List of local users to chroot() to their home directory. If
+# chroot_local_user is YES, then this list becomes a list of users to NOT
+# chroot()
+#chroot_list_enable=YES
+#chroot_list_file=/etc/vsftpd/chroot_list
+#
+# Activate the "-R" option to the builtin ls. This is disabled by default to
+# avoid remote users being able to cause excessive I/O on large sites.
+# However, some broken FTP clients such as "ncftp" and "mirror" assume
+# the presence of the "-R" option
+ls_recurse_enable=YES
+#
+# Show textual names in the user and group fields of directory listings
+text_userdb_names=YES
+#
+# Empty directory not writable by the ftp user as a secure chroot() jail at
+# times vsftpd does not require filesystem access
+secure_chroot_dir=/var/run/vsftpd/empty
+#
+# PAM service vsftpd will use
+pam_service_name=vsftpd
+% if ($ssl ne 'disabled') {
+#
+# Support secure connections via SSL. This applies to the control connection
+# (including login) and also data connections
+ssl_enable=YES
+#
+# Certificate to use for SSL encrypted connections
+rsa_cert_file=/etc/vsftpd/ssl/ssl.pem
+#
+# Not to require all SSL data connections to exhibit SSL session reuse
+require_ssl_reuse=NO
+#
+# Force authenticated login and data via SSL
+force_local_logins_ssl=<% ($ssl eq 'forcessl') ? 'YES' : 'NO' %>
+force_local_data_ssl=<% ($ssl eq 'forcessl') ? 'YES' : 'NO' %>
+% } else {
+ssl_enable=NO
+% }
+#
+# Disable seccomp sandboxing new feature because it causes errors
+# https://bugs.launchpad.net/ubuntu/+source/vsftpd/+bug/1195816
+seccomp_sandbox=NO

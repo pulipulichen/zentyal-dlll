@@ -1,0 +1,22 @@
+#!/bin/bash
+
+USER=$PAM_USER
+USERHOME=/home/$USER
+
+PROFILE=$USERHOME/.profile
+CONFIGURED_STAMP=~/.zentyal-desktop-configured
+SETUP_SCRIPT=/usr/share/zentyal-desktop/zentyal-setup-user
+
+COMMENT="# Added by zentyal-desktop"
+if ! grep -q "$COMMENT" $PROFILE
+then
+    echo "\n$COMMENT" >> $PROFILE
+    # Execute zentyal-desktop setup unless it's already configured
+    echo "[ -f $CONFIGURED_STAMP ] || $SETUP_SCRIPT" >> $PROFILE
+    # Always execute the roaming profile sync tool
+    echo "/usr/share/zentyal-desktop/zentyal-sync-profile" >> $PROFILE
+fi
+
+# Set proper .profile ownership
+chown $USER: $PROFILE
+

@@ -1,0 +1,136 @@
+<%args>
+    $packageName
+    $modelName
+    $printableTableName
+    $printableRowName
+    $rowName
+    $modelDomain
+    $modelType => 'form'
+    @fields => ()
+</%args>
+# Copyright (C)
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+# Class: <% $packageName %>
+#
+#   TODO: Document class
+#
+
+package <% $packageName %>;
+
+% if ($modelType eq 'form') {
+use base 'EBox::Model::DataForm';
+% } else {
+use base 'EBox::Model::DataTable';
+% }
+
+use strict;
+use warnings;
+
+use EBox::Gettext;
+use EBox::Validate qw(:all);
+
+% my %typesSeen;
+% for my $field (@fields) {
+%   my $type = $field->{type};
+%   exists $typesSeen{$type} and
+%     next;
+%   $typesSeen{$type} = 1;
+use EBox::Types::<% $type %>;
+% }
+
+sub new
+{
+        my $class = shift;
+        my %parms = @_;
+
+        my $self = $class->SUPER::new(@_);
+        bless($self, $class);
+
+        return $self;
+}
+
+% for my $field (@fields) {
+%   if ($field->{type} eq 'Select') {
+# Method: populate_<% $field->{name} %>
+#
+#   Callback function to fill out the values that can
+#   be picked from the <EBox::Types::Select> field <% $field->{name} %>
+#
+# Returns:
+#
+#   Array ref of hash refs containing:
+#
+sub populate_<% $field->{name} %>
+{
+    return [ { value => 'value1', printableValue => 'value2'}];
+}
+%   }
+% }
+
+sub _table
+{
+
+    my @fields =
+    (
+#     Here you should add your instances of subclass of EBox::Types::Abstact to
+#     define the form's fields. For example to add a text field:
+#        new EBox::Types::Text(
+#            'fieldName' => 'ExampleField',
+#            'printableName' => __('Example text field'),
+#            'size' => '8',
+#            'unique' => 1,
+#            'editable' => 1,
+#            'help' => __('This field is an example.'),
+#        ),
+% for my $field (@fields) {
+
+%   if ($field->{type} eq 'Select') {
+        new EBox::Types::<% $field->{type} %>(
+            'fieldName' => '<% $field->{name} %>',
+            'printableName' => __('<% $field->{name} %>'),
+            'populate' => \&populate_<% $field->{name} %>,
+            'unique' => 1,
+            'editable' => 1,
+            'help' => '',
+        ),
+%   }   else {
+        new EBox::Types::<% $field->{type} %>(
+            'fieldName' => '<% $field->{name} %>',
+            'printableName' => __('<% $field->{name} %>'),
+            'size' => '8',
+            'unique' => 1,
+            'editable' => 1,
+            'help' => '',
+        ),
+%   }
+% }
+    );
+
+    my $dataTable =
+    {
+        'tableName' => '<% $modelName %>',
+        'printableTableName' => __('<% $printableTableName %>'),
+        'printableRowName' => __('<% $printableRowName %>'),
+        'modelDomain' => '<% $modelDomain %>',
+        'defaultActions' => ['add', 'del', 'editField', 'changeView' ],
+        'tableDescription' => \@fields,
+        'help' => '', # FIXME
+    };
+
+    return $dataTable;
+}
+
+1;

@@ -1,0 +1,349 @@
+4.1
+	+ Remove external AD integration
+4.0.2
+	+ Escape TXT records in nsupdate commands
+	+ Update managed domain ip addresses on static interfaces change
+4.0.1
+	+ Invalidate openchange VDomains model cache on added, modified and
+	  deleted rows operation in DomainTable model
+4.0
+	+ Set version to 4.0
+	+ Use refactored internalNetworks from network module
+	+ Do not fail to add a host if an IP address is already used by
+	  other hostname
+	+ Return the identifier in EBox::DNS::addDomain method
+	+ Add /etc/samba/* to allowed to read in apparmor profile
+3.5.1
+	+ Workaround in pageTitle() method against losing of directory parameter/attribute
+3.5
+	+ Enable sortlist by default in /etc/zentyal/dns.conf
+	+ EBox::DNS::Types::Hostname always return lowercase values
+	+ Adapted to OpenLDAP removal
+	+ Set version to 3.4
+3.4
+	+ Fix nsupdate error after domain rename
+	+ Adapted apparmor configuration to Saucy
+	+ Avoid lame servers message
+	+ Use proper dlz library for bind9.9
+	+ Use service instead of deprecated invoke-rc.d for init.d scripts
+	+ Set version to 3.4
+	+ Take in account virtual interfaces too when getting addresses
+	  for a new domain
+3.3
+	+ Switch from Error to TryCatch for exception handling
+	+ Lowercase LDB domains for comparision
+	+ Update TXT _kerberos record on domain rename
+	+ Added missing EBox::Exceptions uses
+	+ Read DNS zones from samba database while provisioning
+	+ Enable sortlist option by default in /etc/zentyal/dns.conf
+	+ Delete migration code from old versions
+	+ Fix set of dynamic attribute in domain table when samba module is enabled
+	  again
+	+ Do not write reverse zone files if generate_reverse_zones is false
+	+ Do not set localhost as primary resolver if users module is configured
+	  in external AD mode. In this case, the AD DNS server must be used.
+	+ Added network as enabledepend, needed by the resolvconf management
+	+ Enable resolvconf updates when starting and stopping bind9 daemon
+	+ Enforce include of 127.0.0.1 in DNS resolvers when enabling
+	+ Set version to 3.3
+3.2
+	+ Set version to 3.2
+3.1.5
+	+ Override daemons when migrating from 3.0
+3.1.4
+	+ Use the new samba module state flag isProvisioning to set the samba
+	  flag on DomainTable rows
+	+ Do not try to update the zone while samba is provisioning the domain
+3.1.3
+	+ Adapted to new CSS styles
+	+ Remove the setting desktop service in _preSetConf and initial-setup
+3.1.2
+	+ Added sortlist support.
+3.1.1
+	+ Adapted to updatedRowNotify call with no changes in values
+	+ Added menu icon
+	+ Adapt firewall rules to new accept chains
+	+ Set transparent DNS cache firewall rules unless the module is
+	  temporary stopped
+	+ Set transparent DNS cache firewall rules in Firewall Helper
+3.1
+	+ Removed 3.0.X migration code
+	+ Implemented _daemonsToDisable()
+	+ Depend on zentyal-core 3.1
+3.0.9
+	+ Fixed bind9 dependency to allow to install it with higher versions
+	+ Do not try to add duplicated interface addresses
+3.0.8
+	+ Fix intnets config key parsing and validation
+	+ Fixed apparmor errors trying to access /dev/urandom
+3.0.7
+	+ Guard against interfaces with unset address
+	+ Dynamic domains are now properly detected on _reverseData()
+	+ Rename domain if exists when changing it in System -> General
+	+ Remove depends on users and samba to avoid deep recursion
+	+ Use API to retrieve foreign model value
+3.0.6
+	+ Improve management of DNS zones stored in samba LDAP
+	+ Improve data generation for reverse zones.
+	+ Only allow AXFR from internal networks
+3.0.5
+	+ Query samba module for zones stored in LDB. Those ones will override
+	  the zones defined in the UI.
+	+ Changes required by the bundled version of samba4.
+	  Add paths to apparmor profile
+	  Change DLZ library path
+	+ Fixed bread crumbs for hostnames table
+3.0.4
+	+ Service zentyal-desktop-api is now added in initial-setup
+	+ Better exception message when service not exists in /etc/services
+	+ Fix apparmor profile to allow SDLZ driver to read session key
+3.0.3
+	+ Bump bind9 deps to new upstream version
+	+ Add the 'zentyal-desktop-api' SRV entry to the domain of the host
+	+ Add 'zentyal-desktop-api' to /etc/services in the _setConf
+3.0.2
+	+ Add method getTsigKeys to allow DHCP module write the ddns keys
+	+ Do not add trailing dot to key names
+	+ Update samba domain using TSIG keys, avoiding TSIG GSSAPI. Allow
+	  updates even if samba daemon is stopped
+	+ Depend on Zentyal patched version of bind to allow samba DLZ domain
+	  to be updated using TSIG keys
+	+ Remove dependence on libcrypt-openssl-random-perl and add on
+	  libdigest-hmac-perl
+	+ Change TSIG key generation algorithm to be compatible with bind
+	  generated keys
+	+ Add config key to disable automatic reverse zone generation. Useful
+	  when samba4 is installed and reverse zones are managed by other DC,
+	  replicated and loaded by DLZ plugin.
+	+ Fixed bug which left PTRs unwritten in reverse file zones
+	+ Allow to add host without IP addresses in addHost() method from
+	  domain table
+	+ Implement SysInfo::Observer to check that the new host name is not
+	  defined in any domain, and update the hostname in the defined domains
+3.0.1
+	+ Fixed host name ip addition when it was more than one host in
+	  the domain
+3.0
+	+ Removed invalid restoreDependencies
+2.3.11
+	+ Remove unused report sub
+	+ Fix updating dynamic domains
+	+ Allow modifiying models when domain is read only
+	+ Fix enable/disable the DNS cache checkbox without restarting apache.
+	  The enabled property depends on firewall enabled, now this check is
+	  done at run time.
+	+ Update the managed domain ip addresses when saving changes
+	+ Implement Network observer to update the kerberos domain when
+	  dhcp addresses are assigned
+	+ Get domain dynamic status from DHCP module
+	+ Code typo fixes related to references in DNS.pm
+	+ Add x86_64 samba dlz library paths to apparmor profile
+	+ Removed unused sambaZone check
+	+ Write keys file with read access only to bind group
+2.3.10
+	+ Remove subdomain fields from hostnames and services models after
+	  DLZ zones support. The samba records are no longer created in the
+	  models but loaded from the DLZ zone.
+	+ Add support for DLZ zones to load the Samba4 DNS zones stored in
+	  LDB.
+	+ samba is not longer a restore dependency
+	+ Fixed some errors with array references
+	+ Added modeldepends to yaml schema
+2.3.9
+	+ Fixed help strings
+	+ Add method to set the domain's dynamic flag
+	+ Read and apply the samba domain update policy
+	+ Added message when a domain is added to clarify concepts
+2.3.8
+	+ Adapted DHCP ranges to reverse ip fix in Net::IP
+	+ Fixed and improved facade method for management of domains,
+	  hostname and alias
+	+ Added foreign declarations in module schema
+2.3.7
+	+ Use FirewallObserver instead of deprecated addOutputRule
+	+ Adapted to new Model management framework
+2.3.6
+	+ Add new field subdomain to hostnames and services  model,
+	  needed to create some samba records
+	+ API to add/delete A, SRV and TXT records to a domain
+	+ Change the primary nameserver record from 'ns' to the hostname
+	+ Change the IP address field on domain hosts to hasmany type.
+	  This is needed by samba to add the global catalog server record
+	+ Change the domain IP address to a hasmay type. This is needed
+	  if the server has multiple internal networks attached.
+	+ Server does not leak to the internet queries for unused rfc1918 zones
+2.3.5
+	+ Create tables with MyISAM engine by default
+2.3.4
+	+ Packaging fixes for precise
+2.3.3
+	+ Updated Standards-Version to 3.9.2
+2.3.1
+	+ Service name in uppercase and description is now translatable
+	+ Fixed executable permissions in src/scripts
+2.3
+	+ Replaced autotools with zbuildtools
+	+ Bugfix: Delete TXT record on a dynamic domain works again
+2.2.1
+	+ Do not set reverse resolution for domain if any hostname does
+	  already has it
+	+ Do not set reverse resolution for aliases
+	+ Change main URL for breadcrumbs for Domains
+	+ Set always five subdomains to reverse zones to avoid problems
+	  with some networks like 10.0.0.0/24
+	+ Adapted alias table and methods to multiple hostnames
+	+ Use proper paths for PID files to be resilient on reboots in
+	  upstart pre-script
+2.1.6
+	+ Prevent start of bind9 daemon after module is disabled
+2.1.5
+	+ Removed /zentyal prefix from URLs
+	+ Avoid duplicated restart during postinst
+2.1.4
+	+ Workaround for parent deep-recursion problem
+	+ Combine all models in the DNS menu entry and added missing help
+2.1.3
+	+ Give support for Round-Robin records, that is, the same name
+	  points to different IP addresses
+	+ Add transparent cache DNS when firewall module is enabled
+	+ Add forwarders manual configuration
+	+ Add wildcard for hostnames default value
+	+ Add TXT records
+	+ Add SRV records
+2.1.2
+	+ Use public API to get the Hostname model in NameServer and
+	  MailExchanger models
+2.1.1
+	+ Set as hostmaster@domain the email address to report problems
+	  and responsible for that domain
+	+ Do not allow set custom NS or MX records to point CNAME records
+	  in the same domain
+	+ Do not allow to remove last NS record as it is mandatory
+	+ Add a default NS record and A record when creating a domain
+	+ Just one PTR record is written per IP address to avoid
+	  problems in reverse resolution
+	+ Remove no longer used zone files
+	+ Give support to mix static direct resolution with dynamic one
+	+ Give support to mix static reverse resolution with dynamic one
+	+ Start init script using -f flag to send the named log to
+	  daemon.log file
+	+ Give support for dynamic DNS reverse resolution under
+	  /var/lib/bind/ directory
+2.1
+	+ Use new standard enable-module script
+	+ Replace migrations with initialSetup
+	+ Replace /etc/ebox/80dns.conf with /etc/zentyal/dns.conf
+2.0.1
+	+ Bugfix: Comply apparmor profile by setting the updated dynamic
+	  zones under /var/lib/bind
+1.5.1
+	+ BP: Set @ to all domain-wide records (A, NS) to avoid issues
+	  regarding to order in the configuration file
+	+ Added support for internal networks allowed to recurse
+	  the caching server.
+	+ Add support for topdomain record in addDomain method.
+	+ Add TCP/53 to dns service
+1.3.14
+	+ Added migration script for configured modules
+	+ Remove migration scripts 0001_import_to_data_table_model.pl
+	  0002_fix_active_to_enabled.pl
+	+ Move 0003_add_dns_service.pl to 0001_add_dns_service.pl
+1.3.13
+	+ Added support for dynamic zones to be updated using a shared
+	  secret key available at `/etc/bind/keys`. This feature is
+	  mainly used by dhcp module to implement dynamic DNS updates.
+	+ Fixed structure of menu on language change
+1.3.12
+	+ Add breadcrumbs to UI
+1.3.11
+	+ Added report support
+1.3.10
+	+ Added support for NS records
+	+ Check for FQDN in custom MX records
+1.3.4
+	+ Reversed record for domain IP address added
+	+ Fixed bug when removing hostnames
+1.3.1
+	+ Comment out default configuration of source ports operations to stick
+	  to the defaults provided by the  Ubuntu package.
+1.1.10
+	+ New release
+1.1
+	+ Use new row() and ids() API
+0.12.101
+	+ Check two hostnames or alias are equal using type method to do
+	so
+0.12.100
+	+ Added optional IP address for domains
+	+ Bugfix: Show correct message when editing a hostname
+0.12.99
+	+ New release
+0.12.1
+	+ Bugfix. Remove mail exchangers that reference a deleted host name.
+0.12
+	+ Use the new EBox::Model::Row api
+	+ Load module capability in pre-start just like the bind9 init
+	script does
+	+ Don't add static entry `ns` to localhost if user has defined
+	another IP address for the `ns` name0.11.102
+	+ Check aliases are not nameserver records as well
+0.11.101
+	+ Added Mail Exchanger model to introduce MX records in domains.
+	+ Added mail exchanger model related methods to the exposed API.
+	+ Check consistencies among alias and hostnames within the same
+	domain
+	+ Updated remainder models to use lastest types HostIP and
+	DomainName
+	+ Added 'changeName', 'getHostNameByName', 'getHostNameByIP' and
+	'findAlias' to improve DNS API to Perl scripts and SOAP clients
+0.11.100
+	+ add isRunning and enableService to set firewall properly
+	+ onInstall() functionality moved to migration script
+	+ Do not remove bind9 rc links
+	+ Stop bind9 in pre-start in upstart script
+0.11.99
+	+ Added `getHostname` to the exposed API to interact with
+	webserver module
+	+ Now tables are shown sorted by 'name' attribute (domain,
+	hostname and alias respectively)
+0.11
+	+ New release
+0.10.99
+	+ Expose methods in module's API
+	+ Fix bug in migration pre0.9.100 installations
+0.10
+	+ New release
+0.9.100
+	+ Add reverse resolution
+	+ Use new model/view framework. UI uses Ajax
+0.9.99
+	+ New release
+0.9.3
+	+ New release
+0.9.2
+	+ New release
+0.9.1
+	+ New release
+0.9
+	+ Added Polish translation
+	+ Added Aragonese translation
+	+ Added German translation
+
+0.8.99
+	* Add DNS server functionality
+0.7.1
+	* Allow TCP queries
+	* Use of ebox-sudoers-friendly
+0.7
+	* First public release
+0.6
+	* API documented using naturaldocs
+	* Update install and depends
+0.5.2
+	* Fix some packaging issues
+
+0.5.1
+	* Convert module to new menu system
+
+0.5
+	* Initial release

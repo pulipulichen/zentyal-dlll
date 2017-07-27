@@ -1,0 +1,25 @@
+class: 'EBox::OpenChange'
+
+enabledepends:
+    - mail
+
+bootdepends:
+    - samba
+    - mail
+
+depends:
+    - samba
+    - mail
+    - dns
+
+models:
+    - Provision
+    - OpenChangeUser
+    - VDomains
+    - RPCProxy
+    - ActiveSync
+
+composites:
+    Disclaimer: []
+    Configuration: [VDomains, RPCProxy, ActiveSync]
+    General: [Provision, Configuration, Disclaimer]

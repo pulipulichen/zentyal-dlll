@@ -1,0 +1,25 @@
+4.0.2
+	+ Fix port value on updating communication interface
+	+ Fixed cluster status errors can not be empty
+4.0.1
+	+ Retry replication button fixed
+4.0
+	+ Set version to 4.0
+	+ Include ntp as module to replicate
+	+ Increase the timeout time for HA location due to large
+	  replication setup
+	+ Wait 1 second less when setting up the cluster
+	+ Floating IP address can be in a virtual interface
+	+ Make use of VerifyPeer to false on EBox::RESTClient as we
+	  don't verify other HA hosts
+3.5.1
+	+ Avoid warning flag on smart match experimental feature
+3.5
+	+ Removed wrong translatable string in crm_resource command
+	+ Added integration with firewall
+	+ ClusterStatus creation issued at model constructor
+	+ Set version to 3.5
+3.4.1
+	+ Fixed wrong calls to ClusterStatus constructor
+3.4
+	+ Initial release

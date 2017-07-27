@@ -1,0 +1,76 @@
+<!-- vim: ts=4 sw=4 nowrap filetype=mason
+-->
+<%args>
+    @actions => ()
+    $unsaved => 'no'
+    @disabledModules => ()
+</%args>
+<%init>
+use EBox::Gettext;
+</%init>
+% if($unsaved eq 'yes') {
+%    if (@actions) {
+<p>
+<% __('The following changes are pending. You can save or discard them.') %>
+</p>
+%    }
+<div class='warning'>
+%   if (@disabledModules) {
+        <% __x('The following modules have unsaved changes but are <b>disabled</b>. If you need to enable them go to {openref}Module Status{closeref}.', openref => '<a href="/ServiceModule/StatusView">', closeref => '</a>') %>
+        <ul>
+%      for my $module (@disabledModules) {
+         <li><% $module %></li>
+%      }
+        </ul>
+%   } else {
+    <% __('There are unsaved changes in one or more modules, you can save or discard those changes.')%>
+    <br/>
+%   }
+    <br/>
+    <%__('If you made changes to the network interfaces or the administration port, you may need to manually rewrite the url in order to access this administration interface again.') %>
+</div>
+% if (@actions) {
+
+<div style='display: block; overflow: auto; height: 140px;'>
+  <table class='dataTable' cellspacing='0'>
+    <thead>
+         <th class='tleft'><% __('Date') %></th>
+         <th class='tleft'><% __('Module') %></th>
+         <th class='tleft'><% __('Section') %></th>
+         <th class='tleft'><% __('Description') %></th>
+    </thead>
+    <tbody>
+%   my $oddRow = 1;
+%   foreach my $action (@actions) {
+%      my $class = $oddRow ? 'border odd' : 'border even';
+%      $oddRow = not $oddRow;
+       <tr class='<% $class %>'>
+           <td><% $action->{'timestamp'} %></td>
+           <td><% $action->{'modtitle'} %></td>
+           <td><% $action->{'modeltitle'} %></td>
+           <td><% $action->{'message'} %></td>
+       </tr>
+%   }
+    </tbody>
+  </table>
+</div>
+% }
+<%perl>
+my $mboxSaveTitle = __('Saving changes');
+my $mboxDiscardTitle = __('Discarding changes');
+</%perl>
+<form action='Finish' method='POST'>
+ <p>
+    <input class='inputButton' type='submit' name='save' id='save'
+                   value="<% __('Save') %>"
+                   onclick="Zentyal.Dialog.close(); Zentyal.Dialog.showURL('/SaveChanges', {title:'<% $mboxSaveTitle %>', data:'save=1', showCloseButton: false}); return false" />
+    <input class='inputButton' type='submit' name='cancel'
+                   value="<% __('Discard changes') %>"
+                   onclick="Zentyal.Dialog.close(); Zentyal.Dialog.showURL('/SaveChanges', {title: '<% $mboxDiscardTitle %>', data:'cancel=1', showCloseButton: false}); return false" />
+ </p>
+</form>
+% }else{
+<div class='note'>
+<% __('There are no unsaved changes.') %>
+</div>
+% }

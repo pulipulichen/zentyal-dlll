@@ -60,17 +60,6 @@ sub getDNSServerService
     return $self->initService($name, $desc);
 }
 
-# 20170727 Pulipuli Chen
-# 取得"dlllciasrouter-workplace"的服務資料
-sub getWorkplaceService
-{
-    my ($self) = @_;
-
-    my $name = "dlllciasrouter-workplace";
-    my $desc = __("Workplace");
-    return $self->initService($name, $desc);
-}
-
 # 20150518 Pulipuli Chen
 # 取得"dlllciasrouter-pound"的服務資料
 sub getPoundService

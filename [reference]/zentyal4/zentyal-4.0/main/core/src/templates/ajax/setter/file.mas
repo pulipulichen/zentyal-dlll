@@ -1,0 +1,49 @@
+<%args>
+$tableName
+$data
+$cssClass => ''
+</%args>
+<%init>
+my $id = $tableName . '_' . $data->fieldName();
+my $loadingId = $id . '_loading';
+my $formId    = $id . '_form';
+my $onChange = << "JS_END";
+var fileUpload = new Zentyal.FileUpload(
+   { formId:   '$formId',
+     start:    function() { Zentyal.TableHelper.setLoading('$loadingId'); },
+     complete: function() { Zentyal.TableHelper.setDone('$loadingId') ; },
+   }
+);
+return fileUpload.submit();
+JS_END
+</%init>
+
+% if ( $data->editable() ) {
+<div id="<% $id %>" class="<% $cssClass %>">
+</form>
+ <form action="/Uploader"
+        method="POST"
+        enctype="multipart/form-data"
+        id="<% $id . '_form' %>">
+    <& /input/file.mas,
+       name => $id . '_path',
+       printableName => $data->printableName(),
+       id   => $id . '_path',
+       onchange => $onChange,
+    &>
+    <span id="<% $id . '_loading'%>">
+    </span>
+  </form>
+  <input type='hidden' id='<% $id %>_remove' id='<% $id %>_remove' value='0'/>
+<form class="formDiv">
+</div>
+% if ( $data->showFileWhenEditing() and $data->exist()) {
+  <& $data->HTMLViewer(), data => $data &>
+% }
+
+% }
+% else
+% {
+<& $data->HTMLViewer(),
+   data => $data &>
+% }

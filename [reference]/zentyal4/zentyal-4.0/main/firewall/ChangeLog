@@ -1,0 +1,295 @@
+4.0
+	+ Adapt firewall to reduce on remoteservices module
+	+ Set version to 4.0
+	+ Added afterFwRestart method to firewall helper
+3.5
+	+ Remove bad usage of Error package
+	+ Use a blocking lock to get iptables resource on restart
+	  and stop to avoid other modules to get it
+	+ beforeFwRestart don't called on stopped or unconfigured modules
+	+ Added beforeFwRestart method to firewall helper
+	+ Fixed crash when editing view in Summarized Report
+	+ Added EBox::Iptables::executeModuleRules to be able to execute
+	  rules from a given module calling this new method
+	+ Set version to 3.5
+3.4
+	+ Added portUsedByService method
+	+ Updated to use the new haproxy API
+	+ Use service instead of deprecated invoke-rc.d for init.d scripts
+	+ Set version to 3.4
+	+ Fixed crash when editing view in Summarized Report
+	+ Added EBox::Iptables::executeModuleRules to be able to execute
+	+ Removed code made dead by new managament of DHCP nameservers
+	+ Select text clearer for interfaces which have virtual interfaces
+3.3
+	+ Switch from Error to TryCatch for exception handling
+	+ Added missing EBox::Exceptions uses
+	+ Set version to 3.3
+3.2
+	+ Set version to 3.2
+3.1.7
+	+ Added missing EBox::Gettext uses
+3.1.6
+	+ Use common prefix (zentyal-firewall) for logging redirections,
+	  snat, drop and log rules
+	+ Use DATETIME type in date column for consolidation tables
+	+ Summarised report has breadcrumbs now
+3.1.5
+	+ Use (i|f|o)accept chains in user's defined firewall rules to be
+	  able to analyse the traffic
+3.1.4
+	+ New icons and style for Packet Filter section
+	+ Moved warnings inside of models instead of Packet Filter frontpage
+	+ Fix regression (INVALID packets on FORWARD were accepted)
+	+ Delete iintservs and fobjects unused chains
+3.1.3
+	+ Hide from External to Internal section by default to avoid confusion
+	  with Port Forwarding unless show_ext_to_int_rules confkey is enabled
+3.1.2
+	+ Added menu icon
+	+ Set iaccept, faccept and oaccept chains instead of ACCEPT target
+	  to be able to analyse traffic using IPS
+	+ Add restartOnTemporaryStop attribute to firewall helper to
+	  indicate to core if firewall must be restart on temporary stop
+	  events
+3.1.1
+	+ Set file location for redirect rule logging
+	+ Use zentyal-firewall prefix in redirects log
+3.1
+	+ Added Pre-Depends on mysql-server to avoid problems with upgrades
+	+ Depend on zentyal-core 3.1
+3.0.3
+	+ Changed order for the ! character when adding an inverse rule
+3.0.2
+	+ Added preInput(), preOutput() and preForward() to FirewallHelper
+3.0.1
+	+ Adapted to changes in EBox::LogHelper::_convertTimestamp
+3.0
+	+ Set RS VPN rule only if the VPN connection is done
+	+ Check connectivity against new API end point for Remote instead
+	  of WS server
+2.3.11
+	+ Fixed names of some model classes
+2.3.10
+	+ Hide advanced service rules by default, they can be enabled by
+	  setting the show_service_rules variable in firewall.conf
+	+ Fixed log icon
+	+ Fixed network observer calls
+	+ Fixed translation of Configure rules button
+	+ SNAT and redirect tables acknowledge that netfilter only knows
+	  about physical interfaces
+2.3.9
+	+ Firewall is now under Gateway instead of UTM
+	+ Added priority to redirects
+	+ Fixed bug with SNAT and redirects to the same target
+	+ Improved style of packet filtering page
+	+ Added modeldepends to yaml schema
+	+ Fixed i10n bug in prohibition of inverse match for "any" service
+	+ Adjusted table to existence of inverse match for addresses
+	+ Fixed error which broke rules for inverse address match for
+	  single IP address
+	+ Fixed error which broke rules for inverse service
+	  match for any TCP or any UDP for all ports
+2.3.8
+	+ Use Clone::Fast instead of Clone
+	+ Added load of custom iptables modules
+	+ Added table for SNAT rules
+	+ Added filtering by source MAC
+	+ EBox::Firewall::IPRule can accept now IPRange objects as source
+	  or destination
+2.3.7
+	+ Remove obsolete denyAction code
+	+ Adapted to new Model management framework
+	+ Remove obsolete OutputRules code
+	+ Remove obsolete localredirects methods
+	+ Remove obsolete import of EBox::Order
+2.3.6
+	+ Set RemoteServices rules taking into account no bundle state
+	+ Added clone action to tables
+	+ EBox::Firewall::availablePort now works for non-FirewallObserver modules
+	  and it uses the same readonly status as the firewall module
+2.3.5
+	+ Create tables with MyISAM engine by default
+2.3.4
+	+ Use new unified tableBody.mas in PacketTrafficDetails.pm
+2.3.3
+	+ Packaging fixes for precise
+2.3.2
+	+ Updated Standards-Version to 3.9.2
+2.3.1
+	+ Use printableName instead of name to select services
+	+ Remove firewall hook template as examples are already included in core
+2.3
+	+ Adapted to new MySQL logs backend
+	+ Disabled source/destination port for portless protocols in redirections
+	+ Using iprange module for iptable rules referencing range object members
+	+ Replaced autotools with zbuildtools
+2.1.7
+	+ Avoid some crashes caused by connectivity issues during save changes
+2.1.6
+	+ Fixed check of hide_firewall_images config key
+2.1.5
+	+ Do not crash when a firewall helper rule fails and inform the user
+	+ Hide explanatory images in the GUI if hide_firewall_images key defined
+	+ Removed /zentyal prefix from URLs
+	+ Set single by default in the PortRange of the RedirectRules table
+2.1.4
+	+ Fixed deprecated use of iptables command
+2.1.3
+	+ Added help images to each firewall filtering table
+	+ Improve kernel settings for increased firewall security
+	+ Use the new "Add new..." option in the object selectors
+	+ Removed obsolete gettext calls
+2.1.2
+	+ Changed RedirectRules table order (Protocol before Port)
+	+ Added chains method to firewall helpers (lets them create custom chains)
+2.1.1
+	+ Added SNAT option in Port Forwarding rules
+	+ Remove unnecessary code from EBoxServicesRuleTable::syncRows
+	+ Add forwardNoSpoof and inputNoSpoof FirewallHelper methods to allow
+	  exceptions on default spoof checking in the firewall
+	+ Log INVALID packets as we do with DROPped ones
+	+ Fixed bug when getting the value of destination port in redirect table
+2.1
+	+ Removed unnecesary call to isReadOnly in syncRows
+	+ New addServiceRules helper method for initial setup of modules
+	+ Added addToInternetService to exposed methods
+	+ Added new addInternalService and requestAvailablePort methods
+	+ Use new initialSetup method to add default rules
+	+ Remove obsolete migrations
+	+ Replace /etc/ebox/80firewall.conf with /etc/zentyal/firewall.conf
+2.0.1
+	+ PPPOE MTU is now changed in network module when reconfiguring gateways
+1.5.6
+	+ Zentyal rebrand
+1.5.5
+	+ Use modelClasses API for firewall rule tables
+	+ Increased size of description fields for rules
+1.5.4
+	+ Set iptables rule properly to fix PPPoE problems with some websites
+1.5.3
+	+ Bridged mode support
+1.5.2
+	+ New logging feature for port forwarding rules
+	+ Only allow safe ICMP types everywhere
+1.5.1
+	+ New firewall table containing rules added by eBox services
+	+ Bug fix: port forwarding now works with PPPoE
+	+ Bug fix: openVPN interfaces are added as internal interfaces to
+	  iexternal and iexternalmodules (Closes #1758)
+	+ Bug fix: allow only safe ICMP types and insert the rules after user rules
+	  so these override the default ones. Drop INVALID packets first
+	  too
+	+ Added TCP/53 to DNS rules in fdns and ointernal chains
+	+ Inverse match is not longer allowed for service 'any'
+1.4.2
+	+ Add a config option to disable the logging of dropped packets in firewall
+1.4
+	+ Bug fix: i18n
+1.3.14
+	+ Added multi-gateway support for DHCP and PPPoE
+	+ Add an allow rule by default from internal
+	  networks to internet
+1.3.11
+	+ Added report support
+	+ Add description field for redirects
+	+ Breadcrumbs
+	+ Change Redirections for Port Forwarding
+1.3.6
+	+ Add clone() to EBox::Firewall::IptablesRule
+1.3.4
+	+ bugfix: inospoof chain was buggy and didn't allow traffic
+	  to internal eBox addresses from other internal networks
+	+ bugfix: insert missing port data using NULL in logs data base
+1.1.30
+	+ Add all and ah protocols to redirections
+1.1.20
+	+ New release
+1.1.10
+	+ New release
+1.1
+	+ Added required output rules to connect remote services when the
+	eBox is subscribed
+	+ Use the new ids() and row() API
+	+ Added support to redirects to introduce the origin destination address.
+	  So far, only local address could be used.
+	+ Bugfix: fix regression that didn't allow to use virtual interfaces on
+	redirections
+	+ Allow outgoing connections from eBox by default
+0.12.101
+	+ Bugfix: Add redirect migration script to Makefile.am
+0.12.100
+	+ New release
+0.12.99
+	+ Add support for reporting
+	+ Add rules to allow DHCP requests from interfaces configured via DHCP
+0.12.1
+	+ Add log decision to firewall rules
+	+ Add conf parameter to disable NAT
+0.12
+	+ Use the new EBox::Model::Row api
+	+ Add help field to firewall models
+	+ Bugfix. Use exit and not return in dchp-firewall external script
+	+ Bugfix. Use #DEBHELPER# properly to be able to flush the firewall rules
+	  when the package is uninstalled
+	+ Add support for ESP protocol
+0.11.102
+	+ Set editable attribute to 1 in Decision field. To comply with
+	  what the type expects and avoid warnings
+0.11.101
+	+ Unroll inoexternal chain
+	+ Bugfix. Do not restart firewall module if called from dhcp context
+	  and the module is not enabled
+	+ Add setExternalService
+0.11.100
+	+ Fix English string
+	+ onInstall() functionality moved to migration script
+0.11.99
+	+ Added log domain for firewall's drops. Firewall logging limits
+	are stored in a configuration file
+	+ Enhanced strings
+0.11
+	+ New release
+0.10.99
+	+ Fix some typos
+0.10
+	+ Load ip_nat_ftp module
+0.9.100
+	+ Use new model/view framework which implies several changes
+	+ Now the user can add rules to INPUT/OUTPUT chain
+	+ Use the new services module
+0.9.99
+	+ New release
+0.9.3
+	+ New release
+0.9.2
+	+ New release
+0.9.1
+	+ Small UI changes
+	+ Fix bug with rules and more than one external interface
+0.9
+	+ Added Polish translation
+	+ Added Aragonese translation
+	+ Added German translation
+	+ dhcp-hooks script will be installed by network module
+
+0.8.99
+	+ Add externalInput to FirewallObserver to provide rules for
+	  external interfaces
+0.8.1
+	+ New release
+0.8
+	+ New release
+0.7.99
+	+ Add Portuguese translation
+0.7.1
+	+ GUI fixes
+	+ Use of ebox-sudoers-friendly
+0.7
+	+ First public release
+0.6
+	+ Separate module from ebox base
+	+ move to client
+	+ API documented using naturaldocs
+	+ Update install
+	+ Update debian scripts

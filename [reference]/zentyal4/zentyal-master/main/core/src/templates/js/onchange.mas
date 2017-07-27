@@ -1,0 +1,12 @@
+<%args>
+    $fieldName
+    $JSONActions
+    $tableName
+</%args>
+<%init>
+my $fullId = "${tableName}_${fieldName}";
+</%init>
+$('#<% $fullId %>').change(function (event) {
+              Zentyal.TableHelper.onFieldChange(event, <% $JSONActions %>, '<% $tableName %>')
+}  );
+

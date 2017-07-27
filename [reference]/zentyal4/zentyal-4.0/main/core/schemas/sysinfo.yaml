@@ -1,0 +1,14 @@
+class: 'EBox::SysInfo'
+models:
+    - Halt
+    - TimeZone
+    - DateTime
+    - HostName
+    - ManageAdmins
+    - Debug
+
+composites:
+    General: ['sysinfo/ManageAdmins', 'webadmin/Language','webadmin/AdminPort', 'sysinfo/HostName']
+    DateAndTime: []
+
+# NOTE: DateAnDtime composite components are dynamic in componentNames()

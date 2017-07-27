@@ -1,0 +1,42 @@
+<%doc>
+   Template to configure a simple named virtual host using the default
+   site given with the apache2 debian package
+
+   Parameters:
+
+   vHostName     - String with the virtual host name
+   hostname      - String with the server host name
+   publicSSLPort - String with the HTTPS listen port
+   sslPort       - String with the HTTPS internal port
+   sslSupport    - [disabled|allowssl|forcessl]
+</%doc>
+<%args>
+  $vHostName
+  $hostname
+  $publicSSLPort
+  $sslPort
+  $sslSupport
+</%args>
+<%init>
+  use EBox::WebServer;
+  use EBox::WebServer::PlatformPath;
+  my $vHostPrefix = EBox::WebServer::VHostPrefix();
+  my $docRoot = EBox::WebServer::PlatformPath::VDocumentRoot();
+  my $etcPath = EBox::WebServer::PlatformPath::ConfDirPath();
+</%init>
+% if ($sslSupport ne 'disabled') {
+<VirtualHost *:<% $sslPort %>>
+        ServerAdmin webmaster@<% $hostname %>
+
+        ServerName <% $vHostName %>:<% $publicSSLPort %>
+        DocumentRoot <% $docRoot %>/<% $vHostName %>
+
+        SetEnv HTTPS On
+
+        ErrorLog /var/log/apache2/<% $vHostName %>-error.log
+        CustomLog /var/log/apache2/<% $vHostName %>-access.log combined
+
+        # Custom configuration goes in this file
+        IncludeOptional <% $etcPath %>/sites-available/<%  'user-' . "$vHostPrefix$vHostName" %>/*
+</VirtualHost>
+% }

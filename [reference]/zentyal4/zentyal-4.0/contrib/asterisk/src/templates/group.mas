@@ -1,0 +1,67 @@
+<%args>
+    $params
+</%args>
+<%init>
+    use EBox::Gettext;
+</%init>
+
+% if (not $params->{service} ) {
+            <& /asterisk/moduleDisabled.mas &>
+% }
+<form id='astGroupOptions' action='/Asterisk/AsteriskGroupOptions' method='POST'>
+  <table class='formTable'><tbody>
+   <div id='note_astGroupOptions' class='note' style='display:none'></div>
+   <div id='error_astGroupOptions' class='error' style='display:none'></div>
+
+        <input type="hidden" name="group" value="<% $params->{group}->dn() %>">
+        <tr>
+        <td class="tright">
+            <span class="ftitle"><% __('Group queue') %>:</span>
+        </td>
+        <td>
+            <select name="active" enabled>
+%       if ($params->{'active'}) {
+            <option value="no" ><% __('Disabled') %></option>
+            <option selected value="yes" ><% __('Enabled') %></option>
+%       } else {
+            <option selected value="no" ><% __('Disabled') %></option>
+            <option value="yes" ><% __('Enabled') %></option>
+%       }
+            </select>
+        </td>
+        </tr>
+
+        <tr id='astGroupExtensionRow' <%($params->{'active'}) ? '' : 'style="display:none"' %>>
+        <td class="tright">
+            <span class="ftitle"><% __('Extension') %>:</span>
+        </td>
+        <td>
+            <input id='astGroupExtension' type="text" class="inputText" size="4" maxlenght="4" name="extension" value="<% $params->{'extension'} %>">
+        </td>
+        </tr>
+
+        <tr>
+        <td></td>
+        <td>
+            <input class="inputButton" type="submit" name="change" id='submitAstGroupOptions'
+                    value="<% __('Change') %>"
+                    alt="<% __('Change') %>">
+        </td>
+        </tr>
+  </tbody></table>
+</form>
+
+
+<script>
+$(function(){
+  Zentyal.Form.setupAjaxSubmit('#astGroupOptions', {
+     noteDiv: '#note_astGroupOptions',
+     errorDiv: '#error_astGroupOptions',
+     submitButton: '#submitAstGroupOptions',
+     success: function(response) {
+           $('#astGroupExtensionRow').toggle(response.enabled === 1);
+           $('#astGroupExtension').val(response.extension);
+     }
+ });
+});
+</script>

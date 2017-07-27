@@ -1,9 +1,0 @@
-<%args>
-    @paths
-</%args>
-/mnt/mfs/pve 10.6.0.0/24(rw,fsid=0,async,no_root_squash,subtree_check)
-% if (@paths) {
-% for my $path (@paths) {  	
-%   print $path . "\n";
-% } #for my $path (@paths) {  	
-% } #if (@paths) {

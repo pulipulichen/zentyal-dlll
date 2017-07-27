@@ -1,0 +1,153 @@
+<%init>
+use EBox::Gettext;
+use EBox::Config;
+my $samba = EBox::Global->modInstance('samba');
+my $hostDomain = lc($samba->kerberosRealm());
+my $workgroup = $samba->defaultWorkgroup();
+
+my $confirmationTitle = __('Change server local domain?');
+my $confirmationMsg = __x('{op}This action will trigger the change of the actual host name.{cp}', op => '<p>', cp => '</p>');
+$confirmationMsg .= __x('{op}A hostname change will create a new certificate for the web administration connections. This means you will have to reload the page manually once the save change proccess ends.{cp}', op => '<p>', cp => '</p>');
+</%init>
+<h3><% __('Users and Groups') %></h3>
+<img src="/data/software/images/users.png" />
+<form method="post" action="./Samba/Wizard/Users" class="formDiv"
+      id="ad_wizard_form"
+      data-host-domain="<% $hostDomain %>" >
+        <fieldset>
+        <legend><% __('Select the type of the server') %></legend>
+          <div class="radio-group">
+            <label>
+               <input type="radio" name="mode" id="standaloneRadio" value="standalone" checked="true" />
+               <% __('Standalone server') %>
+            </label>
+            <label>
+              <input type="radio" name="mode" id="joinRadio" value="join"/>
+              <% __('Additional domain controller') %>
+            </label>
+          </div>
+        </fieldset>
+        <& .standaloneSection, hostDomain => $hostDomain &>
+        <& .joinSection, hostDomain => $hostDomain, workgroup => $workgroup &>
+</form>
+<script type="text/javascript" src="/data/js/table-helper.js">//</script>
+<script>
+
+$(function() {
+   $('#standaloneRadio').on('click', function (event) {
+      $('#standaloneSection').show();
+      $('#joinSection').hide();
+   });
+   $('#joinRadio').on('click', function (event) {
+      $('#standaloneSection').hide();
+      $('#joinSection').show();
+   });
+   $('#adRadio').on('click', function (event) {
+      $('#standaloneSection').hide();
+      $('#joinSection').hide();
+   });
+
+   $('#wizard-next2').removeAttr('onclick').on('click', function(event) {
+      event.preventDefault();
+
+      var new_domain, host_domain;
+      var ad_wizard = $('#ad_wizard_form');
+      var in_ad_wizard = ad_wizard.filter(':visible').length > 0;
+      if (!in_ad_wizard) {
+          Zentyal.Wizard.Software.nextStep();
+          return false;
+      }
+
+      host_domain = ad_wizard.attr('data-host-domain');
+      if ($('#standaloneRadio').val()) {
+          new_domain = $('#domain', ad_wizard).val();
+      } else if ($('#joinRadio').val()) {
+          new_domain = $('#realm', ad_wizard).val();
+      } else {
+          Zentyal.Wizard.Software.nextStep();
+          return false;
+      }
+
+      if (new_domain == host_domain) {
+          Zentyal.Wizard.Software.nextStep();
+          return false;
+      }
+
+      var confirmParams = {
+          title  : '<% $confirmationTitle %>',
+          message: '<% $confirmationMsg %>'
+      };
+      var acceptMethod = function () {
+          Zentyal.Wizard.Software.nextStep();
+       };
+      Zentyal.TableHelper.showConfirmationDialog(confirmParams, acceptMethod);
+
+      return false;
+   });
+});
+</script>
+
+<%def .standaloneSection>
+<%args>
+$hostDomain
+</%args>
+    <fieldset id='standaloneSection'>
+        <legend>
+            <% __('Select the domain name of the server') %>
+        </legend>
+        <div>
+            <label for="domain"><% __('Host domain name') %>
+              <span class="field_help">
+                  <% __('This will be used as the Kerberos authentication realm for your users.') %>
+              </span>
+            </label>
+            <input type="text" name="domain" id="domain" value="<% $hostDomain %>"/>
+        </div>
+     </fieldset>
+</%def>
+
+<%def .joinSection>
+<%args>
+$hostDomain
+$workgroup
+</%args>
+    <fieldset id='joinSection' style="display: none">
+        <legend>
+            <% __('Enter your existing domain settings') %>
+        </legend>
+        <div>
+            <label for="realm"><% __('Domain name') %>
+              <span class="field_help">
+                  <% __('This is the name of the existing domain you want to join.') %>
+              </span>
+            </label>
+            <input type="text" name="realm" id="realm" value="<% $hostDomain %>"/>
+        </div>
+        <div>
+              <label for="dcfqdn"><% __('Domain controller FQDN') %>
+              </label>
+              <input type="text" name="dcfqdn" id="dcfqdn"/>
+        </div>
+        <div>
+              <label for="dnsip"><% __('Domain DNS server IP') %>
+              </label>
+              <input type="text" name="dnsip" id="dnsip"/>
+        </div>
+        <div>
+              <label for="adminAccount"><% __('Administrator account') %></label>
+              <input type="text" name="adminAccount" id="adminAccount"/>
+        </div>
+        <div>
+              <label for="password"><% __('Administrator password') %></label>
+              <input type="password" name="password" id="password"/>
+        </div>
+        <div>
+              <label for="workgroup"><% __('NetBIOS domain name') %></label>
+              <input type="text" name="workgroup" id="workgroup" value="<% $workgroup %>"/>
+        </div>
+        <div>
+              <label for="netbiosName"><% __('NetBIOS computer name') %></label>
+              <input type="text" name="netbiosName" id="netbiosName"/>
+        </div>
+    </fieldset>
+</%def>

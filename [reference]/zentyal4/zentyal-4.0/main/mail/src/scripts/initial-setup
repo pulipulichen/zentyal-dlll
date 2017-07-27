@@ -1,0 +1,21 @@
+#!/bin/bash
+
+VERSION=$1
+
+VMAIL_DIR=/var/vmail
+SIEVE_SCRIPTS_DIR=/var/vmail/sieve
+
+# FIXME: If upgrading from 2.0.X, migrate quota to mailquota, if users script
+# is run before this one, their LDAP actions won't be complete, so we'd have to
+# perform them again.
+
+# create directory for vmail
+mkdir -p $VMAIL_DIR
+/bin/chmod 0755 $VMAIL_DIR
+chown ebox:ebox $VMAIL_DIR
+# create directory for sieve filters
+mkdir -p $SIEVE_SCRIPTS_DIR
+/bin/chmod 2775 $SIEVE_SCRIPTS_DIR
+chown ebox:ebox $SIEVE_SCRIPTS_DIR
+
+exit 0

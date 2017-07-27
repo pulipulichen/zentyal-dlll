@@ -1,0 +1,39 @@
+#!/bin/bash
+
+NEW=$1
+DOMAIN=$2
+
+if [ -z $NEW ]
+then
+    echo "Usage: $0 <new_hostname> [new_domain]"
+    exit 1
+fi
+
+if [ `hostname --fqdn` == "$NEW.$DOMAIN" ]; then
+# nothing needs to change, exiting
+    exit 0
+fi
+
+# Set /etc/hosts
+
+CURRENT=`hostname`
+# Delete all lines where current appears un /etc/hosts
+sed -Ei "/^.*\s+$CURRENT\s*$/d" /etc/hosts
+sed -Ei "/^.*\s+$CURRENT\..*$/d" /etc/hosts
+
+# Set localhost in /etc/hosts
+sed -Ei "s/^127.0.0.1.*/127.0.0.1\tlocalhost.localdomain localhost/" /etc/hosts
+if [ -n "$DOMAIN" ]; then
+    sed -Ei "2i\
+127.0.1.1\t$NEW.$DOMAIN $NEW" /etc/hosts
+fi
+
+# Set /etc/hostname
+echo $NEW > /etc/hostname
+
+hostname $NEW
+
+# create Zentyal webadmin certificate with the new hostname
+CERT_DIR=/var/lib/zentyal/conf/ssl
+rm -rf $CERT_DIR
+/usr/share/zentyal/create-certificate $CERT_DIR $NEW.$DOMAIN > /dev/null 2>&1

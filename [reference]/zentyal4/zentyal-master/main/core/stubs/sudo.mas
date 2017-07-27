@@ -1,0 +1,14 @@
+<%args>
+	$user => 'ebox'
+        @extraUsers => ()
+</%args>
+
+# Zentyal sudo configuration
+
+# allow there users to run all commands without passwd
+<% $user %>  ALL = NOPASSWD:ALL
+% if (@extraUsers) {
+%   foreach my $extraUser (@extraUsers) {
+<% $extraUser %>  ALL = NOPASSWD:ALL
+%   }
+% }

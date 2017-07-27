@@ -1,0 +1,15 @@
+Source: zbuildtools
+Section: devel
+Priority: optional
+Maintainer: Zentyal Packaging Maintainers <pkg-team@zentyal.com>
+Build-Depends: cdbs, debhelper (>= 7)
+Standards-Version: 3.9.3
+Homepage: http://www.zentyal.org/
+Vcs-Browser: http://git.zentyal.org/zentyal.git/tree/HEAD:/extra/zbuildtools
+Vcs-Git: git://git.zentyal.org/zentyal.git
+
+Package: zbuildtools
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, liberror-perl, libfile-slurp-perl, dpkg-dev, cdbs, devscripts
+Description: Zentyal Build Tools
+ These tools are needed to build and install Zentyal modules.

@@ -1,0 +1,95 @@
+<%args>
+    @modules
+    $hasChanged => 'notset'
+</%args>
+<%init>
+use EBox::Gettext;
+</%init>
+<script type="text/javascript" src="/data/js/table-helper.js">//</script>
+<div id='modulesStatus'>
+<script type="text/javascript">
+"use strict";
+function sendStatus(name, enable)
+{
+    var params = 'module=' + name + '&enable=' + (enable ? '1' : '0');
+    $.ajax({
+        url: '/ServiceModule/StatusController',
+        type: 'post',
+        data: params,
+        success: function (response) {
+          $('#modulesStatus').html(response);
+        },
+        complete: function(){
+            Zentyal.refreshSaveChangesButton();
+        }
+    });
+}
+
+function configureModule(module, title)
+{
+    var modCheckbox = $('#' + module);
+    if (modCheckbox.prop('checked')) {
+        modCheckbox.prop('checked', false);
+        Zentyal.Dialog.showURL('/ServiceModule/ConfigureView', {
+                   title: title,
+                   data: 'module=' + module,
+                   load: function() {
+                        $('#accept', this).focus();
+                    }
+        });
+    }
+}
+
+$(function() {
+    Zentyal.stripe('#statusTable', 'even', 'odd');
+});
+</script>
+<br/>
+<form id="statusForm">
+<table id='statusTable' class='dataTable'>
+<thead>
+    <tr>
+        <th class='tleft'><% __('Module') %></th>
+        <th class='tleft'><% __('Depends') %></th>
+        <th class='thOptions'><% __('Status') %></th>
+    </tr>
+</thead>
+<tbody>
+% for my $mod (@modules) {
+%   my $name = $mod->{'name'};
+%   my $printableName = $mod->{'printableName'};
+%   my $depends = $mod->{'depends'};
+%   my $status = $mod->{'status'};
+%   my $configured = $mod->{'configured'};
+    <tr>
+        <td class="icon-<% $name %>">
+            <% $printableName %>
+        </td>
+        <td style="color:#888">
+        <% join(', ', @{$mod->{'printableDepends'}}) %>
+        </td>
+        <td class='tcenter' id="<% $name %>_status">
+%   if (not $configured) {
+%       my $title = __x("Configure module: {module}", module => $printableName);
+           <& /input/checkbox.mas,
+                'name' => $name,
+                'id' => $name,
+                'value' => $status,
+                'onChange' => qq{configureModule('$name', '$title')}
+
+            &>
+%   } else {
+           <& /input/checkbox.mas,
+                'name' => $name,
+                'id' => $name,
+                'value' => $status,
+                'onChange' => qq{sendStatus('$name', this.checked); Zentyal.TableHelper.setLoading('${name}_status'); }
+            &>
+%   }
+        </td>
+    </tr>
+% }
+  </tbody>
+  </table>
+</form>
+</div>

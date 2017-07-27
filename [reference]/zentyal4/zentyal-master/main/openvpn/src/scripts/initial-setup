@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+# create diffie-hellman parameters if needed
+DH_FILE='/etc/openvpn/ebox-dh1024.pem'
+if [ -e $DH_FILE  ]; then
+    echo "We assume $DH_FILE is a Diffie-Hellman parameter file with 1024 byte length. If the assumption is false, please remove it and create a new one manually. If you do NOT do so, your OpenVPN tunnels may be compromised"
+else
+    openssl dhparam -out $DH_FILE 1024
+fi
+
+# create openvpn status log directory
+STATUS_DIR=`perl -MEBox::OpenVPN -e 'print EBox::OpenVPN->logDir(); 1 '`
+test -d $STATUS_DIR || mkdir -p  $STATUS_DIR
+chown nobody:nogroup $STATUS_DIR
+
+# Workaround problem when automatically updating quagga
+# FIXME: remove this if it gets fixed by upstream
+echo "quagga quagga/really_stop boolean true" | debconf-set-selections
+
+exit 0

@@ -1,0 +1,96 @@
+<!-- vim: ts=4 sw=4 nowrap filetype=mason
+-->
+<%args>
+    $backup
+    $action
+    $actiontext
+    $popup => 0
+</%args>
+<%init>
+use EBox::Gettext;
+use Perl6::Junction qw(any);
+use EBox::Backup;
+use URI::Escape;
+
+my $onclickSubmit = '';
+my $onclickCancel = '';
+if ($popup) {
+    my $title;
+    my $url = '/SysInfo/Backup';
+    my $data = "$action=1";
+
+    if ($action eq any(qw(restoreFromId  restoreFromFile))) {
+        $title = __x('Restore backup: {desc}',
+                    desc => $backup->{description});
+        if ($action eq 'restoreFromId') {
+            $data .= '&id=' . $backup->{id};
+        } elsif ($action eq 'restoreFromFile') {
+            $data .= '&backupfile=' . uri_escape($backup->{file});
+        }
+        $data .= "&popup=1";
+        $onclickSubmit = qq{onclick="Zentyal.Dialog.close(); Zentyal.Dialog.showURL('$url', {title:'$title', data:'$data', showCloseButton: false}); return false"};
+    } elsif ($action eq 'delete') {
+        $data .= '&id=' . $backup->{id};
+        $onclickSubmit = qq(onclick="Zentyal.Dialog.close(); window.location='$url?$data'; return false");
+    }
+
+
+    $onclickCancel = qq{onclick="Zentyal.Dialog.close(); return false"};
+}
+</%init>
+
+<form action='Backup' method='POST' class="formDiv">
+    <& /input/hidden.mas, name => 'popup', value => $popup &>
+    <& .backupIdentifier, backup => $backup &>
+    <div>
+        <label><% __('Date') %></label>
+        <span><% $backup->{'date'} %></span>
+    </div>
+    <div>
+        <label><% __('Description') %></label>
+        <span><% $backup->{'description'} %></span>
+    </div>
+%               if (exists $backup->{'size'}) {
+    <div>
+        <label><% __('Archive size') %></label>
+        <span><% $backup->{'size'} %></span>
+    <div>
+%                }
+    <div class="form-buttons">
+        <input class='inputButton' type='submit'
+                        name='<%$action%>'
+                        value='<%$actiontext%>'
+                        alt='<%$actiontext%>'
+          <% $onclickSubmit  %>
+         />
+        <input class='inputButton' type='submit'
+                        name='cancel'
+                        value="<%__('Cancel')%>"
+                        alt="<%__('Cancel')%>"
+          <% $onclickCancel %>
+        />
+    </div>
+</form>
+
+<%def .backupIdentifier >
+<%args>
+$backup
+</%args>
+<%init>
+my $name;
+my $value;
+
+if (exists $backup->{id}) {
+    $name = 'id';
+    $value = $backup->{id};
+}
+elsif (exists $backup->{file}) {
+   $name = 'backupfile';
+   $value = $backup->{file}
+}
+else {
+   die "bad backup details data";
+}
+</%init>
+<& /input/hidden.mas, name => $name, value => $value &>
+</%def>

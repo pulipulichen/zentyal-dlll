@@ -1,0 +1,86 @@
+<%args>
+$showImages => 1
+$showAdvanced => 0
+$showExtToInt => 0
+</%args>
+<%init>
+use EBox::Gettext;
+</%init>
+
+<div class="PackFilter">
+<div class="half-block">
+  <div class="item-block">
+% if ($showImages) {
+	<a class="img_a" href="/Firewall/View/InternalToEBoxRuleTable"><img src="/data/firewall/internal_to_zentyal.png" /></a>
+% }
+	<h3><% __('Filtering rules from internal networks to Zentyal') %></h3>
+	<p>
+		<% __('These rules allow you to control access from internal networks to services running on your Zentyal machine.') %>
+    </p>
+    <a class="btn btn-icon btn-config" href="/Firewall/View/InternalToEBoxRuleTable"><% __('Configure rules') %></a>
+  </div>
+
+<div class="item-block">
+% if ($showImages) {
+	<a class="img_a" href="/Firewall/View/ToInternetRuleTable"><img src="/data/firewall/internal_networks.png" /></a>
+% }
+	<h3><% __('Filtering rules for internal networks') %></h3>
+	<p>
+		<% __('These rules allow you to control access from internal networks to the Internet and traffic between internal networks. If you wish to provide access to your Zentyal services, you must use the above section.') %>
+	</p>
+	<a class="btn btn-icon btn-config" href="/Firewall/View/ToInternetRuleTable"><% __('Configure rules') %></a>
+</div>
+</div>
+<div class="half-block">
+<div class="item-block">
+% if ($showImages) {
+	<a class="img_a" href="/Firewall/View/ExternalToEBoxRuleTable"><img src="/data/firewall/external_to_zentyal.png" /></a>
+% }
+	<h3><% __('Filtering rules from external networks to Zentyal') %></h3>
+	<p>
+		<% __('These rules allow you to control access from external networks to sevices running on your Zentyal machine.') %>
+	</p>
+	<a class="btn btn-icon btn-config" href="/Firewall/View/ExternalToEBoxRuleTable"><% __('Configure rules') %></a>
+</div>
+
+% if ($showExtToInt) {
+	<div class="item-block">
+% if ($showImages) {
+	<a class="img_a" href="/Firewall/View/ExternalToInternalRuleTable"><img src="/data/firewall/external_to_internal.png" /></a>
+% }
+	<h3><% __('Filtering rules from external networks to internal networks') %></h3>
+	<p>
+		<% __('These rules allow you to control access from external networks to internal networks.') %>
+	</p>
+	<a class="btn btn-icon btn-config" href="/Firewall/View/ExternalToInternalRuleTable"><% __('Configure rules') %></a>
+
+  </div>
+% }
+
+<div class="item-block">
+% if ($showImages) {
+	<a class="img_a" href="/Firewall/View/EBoxOutputRuleTable"><img src="/data/firewall/outgoing_traffic.png" /></a>
+% }
+	<h3><% __('Filtering rules for traffic coming out from Zentyal') %></h3>
+	<p>
+		<% __('These rules allow you to control access from your Zentyal to external services.') %>
+	</p>
+	<a class="btn btn-icon btn-config" href="/Firewall/View/EBoxOutputRuleTable"><% __('Configure rules') %></a>
+
+</div>
+
+% if ($showAdvanced) {
+<div class="item-block">
+% if ($showImages) {
+	<a class="img_a" href="/Firewall/View/EBoxServicesRuleTable"><img src="/data/firewall/advanced.png" /></a>
+% }
+	<h3><% __('Rules added by Zentyal services (Advanced)') %></h3>
+	<p>
+		<% __('These rules are automatically added by the Zentyal services.') %>
+	</p>
+	<a class="btn btn-icon btn-config" href="/Firewall/View/EBoxServicesRuleTable"><% __('Configure rules') %></a>
+</div>
+% }
+</div>
+</div>
+

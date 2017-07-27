@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use EBox;
+use EBox::Config;
+use EBox::Global;
+
+use EBox::Util::Lock;
+use TryCatch::Lite;
+
+use constant LOCK_NAME => 'manageEBoxLogs';
+
+EBox::init();
+try {
+    EBox::Util::Lock::lock(LOCK_NAME);
+} catch (EBox::Exceptions::Lock $e) {
+    print "Already a manageEBoxLogs process running. Exiting\n";
+    exit 0;
+}
+
+try {
+    my $logs = EBox::Global->getInstance(1)->modInstance('logs');
+    defined $logs or
+        die 'Cannot instantiate Zentyal logs module';
+
+    $logs->purge();
+} catch ($e) {
+    EBox::Util::Lock::unlock(LOCK_NAME);
+    $e->throw();
+}
+EBox::Util::Lock::unlock(LOCK_NAME);
+
+1;

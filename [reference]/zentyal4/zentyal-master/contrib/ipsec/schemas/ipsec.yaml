@@ -1,0 +1,21 @@
+class: 'EBox::IPsec'
+depends:
+    - network
+    - firewall
+
+models:
+    - Connections
+    - SettingsIPsec
+    - SettingsL2TP
+    - ConfPhase1
+    - ConfPhase2
+    - RangeTable
+    - UsersFile
+    - Users
+
+composites:
+    IPsecConf: [SettingsIPsec, Auth]
+    IPsecL2TPConf: [GeneralL2TPSettings, UsersSettings]
+    GeneralL2TPSettings: [SettingsL2TP, RangeTable]
+    Auth: [ConfPhase1, ConfPhase2]
+    UsersSettings: [Users, UsersFile]

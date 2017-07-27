@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use EBox;
+use EBox::Gettext;
+
+my ($locale) = @ARGV;
+$locale or
+die 'No locale given in the command line';
+
+EBox::init();
+
+my $supportedLocales = langs();
+
+if (not exists $supportedLocales->{$locale}) {
+    die "Locale $locale unsupported by Zentyal";
+}
+
+EBox::setLocale($locale);
+
+1;

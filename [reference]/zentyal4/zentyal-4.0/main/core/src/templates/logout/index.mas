@@ -1,0 +1,23 @@
+<%args>
+	$unsaved => 'no'
+</%args>
+<%init>
+use EBox::Gettext;
+</%init>
+% if ($unsaved eq 'yes'){
+<div class='warning'>
+   <% __('There are unsaved changes. Do you really want to close the session?') %>
+</div>
+% } else {
+<div class='info'>
+   <% __('Do you really want to close the session?') %>
+</div>
+% }
+<form action='/Logout/Logout' style="margin-top:20px;" method='post'>
+% if ($unsaved eq 'yes'){
+<div> <% __('Discard current changes') %> <& /input/checkbox.mas, name=> 'revokeConfig' &><div>
+% }
+  <div style="float: left; margin: 15px 0;"> <& /input/submit.mas, name=> 'logoutSubmit', class => '', value =>  __('Exit session') &>
+   <button type='button' name='cancel' value='<% __('Cancel') %>' onClick='Zentyal.Dialog.close(); return false'><% __('Cancel') %></button></div>
+</form>
+

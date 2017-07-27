@@ -1,0 +1,46 @@
+#!/bin/bash
+
+adduser --system --no-create-home vmail
+
+PASSWD_FILE='/var/lib/zentyal/conf/ebox-zarafa.passwd'
+
+if [ -s $PASSWD_FILE ]
+then
+    PASSWD=`cat $PASSWD_FILE`
+else
+    PASSWD=`tr -dc A-Za-z0-9 < /dev/urandom | head -c8`
+    echo -n $PASSWD > $PASSWD_FILE
+fi
+
+echo "DROP DATABASE IF EXISTS zarafa;
+CREATE DATABASE zarafa;
+GRANT ALL ON zarafa.* TO 'zarafa'@'localhost' IDENTIFIED BY \"$PASSWD\";
+FLUSH PRIVILEGES;" | mysql --defaults-file=/etc/mysql/debian.cnf
+
+mkdir -p /etc/zarafa/ssl
+/usr/share/zentyal/create-certificate /etc/zarafa/ssl
+
+# this was only needed for Zarafa 6.40, to remove soon
+DAGENT_DFLT='/etc/default/zarafa-dagent'
+if [ -f $DAGENT_DFLT ]
+then
+    sed -i "s/DAGENT_ENABLED=no/DAGENT_ENABLED=yes/g" $DAGENT_DFLT
+fi
+
+# add if required en_US.utf8 locale
+LOCALE_FOUND=`locale -a | grep 'en_US.utf8'`
+if [ -z "$LOCALE_FOUND" ]
+then
+  LOCALE_FILE=/var/lib/locales/supported.d/local
+  echo 'en_US.UTF-8 UTF-8' >> $LOCALE_FILE
+  locale-gen en_US.UTF-8
+fi
+
+FIRST_RUN_FILE='/var/lib/zentyal/conf/zentyal-zarafa.first'
+touch $FIRST_RUN_FILE
+
+chown www-data:www-data /var/lib/zarafa-webapp/tmp
+
+cp /etc/d-push/apache.conf /etc/apache2/sites-available/d-push
+
+exit 0

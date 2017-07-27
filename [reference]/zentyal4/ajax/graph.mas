@@ -1,0 +1,83 @@
+<%flags>
+ inherit =>  '/ajax/tableBody.mas'
+</%flags>
+<%args>
+  $model
+  $hasChanged
+  $user
+  $action => 'view'
+</%args>
+<& SELF:view,
+   model => $model,
+   user => $user,
+   hasChanged => $hasChanged,
+   action => $action,
+&>
+
+<%method _body>
+<%args>
+  $model
+</%args>
+<%init>
+my $stackDeep = 2;
+my %childArgs = $m->caller_args($stackDeep);
+
+my $action = exists $childArgs{action} ? $childArgs{action} : 'view';
+my $reloadAction = $action eq 'changeList';
+</%init>
+
+%    if ( $model->printableName() ) {
+<& PARENT:title, title => $model->printableName() &>
+<br/>
+%    }
+
+<& SELF:graph, model => $model  &>
+
+</%method>
+
+<%method graph>
+<%args>
+$model
+</%args>
+<%init>
+no warnings 'experimental::smartmatch';
+use feature 'switch';
+
+my $container = $model->name() . 'GraphContainer';
+
+my $labels   = $model->datasetsLabels();
+my $dataSets = $model->datasets();
+my @series;
+foreach my $idx (0 .. $#{$model->datasets()}) {
+   push(@series, { 'data'  => $dataSets->[$idx],
+                   'label' => $labels->[$idx] });
+
+}
+my $timeType;
+given ($model->timePeriod()) {
+   when (['monthly', 'weekly', 'daily']) { $timeType = 'date'; }
+   when ('hourly') { $timeType = 'time'; }
+   default { $timeType = 'datetime'; }
+}
+</%init>
+<& /graph.mas, id => $container, type => 'int',
+               timetype => $timeType, series => \@series &>
+
+</%method>
+
+<%method headerScriptSection>
+
+<& PARENT:headerScriptSection &>
+
+<script type="text/javascript" src="/data/js/jquery.flot.js"></script>
+<script type="text/javascript" src="/data/js/format.js"></script>
+</%method>
+
+<%method editForm>
+$m->abort('images cannot be edited');
+</%method>
+
+<%method editRowFields>
+$m->abort('images cannot be edited');
+</%method>
+

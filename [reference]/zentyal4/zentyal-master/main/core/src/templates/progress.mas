@@ -1,0 +1,312 @@
+<%doc>
+  This template is used to display the progress of the progress
+  indicator.
+</%doc>
+<%args>
+#$currentItemUrl
+$progressId
+$showNotesOnFinish   => 1
+$text   => ''
+$currentItemCaption => undef
+$itemsLeftMessage   => undef
+$endNote            => undef
+$errorNote          => undef
+$currentItemUrl => '/SysInfo/CurrentProgress'
+$reloadInterval  => 2
+
+@slides => ()
+
+$inModalbox => undef
+
+$nextStepType => 'url',
+$nextStepUrl => '/Dashboard/Index'
+$nextStepUrlOnclick => undef
+$nextStepUrlFailureOnclick => undef
+$nextStepText => undef
+
+$nextStepTimeout => 0
+</%args>
+<%init>
+use EBox::Gettext;
+use EBox::ProgressIndicator;
+
+defined $currentItemCaption or $currentItemCaption = __('Item');
+defined $itemsLeftMessage   or $itemsLeftMessage   = __('items left');
+defined $endNote            or $endNote            = __('Done');
+defined $errorNote          or $errorNote = __('Some error has '
+                                               . 'happened in Zentyal: '
+                                              );
+# CGI::Pogress dont allow false values in parameters
+($showNotesOnFinish eq 'no') and
+   $showNotesOnFinish = 0;
+
+my $progressIn = EBox::ProgressIndicator->retrieve($progressId);
+unless (defined ($nextStepText)) {
+    $nextStepText = __('Click here to go to the Dashboard');
+}
+
+if ((defined $nextStepUrlOnclick) and (not defined $nextStepUrlFailureOnclick)){
+        $nextStepUrlFailureOnclick = $nextStepUrlOnclick;
+
+}
+</%init>
+% if (@slides) {
+<script type="text/javascript" src="/data/js/carousel-bootstrap.js">//</script>
+<style>
+.carousel.slide {
+  position: relative;
+  background: url('/data/software/images/pattern-bg.png') repeat scroll 0 0 #33831a;
+  overflow: hidden;
+}
+.carousel.slide:hover .carousel-control {
+  bottom: 10px;
+  -webkit-transition: 0.3s bottom;
+  -moz-transition: 0.3s bottom;
+  -o-transition: 0.3s bottom;
+  transition: 0.3s bottom;
+}
+.carousel-inner {
+  width: 100%;
+  min-height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+.carousel-inner > .item {
+  display: none;
+  position: relative;
+  -webkit-transition: 0.6s left;
+  -moz-transition: 0.6s left;
+  -o-transition: 0.6s left;
+  transition: 0.6s left;
+}
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+  display: block;
+  line-height: 1;
+}
+.carousel-inner > .active,
+.carousel-inner > .next,
+.carousel-inner > .prev {
+  display: block;
+}
+.carousel-inner > .active {
+  left: 0;
+}
+.carousel-inner > .next,
+.carousel-inner > .prev {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.carousel-inner > .next {
+  left: 100%;
+}
+.carousel-inner > .prev {
+  left: -100%;
+}
+.carousel-inner > .next.left,
+.carousel-inner > .prev.right {
+  left: 0;
+}
+.carousel-inner > .active.left {
+  left: -100%;
+}
+.carousel-inner > .active.right {
+  left: 100%;
+}
+.carousel-control {
+  position: absolute;
+  bottom: -100px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  text-indent: 200px;
+  background: rgba(255,255,255,0.6) url('/data/images/r.gif') center center no-repeat; 
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+  -webkit-transition: 0.6s all;
+  -moz-transition: 0.6s all;
+  -o-transition: 0.6s all;
+  transition: 0.6s all;
+}
+
+.carousel-control.right {
+  left: auto;
+  right: 10px;
+  background-image: url('/data/images/f.gif'); 
+}
+.carousel-control:hover {
+  text-decoration: none;
+  background-color: rgba(255,255,255,1);
+  -webkit-transition: 0.3s background-color;
+  -moz-transition: 0.3s background-color;
+  -o-transition: 0.3s background-color;
+  transition: 0.3s background-color;
+}
+.carousel-indicators {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 5;
+  margin: 0;
+  list-style: none;
+}
+.carousel-indicators li {
+  display: block;
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin-left: 5px;
+  text-indent: -999px;
+  background-color: #ccc;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+}
+.carousel-indicators .active {
+  background-color: #fff;
+}
+.carousel-control.carouselControlDisabled {
+  display: none !important;
+}
+</style>
+% }
+
+% if (@slides) {
+<& .carouselSection, slides => \@slides &>
+% }
+
+<div id='progressing'>
+<p> <% $text %> </p>
+<% $currentItemCaption %>: <strong><span id="currentItem"><% __("Starting...")%></span></strong>
+<br/>
+% if (0) {
+<div class="percent" id="percentValue"></div>
+% }
+<div id='progress_bar'>
+         <div id='percent' class='progress-label tcenter'><% __('Loading...') %></div>
+</div>
+<br/>
+<span id='ticks'>-</span><% __(" of ") %>
+<span id='totalTicks'>-</span><% ' ' . $itemsLeftMessage %>
+<br/>
+</div>
+
+<br/>
+
+<div class id="done" style="display:none;">
+%# this div will be closed by .nextStep
+<div id="done_note" class ="note" >
+   <p><% $endNote %></p>
+   <p id="warning-progress" style="display:none"><% __('The process produced some warning messages:') %></p>
+   <p id="warning-progress-messages"></p>
+   <& .nextStep,
+      type => $nextStepType,
+      url => $nextStepUrl,
+      text => $nextStepText,
+      onclick => $nextStepUrlOnclick
+   &>
+</div>
+
+
+<div id="error-progress" style="display:none;">
+%# this div will be closed by .nextStep
+<div class="error">
+   <p><% $errorNote %></p>
+   <p id="error-progress-message"></p>
+%  my $errorNextStepType = $nextStepType ne 'none' ? $nextStepType : 'ahref';
+   <& .nextStep,
+      type => $errorNextStepType,
+      url => $nextStepUrl,
+      text => $nextStepText,
+      onclick => $nextStepUrlFailureOnclick,
+   &>
+</div>
+
+<script type="text/javascript">
+$( function() {
+   Zentyal.ProgressIndicator.updateProgressIndicator(<% $progressId %>,
+                        '<% $currentItemUrl %>',
+                        <% $reloadInterval %>,
+                        <% $nextStepTimeout %>,
+                        '<% $nextStepUrl %>',
+                        <% $showNotesOnFinish ? 'true' : 'false' %>
+  );
+% if (@slides) {
+   var disableClass = 'carouselControlDisabled';
+   $('#carousel').carousel();
+   $('#carouselLeft').prop('disabled', true).addClass(disableClass);
+   $('#carousel').on('slid', '', function() {
+      var toEnable ='', toDisable ='',
+          leftId = '#carouselLeft', rightId = '#carouselRight';
+      var carouselContents = $('#carouselContents');
+      if (carouselContents.find('.item:last').hasClass('active')) {
+            toEnable = leftId;
+            toDisable= rightId;
+           $('#carousel').carousel('pause');
+      } else if (carouselContents.find('.item:first').hasClass('active')) {
+           toEnable= rightId;
+           toDisable = leftId
+           right = true;
+      } else {
+          toEnable = leftId +  ', ' + rightId;
+      }
+
+      if (toDisable) {
+         $(toDisable).prop('disabled', true).addClass(disableClass);
+      }
+
+      $(toEnable).prop('disabled', false).removeClass(disableClass);
+   });
+
+% }
+});
+</script>
+
+
+<%def .nextStep>
+<%args>
+$type
+$url
+$text
+$onclick
+</%args>
+% if ($type eq 'submit') {
+  </div>
+  <div class='tcenter'>
+     <input type="submit" value="<% $text %>" <% $onclick ? qq{onclick="$onclick"} : '' %> />
+  </div>
+% } elsif ($type eq 'none') {
+       <% $text %>
+  </div>
+% } else {
+   <a href="<% $url %>" <% $onclick ? qq{onclick="$onclick"} : '' %> >
+        <% $text %>
+    </a>
+  </div>
+% }
+</%def>
+
+<%def .carouselSection>
+<%args>
+@slides
+</%args>
+<div id="carousel" class="carousel slide">
+     <div id='carouselContents' class="carousel-inner">
+% my $first = 1;
+% foreach my $slide (@slides) {
+%    if ($first) {
+       <div class="item active">
+%      $first = 0;
+%    } else {
+       <div class='item'>
+%    }
+           <% $slide %>
+       </div>
+% }
+    </div>
+    <a id='carouselLeft' class="left carousel-control" href="#carousel" data-slide="prev">&lsaquo;</a>
+    <a id='carouselRight' class="right carousel-control" href="#carousel" data-slide="next">&rsaquo;</a>
+</div>
+</%def>

@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include debian/cdbs/zentyal-desktop.mk
+
+DEB_DH_INSTALLINIT_ARGS = --no-start
+
+install/zentyal-desktop::
+	$(MAKE) DESTDIR=`pwd`/debian/zentyal-desktop PREFIX=/usr install
+
+cleanbuilddir/zentyal-desktop::
+
+clean::
+	debconf-updatepo

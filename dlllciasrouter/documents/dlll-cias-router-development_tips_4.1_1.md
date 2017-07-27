@@ -60,6 +60,6 @@ From original code
 
 # Check error logs
 
-* Zentyal logs: ```` ~/zentyal-dlll/dlllciasrouter/log.sh ````
-* Zentyal error logs: ```` ~/zentyal-dlll/dlllciasrouter/error.sh ````
+* Zentyal logs: ```` ~/zentyal-dlll/dlllciasrouter/log.sh ```` <br /> Log path: ````/var/log/zentyal/zentyal.log````
+* Zentyal error logs: ```` ~/zentyal-dlll/dlllciasrouter/error.sh ```` <br /> Log path: ````/var/log/zentyal/error.log````
 

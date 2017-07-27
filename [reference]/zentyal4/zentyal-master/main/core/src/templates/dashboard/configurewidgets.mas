@@ -1,0 +1,27 @@
+<%args>
+    @modules
+</%args>
+<%init>
+use EBox::Gettext;
+use JSON;
+</%init>
+<script type='text/javascript'>
+% local $JSON::ConvBlessed = 1;
+% my $modulesJSON = JSON::to_json(\@modules);
+Zentyal.Dashboard.ConfigureWidgets.modules = <% $modulesJSON %>;
+</script>
+
+<div id='module_list'>
+% foreach my $module (@modules) {
+%   my $modname = $module->{'name'};
+%   my $title = $module->{'title'};
+    <div id='<% $modname %>-title'>
+    <a href="#" onclick="Zentyal.Dashboard.ConfigureWidgets.showModuleWidgets('<% $modname %>', 0, true); return false;"><% $title %></a>
+    </div>
+% }
+</div>
+<div id='widget_list'>
+    <div class='note'>
+        <% __('Browse the available widgets in the top menu and drag&drop them to the dashboard.') %>
+    </div>
+</div>

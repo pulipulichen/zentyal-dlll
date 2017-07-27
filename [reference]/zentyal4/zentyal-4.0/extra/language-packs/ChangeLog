@@ -1,0 +1,57 @@
+4.0.2
+	+ Translations updated from translate.zentyal.org (Nov/24)
+4.0.1
+	+ Translations updated from translate.zentyal.org (Nov/04)
+4.0
+	+ Set version to 4.0
+3.5
+	+ Added Hebrew language
+	+ Set version to 3.5
+3.4
+	+ Commercial messages are included now in the same .po
+	+ Set version to 3.4
+3.3
+	+ Set version to 3.3
+3.2.1
+	+ Translations updated from translate.zentyal.org (Sep/23)
+	+ Fixed problems with po.de
+3.2
+	+ Translations updated from translate.zentyal.org (Sep/17)
+3.1.2
+	+ Translations updated from translate.zentyal.org (Aug/14)
+3.1.1
+	+ Translations updated from translate.zentyal.org (Aug/04)
+3.1
+	+ Translations updated from translate.zentyal.org (May/08)
+	+ Added Yoruba language
+3.0.1
+	+ Added some missing strings
+3.0
+	+ Final strings for Zentyal 3.0
+2.3.3
+	+ Translations updated from translate.zentyal.org (Sep/11)
+2.3.2
+	+ Translations updated from translate.zentyal.org (Aug/11)
+2.3.1
+	+ Translations updated from translate.zentyal.org (Jul/26)
+	+ Fix in parsing mason templates: <% %> can be concatenated in the
+	  same line and it can split in several lines
+2.3
+	+ Simplified build system without autotools
+	+ Translations updated from translate.zentyal.org (Mar/04)
+	+ Added a tool to fix missing fuzzy flags in .po files
+	+ Generate locales in postint
+2.2.1
+	+ Translations updated from translate.zentyal.org (Sep/29)
+2.1.5
+	+ Translations updated from translate.zentyal.org (Sep/10)
+2.1.4
+	+ Translations updated from translate.zentyal.org (Aug/30)
+2.1.3
+	+ Translations updated from translate.zentyal.org (Jul/27)
+2.1.2
+	+ Translations updated from translate.zentyal.org (Jul/14)
+2.1.1
+	+ Translations updated from translate.zentyal.org (May/10)
+2.1
+	+ Initial release

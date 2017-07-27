@@ -1,3 +1,0 @@
-<%args>
-</%args>
-rm -f /opt/mfschunkservers/10.*/.metaid

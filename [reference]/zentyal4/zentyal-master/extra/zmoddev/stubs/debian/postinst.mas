@@ -1,0 +1,18 @@
+<%args>
+    $module
+</%args>
+#!/bin/bash
+
+set -e
+
+#DEBHELPER#
+
+case "$1" in
+    configure)
+         /usr/share/zentyal/initial-setup <% $module %> $2
+
+        dpkg-trigger --no-await zentyal-core
+    ;;
+esac
+
+exit 0

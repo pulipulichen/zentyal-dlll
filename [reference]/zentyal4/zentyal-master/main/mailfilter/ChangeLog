@@ -1,0 +1,235 @@
+4.1
+	+ Remove wrong call to checkUsersMode after external AD removal
+4.0.3
+	+ Changed stub to not give points based on AHBL_RHSBL, given it is
+	  shut down and answering with false positives:
+	  http://www.ahbl.org/content/last-notice-wildcarding-services-jan-1st
+	+ Remove amavis-new warnings due to deprecated config keys
+4.0.2
+	+ Fixed bugs related when setting and removing virtual domain
+	  antispam options
+4.0.1
+	+ Adding new dependency needed by amavis and spamassassin
+	+ Fixed LDAP schema: white and black list are multi-valued
+4.0
+	+ Remove ads on deprecated features
+	+ Set version to 4.0
+3.5
+	+ Fixed running status of module components
+	+ Adapted to Samba4 instead of OpenLDAP
+	+ Set version to 3.5
+3.4
+	+ Changed configuration of amavis to avoid only ipv6 in Net::LDAP bug
+	+ Use service instead of deprecated invoke-rc.d for init.d scripts
+	+ Set version to 3.4
+	+ Fixed logs summarized report
+3.3
+	+ Take in account mail dependency if mail module is enabled
+	+ Switch from Error to TryCatch for exception handling
+	+ Update strings to new offering
+	+ Added missing EBox::Exceptions uses
+	+ Avoid call to mailfilter-ldap script from enableActions
+	+ Removed old migration code from 3.0 to 3.2
+	+ Set version to 3.3
+3.2
+	+ Set version to 3.2
+3.1.4
+	+ Set ham and spam users as internal when migrating from 3.0
+3.1.3
+	+ Use DATETIME type in date column for consolidation tables
+	+ Summarised report has breadcrumbs now
+	+ Adapted mailfilter-ldap script to the new users API
+3.1.2
+	+ Adapted to updatedRowNotify call with no changes in values
+	+ Added menu icon
+	+ Removed dkim_verification obsolete option from the local conf
+	+ Adapt firewall rules to new accept chains
+	+ Updated to use the new User API.
+	+ Added incompatiblity with external AD authentication mode
+3.1.1
+	+ Use new EBox::Users namespace instead of EBox::UsersAndGroups
+3.1
+	+ Removed 3.0.X migration code
+	+ Added Pre-Depends on mysql-server to avoid problems with upgrades
+	+ Depend on zentyal-core 3.1
+3.0.5
+	+ Fixed spam/ham mail account check to not fail if the user does
+	  not exists. This avoids a dashboard error.
+	+ Fixed LDAP reprovision to recreate ham and spam users
+3.0.4
+	+ Fixed missing use statement in MailfilterACL model
+	+ Added dependencies and fixes needed for better sa tests
+	+ Dont run spamd daemon
+	+ Fixed regression in creation of ham/spam mail aliases due to changes
+	  in the users API
+	+ Adapted learnspamd to changes in user module API
+3.0.3
+	+ Reworked log helper to remove POP proxy and adapt to changes in
+	  base class
+3.0.2
+	+ Removed POP proxy logs from log table, fixed bug which make
+	  summarized smtp filter report page to be blank
+3.0.1
+	+ Fixed bad filter error at EBox::Mailfilter::VDomainsLdap::_hasAccount
+2.3.8
+	+ Fixed wrong retrieval of VDomains model
+2.3.7
+	+ Fixed virtual domain policies tab
+2.3.6
+	+ Move report code to remoteservices
+	+ Fixed LDAP url in amavisd.conf
+2.3.5
+	+ VDomains model renamed to VDomainsFilter
+	+ Mailfilter is now under Communications instead of UTM
+	+ Disabled POP3 Proxy
+	+ Ham/Spam accounts adapted to changes in EBox::MailUserLdap methods
+	+ Added modeldepends to yaml schema
+2.3.4
+	+ Adapted to new Model management framework
+2.3.3
+	+ Create tables with MyISAM engine by default
+2.3.2
+	+ withoutActions property in FilterDetails.pm and POPProxyDetails.pm
+	  for the new tableBody.mas
+	+ Clarify some policy option names
+	+ Mail module is force to reload when mailfilter module is enabled
+	  or disabled
+2.3.1
+	+ Disabled POP3 proxy to avoid installation problems
+	+ Adapted messages in the UI for new editions
+	+ New printableName for POP Transparent proxy service
+	+ Adapted to new users implementation
+2.3
+	+ Service names are now translatable
+	+ Adapted to new MySQL logs backend
+	+ Use MySQL instead of PostgreSQL for spamassassin database
+	+ Added methods to get learn accounts for a domain
+	+ Fixed regression in spamassassin database setup
+	+ Replaced autotools with zbuildtools
+	+ Fixed typo in code which prevented the creation of spam and ham users
+2.1.6
+	+ Reviewed some subscription strings
+2.1.5
+	+ Differentiate ads from notes
+	+ Removed /zentyal prefix from URLs
+2.1.4
+	+ Fixed argument passing in constructor, readonly instances now work
+2.1.3
+	+ Adapted to changes in amavis bounce policies and changed labels in
+	  vdomain policies
+	+ Use quote column option for periodic and report log consolidation
+2.1.2
+	+ Do not enable when mail module has a custom filter in use
+	+ runMonthlyQuery method uses keyGenerator option for consistency
+2.1.1
+	+ Manage MTA-BLOCKED event in the logs
+	+ Removed 'learn from accounts spam folder' feature until serious
+	  bug in dovecot-antispam Ubuntu package is fixed
+	+ Fixed Makefile for SQL traffic for preriod tables
+2.1
+	+ Use new standard enable-module script
+	+ Remove old migrations and use new initial-setup
+	+ Add depend on dovecot-antispam previously on zentyal-mail.
+2.0.2
+	+ Manage exception when ebox.amavisd-new is missing. It never
+	  should be missing unless unfinished or wrong installation.
+	  But at least now it doesn't crash the entire dashboard.
+	+ Replaced lha uncompressor with rar and 7zip
+	+ Set default order for dashboard widgets
+2.0.1
+	+ Fixed widget subsection titles
+	+ Added commercial message
+1.5.3
+	+ Zentyal rebrand
+1.5.2
+	+ Added bridged mode support in firewall helper
+1.5.1
+	+ Bugfix: data for CC's SMTP report was not correctly formated
+1.5
+	+ Update configuration templates with the configuration files from lucid
+	+ Bugfix: fixed training with uploaded files
+	+ Bugfix: removed duplicates from spamassasin trusted_networks variable
+1.4.2
+	+ Bugfix: when no banned extensions are present p3scan/renattach
+	  no longer blocks anything. Thanks to rsalgado to point this out
+	+ Bugfix: regular expresion in file extensions matched too
+	  much. Thanks to auerhaan for finding this bug
+1.4.1
+	+ Bugfix: Fix the report query for POP filtering
+1.3.14
+	+ Bugfix: Rename the report table names in code after changing in
+	  database
+1.3.13
+	+ Removed addition of 127.0.0.1 to trusted networks, is already added
+	by spamassassin
+	+ Add dovecot-antispam plugin support
+	+ Moved bayes database to postgres
+	+ Added pyzor and dkim tests
+1.3.12
+	+ Add breadcrumbs
+1.3.11
+	+ Added report support
+	+ Fixed bug when retrieving LDAP instance in master/slave
+	  architecture
+	+ Fixed bug we dont have duplicates entries in vdomain and global ACLs anymore
+1.3.6
+	+ adapted to changes in LDAP schemas managament
+	+ Bugfix: adapted to changes in EBox::Ldap API
+	+ Bugfix: banned extension regex broke, fixed with a simpler
+	  expression
+	+ Bugfix: only IP address are accepted now as external mail serves
+	for amavis (amavis cannot use sost names for this)
+1.1.30
+	+ Bugfix: when the user spam/ham does not exist do not try to
+	remove its account
+1.1.20
+	+ New release
+1.1.10
+	+ New release
+1.1
+	+ Use the new row() and ids() API
+	+ bugfix: if the module is disabled the filter now appears as disabled as it should be
+	+ Now antivirus service has its own eBox module
+	+ Fixed migration script that broke in new  versions
+	+ Bug fix: when adding/removing vdomains we assure that amavis is
+	notified of the changes
+	+ Bug fix: configuration is sette only if module is enabled; this
+	avoid some error when LDAP data was not set (like some first time installations)
+0.12.100
+	+ Bugfix: validation of General model now works properly
+	+ Added POP transparent proxy
+	+ SMTP filter separated from main module
+	+ Interface overhaul to reflect changes in SMTP filter and addition
+	of POP proxy
+	+ Fixed bug in learnspamd: adapted to spam/ham accoutns interface
+	change
+       + Bugfix: force removal of previous data in backup
+       + Bugfix: fixed regression bug, amavisd now prepends spam subject tag
+0.12.99
+	+ New release
+0.12.1
+	+ Run clamd with "su clamav -c ..."
+0.12
+	+ Use eBox OID number in LDAP schemas
+0.11.101
+	+ New release
+0.11.100
+	+ Stop daemons in pre-start upstart script
+	+ Create /var/run/* directories in pre-start
+	+ Removed erroneous activation order dependency with module mail
+	+ Added module activation with mail only when mail is not
+	configured (mailfilter depends on ldap data created in
+	configuration of mail module)
+0.11.99
+	+ Bugfix: Banned file names regular expressions are case
+	insensitive
+0.11
+	+ New release
+0.10.99
+	+ New release
+0.10
+	+ Bugfix. Removal of external domain
+0.9.100
+	+ Configure firewall to open fort for freshclam
+0.9.99
+	+ First release

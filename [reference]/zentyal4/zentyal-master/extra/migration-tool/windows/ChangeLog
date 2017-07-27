@@ -1,0 +1,18 @@
+HEAD
+	+ Added functionality to export PDC, DHCP and DNS configuration
+	+ Changed name from "AD Sync Password Synchronizer" to "Migration Tool"
+	+ New PyGTK GUI to replace the old MFC one
+	+ Do not block password sync of other users if one user fails
+	+ Do not try to send password change notifications for invalid users
+	+ Renamed ebox-pwdsync-* to zentyal-pwdsync-*
+2.0.1
+	+ Includes support for 64bit editions of Windows Server
+	+ Merge multibyte strings changes in passwdhk.dll from passwdhk trunk
+	+ Use passwdhk key in registry instead of ebox-adsync to be compatible
+	  with unmodified versions of passwdhk.dll
+2.0
+	+ Zentyal rebrand
+	+ Fixed problems with special characters in passwords
+	+ Check that size of secret key is 16 characters
+1.4
+	+ Initial release

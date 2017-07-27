@@ -1,0 +1,154 @@
+<%doc>
+  This template will show the content from a model composite, that is
+  the content from its components in an established layout.
+
+  Parameters:
+    model - <EBox::Model::Composite> the composite model to show
+    hasChanged - Boolean indicating whether the composite model has
+    changed or not
+</%doc>
+<%args>
+  $model
+  $hasChanged
+  $user
+</%args>
+<%init>
+  use EBox::Gettext;
+  use Data::Dumper;
+</%init>
+<& .pageTitle,
+   crumbs => $model->HTMLTitle()
+&>
+<& /disabledModuleWarn.mas, model => $model &>
+<%perl>
+  # Annotate we are in composite after printing own title
+  $m->notes('composite', 1);
+</%perl>
+<& .headTitle,
+   title => $model->headTitle()
+&>
+% if ($model->precondition()) {
+%    # Define the components when we are sure the precondition is
+%    # matched
+%    my $componentsRef = $model->components();
+     <& .helpAndMessages, model => $model &>
+%    if ( $model->layout() eq 'tabbed' )  {
+<& /ajax/tabMenu.mas,
+   models => $componentsRef,
+   selectedTab => 0,
+   user => $user,
+   hasChanged => $hasChanged,
+   tabName    => $model->name(),
+   directory  => $model->directory(),
+&>
+%    } elsif ( $model->layout() eq 'top-bottom' ) {
+%       foreach my $component (@{$componentsRef}) {
+<& $component->Viewer(),
+   model => $component,
+   user => $user,
+   hasChanged => $hasChanged,
+   action => 'view',
+&>
+%       }
+%    } elsif ( $model->layout() eq 'left-right' ) {
+<div class='left-right-container'>
+%       my $i = 0;
+%       my $class = '';
+%       foreach my $component (@{$componentsRef}) {
+%           my $width = $model->width($component->name());
+%           if ($i == 0) { $class = 'half-left'; $i++; }
+%           else { $class = 'half-right'; $i++; }
+<div class='<% $class %>' style='width:<% $width %>;'>
+<& $component->Viewer(),
+   model => $component,
+   user => $user,
+   hasChanged => $hasChanged,
+   action => 'view',
+&>
+</div>
+%       }
+</div>
+<div style='clear:both;'></div>
+%    } elsif ( $model->layout() eq 'select' )  {
+<& /ajax/selector.mas,
+   composite => $model,
+   user => $user,
+   hasChanged => $hasChanged,
+&>
+%    }
+% } else {
+%   my $failMsg =  $model->preconditionFailMsg();
+%   if ($failMsg) {
+<div class="note">
+  <% $failMsg %>
+</div>
+%   }
+% }
+<%perl>
+  # Annotate we are no longer in composite
+  $m->notes('composite', 0);
+</%perl>
+
+<%doc>
+  Method: pageTitle
+
+     Set the page title
+
+  Parameters:
+
+     title - String the title
+
+</%doc>
+<%def .pageTitle>
+<%args>
+  $crumbs => undef
+</%args>
+<& /title.mas,
+    crumbs => $crumbs
+&>
+</%def>
+
+<%doc>
+Method: .headTitle
+
+   Private component to print the title if any. It takes into account
+   if the composite is the root one or not to determine which kind of
+   title it is
+
+Parameters:
+
+   title - String the title to print
+
+</%doc>
+<%def .headTitle>
+<%args>
+  $title => undef
+</%args>
+
+% if ($title) {
+<h3>
+  <% $title %>
+</h3>
+% }
+</%def>
+
+<%def .helpAndMessages>
+<%args>
+$model
+</%args>
+%  # Print the help if any
+%  my $help = $model->help();
+%  if ($help) {
+<div class="help" style="display:none">
+  <% $model->help() %>
+</div>
+%  }
+%  # Print the permanent message if any
+%  my $permanentMessage = $model->permanentMessage();
+%  my $permanentMessageType = $model->permanentMessageType();
+%  if ($permanentMessage) {
+<div class="<% $permanentMessageType %>">
+  <% $permanentMessage %>
+</div>
+%  }
+</%def>

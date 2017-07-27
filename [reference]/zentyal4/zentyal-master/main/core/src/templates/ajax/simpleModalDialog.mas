@@ -1,0 +1,22 @@
+<%args>
+$textClass => undef
+$text      => undef
+$buttonText => undef
+</%args>
+<%init>
+use EBox::Gettext;
+if (not defined $buttonText) {
+  $buttonText = __('OK');
+}
+</%init>
+% if ($text) {
+<div <% $textClass ? qq{class='$textClass'} : '' %> >
+<% $text %>
+</div>
+% }
+<br/>
+<div class='tcenter'>
+<input type ='button' value=<% $buttonText %>
+       onclick='Zentyal.Dialog.close(); return false'
+/>
+</div>

@@ -1,0 +1,20 @@
+set_router() {
+    ebox_routers="$new_routers"
+    unset new_routers
+}
+
+
+# Do nothing if network module is disbled
+if service zentyal network status; then
+    case $reason in
+        BOUND)
+            set_router
+            ;;
+        REBOOT|RENEW|REBIND|TIMEOUT)
+            set_router
+            ;;
+        *)
+            ;;
+    esac
+fi
+

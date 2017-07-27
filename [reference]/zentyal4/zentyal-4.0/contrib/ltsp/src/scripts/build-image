@@ -1,0 +1,69 @@
+#!/usr/bin/perl -s
+
+use strict;
+use warnings;
+
+use EBox;
+use EBox::Gettext;
+use EBox::Global;
+use Error qw(:try);
+
+if (scalar @ARGV >= 3) {
+    my $chroot = $ARGV[0];
+    my $arch = $ARGV[1];
+    my $fat  = $ARGV[2];
+
+    EBox::init();
+
+    my $ltsp = EBox::Global->modInstance('ltsp');
+    my $state = $ltsp->get_state();
+
+    $state->{work} = 'build';
+    $state->{error} = '';
+    $state->{images}->{$chroot} = { state => 'build',
+                                    arch  => $arch,
+                                    fat   => $fat };
+    $ltsp->set_state($state);
+
+    print "Building $chroot image...\n";
+
+    my $buildCmd = "ltsp-build-client --chroot $chroot --arch $arch --purge-chroot";
+    if ($fat) {
+        my $desktop;
+        if (scalar @ARGV >= 4) {
+            $desktop = $ARGV[3];
+        } else {
+            print "You didn't enter a desktop environment, using ubuntu-desktop\n";
+            $desktop = 'ubuntu-desktop';
+        }
+
+        $buildCmd .= " --fat-client --fat-client-desktop $desktop";
+    }
+    try {
+        # TODO: add more messages to ltsp.log (with timestamps)
+        EBox::Sudo::root("$buildCmd >> /var/log/zentyal/ltsp.log");
+        EBox::Sudo::root('service nbd-server restart >> /var/log/zentyal/ltsp.log');
+    } otherwise {
+        $state->{error} = __('Build image failed');
+        delete $state->{images}->{$chroot};
+        print "Build image failed. Check /var/log/zentyal/ltsp.log for details.\n";
+    } finally {
+        $state->{images}->{$chroot}->{state} = 'done';
+        my $work = 0;
+        my @image_list = values($state->{images});
+        for my $image (@image_list) {
+            if ($image->{state} ne 'done') {
+                $work = 1;
+                #break;
+            }
+        }
+        unless ($work)  {
+            $state->{work} = 'none';
+        }
+        $state->{work} = 'none';
+        $ltsp->set_state($state);
+    };
+
+} else {
+    print "Usage: build-image name arch fat? [desktop-environment]\n";
+}

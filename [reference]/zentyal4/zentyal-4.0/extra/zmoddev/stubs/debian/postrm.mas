@@ -1,0 +1,19 @@
+<%args>
+    $module
+</%args>
+#!/bin/bash
+
+set -e
+
+#DEBHELPER#
+
+case "$1" in
+    remove)
+        dpkg-trigger --no-await zentyal-core
+    ;;
+    purge)
+        /usr/share/zentyal/purge-module <% $module %>
+    ;;
+esac
+
+exit 0

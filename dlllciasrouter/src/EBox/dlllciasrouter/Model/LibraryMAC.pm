@@ -115,6 +115,7 @@ sub addDHCPfixedIPMember
 
 ##
 # 20150517 Pulipuli Chen
+# 能觸碰Zentyal核心服務的相關成員
 ##
 sub initAdministorNetworkMember
 {
@@ -148,6 +149,41 @@ sub initAdministorNetworkMember
 
 ##
 # 20150517 Pulipuli Chen
+# 能觸碰Zentyal核心服務的相關成員
+##
+sub initWorkplaceNetworkMember
+{
+    my ($self) = @_;
+
+    my $libNET = $self->loadLibrary('LibraryNetwork');
+
+    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $sourceMask = $self->loadLibrary('LibraryNetwork')->getExternalMask('16');
+
+    my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
+    my $ip_broadcast = EBox::NetWrappers::ip_broadcast($address, $sourceMask);
+
+    my $objectRow = $self->getObjectRow('Workplace-List');
+    my $memberModel = $objectRow->subModel('members');
+    # 先移除既有的
+    my $id = $memberModel->findId('name' => 'default');
+    if (!defined($id)) {
+        #my $macaddr;
+        # 加入新的 
+        $id = $memberModel->addRow(
+            name => 'default',
+            address_selected => 'iprange',
+            iprange_begin => $ip_network,
+            iprange_end => $ip_broadcast,
+            #macaddr => $macaddr,
+        );
+    }
+    return $memberModel->row($id);
+}
+
+##
+# 20150517 Pulipuli Chen
+# 阻止以下IP進入
 ##
 sub initBlackListMember
 {

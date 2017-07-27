@@ -1,0 +1,528 @@
+<%flags>
+  inherit => '/ajax/modelViewer.mas'
+</%flags>
+<%args>
+  $model
+  $user
+  $action => 'view'
+  $editid => ''
+  $hasChanged => 1
+  $filter => ''
+  $page => 0
+  $tpages => 0
+  %presetParams => ()
+</%args>
+<%init>
+use EBox::Gettext;
+use EBox::Model::DataTable;
+use POSIX;
+use Perl6::Junction qw(any);
+</%init>
+<& PARENT:view,
+   model      => $model,
+   hasChanged => $hasChanged,
+   action     => $action,
+   user       => $user,
+&>
+
+
+<%doc>
+  Method: _body
+
+     Set the model viewer body. Check the overridden method very
+     carefully.
+
+  Overrides:
+
+     /ajax/modelViewer.mas:_body
+
+</%doc>
+<%method _body>
+<%args>
+  $model
+  $user
+  $action => 'view'
+  $editid => ''
+  $hasChanged => 1
+  $filter => ''
+  $page => 0
+  $tpages => 0
+  %presetParams => ()
+</%args>
+<%init>
+  # Fetch table head from model
+  my $table     = $model->table();
+  my @tableHead = @{$table->{'tableDescription'}};
+  # Pointer to different values for convenience
+  my $actions = $table->{'actions'};
+  my $changeView = $model->action('changeView');
+  my $printableRowName = $table->{'printableRowName'};
+  my $tableName = $table->{'tableName'};
+  my $printableTableName = $table->{'printableTableName'};
+  my $onlyCustomActions = $table->{'onlyCustomActions'};
+  my $withoutActions = $table->{'withoutActions'};
+
+  my $adaptedFilter;
+  if (defined $filter and ($filter ne '')) {
+     $adaptedFilter = $model->adaptRowFilter($filter);
+  }
+
+  my @ids;
+  if (not $model->customFilter()) {
+    @ids =  @{$model->ids()};
+  } else {
+    @ids = @{$model->customFilterIds($adaptedFilter)};
+  }
+
+  my $movableRows = $model->movableRows($filter);
+  my $pageSizeInt = $model->pageSizeIntValue($user);
+  my $pageSize = $model->pageSize($user);
+  if (not $page) {
+    $page = 0;
+  } elsif ($page == -1) {
+    # go to last page
+    $page = POSIX::ceil(@ids/$pageSize) - 1;
+  }
+
+my %checkAllControls = %{ $model->checkAllControls()  };
+</%init>
+<div id='<% $tableName %>_error'></div>
+<div id='<% $tableName %>_message'></div>
+<& PARENT:title,
+      title => $model->headTitle()
+&>
+<& SELF:topTable,
+   model => $model,
+   actions => $actions,
+   onlyCustomActions => $onlyCustomActions,
+   page => $page,
+   filter => $filter,
+   nIds   => scalar @ids
+&>
+<div id='<% $tableName  %>_editForm' class="dropdownForm">
+% if ($action eq 'presetUpdate') {
+<& /ajax/changeRowForm.mas,
+  action => $action,
+  model => $model,
+  editid => $editid,
+  filter => $filter,
+  page => $page,
+  tpages => $tpages,
+  presetParams  => \%presetParams,
+  printableRowName => $printableRowName,
+&>
+<script>
+    $('#<% $tableName %>_top').hide();
+    $('#<% $tableName %>_editForm').show();
+</script>
+% }
+</div>
+
+% if (@ids or length($filter) > 0)  {
+%
+%   unless ((defined $onlyCustomActions) and $onlyCustomActions)   {
+%    if ( $action eq 'changeAdd' or $action eq 'changeEdit' )  {
+% if ($printableTableName) {
+<h3>
+  <% $printableTableName %>
+</h3>
+% }
+%    }
+%   }
+
+<div class="table-wrapper">
+<table id='<% $tableName %>_table'  class='<%  $table->{'class'}  %>'>
+
+<& SELF:tableHead, tableHead => \@tableHead,
+                   actions   => ((defined $withoutActions) ? not  $withoutActions: 1),
+                   model => $model,
+                   page  => $page,
+                   checkAllControls => \%checkAllControls,
+ &>
+
+    <tbody id='<% $tableName %>_tbody' >
+<%perl>
+    my $displayRows = 0;
+    my $matches = 0;
+    for ( my $idx = 0; $idx < scalar(@ids); $idx++) {
+      my  $row;
+      if (not $model->customFilter() and defined($adaptedFilter)) {
+        $row = $model->row($ids[$idx]);
+        if (not ($row->matchFilter($adaptedFilter))) {
+          next;
+        }
+      } else {
+        $matches++;
+        unless ($matches > ($pageSizeInt * $page)) { next;}
+        $displayRows++;
+      if ($displayRows > $pageSizeInt) { next; };
+        $row = $model->row($ids[$idx]);
+      }
+</%perl>
+      <& /ajax/row.mas,
+         model => $model,
+         row   => $row,
+         movable => $movableRows,
+
+         checkAllControls => \%checkAllControls,
+
+         actions        => $actions,
+         withoutActions => $withoutActions,
+         page           => $page,
+         changeView     => $changeView
+      &>
+%     if ($displayRows == $pageSizeInt and not (defined($filter) and length($filter) > 0) ) {
+%       $matches = scalar(@ids);
+%       last;
+%     }
+%   }
+    </tbody>
+</table>
+</div>
+
+<script>
+$(function() {
+     Zentyal.stripe('#<% $tableName %>', 'even', 'odd');
+% if ($movableRows) {
+     <% $model->setSortableTableJS() %>
+% }
+});
+</script>
+
+<div class="bDataTable">
+
+% if ($model->showPaginationForm()) {
+ <& /ajax/tablePager.mas,
+   model => $model,
+   page => $page,
+   tpages => POSIX::ceil($matches / $pageSizeInt) - 1,
+   pageSize => $pageSize,
+&>
+% }
+
+</div>
+
+<& SELF:legend, model => $model,
+                    actions => $actions,
+                    ids => \@ids,
+                    changeView => $changeView,
+                    &>
+
+% } else {
+<input type="hidden"
+  id="<% $tableName . '_pageSize' %>"
+  value="<% $pageSize %>"
+>
+% }
+
+% unless ((defined $onlyCustomActions) and $onlyCustomActions) {
+%  if ( $action eq 'changeEdit' and $editid ) {
+<script>Zentyal.TableHelper.highlightRow('<% $editid %>', true, <% $tableName %>);</script>
+%  }
+% }
+% # End body method
+</%method>
+
+<%method topTable>
+<%args>
+$model
+$actions
+$onlyCustomActions
+$page
+$filter
+$nIds
+</%args>
+<%init>
+my $tableName = $model->table()->{'tableName'};
+my $changeView = $model->action('changeView');
+</%init>
+<div id="<% $tableName %>_top">
+    <& SELF:helpAndMessages, model => $model &>
+%    unless ((defined $onlyCustomActions) and $onlyCustomActions)  {
+%        if ($changeView) {
+           <& SELF:tableActionLinks,
+               model => $model,
+               addAction =>  (exists $actions->{'add'}),
+               page => $page,
+           &>
+
+%        }
+%     }
+  <span id="creatingForm_<% $tableName %>"></span>
+% if ($nIds > 0 and $model->showFilterForm()) {
+  <div class="tableSearch">
+         <& SELF:filterForm,
+            tableName => $tableName,
+            model     => $model,
+            filter    => $filter,
+         &>
+  </div>
+% }
+</div>
+</%method>
+
+<%method filterForm>
+<%args>
+$tableName
+$model
+$filter
+</%args>
+<%init>
+ my $filterId =  $tableName  .  '_filterLoading';
+</%init>
+<form action="javascript:void(0)">
+
+  <input type='text'
+      name='<%
+              $tableName
+            %>'
+      id='<%
+            $tableName . "_filter"
+          %>'
+      value="<%
+              $filter
+             %>"
+  />
+  <input type='submit'
+      name='filter'
+      value="<% __('Search') %>"
+      title="Apply"
+      onClick="Zentyal.TableHelper.setLoading('<%
+                             $filterId
+                            %>');
+                <%
+                  $model->changeViewJS( changeType => "changeList",
+                     editId => 'undefined',
+                     page => 0,
+                     isFilter => 1)
+               %>;
+               return false"
+  />
+  <span id="<%
+              $filterId
+            %>"
+  ></span>
+</form>
+</%method>
+
+<%method tableHead>
+<%doc>
+Method: tableHead
+
+  Print the header of the table
+
+Parameteres:
+  @tableHead - list with the types of the fields of the tale's rows
+  $actions   - whether to show Action row or not
+  $model
+  $page
+</%doc>
+<%args>
+@tableHead
+$actions
+$model
+$page
+%checkAllControls => ()
+</%args>
+    <thead>
+%   my $checkAll = %checkAllControls;
+%   foreach my $th (@tableHead)  {
+%      next unless ($th->HTMLViewer());
+      <th class='<%
+                   $th->class()
+                  %>'>
+        <%
+          $th->printableName()
+        %>
+
+%    if ($checkAll) {
+%      my $spaceAdded = 0;
+%      my $fieldName = $th->fieldName();
+%      if ($th->isa('EBox::Types::Boolean')) {
+%         my $checkAllId = $checkAllControls{$fieldName};
+%         if ($checkAllId) {
+            <& SELF:checkAllControl,
+                id => $checkAllId,
+                fieldName => $fieldName,
+                model     => $model,
+                page      => $page,
+             &>
+%            $spaceAdded = 1;
+%         }
+%      }
+%      unless ($spaceAdded) {
+            <div>&nbsp;</div>
+%      }
+%     }
+      </th>
+%   }
+
+%    if ($actions) {
+      <th class='thOptions'>
+        <%
+          __('Action')
+        %>
+%      if ($checkAll) {
+            <div>&nbsp;</div>
+%      }
+      </th>
+%    }
+    </thead>
+</%method>
+
+<%method checkAllControl>
+<%args>
+$id
+$fieldName
+$model
+$page
+</%args>
+<%init>
+my $tableName = $model->name();
+my $divId = $id;
+$divId =~ s/_CheckAll$/_div_CheckAll/;
+
+
+my $checkAllJS = $model->checkAllJS($fieldName);
+my @htmlAttrs = (onchange => "$checkAllJS; return false");
+push @htmlAttrs, (id => $id);
+if ( $model->checkAllControlValue($fieldName)) {
+  push @htmlAttrs, ('checked' => 'checked');
+}
+
+</%init>
+<div id=<% $divId %> >
+<input  type='checkbox'
+ <& /htmlAttributes.mas, @htmlAttrs &>
+/>
+</div>
+</%method>
+
+<%method tableActionLinks>
+<%args>
+$model
+$addAction
+$page
+</%args>
+<%init>
+my $tableName = $model->name();
+my $checkAll  = $model->checkAllProperty();
+</%init>
+% if ($addAction)  {
+  <button type='button' class='btn btn-icon btn-add'
+      name='show_add' id='<% $tableName %>_add_button'
+         onClick="<%
+                 $model->showChangeRowFormJS( changeType => "changeAdd",
+                      editId => "undefined",
+                      page => $page,
+                      isFilter => 0)
+                %>;return false"><% __('Add new') %></button>
+% }
+
+</%method>
+
+<%method legend>
+<%doc>
+    Print the legend of a table
+
+    Parameters:
+        $model - model of the table
+        $actions
+        @ids
+        $changeView
+</%doc>
+<%args>
+$model
+$actions
+@ids
+$changeView
+</%args>
+
+<%perl>
+    my $customActions = $model->{'table'}->{'customActions'};
+    if ($customActions) {
+</%perl>
+
+        <br/>
+        <!-- Put the legend underneath the table -->
+        <table class="legend">
+          <tbody><tr>
+
+<%perl>
+        foreach my $customAction ( @{$customActions} ) {
+            if (exists $customAction->{'states'}) {
+                foreach my $keyname (keys %{$customAction->{'states'}} ) {
+                    my $state = $customAction->{'states'}->{$keyname};
+</%perl>
+%                   # Show the custom action in the legend if an image is defined
+%                   if ($state->{'image'}) {
+                    <td>
+                    <img
+                        title="<% $state->{'printableValue'} %>"
+                        alt="<% $state->{'printableValue'} %>"
+                        src="<% $state->{'image'}  %>"
+                    />
+                    </td>
+                    <td class="legendName">
+                    <% $state->{'printableValue'} %>
+                    </td>
+%                   }
+<%perl>
+                }
+            } else {
+</%perl>
+                <td>
+                <img
+                    title="<% $customAction->{'printableValue'} %>"
+                    alt="<% $customAction->{'printableValue'} %>"
+                    src="<% $customAction->{'image'}  %>"
+                />
+                </td>
+                <td class="legendName">
+                <% $customAction->{'printableValue'} %>
+                </td>
+%           }
+%       }
+
+%# Not custom actions
+%# Currently they does not show, reenable them if you want they to appear in the
+%# legend. Also add the clone action if we want to show it
+
+<%perl>
+    my $edit = 'edit';
+    my $edit_msg = __('Edit');
+    my $delete = 'delete';
+    my $delete_msg = __('Delete');
+
+    if ( 0 && $actions->{'del'}) {
+</%perl>
+        <td>
+        <img
+            title="<% $delete_msg %>"
+            alt="Del"
+            src='/data/images/<% $delete %>.gif'
+        />
+        </td>
+        <td class="legendName">
+        <% $delete_msg %>
+        </td>
+%   }
+%   if (0 && $changeView) {
+        <td>
+        <img
+            alt="edit"
+            title="<% $edit_msg %>"
+            src='/data/images/<% $edit %>.gif'
+        />
+        </td>
+        <td class="legendName">
+        <% $edit_msg %>
+        </td>
+%   }
+  </tr>
+</tbody></table>
+
+%}
+
+</%method>
+

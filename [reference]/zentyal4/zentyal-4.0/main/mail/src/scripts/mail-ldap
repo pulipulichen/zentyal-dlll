@@ -1,0 +1,98 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use EBox::Global;
+use EBox::MailVDomainsLdap;
+use EBox::MailAliasLdap;
+use EBox::MailUserLdap;
+use EBox::Sudo;
+
+EBox::init();
+
+my $global = EBox::Global->getInstance(1);
+my $users = $global->modInstance('samba');
+my $vdomain = new EBox::MailVDomainsLdap;
+my $vusers = new EBox::MailUserLdap;
+my $alias = new EBox::MailAliasLdap;
+
+sub _addContainer
+{
+    my ($ldap, $dn) = @_;
+    if (not $ldap->existsDN($dn)) {
+        $ldap->add($dn, {attr => [
+                'objectClass' => 'top',
+                'objectClass' => 'container'
+               ]});
+    } else {
+        warn "$dn already exists";
+    }
+}
+
+sub update
+{
+    my $ldap = $vdomain->{ldap};
+    $ldap->connection();
+    my $dn;
+
+    $dn = 'cn=zentyal,cn=configuration,' . $vdomain->{ldap}->dn;
+    _addContainer($ldap, $dn);
+
+    $dn = 'cn=mail,' . $dn;
+    _addContainer($ldap, $dn);
+
+    $dn = $vdomain->vdomainDn();
+    _addContainer($ldap, $dn);
+
+    $dn = $alias->aliasDn();
+    _addContainer($ldap, $dn);
+}
+
+
+sub clean
+{
+    $vdomain->{ldap}->connection();
+    my $ldap = $vdomain->{ldap}->{ldap};
+
+    my $pdn = "cn=mail,cn=zentyal,cn=configuration" . $vdomain->{ldap}->dn;
+    my $adn = $alias->aliasDn;
+    my $vdn = $vdomain->vdomainDn;
+
+    my @domains = $vdomain->vdomains;
+
+    foreach (@domains) {
+        $alias->delAliasesFromVDomain($_);
+        $vusers->delAccountsFromVDomain($_);
+        $vdomain->delVDomain($_);
+    }
+
+    my $result = $ldap->delete($adn);
+    ($result->is_error) and warn "Can not remove postfix vdomains leaf ".$result->error;
+    $result = $ldap->delete($vdn);
+    ($result->is_error) and warn "Can not remove postfix alias leaf ".$result->error;
+    $result = $ldap->delete($pdn);
+    ($result->is_error) and warn "Can not remove postfix parent leaf ".$result->error;
+
+    EBox::Sudo::root('/bin/rm -rf /var/vmail/*');
+}
+
+sub usage
+{
+    print "Usage: $0 update | clean\n";
+    exit 1;
+}
+
+unless ($#ARGV == 0) {
+    usage();
+}
+
+if ($ARGV[0] eq 'update') {
+    update();
+} elsif ($ARGV[0] eq 'clean') {
+    clean();
+} else {
+    usage();
+}
+
+1;

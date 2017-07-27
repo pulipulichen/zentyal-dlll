@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Name=Zentyal Administration
+Name[es]=Panel de control Zentyal
+Comment=Launch a browser with the Zentyal Control Panel
+Comment[es]=Lanza un navegador con el panel de control de Zentyal
+Exec=/usr/share/zenbuntu-desktop/firefox-launcher
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=zentyal
+Categories=Application;Internet;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/vnd.mozilla.xul+xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;
+StartupWMClass=Firefox
+StartupNotify=true

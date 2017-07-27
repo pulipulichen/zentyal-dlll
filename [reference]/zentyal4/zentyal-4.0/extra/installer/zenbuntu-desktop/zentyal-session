@@ -1,0 +1,7 @@
+#!/bin/bash
+
+/usr/share/zenbuntu-desktop/firefox-launcher &
+
+xset s off
+xset -dpms
+xset s noblank

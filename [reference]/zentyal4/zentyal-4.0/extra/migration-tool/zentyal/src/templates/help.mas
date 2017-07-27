@@ -1,0 +1,14 @@
+<%init>
+use EBox::Gettext;
+</%init>
+<p>
+
+<h3><% __('Instructions') %></h3>
+<p><% __('To launch the migration tool you only need to run the following command:') %></p>
+
+<pre>zentyal-migration-tool</pre>
+
+<p><% __x('For detailed instructions about the migration process, please refer to the {oh}Migration Tool page{ch}', oh => '<a href="http://www.zentyal.org/migration-tool">', ch => '</a>') %>.</p>
+
+<p><% __('You can safely delete this module once you have completed the migration.') %></p>
+

@@ -1,0 +1,48 @@
+<%args>
+    $namespace
+    $item
+    $i
+</%args>
+<%init>
+use EBox::Gettext;
+use EBox::SysInfo;
+
+my $statusText;
+my $statusTip;
+my $statusClass;
+my $restart = __('Restart');
+my $name = 'restart';
+
+if ( $item->{statusStr} ) {
+    $statusText = $item->{statusStr};
+} else {
+    my $status;
+    if ($item->{enabled} and $item->{running}) {
+        $status = 'running';
+    } elsif ($item->{enabled} and not $item->{running}) {
+        $status = 'stopped';
+    } elsif ((not $item->{enabled}) and $item->{running}) {
+        $status = 'unmanaged';
+    } else {
+        $status = 'disabled';
+    }
+    my $statusStrings =  EBox::SysInfo::dashboardStatusStrings()->{$status};
+    $statusText = $statusStrings->{text};
+    $statusTip = $statusStrings->{tip};
+    $statusClass = $statusStrings->{class};
+}
+</%init>
+<tr>
+<td class='summaryKey'><% $item->{printableName} %></td>
+<td id='<% $namespace . '_' . $i %>' class='summary_value'>
+<span title='<% $statusTip %>' class='sleft'><% $statusText %></span>
+% if ($item->{enabled} and not $item->{nobutton}) {
+<form action='/SysInfo/RestartService'>
+    <input type='hidden' name='module' value='<% $item->{module} %>'/>
+    <span class='sright'>
+        <input class='btn-dashboard  btn-restart <% $statusClass %>' type='submit' name='<% $name %>' value='<% $restart %>'/>
+    </span>
+</form>
+% }
+</td>
+</tr>

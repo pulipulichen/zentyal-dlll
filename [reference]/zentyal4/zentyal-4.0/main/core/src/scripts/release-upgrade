@@ -1,0 +1,53 @@
+#!/bin/bash
+
+UPGRADE_FILE=/var/lib/zentyal/.upgrade-finished
+
+rm -f $UPGRADE_FILE
+
+export DEBIAN_FRONTEND=noninteractive
+
+function upgrade
+{
+    apt-get update
+
+    for i in `seq 1 10`
+    do
+        if apt-get dist-upgrade -y --force-yes --download-only
+        then
+            break
+        else
+            echo "Download failed, retrying in 5 seconds..."
+            sleep 5
+        fi
+    done
+
+    apt-get dist-upgrade --purge -y --force-yes -o DPkg::Options::="--force-confdef"
+}
+
+sed -i "s/^deb-src/#deb-src/g" /etc/apt/sources.list
+
+echo; echo "Upgrading your current system to the latest packages..."; echo
+upgrade
+
+echo; echo "Upgrading from Zentyal 4.0 to 4.1..."; echo
+sed -ri 's/zentyal(.)4.0/zentyal\14.1/g' /etc/apt/sources.list
+sed -i 's/zentyal-qa-4.0/zentyal-qa-4.1/g' /etc/apt/sources.list.d/zentyal-qa.list
+upgrade
+
+if apt-get dist-upgrade --purge -y --force-yes -o DPkg::Options::="--force-confdef"
+then
+    # Purge all no longer needed running services like haproxy, collectd, etc
+    apt-get autoremove --purge -y --force-yes -o DPkg::Options::="--force-confdef"
+
+    # Restart regular webserver, Zentyal UI and logs
+    service apache2 restart
+    service zentyal webadmin restart
+
+    echo; echo "Zentyal upgrade finished!"
+else
+    echo; echo "Zentyal upgrade failed. Full log at /var/log/zentyal/upgrade.log."
+fi
+
+apt-get clean
+
+touch $UPGRADE_FILE

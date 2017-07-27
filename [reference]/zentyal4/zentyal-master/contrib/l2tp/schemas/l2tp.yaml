@@ -1,0 +1,15 @@
+class: 'EBox::L2TP'
+enabledepends:
+    - samba
+
+depends:
+    - network
+    - firewall
+    - samba
+
+models:
+    - Connections
+    - ConnectionSettings
+
+foreign:
+    Connections: [ConnectionSettings]

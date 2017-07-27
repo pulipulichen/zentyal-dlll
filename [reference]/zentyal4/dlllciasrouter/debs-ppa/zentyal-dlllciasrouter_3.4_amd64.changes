@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Sat, 09 May 2015 13:55:22 +0800
+Source: zentyal-dlllciasrouter
+Binary: zentyal-dlllciasrouter
+Architecture: source all
+Version: 3.4
+Distribution: saucy
+Urgency: medium
+Maintainer: Zentyal Packaging Maintainers <pkg-team@zentyal.com>
+Changed-By: <zentyal@zentyal.zentyal-domain.lan>
+Description: 
+ zentyal-dlllciasrouter - Zentyal - dlllciasrouter module
+Changes: 
+ zentyal-dlllciasrouter (3.4) saucy; urgency=medium
+ .
+   * New upstream release
+Checksums-Sha1: 
+ 0e8ae1c65b82e0be498fc93d6fa8d0b5f79a9ede 633 zentyal-dlllciasrouter_3.4.dsc
+ 1108676fbbcf93e7ff775ca4abfd7e4a90fef513 10230 zentyal-dlllciasrouter_3.4.tar.gz
+ 4b9c76c59e8daaf875132a70a72937c61e4b7f06 3024 zentyal-dlllciasrouter_3.4_all.deb
+Checksums-Sha256: 
+ 17b8c7fed6bfbbe0014b6fba2eaa3063125a79f3b6d611373c6d87e2287b9849 633 zentyal-dlllciasrouter_3.4.dsc
+ 263254eb4b61a2fba5031b0973ba05c9f3e9df9e0db6fac599818ceeafcdfa17 10230 zentyal-dlllciasrouter_3.4.tar.gz
+ e5dd1de9b13b66a25e6901299cfee462becb2d3c754e204d9a1434bc4fc2402d 3024 zentyal-dlllciasrouter_3.4_all.deb
+Files: 
+ fc1d68cedfd2cccf9c0f385749092682 633 web optional zentyal-dlllciasrouter_3.4.dsc
+ 99feab5616301f91b60077925de514c8 10230 web optional zentyal-dlllciasrouter_3.4.tar.gz
+ e3ccaedba357f0a3a0ca3a6b21f3f180 3024 web optional zentyal-dlllciasrouter_3.4_all.deb

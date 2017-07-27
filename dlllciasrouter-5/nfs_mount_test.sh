@@ -1,1 +1,0 @@
-sudo mount -t nfs 10.0.0.254:/mnt/mfs /tmp

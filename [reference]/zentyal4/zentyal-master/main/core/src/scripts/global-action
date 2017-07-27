@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use EBox;
+use EBox::Config;
+use EBox::Global;
+use EBox::ProgressIndicator;
+use EBox::Exceptions::Internal;
+
+use Scalar::Util qw(blessed);
+use TryCatch::Lite;
+
+EBox::init();
+
+my %params = @ARGV;
+
+my $action = $params{'--action'};
+$action or
+    throw EBox::Exceptions::Internal('No action provided');
+
+if (($action ne 'saveAllModules') and ($action ne 'revokeAllModules')) {
+    throw EBox::Exceptions::Internal("Bad action: $action");
+}
+
+my @callParams;
+my $progress;
+
+my $progressId = delete $params{'--progress-id'};
+if ($progressId) {
+    $progress = EBox::ProgressIndicator->retrieve($progressId);
+    @callParams = (progress => $progress);
+}
+
+try {
+    my $global = EBox::Global->getInstance();
+    if ($action eq 'saveAllModules') {
+        $global->saveAllModules(@callParams);
+    } elsif ($action eq 'revokeAllModules') {
+        $global->revokeAllModules(@callParams);
+    }
+} catch ($ex) {
+    if ($progress) {
+        my $errorTxt = blessed($ex) ? $ex->text() : $ex;
+        if (EBox::Config::boolean('debug') and blessed($ex)) {
+            $errorTxt .= "\n" . $ex->stacktrace();
+        }
+        $progress->setAsFinished(1, $errorTxt);
+    }
+    if (blessed($ex)) {
+        $ex->throw();
+    } else {
+        # Exception with a die
+        EBox::Exceptions::Internal->throw("$ex");
+    }
+}
+
+1;

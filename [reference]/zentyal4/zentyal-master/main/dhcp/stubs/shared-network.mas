@@ -1,0 +1,14 @@
+<%args>
+	$iface
+	%ifaces
+</%args>
+shared-network <% $iface %> {
+<& includes.mas,
+   iface => $iface
+&>
+
+<& subnet.mas, info => $ifaces{$iface} &>
+}
+
+
+

@@ -1,0 +1,151 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use EBox;
+use EBox::Backup;
+use EBox::ProgressIndicator;
+
+use Getopt::Long;
+
+use English qw(-no-match-vars);
+use TryCatch::Lite;
+
+EBox::init();
+
+# check user..
+#if ($EUID == getpwnam('ebox')) {
+#  # ok ...
+#}
+#elsif ($EUID == 0) {
+#  EBox::init();
+#}
+#else {
+#  die 'This program can be only run by root or ebox user';
+#}
+
+
+# process cli
+my $progressId = undef;
+my @modsToRestore = ();
+my @modsToExclude = ();
+
+my $deleteBackup = 0;
+
+my $forceDependencies = 0;
+my $forceZentyalVersion = 0;
+my $revokeAllOnModuleFail = 1;
+my $continueOnModuleFail = 0;
+my $installMissing = 0;
+
+my $help = 0;;
+my $info = 0;
+
+my $optionsOk = GetOptions(
+    'module:s' => \@modsToRestore,
+    'exclude:s' => \@modsToExclude,
+    'progress-id:i' => \$progressId,
+    'force-dependencies' => \$forceDependencies,
+    'force-zentyal-version' => \$forceZentyalVersion,
+    'delete-backup'      => \$deleteBackup,
+    'revoke-all-on-module-fail!' => \$revokeAllOnModuleFail,
+    'continue-on-module-fail!' => \$continueOnModuleFail,
+    'install-missing' => \$installMissing,
+
+    'info'       => \$info,
+    'help'       => \$help,
+);
+
+if (not $optionsOk) {
+  usage();
+  exit 1;
+}
+elsif (@ARGV != 1) {
+  usage();
+  exit 1;
+}
+
+my ($file) = @ARGV;
+
+# select operation mode
+if ($help) {
+  usage();
+  exit 0;
+} elsif ($info) {
+  info($file);
+  exit 0;
+}
+
+# Operation mode: restore backup
+
+my %restoreParams;
+if ($progressId) {
+    my $progress = EBox::ProgressIndicator->retrieve($progressId);
+    $restoreParams{progress} = $progress;
+}
+
+if (@modsToRestore) {
+    $restoreParams{modsToRestore} = \@modsToRestore;
+}
+if (@modsToExclude) {
+    $restoreParams{modsToExclude} = \@modsToExclude;
+}
+
+$restoreParams{forceDependencies} = $forceDependencies;
+$restoreParams{forceZentyalVersion} = $forceZentyalVersion,
+$restoreParams{deleteBackup}      = $deleteBackup;
+$restoreParams{revokeAllOnModuleFail} = $revokeAllOnModuleFail;
+$restoreParams{continueOnModuleFail}  = $continueOnModuleFail;
+$restoreParams{installMissing}    = $installMissing;
+
+try {
+    EBox::Backup->restoreBackup($file, %restoreParams);
+} catch ($ex) {
+    if (exists $restoreParams{progress}) {
+        my $progress = $restoreParams{progress};
+        $progress->setAsFinished(1, $ex->text);
+    }
+    $ex->throw();
+}
+
+sub info
+{
+    my ($archive) = @_;
+
+    my $details_r = EBox::Backup->backupDetailsFromArchive($archive);
+    my $desc = $details_r->{description};
+    my $date = $details_r->{date};
+    my $type = $details_r->{type};
+
+    my @modulesInBackup = @{ EBox::Backup->_modulesInBackup($archive) };
+
+    print <<END;
+      $desc
+      Date: $date
+      Backup type: $type
+      Modules in backup: @modulesInBackup
+END
+}
+
+sub usage
+{
+  print <<END;
+  Usage:
+  $0  [OPTION\]... [--module NAME]...  [--exclude NAME]...  ARCHIVE_FILE
+  $0  --info ARCHIVE_FILE
+  $0  --help
+
+  Options:
+    --force-dependencies
+    --force-zentyal-version
+
+    --delete-backup
+
+    --revoke-all-on-module-fail,--no-revoke-all-on-module-fail
+
+    --progress-id
+END
+
+}
+
+1;

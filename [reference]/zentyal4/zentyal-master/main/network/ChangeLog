@@ -1,0 +1,588 @@
+4.1.1
+	+ Remove leftovers of bonding and bridged mode
+4.1
+	+ Remove multi-gateway functionality (balancing, failover, etc)
+	+ Remove support for PPPoE, bridged and bundled interfaces
+	+ Remove no longer maintained ddclient integration
+4.0
+	+ Drop Zentyal-provided Dynamic DNS
+	+ WAN failover now uses cron instead of old events module
+	+ Set version to 4.0
+	+ Check external IP against different providers to be more reliable
+	+ Refactor and include internalNetworks method used by dns and
+	  openchange modules
+	+ Fixed problem in gateway table when gateways go away when
+	  syncing rows
+	+ Added vlans key as exclude replication key
+	+ Add nameserverDelete and nameserverAdded callbacks to NetworkObserver
+3.5.1
+	+ Added defensive code to DNSResolver to avoid ifaces down after crash
+3.5
+	+ Changed ifup coditions on first time save
+	+ Changed validation of setDHCPAddress, setRealPPPIface and
+	  DHCPCleanUp to allow pseudoterminal interfaces, this is needed for l2tp
+	+ Allow network proxy which is listening on localhost
+	+ Fixed error which skipped the execution of _preSetConf
+	+ Added No-IP to DynDNS
+	+ Fix get router MAC after latest changes in Net::ARP library
+	+ Updated DynDNS server in ddclient configuration
+	+ Set version to 3.5
+	+ Fixed wrong call when cleaning up a bundled interface
+3.4
+	+ Import current DHCP addresses in first setup and when enabling module
+	+ Don't allow domain names as target of failover tests, usability
+	  changes in failover rules
+	+ Removed DNS resolution failover test
+	+ Save module config after initialSetup
+	+ Added flag to notify when an ifup is set
+	+ Wait a bit in multigwRoutes to give time to dhcp/pppoe to register addresses
+	+ Implement replicationExcludeKeys() to avoid replication of ifaces in HA
+	+ Migrated to use Plack / PSGI API instead of the CGI one
+	+ When adding a new IP (viface or static iface) it is checked to avoid
+	  collision with the current HA floating IPs
+	+ Use service instead of deprecated invoke-rc.d for init.d scripts
+	+ Added bonding support (contribution by Vsevolod Kukol)
+	+ Specifiy local address in failover tests to avoid vlan interface problems
+	+ Fix Dynamic DNS with Zentyal Remote as provider when the
+	  registration wizard is done
+	+ Fixed bad behaviour in interfaces method wizard
+	+ Wait a bit in multigwRoutes to give time to dhcp/pppoe to register addresses
+	+ Don't generate resolvconf file until all interfaces are up
+	+ nameservers() method always return 127.0.0.1 if DNS module is
+	  installed and enabled
+	+ Fixed dhclient configuration
+	+ Fixed some issues with showing of DHCP nameservers and removed
+	  related dead code
+	+ Don't use owner module in external-ip.pl script
+	+ Changed failover firewall rules to not use owner module
+	+ Fixed regression in VLANs interface (contribution by Chris Pitchford)
+	+ Fixed bug which made impossible to edit pppoe gateways
+	+ Fix regresion in the installer wizard that made options for static
+	  interfaces be always shown
+	+ Set version to 3.4
+3.3
+	+ Add module not enabled warning to interfaces page
+	+ Switch from Error to TryCatch for exception handling
+	+ Update strings to new offering
+	+ ppp-set-iface.pl script should not regen gateway if we are saving changes
+	+ Flush interfaces list cache after all ifups and all ifdowns
+	+ Added missing EBox::Exceptions uses
+	+ Delete migration code from old versions
+	+ Write resolvconf head, base and tail
+	+ Set proper file name for HTTP proxy configuration for APT
+	+ Set HTTP proxy wide settings in /etc/environment
+	+ Do not disable DNSResolver model when users mode is external AD
+	+ Added resolvconf as dependency to avoid problems in installations
+	  without the ubuntu-minimal metapackage
+	+ Use new resolvconf framework to manage resolvers list
+	+ Fix setNameservers method in Network to avoid error in import
+	  interfaces
+	+ Set version to 3.3
+3.2
+	+ Set version to 3.2
+3.1.6
+	+ Guard against undefined rows getting auto value in GatewayTable
+3.1.5
+	+ Fix addition of gateways in initial configuration wizard
+	+ Override daemons when migrating from 3.0
+3.1.4
+	+ Adapted to new CSS styles
+	+ Use upstart for ddclient daemon management
+3.1.3
+	+ Clearer messages for gateway not reachable condition
+	+ Fixed bug which unallowed to disable the proxy server
+	+ Fix regression is Gateways table due to the change of behaviour
+	  of update row notifications
+	+ Added menu icon
+	+ Fix regression in dhcp-gateway.pl which interfered with save
+	  change process
+	+ Increase regenGateways() timeout from 60 to 180 seconds
+	+ Add zentyal-users to package breaks control to avoid errors with
+	  bad users version
+	+ Fixed regression in external interface check in Network -> Interfaces
+	  after having nginx as source of all requests to apache
+	+ Warning in initial configuration wizard when trying to set as external
+	  the interface used to access the administration interface
+	+ To fix dhclient erratic behaviour, we always restart the dhcp interfaces
+	+ Corrected typo in message on tab multigw when only one gw is present
+	+ Better check for ipv6 presence before disabling it
+	+ Removed no longer necessary jQuery noConflict()
+	+ Adapted DNS resolver model to authorization mode changes
+	  in users and squid module
+3.1.2
+	+ Ported JS code to jQuery
+3.1.1
+	+ Do not add /32 mask to default route when deleting routes
+3.1
+	+ Updated to reflect the Apache -> WebAdmin rename.
+	+ Added netInitRange and netEndRange methods from the dhcp module to be
+	  shared between modules.
+	+ Added localGatewayIP method to get the Zentyal's IP address that may be
+	  used as the gateway of the given IP.
+	+ Added externalIpAddresses method to retrieve the list of IP addresses
+	  that are external.
+	+ Depend on zentyal-core 3.1
+3.0.6
+	+ PPPoE set iface script is more robust against locks
+	+ Adapted to use of ifaceByAddress, removed IPAddressExists
+	+ Don't allow to use a local address as gateway address
+	+ Added ifaceByAddress method
+3.0.5
+	+ Guard against previous version of squid without
+	  authenticationMode method
+3.0.4
+	+ Improve addition of localhost as primary resolver when DNS module is
+	  enabled.
+	+ Remove localhost as primary resolver when squid module is configured
+	  to authenticate against external server
+3.0.3
+	+ Log warn instead of error when iface has not address in _multigwRoutes()
+	+ Fixed error replacing nameserver when importing resolv.conf
+	+ Remove leftover PPP provider files
+	+ Remove attached vlans when a interface is not longer trunk
+	+ Do not try to disable rp_filter for vlan interfaces
+	+ Virtual interfaces on a bridge interface are not considered
+	  bridges themselves
+	+ Use EBox::Module::Base::writeConfFile to generate interfaces
+	  file
+	+ Only disable IPv6 in enableActions if IPv6 is available
+	+ Bridged interfaces added to 'auto' directive in
+	  /etc/networks/interfaces to avoid network startup problems
+	+ Dont allow to set a local address as network proxy
+	+ Fixed error in json response trigered by widget size
+	+ Don't check for IPaddr in the same subnet on interfaces
+	  that belong to the same bridge
+3.0.2
+	+ Disable IPv6 on enable actions to avoid problems with samba4
+	+ Added more coherence checks to static routes table
+	+ Allow to set broadcast address in wakeonlan tool
+	+ Fixed unproper use of last inside try
+3.0.1
+	+ Added domain option to /etc/resolv.conf
+	+ Supersede DHCP offered nameservers, domain name and search domain if
+	  these values are already configured in Zentyal
+	+ Fixed gateways setup in wizard
+	+ Fixed bug in Gateways watcher which inhibited the call to regen
+	  failover notifier method in modules which are network observers
+	+ Vlanes and vifaces are now ordered by name in interface page
+	+ Fixed error disabling reverse path for virtual interfaces
+2.3.15
+	+ Expanded allowed character set in interface PPPoE password
+	+ Reviewed registration strings
+	+ Fixed treatment for wake on lan objects in template, now there is no
+	  crash in Network Tools when entering an empty host
+2.3.14
+	+ Fixed bug which made impossible to remove bridged interfaces
+	+ Management of CHAP secrets file recovers from removal of Zentyal marks
+	+ Add two methods to NetworkObserver interface to notify observers about
+	  address changes on dhcp interfaces
+	+ Forbid interfaces alias with ':' character
+	+ Assign ip address 127.0.1.1/8 to loopback interface in module restart
+	  and remove the post-up hook from /etc/network/interfaces file.
+2.3.13
+	+ Removed some warnings when external is undefined
+	+ Added modeldepends to yaml schema
+	+ New libossp-uuid-perl dependency
+	+ Zentyal Cloud DynDNS updates are now done outside the VPN and using
+	  the credentials obtained when the server is subscribed
+2.3.12
+	+ Interface is now auto-detected when adding gateways
+	+ New table to allow disabling of traffic balance for some gateways
+2.3.11
+	+ Fixed typo which made EBox::Network::ifaceAddress return empty
+	  addresses for virtual interfaces
+	+ Fixed validation of gateway names
+	+ Removed undefined value warning in setIfaceStatic()
+	+ Using EBox::Object::Members to generate multigw iptables rules
+2.3.10
+	+ Restricted gateway names to be sane with dyndns and fixed dyndns
+	  configuration with old incorrect gateway names
+	+ Disabled dnspark until ddclient upstream fix a bug with this provideer
+	+ Multigw rules more robust when no-static interfaces are down
+	+ Removed redis transaction workarounds in _setConf
+	+ Fixed unconfigured gateway removal, raise exception if the route
+	  addition command fails
+2.3.9
+	+ Remove all gateway based routes before adding the configured one
+	  and raise exception if the route addition command fails
+	+ Fix deadlock in preSetConf when DHCP is used
+	+ Moved bandwidth test to remoteservices
+2.3.8
+	+ internalIpAddresses() does not throw exception if there are no ifaces
+	+ ifaceExternalChanged() is now called when static or PPP interfaces
+	  changes from external to internal
+	+ Implement new EBox::Events::WatcherProvider
+	+ Remove no longer necessary ad-hoc vifacesConf cache
+	+ Adapted to new Model management framework
+	+ Reimplemented Ifaces/Vifaces/VLANs storage according to new conf backend
+	+ Added vnet to the ignored interfaces list
+2.3.7
+	+ Send additional info in Gateways watcher
+	+ Added clone action to multi gw and wan failover tables
+	+ Added EBox::Network::internalIpAddresses()
+	+ Added regenGatewaysFailover() to NetworkObserver so modules can
+	  implement actions to be done after failover regenerates routing tables
+	+ Fixed calculation of fail ratio
+	+ Assure that we have always one gateway marked as default
+	+ Restart traffic shaping on postinst to avoid rule loss on upgrades
+	+ Regenerate traffic shaping rules after failover event
+	+ EBox::Network::setNameservers does not fail if the same server
+	  is already in the list
+	+ Fixed calls to storeSelectedDefaultGateway with undef argument
+	+ EBox::Network::importInterfacesFile skips gateway adition instead of
+	  aborting if already exists one
+	+ Insert fwmark ip rules before from ones
+	+ Remove no longer necessary mark rules when having several interfaces
+	+ Pre-create failover and check-ip chains on network start to always ensure
+	  that rules are inserted in the proper position
+	+ Remove obsolete import of EBox::Order
+	+ Do not add gateways to /etc/network/interfaces to avoid conflicts
+2.3.6
+	+ Create tables with MyISAM engine by default
+	+ Fixed path of dhclient.conf
+2.3.5
+	+ Fixed path of dhclient hooks
+2.3.4
+	+ Not allowed to attach static interfaces to a network which
+	  has already another interface atached
+	+ Fixed restore of default gateway in failover event
+2.3.3
+	+ Packaging fixes for precise
+2.3.2
+	+ Updated Standards-Version to 3.9.2
+2.3.1
+	+ Adapted messages in the UI for new editions
+	+ Use printableName instead of name to select services
+	+ Fixed executable permissions in ppp hooks and external-ip.pl
+	+ Bridge interfaces are correctly removed; fixed _hasChanged method
+	+ Menu entry Diagnostic Tools in Network renamed to Tools
+	+ Added WakeOnLan to the Network Diagnostic Tools
+	+ Added proxySettings to return the proxy settings to other modules
+	+ Added new ip rules to avoid connection problems on multigateway & UDP
+	+ Virtual interfaces called '0' does not longer raise error
+2.3
+	+ Cache vifacesConf() result to improve performance
+	+ Replaced autotools with zbuildtools
+	+ Added gatewayDelete method to NetworkObserver and use it to check
+	  gateway removal in gateway table
+2.2.3
+	+ Allow to disable traffic balance with no_balance_$gwname config keys
+	+ Fixed bridged interfaces change when the bridge is not configured
+	+ Do not mark traffic to default gateway if it is disabled
+2.2.2
+	+ Fixed bug setting ip route rules with PPPoE interfaces
+2.2.1
+	+ External IP address getter now works even in an unpolite situation
+2.1.16
+	+ Does not sometimes fail in external IP address getter when
+	  multigw is enabled
+2.1.15
+	+ Fixed unique IP check on gateways table
+2.1.14
+	+ Fixed problems bringing up static interfaces during boot
+2.1.13
+	+ Proper use of ro/rw instances on failover event
+	+ Avoid duplicated gateway due to network wizard
+	+ Disable autocomplete in gateway proxy configuration
+	+ Disable autocomplete in dynamic DNS provider configuration
+2.1.12
+	+ PPPoE works again after regression by PPTP changes
+	+ Reviewed some subscription strings
+	+ Removed all the obsolete traffic monitoring stuff using jnettop and rrdtool
+	+ Added custom mtu configuration for the interfaces in /etc/zentyal/network.conf
+	+ Improved texts in configure interfaces wizard
+	+ Fixed dashboard network graphs for interfaces with strange characters
+2.1.11
+	+ Change provider for getting the public IP address in DynDNS
+	+ Better integration with core theme
+	+ Removed /zentyal prefix from URLs
+	+ Avoid errors deleting non-existent gateways
+2.1.10
+	+ Avoid duplicated restart during postinst
+	+ Added staticIfaceAddressChangedDone notification
+	+ Fixed module name in actions logging
+	+ Send only gw.hostname.dyndomain.tld to avoid ddclient go nuts
+2.1.9
+	+ Calculate interfaces widget size for a better default dashboard balance
+2.1.8
+	+ Remove pppoe debug in hooks
+	+ Allowed '/' character in proxy username
+	+ Manual log of audit actions in Iface, VIface and Vlan CGIs
+	+ Update wizard pages with new order option
+	+ Use pppoe name on chap-secrets
+2.1.7
+	+ Now chap-secrets configuration for pptp module is not overwritten
+	+ Use the new "Add new..." option in the object selectors
+	+ Set connected gateway as warn level event and minor improvements
+	  in the failover messages
+	+ Added maxfail option to PPP configuration files to retry lost connections
+	+ Added logic to manage PPP gateways in failover tests
+	+ Failover tests are now ran with a read-only instance even if there are
+	  unsaved changes on the interface and the generated events notify this
+	+ Removed unused EnableBalanceTraffic CGI
+	+ Removed use of obsolete LogAdmin
+2.1.6
+	+ Mark DHCP interfaces as changed in the Wizard to get IP on first save
+	+ Removed unnecessary call to ids() in DHCP hook
+2.1.5
+	+ Added interfaces created by libvirt and virtualbox to the ignore list
+	+ Dynamic DNS: Transform gateway names when multigw is on to send
+	  only valid domain names
+2.1.4
+	+ Group sudo commands when adding routes and cleaning VLANs
+	+ Added new Zentyal Cloud service for DynDNS
+	+ Fixed DynDNS help string
+2.1.2
+	+ Allow internal bridges
+	+ Gateways, Balance Traffic and WAN Failover are now together
+	  as tabs of the Gateways submenu
+	+ Improved order of the submenus
+	+ Setting DHCP gateway does not longer require saving changes twice
+	+ Remove unnecessary code from GatewayTable::syncRows
+	+ Do not execute ifup on interfaces during the boot to avoid
+	  multiple instances of dhclient
+	+ Fixed problem with uniqueness check in GatewayTable
+	+ Added report for bandwidth tests
+	+ Avoid warning in GatewayTable::syncRows when gateway is undef
+	+ Added debug to dhcp-gateway.pl script
+	+ New interfaces alias are checked to avoid name clashes
+2.1.1
+	+ Bugfix: PPPoE gateway is now properly set
+2.1
+	+ Removed ebox- prefix from src/scripts/*
+	+ Removed unnecesary call to isReadOnly in syncRows
+	+ Move ebox-netcfg-import to importInterfacesFile method
+	+ Remove obsolete migration
+	+ Added new initialSetup method for post-install
+	+ Replace /etc/ebox/80network.conf with /etc/zentyal/network.conf
+	+ Bug fix: Traffic monitor didn't work in non-English installations
+	+ Zoneedit service url changed
+	+ Basic support for other methods to retrieve IP
+	+ Do not try to start ddclient daemon if disabled
+	+ Make source event not i18n
+	+ Safer way to get the PPPoE 'tty' ethernet interface
+	+ Added PPPoE logging in /var/log/ebox/pppoe.log and ebox.log
+	+ Installation does not fail if the restart of EventDaemon fails
+	+ Now the ifaces_to_ignore variable is considered in ebox-netcfg-import
+2.0.8
+	+ PPPoE MTU rule is no longer flushed on module restart
+2.0.7
+	+ Show DHCP as default option in wizards if there is only one interface
+	+ Avoid problems when removing interfaces (vlan, briges)
+	+ Fixed support for bridged vlans configuration
+	+ Set all interfaces as changed on backup restore
+	+ PPPOE MTU is now changed when reconfiguring gateways
+	+ Set default order for dashboard widgets
+2.0.6
+	+ WAN Failover now supports DHCP and PPPoE interfaces
+	+ Disable reverse path to avoid failover checking problems
+	+ Better default values for failover rules
+	+ Use masks in fwmark to avoid interferences with traffic shaping
+	+ Warning in log if failover event disabled due to unsaved changes
+	+ Failover does not enable unwatched gateways
+	+ Reload events daemon after upgrade to apply failover changes
+2.0.5
+	+ Include Zentyal in multigateway rules when setting 'any' as source
+	+ Make Interfaces page title translatable
+2.0.4
+	+ Fixed failover problems in some scenarios
+2.0.3
+	+ Fixed syntax and string quote in 99proxy.conf
+2.0.2
+	+ Add support for authenticated proxy
+	+ Fixed traffic shaping problems in multigateway scenarios
+2.0.1
+	+ Fixed network confirmation page to work with bridges
+	+ Improved load balancing to avoid web sessions loss
+2.0
+	+ Fixed network wizard interface and logic
+1.5.8
+	+ Added options for internal ifaces in wizard configuration
+	+ Bug fix: disabling global proxy configuration didn't work
+1.5.7
+	+ More global proxy configuration and domain configuration improvements.
+	+ Zentyal rebrand
+1.5.6
+	+ Do not show unreplaced {link} variable in dashboard if not available
+	+ Add support to define a system wide proxy
+1.5.5
+	+ New setup wizard
+1.5.4
+	+ Bridged mode support
+1.5.3
+	+ Fixed failover problems with undefined default gateway
+1.5.2
+	+ Traceroute works again in network diagnostic tools
+	+ Using iptables statistic module instead of route for better traffic
+	  balancing
+1.5.1
+	+ Fixed nasty bug of traceroute in Diagnostic Tools with invalid host
+	+ Flush cache when regenerating routes
+	+ Bug fix: use '>='  and not '>' to check if a test exceeds $maxRatio
+	  in Failover watcher
+	+ Bug fix: do not run failover probes when all are disabled because
+	  they enable a disabled gateway.
+	+ Add and use EBox::NetworkObserver::ifaceMethodChangeDone to tell
+	  observers that a configuration method change has been carried out.
+	  So far observers were only notified right before the change takes place.
+	+ Add _notifyChangedIface() to factor code that calls observer to
+	  notify ifaceMethodChanged and ifaceMethodChangeDone
+	+ Add etherIface to fetch the ethernet interface from a  ppp interface
+	+ Bug fix: do not mess with ebox's apache packets in failover test
+	+ Make failover test more robust
+	+ Added internal/external property to interfaces widget
+1.4.2
+	+ Restart squid when failover events are produced to avoid problems
+	+ Do not check host when adding a ping to gateway rule in WAN Failover
+1.4.1
+	+ Do not run ifdown for network interfaces when network is started from
+	  /etc/init.d/ebox start This seems to avoid some issues with DHCP
+	  configured gateways at boot time
+1.4
+	+ i18n help string
+1.3.15
+	+ Bug fix: warning instead of error if can't add failover rule
+	+ Bug fix: now a gateway without IP assigned can be edited
+1.3.14
+	+ Added multi-gateway support for DHCP and PPPoE
+	+ Add a warning if a user sets an interface as external and we detect
+	  the connection is made through that interface
+	+ Remove migration scrips:
+		- 0001_import_default_gateway.pl
+		- 0002_add_weight_to_gateway.pl
+		- 0003_import_routes_to_mvc.pl
+		- 0004_import_dns_to_mvc.pl
+1.3.13
+	+ Bug fix: configuration of PPPoE interfaces now works when
+	  confirmation is required because of other modules
+	+ Default field in gateways model uses '/ajax/viewer/booleanViewer.mas'
+	  instead of in-place edition
+1.3.11
+	+ Bug fix: fix issue with virtual interfaces on vlan interfaces
+	+ Add breadcrumbs
+1.3.10
+	+ Added PPPoE support
+1.3.7
+	+ Bug fix: update ebox-netcfg-import to not add upload and download as those
+	  fields do no exist any longer
+1.3.6
+	+ Remove upload/download fields from gateways.
+	  Traffic shaping has its own model for that
+	+ Bug fix: traffic generated by eBox didn't come out from the
+	  right interface as we cleared the CONNMARK with a --save-mark
+1.3.4
+	+ bugfix: add use=web to guess the public address
+	+ bugfix: make ddclient work with dhcp configured interfaces
+	+ bugfix: multi gateway rules work again
+1.3.3
+	+ Bugfix: Edition and removal routes is working again
+	+ Remove those static routes that they have been manually added
+1.3.1
+	+ bugfix: do not use Net::DNS
+	+ bugfix: used vlan interface can be removed
+1.3.0
+	+ bugfix: restart network interfaces properly
+1.2
+	+ Added support for WAN failover
+	+ ifaceNetmask method now uses DHCPNetmask to get the dhcp ifaces
+	netmask instead NetWrapper call this adds symethrie with
+	ifaceAdrress method and fixes a bug when changing a dhcp interface
+	with no lease to static interface
+1.1.30
+	+ Added support for all missing netmasks between /16 and /32
+	+ Added support for search domain in /etc/resolv.conf
+	+ Use a template to write down /etc/resolv.conf to allow easier
+	user modifications
+	+ Use ICMP for traceroute diagnosis
+1.1
+	+ Added traceroute on network diagnosis
+	+ Use new rows() and ids() API
+	+ Bugfix: ebox-netcfg-import uses model API to import default gateway
+	+ Support for dyndns
+	+ Gateway models does not use longet custom views
+	+ Gateway rules table now use services
+0.12.99
+	+ New release
+0.12
+	+ Use new EBox::Model::Row api
+	+ Add help to model fields
+	+ Remove default option auotmatically if another router is set as default
+0.11.102
+	+ Bugfix: Static routes are deleted from ip when they are not
+	useful
+	+ Bugfix: Fixing wrong href in multigateway rules page
+0.11.101
+	+ Static routes become a model with three methods exposed
+	+ Remove usage of a deprecated method in NetWrappers
+	+ DNS resolvers become  a model with three methods exposed. Now
+	you may add as many DNS resolvers you want
+	+ Use separator ':' in exposed method using '/' for addresses
+O.11.100
+	+ Disable network traffic monitor due to a bug in perl and RRDs module
+	+ Use /etc/network/interfaces and not /var/lib/zentyal/tmp/interfaces
+	+ Run saveConfig() after importing network configuration and not save()
+	  which forced a restart of the interfaces stored
+	  in /etc/network/interfaces at package installation time
+	+ Add default gateway to /etc/network/interfaces
+0.11.99
+	+ Added traffic rate monitoring done on demand and in
+	real-time. The monitoring may be filter by source address and
+	service (protocol/port).
+0.11
+	+ move helper scripts to data dir (applied Soren's patch)
+	+ Bugfix: Change from static to other method works again
+0.10.99
+	+ New release
+0.10
+	+ Remove all interfaces from /etc/network/interfaces but lo
+	  after importing network configuration
+0.9.100
+	+ Fixing bug with static routes which prevented them from working
+	  if the multigateway support was enabled
+	+ Fixing bug importing gateway IP addresses from network
+	  configuration
+	+ Added /22 netmask setting iface IP address
+	+ Update models to new API
+	+ Get rid of custom controllers
+0.9.99
+	+ Restore conntrack mark in OUTPUT chain to make traffic generated in
+	  eBox go through the right router.
+0.9.3
+	+ Use value() instead of printableValue() in protocol
+	+ Add iptables rule to chain OUTPUT in table mangle to send traffic
+	  originated in eBox through the default router.
+0.9.2
+	+ Always add weighted routers when configuring routers. Instead
+	 of adding them when traffic balancing is enabled. Use iptables
+	 to send unmarked packets through the default router
+0.9.1
+	+ Add support for traffic load balancing
+	+ Try several times to fetch the mac address for each router
+0.9
+	+ Added Polish translation
+        + Added Aragonese translation
+	+ Added German translation
+	+ Removed dependency: dhcp-hooks don't require firewall module
+	anymore to operate correctly
+
+0.8.99
+	+ Support multigateway configuration
+	+ Remove old default router configuration
+	+ Add migration script from version 0 to 1
+O.8.1
+	+ New release
+0.8
+	+ Add netmask /30 (Patch from rampa at encomix.org)
+0.7.99
+	+ New release
+0.7.1
+	+ New release
+	+ Use of ebox-sudoers-friendly
+0.7
+	+ First public release
+0.6
+	+ Separate module from ebox base
+	+ move to client
+	+ API documented using naturaldocs
+	+ Update INSTALL
+	+ Update debian scripts

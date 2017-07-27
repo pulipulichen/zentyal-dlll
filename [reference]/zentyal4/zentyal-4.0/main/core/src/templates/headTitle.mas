@@ -1,0 +1,44 @@
+<%args>
+    $save => ''
+    $logout => ''
+    $finishClass => ''
+    $image_title
+    $version
+</%args>
+<%init>
+use EBox::Gettext;
+my $logoutTitle = __('Close session');
+my $finishTitle = __('Save changes?');
+</%init>
+    <div id="top"></div>
+    <div id="header">
+      <a class="logo" href="/">
+        <img src="<% $image_title %>" alt="title"/>
+      </a>
+      <span class="version"><% $version %></span>
+      <div id="hmenu">
+% if ($logout) {
+        <div class="menusearch">
+          <form action='/Search'>
+             <input id="menusearch" name="searchterm" type="text" placeholder="<% __('Search...') %>"/>
+             <input type="submit"/>
+          </form>
+        </div>
+     <a id="m" href="#"
+     onclick="Zentyal.Dialog.showURL('/Logout/Index', { title: '<% $logoutTitle %>'}); return false">
+      <% $logout %>
+     </a>
+% }
+% if ($save) {
+          <a class="<% $finishClass %>" id="changes_menu" href="#"
+          onclick="Zentyal.Dialog.showURL('/Finish', { title: '<% $finishTitle %>',  load: function() { $('#save', this).focus()} }); return false">
+              <% $save %>
+          </a>
+% }
+        </div>
+      </div>
+<script>
+$(function() {
+    Zentyal.refreshSaveChangesButton();
+});
+</script>

@@ -1,0 +1,425 @@
+<%args>
+    @bigpkgs => ()
+    @mediumpkgs => ()
+    @allpkgs => ()
+    %filterpkgs => ()
+    @brokenPackages => ()
+    $updateStatus
+    $QAUpdates
+    $updateList
+    $updateListError
+    $updateListErrorMsg
+</%args>
+<%init>
+use EBox::Gettext;
+use EBox::Util::Version;
+my $eboxupgbutton = 'no';
+my $upgpkgs = 0;
+my $first = EBox::Global->first();
+my $popup = $first ? 0 : 1;
+
+my @advInstallPkgs;
+my @advUpdatePkgs;
+my @advRemovePkgs;
+foreach my $pkg (@allpkgs) {
+  next if ($pkg->{name} eq 'zentyal-all');
+  next if ($pkg->{name} eq 'zentyal-ids');
+  ($pkg->{description} =~ m/Suite/) and next;
+  ($pkg->{description} =~ m/^transitional/) and next;
+
+  if ($pkg->{version}) {
+     push @advRemovePkgs, $pkg;
+     if (EBox::Util::Version::compare($pkg->{version}, $pkg->{avail}) == -1) {
+         push @advUpdatePkgs, $pkg
+     }
+ } else {
+     push @advInstallPkgs, $pkg;
+ }
+}
+
+my %pkgTablePrintableFields = (
+    description =>  __('Component'),
+    version =>  __('Installed Version'),
+    avail =>  __('Latest Version'),
+);
+
+my %titleByAction = (
+   install =>  __('Installing packages'),
+   remove =>  __('Removing packages'),
+   upgrade =>  __('Upgrading packages'),
+);
+</%init>
+
+<script type="text/javascript" src="/data/js/software-management.js">//</script>
+
+<script type="text/javascript" src="/data/js/table-helper.js">//</script>
+<script type="text/javascript" src="/data/js/tabMenu.js">//</script>
+
+<script>
+var pkgTable = new Array(
+%   foreach my $pkg (@allpkgs) {
+%       my $eboxupg = 'no';
+        {"<% __('Component') %>":"<% $pkg->{description} %>",
+%       if ($pkg->{version}) {
+%           if ($pkg->{version} ne $pkg->{avail}) {
+%               $eboxupg = __('Update');
+%               $eboxupgbutton = 'yes';
+%               $upgpkgs = 1;
+%           }
+           "<% __('Installed Version') %>":"<% $pkg->{version} %>",
+%       } else {
+%           $eboxupg = __('Install');
+%           $eboxupgbutton = 'yes';
+            "<% __('Installed Version') %>":"",
+%      }
+        "<% __('Latest Version') %>":"<% $pkg->{avail} %>",
+        "Name": "<% $pkg->{name} %>",
+        "Removable": "<% $pkg->{removable} %>"
+%   if ($pkg == $allpkgs[-1]) {
+        }
+%   } else {
+        },
+%   }
+%   }
+    );
+</script>
+
+% unless ($first or @brokenPackages) {
+<& /software/updateNote.mas, status => $updateStatus, qa => $QAUpdates &>
+% }
+
+
+% if ($updateList == 1) {
+<& .updateList, error => $updateListError, errorMsg => $updateListErrorMsg &>
+% }
+
+
+% if (@brokenPackages) {
+<div class='error'>
+    <% __('The following packages are not properly installed. You need to fix this before trying to use them or install new modules.') %>
+</div>
+<div>
+
+<table cellspacing="1" cellpadding="0" class="dataTable" style="margin: 10px 0">
+    <thead>
+        <tr>
+            <th class="tleft"><% __('Component') %></th>
+            <th class="tleft"><% __('Description') %></th>
+            <th class="tleft"><% __('Version') %></th>
+        </tr>
+    </thead>
+    <tbody>
+% foreach my $pkg (@brokenPackages) {
+    <tr class="data line0">
+      <td><% $pkg->{name} %></td>
+      <td><% $pkg->{description} %></td>
+      <td><% $pkg->{version} %></td>
+    </tr>
+% }
+</tbody></table>
+</div>
+<div class='note'>
+    <% __('To solve this situation, please try to execute the following command in the console:') %>
+    <br/>
+    <br/>
+    <b>sudo dpkg --configure -a</b>
+    <br/>
+    <br/>
+    <% __x('After the above command is finished you can reload this page. If the problem persists, you can ask for help in the {ofhref}community forum{chref} or file a ticket in the {othref}Zentyal trac{chref}.',
+           othref => '<a href="http://trac.zentyal.org/newticket" target="_blank">',
+           ofhref => '<a href="http://forum.zentyal.org/" target="_blank">', chref => '</a>') %>
+</div>
+% } else {
+%# Basic table
+<div id="software" style="display: none">
+% unless ($first) {
+    <a href='#' onclick="$('#software').fadeOut(300); $('#advanced').fadeIn(300); return false"><%__('View advanced mode')%></a>
+% }
+    <div id="Install">
+      <div id="packages">
+      <h3><%__('Server roles')%></h3>
+      <ul>
+%   foreach my $pkg (@bigpkgs) {
+%        my $class;
+%        if ($pkg->{version}) {
+%           $class = 'package_installed';
+%        }
+         <li id="<% $pkg->{name} %>" class="package package-big <% $class %>" onclick="Zentyal.SoftwareManagementUI.togglePackage('<% $pkg->{name} %>'); return false">
+            <img src="/data/images/package-icons/<% $pkg->{name} %>-big.png"/>
+            <p><% $pkg->{description} %></p>
+         </li>
+%   }
+%   foreach my $pkg (@mediumpkgs) {
+%        my $class;
+%        if ($pkg->{version}) {
+%           $class = 'package_installed';
+%        }
+         <li id="<% $pkg->{name} %>" class="package package-medium <% $class %>" onclick="Zentyal.SoftwareManagementUI.togglePackage('<% $pkg->{name} %>'); return false">
+            <img src="/data/images/package-icons/<% $pkg->{name} %>-medium.png"/>
+            <p><% $pkg->{description} %></p>
+         </li>
+%   }
+      </ul>
+      <h3><% __s('Additional services') %></h3>
+      <ul>
+%   foreach my $pkg (@allpkgs) {
+%        # Hide some packages (objects+services), virtual, no removables
+%        next if ($filterpkgs{$pkg->{name}});
+%        next if ($pkg->{description} =~ /Suite$/);
+%        next if ($pkg->{description} =~ /^transitional/);
+%        next if ($pkg->{description} eq 'All Modules');
+%        next unless ($pkg->{removable});
+%        $pkg->{description} =~ s/^Zentyal - //;
+%        my $class;
+%        if ($pkg->{version}) {
+%           $class = 'package_installed';
+%        }
+         <li id="<% $pkg->{name} %>" class="package <% $class %>" onclick="Zentyal.SoftwareManagementUI.togglePackage('<% $pkg->{name} %>'); return false">
+            <img src="/data/images/package-icons/<% $pkg->{name} %>.png"
+                 onerror='this.onerror = null; this.src="/data/images/package-icons/generic.png"' />
+            <p><% $pkg->{description} %></p>
+         </li>
+%   }
+      </ul>
+
+       </div>
+
+       <div class="btn-block tright">
+% if ($first) {
+        <a class="tleft" onclick="document.location.href='/Dashboard/Index'" href="#"><% __('Skip install') %></a>
+% }
+        <button class="btn btn-green btn-big" onclick="Zentyal.SoftwareManagementUI.sendFormBasic(<% $popup %>, '<% $titleByAction{install} %>')"><% __('Install') %></button>
+
+       </div>
+
+    </div>
+</div>
+
+
+<div id="advanced" style="display: none">
+    <a href='#' onclick="$('#advanced').fadeOut(300);$('#software').fadeIn(300); return false"><% __('View basic mode') %></a>
+    <div style="margin-top: 10px" id="tabs">
+        <ul id="tabMenu_ConfigurationComposite" class="tabs">
+            <li>
+                <a id="installTab" href="#" class="current" onclick="Zentyal.SoftwareManagementUI.showInstallTab()"><% __('Install') %></a>
+            </li>
+% if ($first) {
+            <li style="display:none">
+% } else {
+            <li>
+% }
+               <a id="updateTab" href="#" onclick="Zentyal.SoftwareManagementUI.showUpdateTab()"><% __('Update') %>&nbsp;<span id="updNumber">0</span>  </a>
+            </li>
+% if ($first) {
+            <li style="display:none">
+% } else {
+            <li>
+% }
+                <a id="deleteTab" href="#" onclick="Zentyal.SoftwareManagementUI.showDeleteTab()"><% __('Delete') %></a>
+            </li>
+        </ul>
+    </div>
+    <div class="insideTab">
+        <div id="installBox" class="item-block">
+%         if (@advInstallPkgs) {
+              <& .pkgTable,
+                 id => 'installTable',
+                 pkgs => \@advInstallPkgs,
+                 fields => ['description', 'avail'],
+                 printableFieldNames => \%pkgTablePrintableFields,
+                 buttonId => 'install_button',
+             &>
+             <& .pkgTableButtons,
+                id => 'install_button',
+                table => 'installTable',
+                text =>  __('Install'),
+                action => 'install',
+                icon  => 'install',
+                popup => $popup,
+                popupTitle => $titleByAction{install},
+              &>
+%       } else {
+            <& .pkgTableEmpty, msg => __('No packages available for install')  &>
+%       }
+        </div>
+        <div id="updateBox" class="item-block">
+%          if (@advUpdatePkgs) {
+              <& .pkgTable,
+                 id => 'updateTable',
+                 pkgs => \@advUpdatePkgs,
+                 fields => ['description', 'version', 'avail'],
+                 printableFieldNames => \%pkgTablePrintableFields,
+                 buttonId => 'update_button',
+             &>
+             <& .pkgTableButtons,
+                id => 'update_button',
+                table => 'updateTable',
+                text =>  __('Update'),
+                action => 'upgrade',
+                icon  => 'update',
+                popup=> $popup,
+                popupTitle => $titleByAction{upgrade},
+              &>
+%         } else {
+            <& .pkgTableEmpty, msg => __('No upgrades available')  &>
+%         }
+        </div>
+        <div id="deleteBox" class="item-block">
+%          if (@advRemovePkgs) {
+             <& .pkgTable,
+                id => 'deleteTable',
+                pkgs => \@advRemovePkgs,
+                fields => ['description', 'version'],
+                printableFieldNames => \%pkgTablePrintableFields,
+                buttonId => 'delete_button',
+             &>
+             <& .pkgTableButtons,
+               id => 'delete_button',
+               table => 'deleteTable',
+               text =>  __('Delete'),
+               action => 'remove',
+               icon  => 'delete',
+               popup => $popup,
+               popupTitle => $titleByAction{remove},
+             &>
+%         } else {
+            <& .pkgTableEmpty, msg => __('No installed packages to remove')  &>
+%         }
+        </div>
+</div>
+</div>
+% }
+
+<script>
+$(function() {
+% if ($first) {
+   $('#software').show();
+% } else {
+   $('#advanced').show();
+% }
+
+   $('#updNumber').html( '<% scalar @advUpdatePkgs %>' );
+   // update button status
+   Zentyal.SoftwareManagementUI.updateActionButton('installTable', 'install_button');
+   Zentyal.SoftwareManagementUI.updateActionButton('updateTable', 'update_button');
+   Zentyal.SoftwareManagementUI.updateActionButton('deleteTable',  'delete_button');
+
+  // reset checkboxes, this is need for some browsers which autocompletes input by position
+  jQuery('#installTable :checked, #updateTable :checked, #deleteTable :checked', '#advanced').prop('checked', false);
+
+  $('#updateBox, #deleteBox').hide();
+  Zentyal.stripe('.dataTable', 'even', 'odd');
+
+  if (location.hash === '#delete') {
+       Zentyal.SoftwareManagementUI.showDeleteTab();
+  } else {
+       Zentyal.SoftwareManagementUI.<% @advUpdatePkgs ? 'showUpdateTab()' : 'showInstallTab()' %>;
+  }
+});
+</script>
+
+<%def .pkgTableButtons>
+<%args>
+$id
+$table
+$text
+$icon
+$action
+$popup
+$popupTitle
+</%args>
+<table class="bDataTable">
+<tbody><tr><td>
+<div id="<% $action %>Buttons">
+<button  type="button" class="btn btn-icon btn-<% $icon %>" id="<% $id %>" onclick="Zentyal.SoftwareManagementUI.sendForm('<% $action %>', '<% $table%>', <% $popup %>, '<% $popupTitle %>')">
+                  <% $text %>
+</button>
+<button class='btn btn-icon btn-reload' onclick="$('#updateList').submit()"><%__('Update list')%></button>
+<form id='updateList' name='updateList' action='EBox' method='post'>
+        <input type='hidden' name='updatePkgs' value="yes"/>
+</form>
+</div>
+</td></tr></tbody>
+</table>
+</%def>
+
+<%def .pkgTable>
+<%args>
+$id
+@pkgs
+@fields
+%printableFieldNames
+$buttonId
+</%args>
+<%init>
+ my $filterId   = $id . '_filter';
+</%init>
+<div class="tableSearch">
+       <input type='text' id='<% $filterId %>'/>
+       <input type='submit'
+         name='filter'
+         value='<% __("Search") %>'
+         title='Apply'
+         onclick='Zentyal.SoftwareManagementUI.filterTable("<% $id %>", "<% $filterId %>"); return false'
+       />
+</div>
+<table id='<% $id %>' class='dataTable'>
+<thead><tr>
+% foreach my $field (@fields) {
+%    my $printable = $printableFieldNames{$field};
+    <th class='tleft'><% $printable %></th>
+% }
+    <th class='thOptions'>
+      <% __('Select') %>
+      <div>
+      <input type='checkbox'
+             onchange='Zentyal.SoftwareManagementUI.checkAll("<% $id %>", $(this).prop("checked"), "<% $buttonId %> ");'
+       />
+      </div>
+    </th>
+</tr></thead>
+<tbody>
+% foreach my $pkg (@pkgs) {
+    <tr class='border'>
+%   foreach my $field (@fields) {
+            <td><% $pkg->{$field} %></td>
+%   }
+    <td class='tcenter'><input type='checkbox' data-pkg='<% $pkg->{name} %>' onchange='Zentyal.SoftwareManagementUI.updateActionButton("<% $id %>", "<% $buttonId %>");'/></td>
+   </tr>
+% }
+</tbody>
+</table>
+</%def>
+
+<%def .pkgTableEmpty>
+<%args>
+$msg
+</%args>
+<div class='emptynote'>
+<% $msg %>
+</div>
+</%def>
+
+<%def .updateList>
+<%args>
+$error
+$errorMsg => undef
+</%args>
+% if (not $error) {
+<div class='note'>
+<% __('Package list updated successfully') %>
+</div>
+%  } else {
+<%perl>
+my $printableErrorMsg;
+if ($errorMsg) {
+  $printableErrorMsg = __x('Error updating package list.<p>{msg}</p>', msg => $errorMsg);
+} else {
+   $printableErrorMsg = __('Error updating package list.<p>Please try to execute the following command in a console to see the problem: sudo apt-get update</p>');
+}
+</%perl>
+<div class='error'>
+<% $printableErrorMsg  %>
+</div>
+% }
+</%def>

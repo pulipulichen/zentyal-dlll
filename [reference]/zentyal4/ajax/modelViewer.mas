@@ -1,0 +1,283 @@
+<%flags>
+  inherit => undef
+</%flags>
+<%doc>
+  This template establishes the common things that every model viewer
+  will have
+  Parameters:
+     model - <EBox::Model::DataTable> the model to use its name
+     hasChanged - Boolean indicating whether the model has changed or
+                  not
+     user       - String the user name
+     action     - String the action be performed. Only if action is
+                  equal to 'view' the whole model viewer will be
+                  loaded, any other action just the body will be
+                  updated. This behaviour could be enhanced just
+                  printing the updated version of needed. *(Optional)*
+                  Default value: 'view'
+</%doc>
+<%args>
+  $model
+  $hasChanged
+  $user
+  $action => 'view'
+</%args>
+<%init>
+  use EBox::Gettext;
+</%init>
+
+% if ( $action eq 'view' or $action eq 'presetUpdate') {
+<& SELF:view,
+   model => $model,
+   hasChanged => $hasChanged,
+   user => $user,
+&>
+% } else {
+<& SELF:body,
+   model => $model,
+   onlyBody => 1,
+&>
+% }
+
+
+<%doc>
+  Method: view
+
+     Prints the model viewer. This method must be called by every
+     component which inherits from this one. The body is not displayed
+     if the precondition is accomplished, if not a fail message is
+     shown instead.
+
+  Parameters:
+
+     model - <EBox::Model::DataTable> the model to view
+     hasChanged - Boolean indicating whether the model has changed or not
+     user - String the user name
+
+</%doc>
+<%method view>
+<%args>
+  $model
+  $hasChanged
+  $user
+</%args>
+<& SELF:header,
+   model => $model
+&>
+
+<& .pageTitle,
+      crumbs => $model->viewCustomizer()->HTMLTitle()
+&>
+% if (not $m->notes('composite')) {
+<& /disabledModuleWarn.mas, model => $model &>
+% }
+
+% if ($model->precondition()) {
+<%perl>
+     my $showBody = 1;
+     my $noDataMsg;
+     if ($model->size() == 0) {
+        $noDataMsg = $model->noDataMsg();
+        my $actions = $model->table()->{'actions'};
+        $showBody = exists $actions->{add} ? $actions->{add} : 0;
+        unless ($model->message) {
+           $model->setMessage($noDataMsg,'emptynote');
+        }
+     }
+</%perl>
+%   if ($showBody) {
+       <div class="item-block" id="<% $model->modelName() %>">
+            <& SELF:body,
+               model      => $model,
+             &>
+       </div>
+%   } elsif ($noDataMsg) {
+        <& SELF:helpAndMessages, model => $model &>
+%   }
+% } else  {
+%   my $failMsg =  $model->preconditionFailMsg();
+%   if ($failMsg) {
+<div class="note">
+  <% $failMsg %>
+</div>
+%   }
+% }
+</%method>
+
+
+
+<%doc>
+  Method: header
+
+     Include everything that a model view should have
+
+  Parameters:
+
+     model - <EBox::Model::DataTable> the model to view
+</%doc>
+<%method header>
+<%args>
+  $model
+</%args>
+<& SELF:headerScriptSection &>
+<!-- Element to hide the elements while Asynchronous request are -->
+<!-- working. Find more information at "table-helper.js"  -->
+<div id="<% 'hiddenDiv_' . $model->name() | h %>" class="hidden"></div>
+</%method>
+
+<%method headerScriptSection>
+<script type="text/javascript" src="/data/js/table-helper.js">
+  //
+</script>
+<script type="text/javascript" src="/data/js/fileUpload.js">//</script>
+</%method>
+
+
+<%doc>
+  Method: body
+
+     Set the model viewer body. The message if any is also shown.
+
+  Parameters:
+
+     model - <EBox::Model::DataTable> the model to view
+     user  - String the user name
+     onlyBody - boolean indicating if just the body is updated
+                *(Optional)* Default value: false
+
+</%doc>
+<%method body>
+<%args>
+  $model
+  $onlyBody => 0
+</%args>
+<%init>
+  # Get the content from the first called template
+  my $requestCaller = $onlyBody ? 1 : 2;
+  my @childArgs = $m->caller_args($requestCaller);
+</%init>
+<& SELF:_body,
+   model => $model,
+   @childArgs
+&>
+</%method>
+
+<%method helpAndMessages>
+<%args>
+$model
+</%args>
+%  my $help = $model->help();
+%  if ($help) {
+<div class="help" style="display:none">
+  <% $model->help() %>
+</div>
+%  }
+<& SELF:permanentMessage, model => $model &>
+<& SELF:regularMessage, model => $model &>
+</%method>
+
+<%doc>
+  Method: title
+
+     Set the view title
+
+  Parameters:
+
+     title - String the title
+
+</%doc>
+<%method title>
+<%args>
+  $title
+</%args>
+% if ($title) {
+<h3>
+  <% $title %>
+</h3>
+% }
+</%method>
+
+<%doc>
+  Method: buttons
+
+    Show the button to submit the form. It must be overriden. In order
+    to obtain the main arguments used $m->request_args()->{argName}.
+
+</%doc>
+<%method buttons>
+</%method>
+
+<%doc>
+  Group: Protected methods
+</%doc>
+
+<%doc>
+  Method: _body
+
+     Set the body for the viewer indeed. This method must be
+     overridden by the subclasses in order to show the model content
+     in some way.
+
+     The original parameters from the subclass template must appear as
+     well with their own default values.
+     (Protected method)
+
+  Parameters:
+
+     model - <EBox::Model::DataTable> the model to view
+
+     - Additional parameters, see above.
+
+</%doc>
+<%method _body>
+% # Default empty implementation
+% $m->call_next();
+</%method>
+
+<%method permanentMessage>
+<%args>
+$model
+</%args>
+% my $viewCustomizer = $model->viewCustomizer();
+% my $msg = $viewCustomizer ? $viewCustomizer->permanentMessage() : undef;
+% my $type = $viewCustomizer ? $viewCustomizer->permanentMessageType() : undef;
+% if ($msg) {
+<& /msg.mas,
+   msg => $msg,
+   class => $type,
+&>
+%  }
+</%method>
+
+<%method regularMessage>
+<%args>
+$model
+</%args>
+% if ( $model->message() ) {
+     <& /msg.mas,
+        msg => $model->popMessage(),
+        class => $model->messageClass()
+     &>
+% }
+</%method>
+
+<%doc>
+  Method: pageTitle
+
+     Set the page title
+
+  Parameters:
+
+     title - String the title
+
+</%doc>
+<%def .pageTitle>
+<%args>
+  $title => undef
+  $crumbs => undef
+</%args>
+<& /title.mas,
+    title => $title,
+    crumbs => $crumbs
+&>
+</%def>

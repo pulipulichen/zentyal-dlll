@@ -1,0 +1,69 @@
+<%doc>
+  This template is indicated to view the EBox::Model::DataForm. It
+  will show a form with the model description to be edited all the
+  time.
+
+  The original overridden call at /ajax/modelViewer.mas
+</%doc>
+<%flags>
+  inherit => '/ajax/modelViewer.mas'
+</%flags>
+<%attr>
+ editSectionTemplate => '/ajax/formEdit.mas'
+</%attr>
+<%args>
+  $model
+  $hasChanged
+  $user
+  $action => 'view'
+</%args>
+<%init>
+  use EBox::Gettext;
+  use EBox::Model::DataTable;
+</%init>
+<& PARENT:view,
+   model => $model,
+   hasChanged => $hasChanged,
+   action     => $action,
+   user       => $user,
+&>
+
+<%doc>
+  Method: _body
+
+     Set the model viewer body.
+
+  Overrides:
+
+     /ajax/modelViewer.mas:_body
+
+</%doc>
+<%method _body>
+<%args>
+  $model
+</%args>
+<%init>
+  my $tableName = $model->tableName();
+  my $formDataRef;
+  my $row = $model->row();
+  if ($row) {
+      $formDataRef = $row->{'values'};
+  } else {
+      $formDataRef = $model->table()->{'tableDescription'};
+  }
+</%init>
+<div id='<% $tableName %>_error'></div>
+<div id='<% $tableName %>_message'></div>
+<& PARENT:title,
+   title => $model->headTitle()
+&>
+<& SELF:helpAndMessages, model => $model &>
+<& $m->base_comp->attr('editSectionTemplate'),
+   model    => $model,
+   formData => $formDataRef
+&>
+
+
+</%method>
+
+

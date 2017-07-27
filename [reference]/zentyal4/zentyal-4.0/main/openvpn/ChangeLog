@@ -1,0 +1,310 @@
+4.0
+	+ Remove use of deprecated emoteservices dynamical address
+	+ Set version to 4.0
+3.5
+	+ Workaround in members table against losing of directory parameter/attribute
+	+ Show nicer error when uploading invalid certificates to client configuration
+	+ Set version to 3.5
+3.4
+	+ Log audit working properly for download client bundle
+	+ Use service instead of deprecated invoke-rc.d for init.d scripts
+	+ Set version to 3.4
+3.3
+	+ Switch from Error to TryCatch for exception handling
+	+ Added missing EBox::Exceptions uses
+	+ Better behavior for daemons ifaceAddress methods
+	+ Precondition to assure there are certificates available in
+	  DownloadClientBundle model
+	+ In the tunnel client bundle don't allow additional server
+	  addresses because they are not supported
+	+ Set version to 3.3
+3.2
+	+ Set version to 3.2
+3.1.2
+	+ Upgraded OpenVPN installer for Windows to 2.3.2
+3.1.1
+	+ Adapted to updatedRowNotify call with no changes in values
+	+ Added menu icon
+	+ Adapt firewall rules to new accept chains
+3.1
+	+ Updated to reflect the Apache -> WebAdmin rename.
+	+ Removed 3.0.X migration code
+	+ Added advertised routes option to the clients
+	+ Added option that allows server tunnels to reject any route from
+	  the clients
+	+ Client to client connection option is always enforced for tunnel servers
+	+ Added Pre-Depends on mysql-server to avoid problems with upgrades
+	+ Depend on zentyal-core 3.1
+3.0.5
+	+ Create correctly advertised network objects for interfaces with
+	  more than one address in the same network
+3.0.4
+	+ Better filename for tunnel client bundle
+	+ Zebra daemon debug controlled by global debug setting
+	+ Allow again client-to-client connection in tunnel mode
+	+ ripd debug output controlled by debug key
+	+ Modified daemon management to use methods from EBox::Module::Service
+	+ Daemon configuration files are created, as expected, in _setConf method
+3.0.3
+	+ LogHelper does not sees longer 'X509NAME OK' verification status
+	  as unknown
+	+ Added float option to clients to allow server IP/port changes
+	+ Fixed LogHelper Client connection initiated regexp
+	+ Fixed certificates check in client configuration form
+3.0.2
+	+ Adapted to changes in EBox::LogObserver::_convertTimestamp
+3.0.1
+	+ Fixed client configuration model to allow its edition without
+	  changing certificate files
+2.3.12
+	+ Move report code to remoteservices
+2.3.11
+	+ Dont create servers which its name maps to a invalid certificate
+	+ Fixed error in template for server's client bundle
+2.3.10
+	+ VPN is now under Infrastructure instead of UTM
+	+ Add PID file to make compatible with init.d script to check the
+	  current daemon status
+	+ Use MSS fix by configuration file option in order not to affect
+	  all servers
+	+ Added missing use statement in exposed networks model
+	+ Adapted to changes in DataForm, these changes caused problems
+	  creating new servers
+	+ Added modeldepends to yaml schema
+	+ Reimplemented old behavior of client configuration directory
+	  creation for compability with other modules
+	+ Fixed error when backing up servers with no configuration file present
+	+ Improvements in DataForm deprecates the fudge in validateTypedRow
+2.3.9
+	+ Added redirect gateway option to the server
+2.3.8
+	+ Configuration file reside under daemon directory
+	+ ipp files are now in server own directory
+	+ Client now drop prvilegies after initialization
+	+ Different model for upload client bundles for clients
+	+ Added client config directory option to servers
+	+ Daemons can use a TUN interface
+	+ Using cloud DDNS address as defautl for client bundle
+	+ Added connection strategy option to client bundle
+	+ Unavailable options are hidden in download client bundle form
+	+ Added push dhcp-options to server: dns, searchdomain and wins
+	+ Configuration files in windows bundle now use typical window's
+	  line termination
+2.3.7
+	+ Adapted to new Model management framework
+2.3.6
+	+ Take into account the VPN internal client renaming
+	+ Site-to-site VPN is now supported on all editions
+	+ Refresh interface info cache with an apache restart to make the
+	  widgets return updated interface information
+	+ Fixed regresion that allowed bad server names
+	+ Fixed checks for used ports in other modules
+2.3.5
+	+ Create tables with MyISAM engine by default
+2.3.4
+	+ Advertised networks are now defined by objects instead of by
+	  manually specified networks
+2.3.3
+	+ Packaging fixes for precise
+2.3.2
+	+ Updated Standards-Version to 3.9.2
+2.3.1
+	+ Added checks for small business subscription
+	+ Give support to use general proxy in OpenVPN clients
+2.3
+	+ Adapted to new MySQL logs backend
+	+ Delete client and server upstart files on module purge
+	+ Replaced autotools with zbuildtools
+	+ Don't allow any server to use the same network than another
+	  server or any interface
+2.1.6
+	+ Removed /zentyal prefix from URLs
+	+ Include again OpenVPN for Windows installer
+2.1.5
+	+ Avoid duplicated restart during postinst
+	+ Added route up command option to vpn clients
+	+ Added mssfix option for UDP connections
+	+ Added new setRouteUpCmd in EBox::OpenVPN::Client used by
+	  EBox::RemoteServices::SupportAccess class
+	+ Added new setLocalAddressAndPort in EBox::OpenVPN::Client used
+	  by EBox::RemoteServices::Auth class
+	+ Removed useless client widgets
+2.1.4
+	+ Fixed argument passing in constructor, readonly instances now work
+2.1.3
+	+ VPN logs are stored now under /var/log/openvpn and properly rotated
+	+ Remove remoteservices clients on backup restore if remoteservices
+	  module is excluded
+2.1.2
+	+ Improved precondition fail message
+	+ Fixed problem with quagga automatic updates
+2.1.1
+	+ Reorganize URL's and submenus to integrate with new IPsec module
+	+ Upgrade version of the OpenVPN for Windows installer to 2.2.0
+	+ Allow all kind of network addresses on exposed networks
+	+ Added localAddr and lport properties for internal VPN clients
+	+ Bugfix: now you can edit no-certificate VPN client parameters without
+	  resubmitting certificates
+2.1
+	+ Upgrade version of the OpenVPN for Windows installer to 2.1.4
+	+ Use new standard enable-module script
+	+ Use new initial-setup in postinst
+	+ Replace /etc/ebox/80openvpn.conf with /etc/zentyal/openvpn.conf
+	+ Added server option for multihomed UDP server
+2.0.7
+	+ VPN clients are now forced to explicitly notify disconnections only if
+	  UDP is the used protocol.
+2.0.6
+	+ Removed deprecated code that caused a warning in postinst logs restart
+	+ VPN clients are now forced to explicitly notify disconnections
+	+ Bugfix: VPN widgets don't break dashboard if they cannot find the IP of
+	  the used interface
+2.0.5
+	+ Avoid useless log messages on VPN log files recreation
+	+ Bugfix: VPN client connections and disconnections are logged again
+	+ Client bundle filename includes now the certificate name
+	+ Changed download client bundle text to "Download"
+	+ Set default order for dashboard widgets
+2.0.4
+	+ Bugfix: VPN servers are correctly disabled when their certificates are
+	  expired or revoked
+	+ Added /etc/default/openvpn to openvpn used files
+2.0.3
+	+ Bugfix: Zentyal-managed VPN servers are only started by upstart
+	+ Bugfix: VPN servers cannot be managed without a valid CA certificate
+	+ Bugfix: Configuration files are correctly removed when a server is
+	  deleted
+2.0.2
+	+ Typo fix: A missing space in a command to validate certificates
+2.0.1
+	+ Bugfix: Handle spaces in server names
+	+ Added exception error to precondition fail message
+1.5.4
+	+ Zentyal rebrand
+	+ Added Mac OS X option to download bundle (same bundle as linux)
+1.5.3
+	+ Added bridged mode support in firewall helper
+1.5.2
+	+ Use a different persistent connection file for each daemon
+	instead of sharing a common one
+	+ Better messages for upload bundle errors
+1.5.1
+	+ Added support for OpenVPN servers to listen only on a PPPoE iface
+	+ Bugfix: Escape some files to make download client bundle work
+	  again if the server name has spaces
+	+ Bugfix: Escape some files to allow spaces in server names
+	+ Make initializeInterfaces() public
+	+ Bugfix: ebox itself addresses are not accepted in VPN clients as
+	  server addresses
+1.5
+	+ Make changes to work with /etc/init upstart
+1.3.15
+	+ Set a respawn limit when the client is internal
+1.3.14
+	+ Remove migration scripts
+1.3.13
+	+ Usability enhancements. Configure automatically network address and port
+	  and also create a server certificate and advertise local networks.
+	  (Closes #1628)
+	+ Keep folder open
+	+ VPN adddress cannot be the same of any exposed network and viceversa
+1.3.12
+	+ Add breadcrumbs
+1.3.11
+	+ Added report support
+1.3.10
+	+ Changed name of AdvertisedNetworks model to ExposedNetworks to
+	  avoid problems with ad-blockers. However we preserve the old
+	  directory name to avoid more migrations, it seems that this not
+	  triggers ad-blockers. If later we found that it triggers we will
+	  have to use other directory and add a migration script.
+1.3.6
+	+ Upgraded windows installer, now we use 2.1 (previously was 2.0.9)
+	+ Add "configuration" field to Client model to select manual  or
+	  bundle configuration mode
+	+ Bugfix: bundle configuration mode works again
+	+ Bugfix: windows bundle works again
+	+ DownloadClient bundle form is only showed when server
+	  configuration is complete
+1.3.4
+	+ tableInfo returns an array of hash refs
+1.1.20
+	+ Bugfix: Allow VPN clients with spaces in its common name
+	+ Enable/disable rip password depending on eBox-to-eBox conf
+	+ Bugfix: fixed bug in interface number when number >= 10
+1.1
+	+ Show status for non-internal VPN daemons in dashboard
+	+ Using EBox::Types::Text::WriteOnce instead of EBox::Types::OpenVPN::WriteOnceText
+	+ Use the new rows() and ids() API
+0.12.100
+	+ Daemon names are restricted to alphanumerics and '-'. '_', '.'
+	  characters
+	+ Bugfix: servers and clients cannto get any longer the same
+	interface number
+	+ Added log rotation using logrotate
+0.12.99
+	+ New release
+0.12
+	+ Adapt ebox-openvpn to MVC framework
+	+ Bugfix: Enforcing RIPv2 to always authenticate when using eBox
+	tunnels
+0.11.103
+	+ Bugfix. Quote certificate file names with double quote to
+	  fix bug in win32
+0.11.102
+	+ Bugfix. Quote certifacte file names to support spaces
+0.11.101
+	+ Fix typo in CreateClient
+	+ Do not remove quagga and openVPN rc links
+	+ Bugfix. Retrieve rip password in server configuration
+	+ Bugfix. Allow user to remove rip password when disabling ebox-to-ebox
+	  tunnel
+	+ Add backwards compatibility with old openVPN tunnels
+	+ Make removed daemons deletion more robust
+	+ Bugfix. Get activeServers instead of activeDaemons to add
+	  INPUT rules
+	+ Removed duplicate pmasquerade firewall rules, input rules to
+	server more restrictive with input interface
+0.11.100
+	+ Bugfix. rip password is not required for normal clients
+	+ Add feature to allow masquerading in VPNs. Now you can use the
+	  openVPN module with just one interface.
+0.11.99
+	+ Bugfix. Shorten reserved daemons prefix to enlarge the daemon name
+	user choice from RESERVED_DAEMON_ to R_D_
+0.11
+	+ Bugfix. Allow RIP connections on tap interfaces
+	+ Bugfix. Log timestamp with one-digit day
+0.10.99
+	+ Windows bundle can be created to include the openVPN windows installer
+	+ Log openVPN status
+	+ Treat openVPN like internal interfaces
+0.10.99
+	+ New release
+	+ added  log facilities
+	+ client certificates and key validation
+0.10
+	+ Fix issue with www server to guess IP
+	+ Improvements on port availability
+	+ Only announce routes for RFC1918
+	+ Relax checking of advertised routes
+	+ Do not downgrade privileges from root to another user/group to avoid
+	  problems when reconnecting
+0.9.100
+	+ Clients backup their certificates
+	+ Add API to support internal VPNs
+0.9.99
+	+ New openvpn's log directory with log file and status file
+	+ After creating a server the user is redirected to the edit page
+0.9.3
+	+ New release
+0.9.2
+	+ Fix a bug related to unscaped characters
+	+ Added support for hidden clients
+0.9.1
+	+ New release
+0.9
+	+ Added Polish translation
+        + Client bundle generator for Windows and Linux
+0.8.99
+	+ First public release

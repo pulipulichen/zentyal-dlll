@@ -1,0 +1,25 @@
+<%args>
+    $groupip
+    $rdata
+</%args>
+<%init>
+my @time = localtime();
+my $date = sprintf("%04d%02d%02d%02d",$time[5]+1900,$time[4]+1,$time[3],$time[2]);
+</%init>
+$TTL 3D
+$ORIGIN <% $groupip %>.in-addr.arpa.
+@	IN	SOA	<% $rdata->{soa} %>.<% $rdata->{domain} %>.	hostmaster.<% $rdata->{domain} %>. (
+			<% $date %>	;serial number
+			8H		;refresh
+			2H		;retry
+			4W		;expiration
+			1D )		;
+;
+% foreach my $ns (@{$rdata->{'ns'}}) {
+		NS	<% $ns %>.<% $rdata->{'domain'} %>.
+% }
+;
+% foreach my $host (@{$rdata->{'hosts'}}) {
+%   my $prefix = $host->{name} ? "$host->{name}." : '';
+<% $host->{'ip'} %>	PTR	<% $prefix . $rdata->{'domain'} %>.
+% }
