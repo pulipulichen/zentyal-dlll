@@ -15,18 +15,8 @@ sub getOptions
     my $options = ();
     $options->{moduleName} = 'VEServer';
     $options->{help} = '<div class="tip">
-<p><strong>VMID and IP address mapping:</strong></p>
-<p>VMID <span style="background-color: #00ffff;">1</span><span style="background-color: ##ffCCEE;">0</span><span style="background-color: #00ff00;">01</span> = IP 10.<span style="background-color: #00ffff;">1</span>.<span style="background-color: ##ffCCEE;">0</span>.<span style="background-color: #00ff00;">1</span></p>
-<p>VMID&nbsp;<span style="background-color: #00ffff;">3</span><span style="background-color: ##ffCCEE;">1</span><span style="background-color: #00ff00;">24</span>&nbsp;= IP 10.<span style="background-color: #00ffff;">3</span>.<span style="background-color: ##ffCCEE;">1</span>.<span style="background-color: #00ff00;">24</span></p></div>';
-    return $options;
-}
-
-sub getOptionsVirtualEnvironmentServers
-{
-    my $options = ();
-    $options->{moduleName} = 'VEServer';
-    $options->{help} = '<div class="tip">
 <p>IP: 10.<span style="background-color: #00ffff;">6</span>.<span style="background-color: ##ffCCEE;">0</span>.<span style="background-color: #00ff00;">12</span></p>
+<p><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-environment-server-proxmox" target="_blank">' . __('More details') . '</a></p>
 </div>';
     return $options;
 }
@@ -47,7 +37,7 @@ sub _table
 {
     my ($self) = @_;
 
-    my $options = $self->getOptionsVirtualEnvironmentServers();
+    my $options = $self->getOptions();
 
     return $self->loadLibrary('LibraryHeader')->getDataTable($options);
 }

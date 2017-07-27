@@ -2,20 +2,22 @@ Network IP range
 =======
 
 # Virtual Machine
-- for VMID: 100~999
-	- VMID: 105
-	- Example IP: 10.0.1.5
-		- Part A: 10 (fixed)
-		- Part B: 0 (fixed)
-		- Part C: 1 (VMID 1nd number)
-		- Part D: 5 (=05, VMID 2nd & 3rd number) 
-- for VMID: > 1000
-	- VMID: 1055
-	- Example IP: 10.1.0.55
-		- Part A: 10 (fixed)
-		- Part B: 1 (VMID 1st number)
-		- Part C: 0 (VMID 2nd number)
-		- Part D: 55 (VMID 3rd & 4th number)
+
+## For VMID: 100~999
+- Example VMID: 105
+- Example IP: 10.0.1.5
+	- Part A: 10 (fixed)
+	- Part B: 0 (fixed)
+	- Part C: 1 (VMID 1nd number)
+	- Part D: 5 (=05, VMID 2nd & 3rd number) 
+
+## For VMID: > 1000
+- Example VMID: 1055
+- Example IP: 10.1.0.55
+	- Part A: 10 (fixed)
+	- Part B: 1 (VMID 1st number)
+	- Part C: 0 (VMID 2nd number)
+	- Part D: 55 (VMID 3rd & 4th number)
 
 # DHCP Range for virtual machines
 - IP range: 10.6.2.1 - 10.6.2.254
