@@ -100,7 +100,7 @@ sub _table
 
     # ----------------------------------
 
-    #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
+    push(@fields, $fieldsFactory->createFieldHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
 
     # @TODO 20170727 這邊應該改成按下去就立刻備份的HTML
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Backup?selected=local#backup_description", 1));

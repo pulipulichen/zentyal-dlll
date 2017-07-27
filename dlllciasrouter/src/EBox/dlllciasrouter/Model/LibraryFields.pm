@@ -1306,6 +1306,26 @@ sub createFieldHrWithHeading
 }
 
 ##
+# 20150727 Pulipuli Chen
+# 只有標題
+##
+sub createFieldHeading
+{
+    my ($self, $fieldName, $heading) = @_;
+
+    my $field = new EBox::Types::HTML(
+            'fieldName' => $fieldName . '_hr',
+            'printableName' => __(''),
+            'editable' => 0,
+            'defaultValue' => '<span></span>',
+            'help' => "<h4>".$heading."</h4>",
+            'hiddenOnSetter' => 0,
+            'hiddenOnViewer' => 1,
+        );
+    return $field;
+}
+
+##
 # 20150515 Pulipuli Chen
 # 新增按鈕
 ##
