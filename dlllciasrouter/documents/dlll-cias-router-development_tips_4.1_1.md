@@ -41,12 +41,12 @@ From original code
 		* [TimeZone.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/TimeZone.pm)
 		* [Date.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Date.pm) 
 	* Basic: Select
-		* [Select.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Select.pm)
+		* [Select.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Select.pm): It's must being configured with a populate sub function. ([Usage](https://github.com/pulipulichen/zentyal-dlll/blob/fe4851775fec2dcaeaf16755bf05cd29a78ddd46/dlllciasrouter/src/EBox/dlllciasrouter/Model/LibraryFields.pm#L667))
 		* [InverseMatchSelect.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/InverseMatchSelect.pm)
 		* [InverseMatchUnion.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/InverseMatchUnion.pm)
 		* [MultiSelect.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/MultiSelect.pm)
 		* [MultiStateAction.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/MultiStateAction.pm)
-		* **[Union.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Union.pm): Combine multi field into one field. It's not selection.**
+		* [Union.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Union.pm): Combine multi field into one field. It's not selection. ([Usage](https://github.com/pulipulichen/zentyal-dlll/blob/70792a3d3d13fcdfafc383b70c0ba68ed5131bd2/dlllciasrouter/src/EBox/dlllciasrouter/Model/LibraryFields.pm#L669))
 	* Display: only display, it's cannot be used to edit.
 		* [Link.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Link.pm): Only display, cannot edit
 		* [HTML.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/HTML.pm)  

@@ -20,8 +20,9 @@ https://github.com/pulipulichen/zentyal-dlll/tree/master/dlllciasrouter/document
 # Part 4. DLLL-CIAS Router Development Tips
 https://github.com/pulipulichen/zentyal-dlll/tree/master/dlllciasrouter/documents/dlll-cias-router-development_tips_4.1_1.md
 
-# Part 5. Network IP Configuration
-https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md
+# Part 5. Usage
+    * Network IP Configuration: https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md
+    * Usage Guide: https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/dlll-cias-router-usage-guide.md
 
 ----
 

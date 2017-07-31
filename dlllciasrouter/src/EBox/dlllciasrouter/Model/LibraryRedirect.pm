@@ -378,6 +378,10 @@ sub hasProtocolRedirect
     return $row->elementExists('redir' . $protocol . '_enable');
 }
 
+##
+# 20170731 Pulipuli Chen
+# 取得要設定連接埠的參數
+## 
 sub getProtocolRedirectParam
 {   
     my ($self, $row, $protocol) = @_;
@@ -386,8 +390,9 @@ sub getProtocolRedirectParam
     my $intPort = $self->getProtocolIntPort($row, $protocol);
     my $log = $self->getProtocolLog($row, $protocol);
 
-    if ($row->valueByName('redir'.$protocol.'_secure') == 1) {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $protocol, $log);
+    my $secure = $self->getRedirectSecureLevel($row, $protocol);
+    if ($secure > 0) {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $protocol, $log, $secure);
     }
     else {
         return $self->getRedirectParameter($row, $extPort, $intPort, $protocol, $log);
@@ -489,7 +494,7 @@ sub getRedirectParamOther
     };
 
     if ($redirRow->valueByName('secure') == 1) {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log);
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log, 1);
     }
     else {
         return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
@@ -539,7 +544,7 @@ sub getRedirectParameter
 
 sub getRedirectParameterSecure
 {
-    my ($self, $row, $extPort, $intPort, $desc, $log) = @_;
+    my ($self, $row, $extPort, $intPort, $desc, $log, $secure) = @_;
 
     my $lib = $self->getLibrary();
     my $libNET = $self->loadLibrary('LibraryNetwork');
@@ -549,7 +554,14 @@ sub getRedirectParameterSecure
     my $localIpaddr = $row->valueByName('ipaddr');
 
     #my $source = $self->getSecureIpSource();
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+    my $objectRowId;
+    if ($secure == 1) {
+        $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+    }
+    elsif ($secure == 2) {
+        # 20170731 加入Workplace的設定
+        $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id();
+    }
 
     return (
         interface => $iface,
@@ -1016,14 +1028,14 @@ sub getServerRedirectParamOrigin
     my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %param = (
-        interface => $iface,
-        origDest_selected => "origDest_ipaddr",
-        origDest_ipaddr_ip => $destIpaddr,
-        origDest_ipaddr_mask => 32,
-        protocol => "tcp/udp",
+        'interface' => $iface,
+        'origDest_selected' => "origDest_ipaddr",
+        'origDest_ipaddr_ip' => $destIpaddr,
+        'origDest_ipaddr_mask' => 32,
+        'protocol' => "tcp/udp",
 
-        external_port_range_type => 'single',
-        external_port_single_port => $extPort,
+        'external_port_range_type' => 'single',
+        'external_port_single_port' => $extPort,
 
         source_selected => 'source_object',
         source_object => $objectRowId,
@@ -1031,14 +1043,14 @@ sub getServerRedirectParamOrigin
         #source_ipaddr_ip => $source->{sourceIp},
         #source_ipaddr_mask => $source->{sourceMask},
 
-        destination => $row->valueByName("ipaddr"),
+        'destination' => $row->valueByName("ipaddr"),
         
-        destination_port_selected => "destination_port_other",
-        destination_port_other => $intPort,
+        'destination_port_selected' => "destination_port_other",
+        'destination_port_other' => $intPort,
 
-        description => $domainName. " (" . $localIpaddr . "): " . $desc . '('. $protocol .' Original)',
-        snat => 1,
-        log => 1,
+        'description' => $domainName. " (" . $localIpaddr . "): " . $desc . '('. $protocol .' Original)',
+        'snat' => 1,
+        'log' => 1,
     );
 
     return %param;
@@ -1090,59 +1102,59 @@ sub getServerRedirectParamZentyal
 # 20150528 Pulipuli Chen
 # @departed
 # 捨棄不用
-sub setupZentyalRedirect
-{
-    my ($self) = @_;
-    return;
-    my $libNET = $self->loadLibrary('LibraryNetwork');
-    my $iface = $libNET->getExternalIface();
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+#sub setupZentyalRedirect
+#{
+#    my ($self) = @_;
+#    return;
+#    my $libNET = $self->loadLibrary('LibraryNetwork');
+#    my $iface = $libNET->getExternalIface();
+#    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
-    my %paramAdmin = (
-        interface => $iface,
-        origDest_selected => "origDest_ebox",
-        protocol => "tcp/udp",
+#    my %paramAdmin = (
+#        interface => $iface,
+#        origDest_selected => "origDest_ebox",
+#        protocol => "tcp/udp",
 
-        external_port_range_type => 'single',
-        external_port_single_port => 64443,
+#        external_port_range_type => 'single',
+#        external_port_single_port => 64443,
 
-        source_selected => 'source_object',
-        source_object => $objectRowId,
+#        source_selected => 'source_object',
+#        source_object => $objectRowId,
 
-        destination => "10.0.0.254",
+#        destination => "10.0.0.254",
         
-        destination_port_selected => "destination_port_other",
-        destination_port_other => 8443,
+#        destination_port_selected => "destination_port_other",
+#        destination_port_other => 8443,
 
-        description => __("Zentyal Webadmin (64443->8443)"),
-        snat => 0,
-        log => 1,
-    );
+#        description => __("Zentyal Webadmin (64443->8443)"),
+#        snat => 0,
+#        log => 1,
+#    );
 
-    $self->addRedirectRow(%paramAdmin);
+#    $self->addRedirectRow(%paramAdmin);
 
-    my %paramSSH = (
-        interface => $iface,
-        origDest_selected => "origDest_ebox",
-        protocol => "tcp/udp",
+#    my %paramSSH = (
+#        interface => $iface,
+#        origDest_selected => "origDest_ebox",
+#        protocol => "tcp/udp",
 
-        external_port_range_type => 'single',
-        external_port_single_port => 64422,
+#        external_port_range_type => 'single',
+#        external_port_single_port => 64422,
 
-        source_selected => 'source_object',
-        source_object => $objectRowId,
+#        source_selected => 'source_object',
+#        source_object => $objectRowId,
 
-        destination => "10.0.0.254",
+#        destination => "10.0.0.254",
         
-        destination_port_selected => "destination_port_other",
-        destination_port_other => 22,
+#        destination_port_selected => "destination_port_other",
+#        destination_port_other => 22,
 
-        description => __("Zentyal SSH (64422->22)"),
-        snat => 0,
-        log => 1,
-    );
+#        description => __("Zentyal SSH (64422->22)"),
+#        snat => 0,
+#        log => 1,
+#    );
 
-    $self->addRedirectRow(%paramSSH);
-}
+#    $self->addRedirectRow(%paramSSH);
+#}
 
 1;

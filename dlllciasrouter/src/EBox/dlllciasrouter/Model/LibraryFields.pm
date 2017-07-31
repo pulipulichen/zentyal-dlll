@@ -641,24 +641,24 @@ sub createFieldProtocolRedirect
 ##
 # 20170731 Pulipuli Chen
 # 這是給主要管理伺服器用的
+# @departed 20170731
 ##
-sub createFieldProtocolOnlyForLAN
-{
-    my ($self, $protocol, $enable) = @_;
-    my $field = new EBox::Types::Boolean(
-            fieldName => 'redir'.$protocol.'_secure',
-            printableName => __('Only For Administrator List'),
-            help => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
-            editable => 1,
-            optional => 0,
-            defaultValue => $enable,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
-
-    return $field;
-}
-
+#sub createFieldProtocolOnlyForLAN
+#{
+#    my ($self, $protocol, $enable) = @_;
+#    my $field = new EBox::Types::Boolean(
+#            fieldName => 'redir'.$protocol.'_secure',
+#            printableName => __('Only For Administrator List'),
+#            help => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
+#            editable => 1,
+#            optional => 0,
+#            defaultValue => $enable,
+#            hiddenOnSetter => 0,
+#            hiddenOnViewer => 1,
+#        );
+#
+#    return $field;
+#}
 
 ##
 # 20170731 Pulipuli Chen
@@ -673,10 +673,10 @@ sub createFieldProtocolSecureSelection
         'printableName' => __('Secure level'),
         'populate' => \&_populateProtocolSecureSelection,
         'editable' => 1,
-        'defaulValue' => $secureLevel, 
+        'defaultValue' => $secureLevel,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Set up Administrator List & Workplace List') . '</a>',
+        'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_hr_ Zentyal_admin_hr_row" target="_blank">' . __('Set up Administrator List & Workplace List') . '</a>',
     );
 
     return $field;
@@ -840,7 +840,8 @@ sub createFieldPoundOnlyForLAN
 {
     my ($self, $enable) = @_;
 
-    my $field = $self->createFieldProtocolOnlyForLAN("POUND", $enable);
+    #my $field = $self->createFieldProtocolOnlyForLAN("POUND", $enable);
+    my $field = $self->createFieldProtocolSecureSelection("POUND", $enable);
     return $field;
 }
 
@@ -962,7 +963,8 @@ sub createFieldHTTPSRedirect
 sub createFieldHTTPSOnlyForLAN
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolOnlyForLAN("HTTPS", 1);
+    #my $field = $self->createFieldProtocolOnlyForLAN("HTTPS", 1);
+    my $field = $self->createFieldProtocolSecureSelection("HTTPS", 1);
     return $field;
 }
 
@@ -1008,7 +1010,8 @@ sub createFieldSSHRedirect
 sub createFieldSSHOnlyForLAN
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolOnlyForLAN("SSH", 1);
+    #my $field = $self->createFieldProtocolOnlyForLAN("SSH", 1);
+    my $field = $self->createFieldProtocolSecureSelection("SSH", 1);
     return $field;
 }
 
@@ -1053,7 +1056,8 @@ sub createFieldRDPRedirect
 sub createFieldRDPOnlyForLAN
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolOnlyForLAN("RDP", 1);
+    #my $field = $self->createFieldProtocolOnlyForLAN("RDP", 1);
+    my $field = $self->createFieldProtocolSecureSelection("RDP", 1);
     return $field;
 }
 
