@@ -68,7 +68,7 @@ sub _table
         $libFactory->createFieldBoundLocalDNS(),
         $libFactory->createFieldProtocolScheme('POUND', 0, 'http'),
         $libFactory->createFieldInternalPortDefaultValue(80),
-        $libFactory->createFieldPoundOnlyForLAN(),
+        $libFactory->createFieldPoundOnlyForLAN(1),
         $libFactory->createFieldEmergencyRestarter(),
     );
 

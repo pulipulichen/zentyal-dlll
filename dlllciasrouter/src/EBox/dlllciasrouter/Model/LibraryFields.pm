@@ -638,6 +638,10 @@ sub createFieldProtocolRedirect
     return $field;
 }
 
+##
+# 20170731 Pulipuli Chen
+# 這是給主要管理伺服器用的
+##
 sub createFieldProtocolOnlyForLAN
 {
     my ($self, $protocol, $enable) = @_;
@@ -653,6 +657,47 @@ sub createFieldProtocolOnlyForLAN
         );
 
     return $field;
+}
+
+
+##
+# 20170731 Pulipuli Chen
+# 這是給主要管理伺服器用的，可以選擇多種Port
+##
+sub createFieldProtocolSecureSelection
+{
+    my ($self, $protocol, $secureLevel) = @_;
+
+    my $field = new EBox::Types::Select(
+        'fieldName' => 'redir'.$protocol.'_secure',
+        'printableName' => __('Secure level'),
+        'populate' => \&_populateProtocolSecureSelection,
+        'editable' => 1,
+        'defaulValue' => $secureLevel, 
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Set up Administrator List & Workplace List') . '</a>',
+    );
+
+    return $field;
+}
+
+sub _populateProtocolSecureSelection
+{
+    return [
+        {
+            value => 0,
+            printableValue => __('Public'),
+        },
+        {
+            value => 1,
+            printableValue => __('Only for Administrator List'),
+        },
+        {
+            value => 2,
+            printableValue => __('Only for Workplace List'),
+        },
+    ];
 }
 
 sub createFieldProtocolLog
@@ -676,10 +721,10 @@ sub createFieldProtocolExternalPort
 {
     my ($self, $protocol, $unique, $extPort) = @_;
     my $field = new EBox::Types::Union(
-            'fieldName' => 'redir'.$protocol.'_extPort',
-            'printableName' => __($protocol.' External Port'),
-            'unique' => $unique,
-            'subtypes' =>
+        'fieldName' => 'redir'.$protocol.'_extPort',
+        'printableName' => __($protocol.' External Port'),
+        'unique' => $unique,
+        'subtypes' =>
             [
             new EBox::Types::Union::Text(
                 'fieldName' => 'redir'.$protocol.'_extPort_default',
@@ -689,9 +734,9 @@ sub createFieldProtocolExternalPort
                 'printableName' => __('Other'),
                 'editable' => 1,),
             ],
-                hiddenOnSetter => 0,
-                hiddenOnViewer => 1,
-        );
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+    );
 
     return $field;
 }
@@ -793,8 +838,9 @@ sub createFieldPoundProtocolScheme
 
 sub createFieldPoundOnlyForLAN
 {
-    my ($self) = @_;
-    my $field = $self->createFieldProtocolOnlyForLAN("POUND", 1);
+    my ($self, $enable) = @_;
+
+    my $field = $self->createFieldProtocolOnlyForLAN("POUND", $enable);
     return $field;
 }
 
@@ -862,7 +908,8 @@ sub createFieldHTTPRedirect
 sub createFieldHTTPOnlyForLAN
 {
     my ($self) = @_;
-    my $field = $self->createFieldProtocolOnlyForLAN("HTTP", 0);
+    #my $field = $self->createFieldProtocolOnlyForLAN("HTTP", 0);
+    my $field = $self->createFieldProtocolSecureSelection("HTTP", 0);
     return $field;
 }
 
@@ -1487,8 +1534,27 @@ sub createFieldPortIntPort
 ##
 # 20150512 Pulipuli Chen
 # Only For LAN 顯示
+# 這是給虛擬機器用的
 ##
 sub createFieldPortOnlyForLan
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::Boolean(
+            'fieldName' => 'secure',
+            'printableName' => __('Only For Administrator List'),
+            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
+            'editable' => 1,
+            optional=>0,
+        );
+    return $field;
+}
+
+##
+# 20170731 Pulipuli Chen
+# 這是給虛擬機器 Other Redirection用的
+# 權限選擇
+##
+sub createFieldPortSecureSelection
 {
     my ($self, $help) = @_;
     my $field = new EBox::Types::Boolean(

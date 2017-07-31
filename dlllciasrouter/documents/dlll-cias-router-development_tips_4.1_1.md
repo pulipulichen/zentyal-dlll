@@ -46,6 +46,7 @@ From original code
 		* [InverseMatchUnion.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/InverseMatchUnion.pm)
 		* [MultiSelect.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/MultiSelect.pm)
 		* [MultiStateAction.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/MultiStateAction.pm)
+		* **[Union.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Union.pm): Combine multi field into one field. It's not selection.**
 	* Display: only display, it's cannot be used to edit.
 		* [Link.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Link.pm): Only display, cannot edit
 		* [HTML.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/HTML.pm)  
@@ -64,7 +65,7 @@ From original code
 	* Database
 		* [HasMany.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/HasMany.pm)
 		* [Service.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Service.pm): Maybe it's Zentyal's service
-		* [Union.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Union.pm)
+		
 		
 
 # Check error logs

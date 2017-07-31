@@ -85,8 +85,8 @@ sub _table
     push(@fields, new EBox::Types::Boolean(
             'fieldName'     => 'async',
             'printableName' => __('Async'),
-            "editable" => 1,
-            "defaultValue" => 1,
+            'editable' => 1,
+            'defaultValue' => 1,
             'hiddenOnSetter' => 0,
             'hiddenOnViewer' => 1,
         ));
@@ -94,7 +94,7 @@ sub _table
             'fieldName' => 'squash',
             'printableName' => __("Squash"),
             'populate' => \&_populateFieldSquash,
-            "editable" => 1,
+            'editable' => 1,
             'hiddenOnSetter' => 0,
             'hiddenOnViewer' => 1,
         ));

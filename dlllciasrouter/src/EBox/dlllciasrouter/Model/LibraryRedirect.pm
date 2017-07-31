@@ -893,7 +893,7 @@ sub getProtocolHint
         $protocolTitle = $protocolTitle . '*';
     }
 
-    my $secure = getRedirectSecureLevel($row, $protocol);
+    my $secure = $self->getRedirectSecureLevel($row, $protocol);
     
     if ($secure == 1) {
         #$protocolTitle = '[' .$protocolTitle . ']';
@@ -945,6 +945,11 @@ sub getProtocolHint
 
     if (defined($note) && $note ne '') {
         $hint = '<em title="'.$note.'">'.$hint.'</em>';
+    }
+
+    my $enable = $self->getLibrary()->isEnable($row);
+    if ($enable == 0) {
+        $hint = '<del>' . $hint . '</del>';
     }
 
     return $hint;

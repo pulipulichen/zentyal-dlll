@@ -217,22 +217,25 @@ sub modelHasDomainName
 # -----------------------------------
 # Field Setter
 
-sub setLinkWithDomainName
-{
-    my ($self, $row) = @_;
-
-    my $domainName = $row->valueByName('domainName');
-    my $url = $row->valueByName('url');
-    my $enable = $self->getLibrary()->isEnable($row);
-
-    my $domainNameLink = $self->domainNameToLink($domainName, $enable);
-    my $urlLink = $self->urlToLink($url);
-
-    $row->elementByName('domainNameLink')->setValue($domainNameLink);
-    $row->elementByName('urlLink')->setValue($urlLink);
-
-    #$row->store();
-}
+# 20170727 Pulipuli Chen
+# @departed
+# 此方法廢棄不用
+#sub setLinkWithDomainName
+#{
+#    my ($self, $row) = @_;
+#
+#    my $domainName = $row->valueByName('domainName');
+#    my $url = $row->valueByName('url');
+#    my $enable = $self->getLibrary()->isEnable($row);
+#
+#    my $domainNameLink = $self->domainNameToLink($domainName, $enable);
+#    my $urlLink = $self->urlToLink($url);
+#
+#    $row->elementByName('domainNameLink')->setValue($domainNameLink);
+#    $row->elementByName('urlLink')->setValue($urlLink);
+#
+#    #$row->store();
+#}
 
 sub setLink
 {
@@ -401,7 +404,16 @@ sub updateDomainNameLinkDeco
         $textDecoration = "line-through";
     }
 
+    my $title = "Public link: " . $link;
+    if ($secure == 1) {
+        $title = "For Administrator: " . $link;
+    }
+    elsif ($secure == 2) {
+        $title = "For Workplace: " . $link;
+    }
+
     $link = '<a href="'.$link.'" ' 
+        . ' title="' . $title . '" '
         . 'target="_blank" ' 
         . 'style="background: none;text-decoration: '.$textDecoration.';color: #A3BD5B;">' 
         . $brokenDomainName 

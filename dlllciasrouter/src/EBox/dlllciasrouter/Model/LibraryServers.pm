@@ -123,7 +123,7 @@ sub getDataTable
 
     #push(@fields, $fieldsFactory->createFieldPoundProtocolScheme());
 
-    push(@fields, $fieldsFactory->createFieldPoundOnlyForLAN());
+    push(@fields, $fieldsFactory->createFieldPoundOnlyForLAN(0));
     push(@fields, $fieldsFactory->createFieldEmergencyRestarter());
 
     #push(@fields, $fieldsFactory->createFieldHr('hr1'));
@@ -379,6 +379,10 @@ sub getVMID
     my @parts = split('\.', $ipaddr);
     my $partA = $parts[0];
     my $partB = $parts[1];
+    if ($partB eq '0') {
+        $partB = "";
+    }
+
     my $partC = $parts[2];
     my $partD = $parts[3];
     if ($partD < 10) {
