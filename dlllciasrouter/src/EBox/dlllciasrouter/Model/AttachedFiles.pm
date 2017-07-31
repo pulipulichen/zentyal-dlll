@@ -116,7 +116,7 @@ sub _table
     {
         'tableName' => 'AttachedFiles',
         'pageTitle' => 'bbb' . $self->pageTitle(),
-        'printableTableName' => __('Attached File') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
+        'printableTableName' => __('Attached Files') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
         'printableRowName' => __('Attached File'),
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,

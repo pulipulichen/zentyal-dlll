@@ -136,11 +136,15 @@ sub deleteDomainName
         my $hasDomainName = 0;
 
         if ($hasDomainName == 0 && $excludeModel ne 'dlllciasrouter-pound') {
-            $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
+            $hasDomainName = $self->modelHasDomainName('LibraryServices', $domainName);
             if ($hasDomainName == 0) {
                 $hasDomainName = $self->modelHasDomainName('OtherDomainNames', $domainName);
             }
         }
+
+        #if ($hasDomainName == 0 && $excludeModel ne 'PoundServices') {
+        #    $hasDomainName = $self->modelHasDomainName('PoundServices', $domainName);
+        #}
 
         if ($hasDomainName == 0 && $excludeModel ne 'URLRedirect') {
             $hasDomainName = $self->modelHasDomainName('URLRedirect', $domainName);
@@ -176,7 +180,9 @@ sub deleteDomainName
         #}
         #$self->deleteDomainName($domainName, $excludeModel);
 
-        $self->getLibrary()->show_exceptions($_ . ' <a href="/DHCP/View/Interfaces">DHCP Module</a> (LibraryDomainName->deleteDomainName() )');
+        $self->getLibrary()->show_exceptions($_ 
+            . ' <a href="/DHCP/View/Interfaces">DHCP Module</a> '
+            . '(LibraryDomainName->deleteDomainName() )');
     };
 }
 
@@ -209,7 +215,7 @@ sub modelHasDomainName
         return defined($domainNameId);
     }
     catch {
-        #$self->getLibrary()->show_exceptions($_ . ' (LibraryDomainName->modelHasDomainName() )');
+        #$self->getLibrary()->show_exceptions($_ . ' ( LibraryDomainName->modelHasDomainName() )');
         return 0;
     }
 }

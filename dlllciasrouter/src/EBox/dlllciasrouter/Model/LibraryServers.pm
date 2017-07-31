@@ -291,18 +291,20 @@ sub serverDeletedRowNotify
 
     try {
 
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->deleteDomainName($row->valueByName('domainName'), 'PoundServices');
-    $libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'PoundServices');
-    
-    my $libREDIR = $self->loadLibrary('LibraryRedirect');
-    $libREDIR->deleteRedirects($row);
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        #$libDN->deleteDomainName($row->valueByName('domainName'), 'PoundServices');
+        #$libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'PoundServices');
+        $libDN->deleteDomainName($row->valueByName('domainName'), 'dlllciasrouter-pound');
+        $libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'dlllciasrouter-pound');
 
-    my $libMAC = $self->loadLibrary('LibraryMAC');
-    $libMAC->removeDHCPfixedIPMember($row);
+        my $libREDIR = $self->loadLibrary('LibraryRedirect');
+        $libREDIR->deleteRedirects($row);
+
+        my $libMAC = $self->loadLibrary('LibraryMAC');
+        $libMAC->removeDHCPfixedIPMember($row);
 
     } catch {
-        $self->getLibrary()->show_exceptions($_ . '( PoundServices->deletedRowNotify() )');
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryServices->deletedRowNotify() )');
     };
 }
 

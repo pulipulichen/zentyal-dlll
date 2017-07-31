@@ -38,17 +38,17 @@ sub new
 sub pageTitle
 {
     my ($self) = @_;
-    my $row = $self->parentRow();
-    
-    if (defined($row))
-    {
+    try {
+        my $lib = $self->getLibrary();
+        my $row = $lib->getParentRow($self);
+
         my $domainName = $row->printableValueByName('domainName');
         my $ip = $row->printableValueByName('ipaddr');
         return $domainName . " (" . $ip . ")";
     }
-    else {
+    catch {
         return __("Other Domain Names");
-    } 
+    }
 }
 
 sub _table
@@ -75,9 +75,9 @@ sub _table
     my $dataTable =
     {
         'tableName' => 'OtherDomainNames',
-        'printableTableName' => __('Other Domain Names'),
-        'printableRowName' => __('Other Domain Names'),
         'pageTitle' => $self->pageTitle(),
+        'printableTableName' => __('Other Domain Names')  . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
+        'printableRowName' => __('Other Domain Name'),
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,
         'defaultController' => '/dlllciasrouter/Controller/OtherDomainNames',
@@ -123,17 +123,16 @@ sub addedRowNotify
 
         my $libDN = $self->loadLibrary('LibraryDomainName');
         #$subRow = $self->row();
-        my $row = $self->parentRow();
-        
-        $self->getLibrary()->show_exceptions( $row->id() );
-        #$row->subModel('OtherDomainNames')->
+        #my $row = $self->parentRow();
 
-        my $isRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($row);
-        my $isSubRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($subRow);
+        my $row = $self->getLibrary()->getParentRow($self);
+        
+        my $isRowEnable = $self->getLibrary()->isEnable($row);
+        my $isSubRowEnable = $self->getLibrary()->isEnable($subRow);
 
         # 1. 更新自己欄位的domain name連線資訊
         $libDN->updateDomainNameLink($subRow, 0);
-        if ($isSubRowEnable == 1 && $isRowEnable == 1) {
+        if ($isRowEnable == 1 && $isSubRowEnable == 1) {
             $libDN->addDomainName($subRow->valueByName('domainName'));
         }
 
@@ -158,18 +157,19 @@ sub deletedRowNotify
     
     try {
 
-    my $row = $self->parentRow();
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    
-    # 刪除Domain Name
-    $libDN->deleteDomainName($subRow->valueByName('domainName'), 'PoundServices');
+        # 刪除Domain Name
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        $libDN->deleteDomainName($subRow->valueByName('domainName'), 'dlllciasrouter-pound');
 
-    # 更新row的資料
-    $libDN->updateDomainNameLink($row, 1);
-    $row->store();
+        # 更新row的資料
+
+        #my $row = $self->parentRow();
+        my $row = $self->getLibrary()->getParentRow($self);
+        $libDN->updateDomainNameLink($row, 1);
+        $row->store();
 
     } catch {
-        $self->getLibrary()->show_exceptions($_ . '(OtherDomainNames->deletedRowNotify())');
+        $self->getLibrary()->show_exceptions($_ . ' ( OtherDomainNames->deletedRowNotify() )');
     };
 }
 
@@ -179,19 +179,20 @@ sub updatedRowNotify
 
     try {
 
-    my $row = $self->parentRow();
-    
-    if ($ROW_NEED_UPDATE == 0) {
-        $ROW_NEED_UPDATE = 1;
-    
-        $self->deletedRowNotify($oldSubRow);
-        $self->addRowNotify($subRow);
-        
-        $ROW_NEED_UPDATE = 0;
-    }   # if ($ROW_NEED_UPDATE == 0) {
+        #my $row = $self->parentRow();
+        #my $row = $self->getLibrary()->getParentRow($self);
+
+        if ($ROW_NEED_UPDATE == 0) {
+            $ROW_NEED_UPDATE = 1;
+
+            $self->deletedRowNotify($oldSubRow);
+            $self->addedRowNotify($subRow);
+
+            $ROW_NEED_UPDATE = 0;
+        }   # if ($ROW_NEED_UPDATE == 0) {
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . " (  OtherDomainNames->updatedRowNotify() ) ");
     };
 }
 

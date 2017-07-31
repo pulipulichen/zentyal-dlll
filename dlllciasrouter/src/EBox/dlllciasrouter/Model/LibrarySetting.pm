@@ -123,7 +123,8 @@ sub updatedRowNotify
 
     # 新增 Domain Name
     my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->deleteDomainName($oldRow->valueByName('domainName'), 'PoundServices');
+    #$libDN->deleteDomainName($oldRow->valueByName('domainName'), 'PoundServices');
+    $libDN->deleteDomainName($oldRow->valueByName('domainName'), 'dlllciasrouter-pound');
 
     if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
         $libDN->addDomainNameWithIP($row->valueByName('domainName'), $extIp);
