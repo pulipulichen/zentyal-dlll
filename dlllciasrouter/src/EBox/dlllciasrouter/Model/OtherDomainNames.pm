@@ -121,23 +121,28 @@ sub addedRowNotify
 
     try {
 
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    
-    # 1. 更新自己欄位的domain name連線資訊
-    $libDN->updateDomainNameLink($subRow, 0);
-    if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($subRow) == 1) {
-        $libDN->addDomainName($subRow->valueByName('domainName'));
-    }
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        my $row = $self->parentRow();
 
-    # 2. 更新row欄位的domain name顯示資訊
-    my $row = $self->parentRow();
-    $libDN->updateDomainNameLink($row, 1);
-    $row->store();
+        my $isRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($row);
+        my $isSubRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($subRow);
 
-    $subRow->store();
+        # 1. 更新自己欄位的domain name連線資訊
+        $libDN->updateDomainNameLink($subRow, 0);
+        if ($isSubRowEnable == 1 && $isRowEnable == 1) {
+            $libDN->addDomainName($subRow->valueByName('domainName'));
+        }
+
+        # 2. 更新row欄位的domain name顯示資訊
+        $libDN->updateDomainNameLink($row, 1);
+
+        $row->store();
+        $subRow->store();
 
     } catch {
-        $self->getLibrary()->show_exceptions( $_ . '; Please add domain name again. (OtherDomainNames->addedRowNotify)');
+
+        $self->getLibrary()->show_exceptions( $_ . '; Please add domain name again. ( OtherDomainNames->addedRowNotify() )');
+
     };
 
     $ROW_NEED_UPDATE = 0;
