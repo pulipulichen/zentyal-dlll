@@ -29,7 +29,7 @@ sub getOptions
 
     my $options = ();
     $options->{tableName} = "MfsSettings";
-    $options->{printableName} = __("MFS Setting");
+    $options->{printableName} = __("MooseFS (MFS) Settings");
     $options->{enableMooseFS} = 1;
     $options->{localhostSize} = "1GiB";
     $options->{chunkserverVMurl} = "https://app.box.com/s/cs3x2ocj90cacr3hzx66v832gvmqrfh1";
