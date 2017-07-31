@@ -51,8 +51,13 @@ sub pageTitle
 #        return $row->id() . __("Attached Files");
 #    }
 #    else {
-        return __("Attached Files");
+#        return
 #    } 
+
+    return '<a href="' . '/dlllciasrouter/Composite/VMServerComposite' . '">' 
+            . __('Virtual Machines') 
+            . '</a> <span class="title_link_sep">❱</span> ' 
+            . __("Attached Files");
 }
 
 sub _table
@@ -75,15 +80,14 @@ sub _table
         $libFactory->createFieldContactNameDisplayOnViewer(),
         $libFactory->createFieldDisplayLastUpdateDate(0),
 
-        
     );
 
     my $dataTable =
     {
         'tableName' => 'AttachedFiles',
-        'printableTableName' => __('Attached File'),
-        'printableRowName' => __('Attached File'),
         'pageTitle' => $self->pageTitle(),
+        # 'printableTableName' => __('Attached File'),
+        'printableRowName' => __('Attached File'),
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,
         'defaultController' => '/dlllciasrouter/Controller/AttachedFiles',
@@ -91,6 +95,7 @@ sub _table
         'tableDescription' => \@fields,
         'sortedBy' => 'updateDate',
         'class' => 'dataTable',
+        #'backview' => '/dlllciasrouter/Composite/VMServerComposite',
     };
 
 
@@ -135,20 +140,22 @@ sub addedRowNotify
 
     try {
 
-    # 更新Description HTML + File Link
-    my $libCT = $self->loadLibrary('LibraryContact');
-    $libCT->setDescriptionHTML($subRow);
+        # 更新Description HTML + File Link
+        my $libCT = $self->loadLibrary('LibraryContact');
+        $libCT->setDescriptionHTML($subRow);
 
-    #  更新ContactLink
-    $self->setFileDescription($subRow);
+        #  更新ContactLink
+        $self->setFileDescription($subRow);
 
-    # 更新LastUpdated
-    $libCT->setUpdateDate($subRow);
+        # 更新LastUpdated
+        $libCT->setUpdateDate($subRow);
 
-    $subRow->store();
+        $subRow->store();
 
     } catch {
+
         $self->getLibrary()->show_exceptions( $_ . '; Please add domain name again. (AttachedFiles->addedRowNotify)');
+
     };
 
     $ROW_NEED_UPDATE = 0;

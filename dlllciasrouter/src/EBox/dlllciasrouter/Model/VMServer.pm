@@ -15,7 +15,8 @@ sub getOptions
     my $options = ();
     #$options->{pageTitle} = __('Virtual Machine Servers');
     $options->{pageTitle} = __('Virtual Machines');
-    $options->{printableTableName} = __('Servers');
+    $options->{printableTableName} = __('Servers') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-data-table-filter.js"></script>';
+    # https://cloud-router.dlll.nccu.edu.tw:64443/data/dlllciasrouter/js/tinymce/js/tinymce/plugins/save/plugin.min.js
     $options->{printableRowName} = __('Server');
     $options->{tableName} = 'VMServer';
     $options->{IPHelp} = '
@@ -75,7 +76,10 @@ sub _table
 
     my $options = $self->getOptions();
 
-    return $self->loadLibrary("LibraryServers")->getDataTable($options);
+    #$self->param('id');
+    my $table = $self->loadLibrary("LibraryServers")->getDataTable($options);
+
+    return $table;
 }
 
 ##

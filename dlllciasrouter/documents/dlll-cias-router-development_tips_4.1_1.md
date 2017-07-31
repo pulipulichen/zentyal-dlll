@@ -66,7 +66,14 @@ From original code
 		* [HasMany.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/HasMany.pm)
 		* [Service.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Service.pm): Maybe it's Zentyal's service
 		
-		
+
+----------
+
+# Model Usage 
+
+* [DataTable.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/CGI/Controller/DataTable.pm)
+
+----------
 
 # Check error logs
 

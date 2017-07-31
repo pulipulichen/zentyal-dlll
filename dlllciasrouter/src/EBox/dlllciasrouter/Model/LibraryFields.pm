@@ -1602,36 +1602,38 @@ sub createFieldAttachedFilesButton
 {
     my ($self, $backView) = @_;
     my $field = new EBox::Types::HasMany(
-            'fieldName' => 'attachedFiles',
-            'printableName' => __('Files'),
-            'foreignModel' => 'AttachedFiles',
-            'view' => '/dlllciasrouter/View/AttachedFiles',
-            'backView' => $backView,
-            'size' => '1',
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 0,
-            'help' => __('You have to add this row before setting up other redirection at following table.'),
-            #'parent' =>  $self->loadLibrary('RouterSettings'),
-       );
+        'fieldName' => 'attachedFiles',
+        'printableName' => __('Files'),
+        'foreignModel' => 'AttachedFiles',
+        'view' => '/dlllciasrouter/View/AttachedFiles',
+        'backView' => $backView,
+        'size' => '1',
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 0,
+        'help' => __('You have to add this row before setting up other redirection at following table.'),
+        #'parent' =>  $self->loadLibrary('RouterSettings'),
+   );
     return $field;
 }
 
+##
 # 20150515 Pulipuli Chen
-# 開啟記錄按鈕
+# 開啟上傳檔案的按鈕
+##
 sub createFieldAttachedFilesButtonShow
 {
     my ($self, $backView) = @_;
     my $field = new EBox::Types::HasMany(
-            'fieldName' => 'attachedFiles',
-            'printableName' => __('Files'),
-            'foreignModel' => 'AttachedFiles',
-            'view' => '/dlllciasrouter/View/AttachedFiles',
-            'backView' => $backView,
-            'size' => '1',
-            'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 0,
-            #'parent' =>  $self->loadLibrary('RouterSettings'),
-       );
+        'fieldName' => 'attachedFiles',
+        'printableName' => __('Files'),
+        'foreignModel' => 'AttachedFiles',
+        'view' => '/dlllciasrouter/View/AttachedFiles',
+        #'backView' => $backView,
+        'backView' => '/dlllciasrouter/Composite/VMServerComposite',
+        'size' => '1',
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 0,
+   );
     return $field;
 }
 
