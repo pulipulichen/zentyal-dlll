@@ -186,7 +186,10 @@ sub deleteDomainName
     };
 }
 
+##
 # 20150515 Pulipuli Chen
+# 考慮到OtherDomainName，刪除他們
+##
 sub deleteOtherDomainNames
 {
     my ($self, $subMod, $excludeModel) = @_;
@@ -198,6 +201,24 @@ sub deleteOtherDomainNames
     my @subModAry = split(/\n/, $subMod);
     for my $domainName (@subModAry) {
         $self->deleteDomainName($domainName, $excludeModel);
+    }
+}
+
+##
+# 20170731 Pulipuli Chen
+# 考慮到OtherDomainName，增加他們
+##
+sub addOtherDomainNames
+{
+    my ($self, $subMod) = @_;
+    
+    if (!defined($subMod) || $subMod eq '') {
+        return;
+    }
+
+    my @subModAry = split(/\n/, $subMod);
+    for my $domainName (@subModAry) {
+        $self->addDomainName($domainName);
     }
 }
 
@@ -355,14 +376,14 @@ sub updateDomainNameLink
         my $otherDN = $row->subModel('otherDomainName');
         for my $dnId (@{$otherDN->ids()}) {
             my $dnRow = $otherDN->row($dnId);
-            $enable = $self->getLibrary()->isEnable($dnRow);
-            if ($enable == 0) {
-                next;
-            }
+            #$enable = $self->getLibrary()->isEnable($dnRow);
+            #if ($enable == 0) {
+            #    next;
+            #}
             $secure = $dnRow->valueByName('redirPOUND_secure');
             my $otherDomainName = $dnRow->valueByName("domainName");
             my $otherLink = $self->updateDomainNameLinkDeco($otherDomainName, $enable, $secure, $doBreakUrl);
-            $link = $link . "<br /> - " . $otherLink;
+            $link = $link . "<br />, " . $otherLink;
 
             if ($subMod ne '') {
                 $subMod = $subMod . "\n";

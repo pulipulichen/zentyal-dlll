@@ -56,6 +56,21 @@ sub createFieldConfigEnable
     return $field;
 }
 
+sub createFieldConfigEnableHidden
+{
+    my $field = new EBox::Types::Boolean(
+        'fieldName' => 'configEnable',
+        'printableName' => __('Enabled'),
+        'editable' => 0,
+        'optional' => 0,
+        'defaultValue' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
+
+    return $field;
+}
+
 sub createFieldDomainName
 {
     my $field = new EBox::Types::DomainName(
@@ -586,22 +601,6 @@ sub createFieldIsHTTPS
     return $field;
 }
 
-sub createFieldBoundLocalDNSwithHR
-{
-    my $field = new EBox::Types::Boolean(
-            fieldName => 'boundLocalDns',
-            printableName => __('Setup In Local DNS'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'
-                . "<br /> <hr />"),
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
-
-    return $field;
-}
 
 sub createFieldBoundLocalDNS
 {
@@ -612,6 +611,41 @@ sub createFieldBoundLocalDNS
             optional => 0,
             defaultValue => 1,
             help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'),
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+
+    return $field;
+}
+
+
+sub createFieldBoundLocalDNSHidden
+{
+    my $field = new EBox::Types::Boolean(
+        'fieldName' => 'boundLocalDns',
+        'printableName' => __('Bound Local DNS'),
+        'editable' => 0,
+        'optional' => 0,
+        'defaultValue' => 1,
+        #'help' => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'),
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
+
+    return $field;
+}
+
+
+sub createFieldBoundLocalDNSwithHR
+{
+    my $field = new EBox::Types::Boolean(
+            fieldName => 'boundLocalDns',
+            printableName => __('Setup In Local DNS'),
+            editable => 1,
+            optional => 0,
+            defaultValue => 1,
+            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'
+                . "<br /> <hr />"),
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         );

@@ -59,16 +59,16 @@ sub _table
     my $libFactory = $self->parentModule()->model('LibraryFields');
 
     my @fields = (
-        $libFactory->createFieldAddBtn('add'),
+        #$libFactory->createFieldAddBtn('add'),
 
-        $libFactory->createFieldConfigEnable(),
+        $libFactory->createFieldConfigEnableHidden(),
 
         $libFactory->createFieldDomainName(),
         $libFactory->createFieldDomainNameLink(),
-        $libFactory->createFieldBoundLocalDNS(),
+        $libFactory->createFieldBoundLocalDNSHidden(),
         $libFactory->createFieldProtocolScheme('POUND', 0, 'http'),
         $libFactory->createFieldInternalPortDefaultValue(80),
-        $libFactory->createFieldPoundOnlyForLAN(1),
+        $libFactory->createFieldPoundOnlyForLAN(0),
         $libFactory->createFieldEmergencyRestarter(),
     );
 
@@ -127,12 +127,15 @@ sub addedRowNotify
 
         my $row = $self->getLibrary()->getParentRow($self);
         
-        my $isRowEnable = $self->getLibrary()->isEnable($row);
-        my $isSubRowEnable = $self->getLibrary()->isEnable($subRow);
+        #my $isRowEnable = $self->getLibrary()->isEnable($row);
+        #my $isSubRowEnable = $self->getLibrary()->isEnable($subRow);
+        my $isRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($row);
+        #my $isSubRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($subRow);
 
         # 1. 更新自己欄位的domain name連線資訊
         $libDN->updateDomainNameLink($subRow, 0);
-        if ($isRowEnable == 1 && $isSubRowEnable == 1) {
+        #if ($isRowEnable == 1 && $isSubRowEnable == 1) {
+        if ($isRowEnable == 1) {
             $libDN->addDomainName($subRow->valueByName('domainName'));
         }
 

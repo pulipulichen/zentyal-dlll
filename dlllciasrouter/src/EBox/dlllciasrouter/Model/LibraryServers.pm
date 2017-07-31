@@ -249,38 +249,40 @@ sub serverAddedRowNotify
 
     try {
 
-    #$ROW_NEED_UPDATE = 1;
-    
-    my $lib = $self->getLibrary();
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    $libDN->updateDomainNameLink($row, 1);
-    $self->updateNetworkDisplay($row, $options->{enableVMID});
-    
-    my $libCT = $self->loadLibrary('LibraryContact');
-    $libCT->setCreateDate($row);
-    $libCT->setUpdateDate($row);
-    $libCT->setContactLink($row);
-    $libCT->updateLogsLink($row);
-    $libCT->setDescriptionHTML($row);
-    $libCT->setHardwareDisplay($row);
+        #$ROW_NEED_UPDATE = 1;
 
-    if ($self->isDomainNameEnable($row) == 1) {
-        $libDN->addDomainName($row->valueByName('domainName'));
-    }
+        my $lib = $self->getLibrary();
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        $libDN->updateDomainNameLink($row, 1);
+        $self->updateNetworkDisplay($row, $options->{enableVMID});
 
-    my $libREDIR = $self->loadLibrary('LibraryRedirect');
-    $libREDIR->updateRedirectPorts($row);
-    $libREDIR->addRedirects($row);
+        my $libCT = $self->loadLibrary('LibraryContact');
+        $libCT->setCreateDate($row);
+        $libCT->setUpdateDate($row);
+        $libCT->setContactLink($row);
+        $libCT->updateLogsLink($row);
+        $libCT->setDescriptionHTML($row);
+        $libCT->setHardwareDisplay($row);
 
-    my $libMAC = $self->loadLibrary('LibraryMAC');
-    $libMAC->addDHCPfixedIPMember($row);
+        if ($self->isDomainNameEnable($row) == 1) {
+            $libDN->addDomainName($row->valueByName('domainName'));
+            $libDN->addOtherDomainNames($row->valueByName('otherDomainName_subMod'));
+        }
 
-    $row->store();
-    #$ROW_NEED_UPDATE = 0;
+        my $libREDIR = $self->loadLibrary('LibraryRedirect');
+        $libREDIR->updateRedirectPorts($row);
+        $libREDIR->addRedirects($row);
+
+        my $libMAC = $self->loadLibrary('LibraryMAC');
+        $libMAC->addDHCPfixedIPMember($row);
+
+        $row->store();
+        #$ROW_NEED_UPDATE = 0;
 
     } catch {
+
         $self->getLibrary()->show_exceptions($_ . "( LibraryServers->serverAddedRowNotify() )");
-        #$mod->setMessage($_ . '( LibraryServers->updatedRowNotify() )', 'error');
+        #$mod->setMessage($_ . ' ( LibraryServers->updatedRowNotify() )', 'error');
     };
 }
 
@@ -308,7 +310,10 @@ sub serverDeletedRowNotify
     };
 }
 
-
+##
+# 20170731 Pulipuli Chen
+# 更新，好像會有Domain Name無法正常儲存的問題
+##
 sub serverUpdatedRowNotify
 {
     my ($self, $row, $oldRow, $options) = @_;
@@ -318,7 +323,8 @@ sub serverUpdatedRowNotify
     try {
 
         my $libDN = $self->loadLibrary('LibraryDomainName');
-        $self->deletedRowNotify($oldRow);
+        $self->serverDeletedRowNotify($oldRow);
+      
         $libDN->updateDomainNameLink($row, 1);
         $self->updateNetworkDisplay($row, $options->{enableVMID});
     
@@ -334,6 +340,7 @@ sub serverUpdatedRowNotify
 
         if ($self->isDomainNameEnable($row) == 1) {
             $libDN->addDomainName($row->valueByName('domainName'));
+            $libDN->addOtherDomainNames($row->valueByName('otherDomainName_subMod'));
         }
 
         $libREDIR->deleteRedirects($row);
@@ -354,7 +361,7 @@ sub serverUpdatedRowNotify
 
         $row->store();
     } catch {
-        $lib->show_exceptions($_);
+        $lib->show_exceptions($_  . ' ( LibraryServices->serverUpdatedRowNotify() )');
     };
 }
 
@@ -372,7 +379,7 @@ sub isDomainNameEnable
         $isBound = $row->valueByName('boundLocalDns');
     }
 
-    return ($isEnable && $isBound);
+    return ($isEnable == 1 && $isBound == 1);
 }
 
 # 20150526 Pulipuli Chen
