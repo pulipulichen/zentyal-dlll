@@ -50,17 +50,17 @@ sub new
 sub pageTitle
 {
     my ($self) = @_;
-    my $row = $self->parentRow();
-    
-    if (defined($row))
-    {
+    try {
+        my $lib = $self->getLibrary();
+        my $row = $lib->getParentRow($self);
+
         my $domainName = $row->printableValueByName('domainName');
         my $ip = $row->printableValueByName('ipaddr');
         return $domainName . " (" . $ip . ")";
     }
-    else {
+    catch {
         return __("Port Redirect");
-    } 
+    }
 }
 
 sub _table
@@ -71,26 +71,26 @@ sub _table
     my $libFactory = $self->parentModule()->model('LibraryFields');
 
     my @fields = (
-        $libFactory->createFieldConfigEnable(),
+        $libFactory->createFieldConfigEnableHidden(),
 
         $libFactory->createFieldPortDescription(),
         $libFactory->createFieldPortDescriptionDisplay(),
         
-        $libFactory->createFieldPortExtPort("Please enter external port last 1 number, only allow 0,1,4,5,6, or 7. <br />For example, 4 means ****4. **** is based on internal IP address."),
+        $libFactory->createFieldPortExtPortSelection("Please enter external port last 1 number, only allow 0,1,4,5,6, or 7. <br />For example, 4 means ****4. **** is based on internal IP address."),
         $libFactory->createFieldPortExtPortDisplay(),
 
         $libFactory->createFieldPortIntPort(),
 
-        $libFactory->createFieldProtocolScheme('Other', 0, 'none'),
+        $libFactory->createFieldProtocolScheme('Other', 0, 'http'),
 
-        $libFactory->createFieldPortOnlyForLan(),
+        $libFactory->createFieldPortSecureSelection(),
         $libFactory->createFieldPortEnableLog(),
     );
 
     my $dataTable =
     {
         'tableName' => 'ServerPortRedirect',
-        'printableTableName' => __('Port Redirect'),
+        'printableTableName' => __('Port Redirect') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
         'printableRowName' => __('Port Redirect'),
         'pageTitle' => $self->pageTitle(),
         'modelDomain' => 'dlllciasrouter',
@@ -131,7 +131,7 @@ sub addedRowNotify
 {
     my ($self, $redirRow) = @_;
 
-    my $row = $self->parentRow();
+    my $row = $self->getLibrary()->getParentRow($self);
 
     $ROW_NEED_UPDATE = 1;
     
@@ -152,10 +152,10 @@ sub deletedRowNotify
     
     try {
 
-    $self->updateRedirectPorts($redirRow);
+        $self->updateRedirectPorts($redirRow);
 
-    my $row = $self->parentRow();
-    $self->deleteRedirect($row, $redirRow);
+        my $row = $self->getLibrary()->getParentRow($self);
+        $self->deleteRedirect($row, $redirRow);
 
     } catch {
         $self->getLibrary()->show_exceptions($_);
@@ -168,27 +168,27 @@ sub updatedRowNotify
 
     try {
 
-    $self->checkExternalPort($redirRow);
-    my $row = $self->parentRow();
+        $self->checkExternalPort($redirRow);
+        my $row = $self->getLibrary()->getParentRow($self);
 
-    if (!defined($row)) {
-        $self->getLibrary()->show_exceptions("row is not defined");
-    }
+        if (!defined($row)) {
+            $self->getLibrary()->show_exceptions("row is not defined");
+        }
 
-    $self->deleteRedirect($row, $oldRedirRow);
-    $self->addRedirect($row, $redirRow);
+        $self->deleteRedirect($row, $oldRedirRow);
+        $self->addRedirect($row, $redirRow);
 
-    $self->updateRedirectPorts($redirRow);
+        $self->updateRedirectPorts($redirRow);
 
-    if ($ROW_NEED_UPDATE == 0) {
-        $ROW_NEED_UPDATE = 1;
+        if ($ROW_NEED_UPDATE == 0) {
+            $ROW_NEED_UPDATE = 1;
 
-        my $libDomainName = $self->loadLibrary('LibraryDomainName');
-        $libDomainName->updatePortDescription($row, $redirRow);
+            my $libDomainName = $self->loadLibrary('LibraryDomainName');
+            $libDomainName->updatePortDescription($row, $redirRow);
 
-        $self->updateExtPortHTML($row, $redirRow);
-        $ROW_NEED_UPDATE = 0;
-    }
+            $self->updateExtPortHTML($row, $redirRow);
+            $ROW_NEED_UPDATE = 0;
+        }
 
     } catch {
         $self->getLibrary()->show_exceptions($_);
@@ -203,21 +203,25 @@ sub addRedirect
 
     #throw EBox::Exceptions::External("Try to add redirect", defined($row));
 
+    if ($self->getLibrary()->isEnable($row) == 0) {
+        return;
+    }
+
     my $poundModel;
     my %param;
     
     try {
-    $poundModel = $self->parentModule()->model("LibraryRedirect");
+        $poundModel = $self->parentModule()->model("LibraryRedirect");
     } catch {
         $self->getLibrary()->show_exceptions(51 . $_);
     };
     try {
-    %param = $poundModel->getRedirectParamOther($row, $redirRow);
+        %param = $poundModel->getRedirectParamOther($row, $redirRow);
     } catch {
         $self->getLibrary()->show_exceptions(52 . $_);
     };
     try {
-    $poundModel->addRedirectRow(%param);
+        $poundModel->addRedirectRow(%param);
     } catch {
         $self->getLibrary()->show_exceptions(53 . $_);
     };
@@ -244,7 +248,7 @@ sub updateRedirectPorts
 {
     my ($self, $redirRow) = @_;
 
-    my $row = $self->parentRow();
+    my $row = $self->getLibrary()->getParentRow($self);
     #my $row = $redirRow->parentRow();
 
     if (defined($row))
@@ -284,10 +288,19 @@ sub updateExtPortHTML
         #my $description = $redirRow->valueByName("description");
 
         my $extPort = $param{external_port_single_port};
-        if ($secure) {
+        if ($secure == 1) {
             $extPort = '[' . $extPort . ']';
         }
-        $extPort = "<span>".$extPort."</span>";
+        elsif ($secure == 2) {
+            $extPort = '(' . $extPort . ')';
+        }
+
+        if ($self->getLibrary()->isEnable($row) == 1) {
+            $extPort = "<span>".$extPort."</span>";
+        }
+        else {
+            $extPort = '<span style="text-decoration: line-through">'.$extPort."</span>";
+        }
 
         $redirRow->elementByName('extPortHTML')->setValue($extPort);
         $redirRow->store();

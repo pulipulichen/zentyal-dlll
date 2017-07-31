@@ -470,9 +470,13 @@ sub updatePortDescription
 
     my $enable = $self->getLibrary()->isEnable($redirRow);
     my $desc = $redirRow->valueByName("description");
+
     my $secure = $redirRow->valueByName('secure');
-    if ($secure) {
+    if ($secure == 1) {
         $desc = '[' . $desc . ']';
+    }
+    elsif ($secure == 2) {
+        $desc = '(' . $desc . ')';
     }
 
     my $schema = $redirRow->valueByName("redirOther_scheme");

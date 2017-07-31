@@ -255,4 +255,21 @@ sub setFileDescription
     $subRow->elementByName('fileDescription')->setValue($fileDesc);
 }
 
+# ------------------------------------------
+
+##
+# 20170801 Pulipuli Chen
+# 移除檔案
+##
+sub deleteAllAttachedFiles
+{
+    my ($self, $row) = @_;
+
+    my $subMod = $row->subModel('attachedFiles');
+
+    for my $subId (@{$subMod->ids()}) {
+        $subMod->removeRow($subId);
+    }
+}
+ 
 1;

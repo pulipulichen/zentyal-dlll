@@ -47,20 +47,26 @@ sub new
     return $self;
 }
 
+
+##
+# 20170731 Pulipuli Chen
+# 網頁標題
+##
 sub pageTitle
 {
     my ($self) = @_;
-    my $row = $self->parentRow();
-    
-    if (defined($row))
-    {
+
+    try {
+        my $lib = $self->getLibrary();
+        my $row = $lib->getParentRow($self);
+
         my $domainName = $row->printableValueByName('domainName');
         my $ip = $row->printableValueByName('ipaddr');
         return $domainName . " (" . $ip . ")";
     }
-    else {
+    catch {
         return __("Port Redirect");
-    } 
+    }
 }
 
 sub _table
@@ -71,19 +77,21 @@ sub _table
     my $libFactory = $self->parentModule()->model('LibraryFields');
 
     my @fields = (
-        $libFactory->createFieldConfigEnable(),
+        $libFactory->createFieldConfigEnableHidden(),
 
         $libFactory->createFieldPortDescription(),
         $libFactory->createFieldPortDescriptionDisplay(),
         
-        $libFactory->createFieldPortExtPort("Please enter external port last 1 number, only allow 1,4,5,6, or 7. <br />For example, 4 means ****4. **** is based on internal IP address."),
+        $libFactory->createFieldPortExtPortSelection("Please enter external port last 1 number, only allow 1,4,5,6, or 7. <br />For example, 4 means ****4. **** is based on internal IP address."),
         $libFactory->createFieldPortExtPortDisplay(),
 
         $libFactory->createFieldPortIntPort(),
 
-        $libFactory->createFieldProtocolScheme('Other', 0, 'none'),
+        $libFactory->createFieldProtocolScheme('Other', 0, 'http'),
 
-        $libFactory->createFieldPortOnlyForLan(),
+        #$libFactory->createFieldPortOnlyForLan(),
+        $libFactory->createFieldPortSecureSelection(0),
+
         $libFactory->createFieldPortEnableLog(),
     );
 
@@ -91,7 +99,7 @@ sub _table
     {
         'tableName' => 'PortRedirect',
         'printableTableName' => __('Port Redirect'),
-        'printableRowName' => __('Port Redirect'),
+        'printableRowName' => __('Port Redirect') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
         'pageTitle' => $self->pageTitle(),
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,
@@ -127,80 +135,96 @@ sub loadLibrary
 
 my $ROW_NEED_UPDATE = 0;
 
+##
+# 20170731 Pulipuli Chen
+# 新增欄位
+##
 sub addedRowNotify
 {
     my ($self, $redirRow) = @_;
 
     try {
 
-    my $row = $self->parentRow();
+        #my $row = $self->parentRow();
+        my $row = $self->getLibrary()->getParentRow($self);
 
-    $ROW_NEED_UPDATE = 1;
-    
-    my $libDomainName = $self->loadLibrary('LibraryDomainName');
-    $libDomainName->updatePortDescription($row, $redirRow);
+        $ROW_NEED_UPDATE = 1;
 
-    $self->checkExternalPort($redirRow);
+        my $libDomainName = $self->loadLibrary('LibraryDomainName');
+        $libDomainName->updatePortDescription($row, $redirRow);
 
-    my $libRe = $self->loadLibrary("LibraryRedirect");
-    $libRe->addOtherPortRedirect($row, $redirRow);
-    $libRe->updateRedirectPorts($row);
+        $self->checkExternalPort($redirRow);
 
-    $self->updateExtPortHTML($row, $redirRow);
+        my $libRe = $self->loadLibrary("LibraryRedirect");
+        $libRe->addOtherPortRedirect($row, $redirRow);
+        $libRe->updateRedirectPorts($row);
 
-    $redirRow->store();
+        $self->updateExtPortHTML($row, $redirRow);
+
+        $redirRow->store();
     
     } catch {
-        $self->getLibrary()->show_exceptions('Please add port again.');
+        $self->getLibrary()->show_exceptions($_ . 'Please add port again. ( PortRedirect->addedRowNotify() )');
     };
 
     $ROW_NEED_UPDATE = 0;
 }
 
+##
+# 20170731 Pulipuli Chen
+# 刪除欄位
+##
 sub deletedRowNotify
 {
     my ($self, $redirRow) = @_;
     
     try {
 
-    my $row = $self->parentRow();
-    my $libRe = $self->parentModule()->model("LibraryRedirect");
-    $libRe->deleteOtherPortRedirect($row, $redirRow);
-    $libRe->updateRedirectPorts($row);
+        #my $row = $self->parentRow();
+        my $row = $self->getLibrary()->getParentRow($self);
+
+        my $libRe = $self->parentModule()->model("LibraryRedirect");
+        $libRe->deleteOtherPortRedirect($row, $redirRow);
+        $libRe->updateRedirectPorts($row);
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . ' ( PortRedirect->deletedRowNotify() )');
     };
 }
 
+##
+# 20170731 Pulipuli Chen
+# 更新欄位
+##
 sub updatedRowNotify
 {
     my ($self, $redirRow, $oldRedirRow) = @_;
 
     try {
 
-    $self->checkExternalPort($redirRow);
-    my $row = $self->parentRow();
+        $self->checkExternalPort($redirRow);
+        #my $row = $self->parentRow();
+        my $row = $self->getLibrary()->getParentRow($self);
 
-    if (!defined($row)) {
-        $self->getLibrary()->show_exceptions("row is not defined");
-    }
+        if (!defined($row)) {
+            $self->getLibrary()->show_exceptions("row is not defined");
+        }
 
-    my $libRe = $self->parentModule()->model("LibraryRedirect");
-    $libRe->updateOtherPortRedirectPorts($row, $redirRow, $oldRedirRow);
+        my $libRe = $self->parentModule()->model("LibraryRedirect");
+        $libRe->updateOtherPortRedirectPorts($row, $redirRow, $oldRedirRow);
 
-    if ($ROW_NEED_UPDATE == 0) {
-        $ROW_NEED_UPDATE = 1;
+        if ($ROW_NEED_UPDATE == 0) {
+            $ROW_NEED_UPDATE = 1;
 
-        my $libDomainName = $self->loadLibrary('LibraryDomainName');
-        $libDomainName->updatePortDescription($row, $redirRow);
+            my $libDomainName = $self->loadLibrary('LibraryDomainName');
+            $libDomainName->updatePortDescription($row, $redirRow);
 
-        $self->updateExtPortHTML($row, $redirRow);
-        $ROW_NEED_UPDATE = 0;
-    }
+            $self->updateExtPortHTML($row, $redirRow);
+            $ROW_NEED_UPDATE = 0;
+        }
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . ' ( PortRedirect->updatedRowNotify() ) ');
     };
 }
 
@@ -222,6 +246,10 @@ sub checkExternalPort
     }
 }
 
+##
+# 20170731 Pulipuli Chen
+# 更新連接埠顯示的HTML
+##
 sub updateExtPortHTML
 {
     my ($self, $row, $redirRow) = @_;
@@ -232,8 +260,11 @@ sub updateExtPortHTML
     my $secure = $redirRow->valueByName("secure");
 
     my $extPort = $param{external_port_single_port};
-    if ($secure) {
+    if ($secure == 1) {
         $extPort = '[' . $extPort . ']';
+    }
+    elsif ($secure == 2) {
+        $extPort = '(' . $extPort . ')';
     }
     $extPort = "<span>".$extPort."</span>";
 

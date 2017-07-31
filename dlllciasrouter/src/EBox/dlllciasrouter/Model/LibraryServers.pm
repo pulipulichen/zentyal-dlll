@@ -319,25 +319,36 @@ sub serverUpdatedRowNotify
     my ($self, $row, $oldRow, $options) = @_;
 
     my $lib = $self->getLibrary();
-
+    
+    my $libDN = $self->loadLibrary('LibraryDomainName');
     try {
-
-        my $libDN = $self->loadLibrary('LibraryDomainName');
         $self->serverDeletedRowNotify($oldRow);
       
         $libDN->updateDomainNameLink($row, 1);
         $self->updateNetworkDisplay($row, $options->{enableVMID});
+    } catch {
+        $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() libDN )');
+    };
     
-        my $libREDIR = $self->loadLibrary('LibraryRedirect');
+    my $libREDIR = $self->loadLibrary('LibraryRedirect');
+    try {
         $libREDIR->updateRedirectPorts($row);
+    } catch {
+        $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() libREDIR )');
+    };
 
+    try {
         my $libCT = $self->loadLibrary('LibraryContact');
         $libCT->setCreateDate($row);
         $libCT->setUpdateDate($row);
         $libCT->setContactLink($row);
         $libCT->updateLogsLink($row);
         $libCT->setHardwareDisplay($row);
+    } catch {
+        $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() libCT )');
+    };
 
+    try {
         if ($self->isDomainNameEnable($row) == 1) {
             $libDN->addDomainName($row->valueByName('domainName'));
             $libDN->addOtherDomainNames($row->valueByName('otherDomainName_subMod'));
@@ -345,11 +356,19 @@ sub serverUpdatedRowNotify
 
         $libREDIR->deleteRedirects($row);
         $libREDIR->addRedirects($row);
+    } catch {
+        $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() libDN libREDIR )');
+    };
 
+    try {
         my $libMAC = $self->loadLibrary('LibraryMAC');
         $libMAC->removeDHCPfixedIPMember($oldRow);
         $libMAC->addDHCPfixedIPMember($row);
+    } catch {
+        $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() libMAC )');
+    };
 
+    try {
         my $redirOther = $row->subModel('redirOther');
 
         for my $subId (@{$redirOther->ids()}) {
@@ -358,10 +377,14 @@ sub serverUpdatedRowNotify
             $redirOther->updateExtPortHTML($row, $redirRow);
             $redirOther->addRedirect($row, $redirRow);
         }
-
+    } catch {
+        $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() redirOther )');
+    };
+        
+    try {
         $row->store();
     } catch {
-        $lib->show_exceptions($_  . ' ( LibraryServices->serverUpdatedRowNotify() )');
+        $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() row )');
     };
 }
 

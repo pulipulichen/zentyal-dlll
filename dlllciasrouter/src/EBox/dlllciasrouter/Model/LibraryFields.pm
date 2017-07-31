@@ -716,6 +716,10 @@ sub createFieldProtocolSecureSelection
     return $field;
 }
 
+##
+# 20170731 Pulipuli Chen
+# 這是給主要管理伺服器用的，可以選擇多種Port 選項
+##
 sub _populateProtocolSecureSelection
 {
     return [
@@ -819,6 +823,10 @@ sub createFieldProtocolInternalPort
     return $field;
 }
 
+##
+# 20170731 Pulipuli Chen
+# 通訊協定
+##
 sub createFieldProtocolScheme
 {
     my ($self, $protocol, $unique, $defaultValue) = @_;
@@ -835,6 +843,29 @@ sub createFieldProtocolScheme
         );
 
     return $field;
+}
+
+##
+# 20170731 Pulipuli Chen
+# 通訊協定 選項
+##
+sub _populateFieldProtocolScheme
+{
+    # life time values must be in hours
+    return  [
+                {
+                    value => 'http',
+                    printableValue => __('HTTP (http://)'),
+                },
+                {
+                    value => 'https',
+                    printableValue => __('HTTPS (https://)'),
+                },
+                {
+                    value => 'none',
+                    printableValue => __('Not a link'),
+                },
+            ];
 }
 
 sub createFieldPoundProtocolScheme
@@ -879,24 +910,7 @@ sub createFieldPoundOnlyForLAN
     return $field;
 }
 
-sub _populateFieldProtocolScheme
-{
-    # life time values must be in hours
-    return  [
-                {
-                    value => 'http',
-                    printableValue => __('HTTP (http://)'),
-                },
-                {
-                    value => 'https',
-                    printableValue => __('HTTPS (https://)'),
-                },
-                {
-                    value => 'none',
-                    printableValue => __('Not a link'),
-                },
-            ];
-}
+
 
 sub createFieldProtocolNote
 {
@@ -1148,8 +1162,8 @@ sub createFieldOtherRedirectPortsButton
     my $field = new EBox::Types::HasMany(
             'fieldName' => 'redirOther',
             'printableName' => __('Other <br />Redirect<br />Ports'),
-            'foreignModel' => 'PortRedirect',
-            'view' => '/dlllciasrouter/View/PortRedirect',
+            'foreignModel' => 'ServerPortRedirect',
+            'view' => '/dlllciasrouter/View/ServerPortRedirect',
             'backView' => $backView,
             'size' => '1',
             'hiddenOnSetter' => 1,
@@ -1522,17 +1536,69 @@ sub createFieldPortExtPort
 {
     my ($self, $help) = @_;
     my $field = new EBox::Types::Port(
-            'fieldName' => 'extPort',
-            'printableName' => __('External Port Last 1 Numbers'),
-            'unique' => 1,
-            'editable' => 1,
-            optional=>0,
-            help => $help,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'extPort',
+        'printableName' => __('External Port Last 1 Numbers'),
+        'unique' => 1,
+        'editable' => 1,
+        'optional' =>0,
+        'help' => $help,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
     return $field;
 }
+
+##
+# 20170731 Pulipuli Chen
+# 外接連接埠輸入欄位，選擇版本
+##
+sub createFieldPortExtPortSelection
+{
+    my ($self, $help) = @_;
+    my $field = new EBox::Types::Select(
+        'fieldName' => 'extPort',
+        'printableName' => __('External Port Last 1 Numbers'),
+        'populate' => \&_populatePortExtPortSelection,
+        'editable' => 1,
+        'optional' =>0,
+        'help' => $help,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
+    return $field;
+}
+
+
+##
+# 20170731 Pulipuli Chen
+# 外接連接埠輸入欄位，選擇版本 選項
+##
+sub _populatePortExtPortSelection
+{
+    return [
+        {
+            value => 1,
+            printableValue => 1,
+        },
+        {
+            value => 4,
+            printableValue => 4,
+        },
+        {
+            value => 5,
+            printableValue => 5,
+        },
+        {
+            value => 6,
+            printableValue => 6,
+        },
+        {
+            value => 7,
+            printableValue => 7,
+        },
+    ];
+}
+
 
 ##
 # 20150512 Pulipuli Chen
@@ -1578,12 +1644,12 @@ sub createFieldPortOnlyForLan
 {
     my ($self, $help) = @_;
     my $field = new EBox::Types::Boolean(
-            'fieldName' => 'secure',
-            'printableName' => __('Only For Administrator List'),
-            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
-            'editable' => 1,
-            optional=>0,
-        );
+        'fieldName' => 'secure',
+        'printableName' => __('Only For Administrator List'),
+        'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
+        'editable' => 1,
+        'optional' => 0,
+    );
     return $field;
 }
 
@@ -1594,14 +1660,18 @@ sub createFieldPortOnlyForLan
 ##
 sub createFieldPortSecureSelection
 {
-    my ($self, $help) = @_;
-    my $field = new EBox::Types::Boolean(
-            'fieldName' => 'secure',
-            'printableName' => __('Only For Administrator List'),
-            'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_RouterSettings_adminNet_config_button_row" target="_blank">' . __('Administrator List Setting') . '</a>',
-            'editable' => 1,
-            optional=>0,
-        );
+    my ($self, $secureLevel) = @_;
+    my $field = new EBox::Types::Select(
+        'fieldName' => 'secure',
+        'printableName' => __('Secure level'),
+        'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_hr_ Zentyal_admin_hr_row" target="_blank">' . __('Set up Administrator List & Workplace List') . '</a>',
+        'populate' => \&_populateProtocolSecureSelection,
+        'editable' => 1,
+        'defaultValue' => $secureLevel,
+        'optional' => 0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
     return $field;
 }
 

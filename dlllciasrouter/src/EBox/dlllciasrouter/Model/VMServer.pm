@@ -113,6 +113,8 @@ sub deletedRowNotify
 {
     my ($self, $row) = @_;
     $self->loadLibrary("LibraryServers")->serverDeletedRowNotify($row, $self->getOptions());
+
+    $self->loadLibrary("AttachedFiles")->deleteAllAttachedFiles($row);
 }
 
 # -------------------------------------------

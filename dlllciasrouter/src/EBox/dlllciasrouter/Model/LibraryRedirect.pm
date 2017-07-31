@@ -91,7 +91,9 @@ sub addRedirects
                 my $redirRow = $redirOther->row($subId);
                 $self->addOtherPortRedirect($row, $redirRow);
             }
-        } catch { };
+        } catch {
+            $self->getLibrary()->show_exceptions($_ . ' ( LibraryRedirect->addRedirects() ) ');
+        };
     }
 }
 
@@ -163,30 +165,45 @@ sub addOtherPortRedirect
 {
     my ($self, $row, $redirRow) = @_;
 
-    if (! ($self->getLibrary()->isEnable($row) &&  $self->getLibrary()->isEnable($redirRow))) {
-        return;
-    }
+    try {
+        if (! ($self->getLibrary()->isEnable($row) &&  $self->getLibrary()->isEnable($redirRow))) {
+            return;
+        }
 
-    my %param = $self->getRedirectParamOther($row, $redirRow);
-    $self->addRedirectRow(%param);
+        my %param = $self->getRedirectParamOther($row, $redirRow);
+        $self->addRedirectRow(%param);
+    }
+    catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryRedirect->addOtherPortRedirect() ) ');
+    }
 }
 
 sub deleteOtherPortRedirect
 {
     my ($self, $row, $redirRow) = @_;
 
-    my %param = $self->getRedirectParamOther($row, $redirRow);
-    $self->deleteRedirectRow(%param);
+    try {
+        my %param = $self->getRedirectParamOther($row, $redirRow);
+        $self->deleteRedirectRow(%param);
+    }
+    catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryRedirect->deleteOtherPortRedirect() ) ');
+    }
 }
 
 sub updateOtherPortRedirectPorts
 {
     my ($self, $row, $redirRow, $oldRedirRow) = @_;
 
-    $self->deleteOtherPortRedirect($row, $oldRedirRow);
-    $self->addOtherPortRedirect($row, $redirRow);
-    $self->updateRedirectPorts($row);
-    $row->store();
+    try {
+        $self->deleteOtherPortRedirect($row, $oldRedirRow);
+        $self->addOtherPortRedirect($row, $redirRow);
+        $self->updateRedirectPorts($row);
+        $row->store();
+    }
+    catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryRedirect->updateOtherPortRedirectPorts() ) ');
+    }
 }
 
 # -----------------------------
@@ -474,27 +491,28 @@ sub getRedirectParamOther
     try {
         $extPort = $self->getOtherExtPort($row, $redirRow);
     } catch {
-        $self->getLibrary()->show_exceptions(1 . $_);
+        $self->getLibrary()->show_exceptions(1 . $_  . ' ( LibraryRedirect->getRedirectParamOther() ) ');
     };
     try {
-    $intPort = $redirRow->valueByName('intPort');
+        $intPort = $redirRow->valueByName('intPort');
     } catch {
-        $self->getLibrary()->show_exceptions(2 . $_);
+        $self->getLibrary()->show_exceptions(2 . $_  . ' ( LibraryRedirect->getRedirectParamOther() ) ');
     };
     
     try {
 
-    $desc = $redirRow->valueByName('description');
-    #$desc = "Other";
-    $desc = "Other (" . $desc . ")";
-    $log = $redirRow->valueByName('log');
+        $desc = $redirRow->valueByName('description');
+        #$desc = "Other";
+        $desc = "Other (" . $desc . ")";
+        $log = $redirRow->valueByName('log');
 
     } catch {
-        $self->getLibrary()->show_exceptions(25 . $_);
+        $self->getLibrary()->show_exceptions(25 . $_  . ' ( LibraryRedirect->getRedirectParamOther() ) ');
     };
 
-    if ($redirRow->valueByName('secure') == 1) {
-        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log, 1);
+    my $secure = $redirRow->valueByName('secure');
+    if ($secure > 0) {
+        return $self->getRedirectParameterSecure($row, $extPort, $intPort, $desc, $log, $secure);
     }
     else {
         return $self->getRedirectParameter($row, $extPort, $intPort, $desc, $log);
@@ -645,7 +663,7 @@ sub addRedirectRow
         }
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_  . ' ( LibraryRedirect->addRedirectRow() ) ');
     };
 }
 
@@ -655,20 +673,20 @@ sub deleteRedirectRow
     
     try {
 
-    my $gl = EBox::Global->getInstance();
-    my $firewall = $gl->modInstance('firewall');
-    my $redirMod = $firewall->model('RedirectsTable');
+        my $gl = EBox::Global->getInstance();
+        my $firewall = $gl->modInstance('firewall');
+        my $redirMod = $firewall->model('RedirectsTable');
 
-    my $id = $redirMod->findId(
-        description => $params{description},
-    );
+        my $id = $redirMod->findId(
+            description => $params{description},
+        );
 
-    if (defined($id) == 1) {
-        $redirMod->removeRow($id);
-    }
+        if (defined($id) == 1) {
+            $redirMod->removeRow($id);
+        }
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryRedirect->deleteRedirectRow() ) ');
     };
 }
 
@@ -678,157 +696,171 @@ sub deleteRedirectParam
     
     try {
 
-    my $gl = EBox::Global->getInstance();
-    my $firewall = $gl->modInstance('firewall');
-    my $redirMod = $firewall->model('RedirectsTable');
+        my $gl = EBox::Global->getInstance();
+        my $firewall = $gl->modInstance('firewall');
+        my $redirMod = $firewall->model('RedirectsTable');
 
-    my $id = $redirMod->findId(%param);
-    if (defined($id) == 1) {
-        $redirMod->removeRow($id);
-    }
+        my $id = $redirMod->findId(%param);
+        if (defined($id) == 1) {
+            $redirMod->removeRow($id);
+        }
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryRedirect->deleteRedirectParam() ) ');
     };
 }
 
+##
+# 20170731 Pulipuli Chen
+# 更新很多連接埠，也很容易出現問題，請小心使用
+##
 sub updateRedirectPorts
 {
     my ($self, $row) = @_;
 
     try {
 
-    my $lib = $self->getLibrary();
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+        my $lib = $self->getLibrary();
+        my $libNET = $self->loadLibrary('LibraryNetwork');
 
-    my $hint = '';
-    my $protocol = '';
+        my $hint = '';
+        my $protocol = '';
 
-    my $ipaddr = $libNET->getExternalIpaddr();
+        my $ipaddr = $libNET->getExternalIpaddr();
 
-    my $portHeader = $self->getPortHeader($row);
+        my $portHeader = $self->getPortHeader($row);
 
-    # 加入Pound
-    $protocol = "POUND";
-    if ($self->isProtocolEnable($row, $protocol)) {
-        if ($hint ne ''){
-            $hint = $hint . "<br />";
-        }
-        $hint = $hint. $self->getProtocolHint($row, $protocol);
-    }
-
-    # 加入HTTP
-    $protocol = "HTTP";
-    if ($self->isProtocolEnable($row, $protocol)) {
-        if ($hint ne ''){
-            $hint = $hint . "<br />";
-        }
-        $hint = $hint. $self->getProtocolHint($row, $protocol);
-    }
-
-    # 加入HTTPS
-    $protocol = "HTTPS";
-    if ($self->isProtocolEnable($row, $protocol)) {
-        if ($hint ne ''){
-            $hint = $hint . "<br />";
-        }
-        $hint = $hint. $self->getProtocolHint($row, $protocol);
-    }
-
-
-    # 加入SSH
-    $protocol = "SSH";
-    if ($self->isProtocolEnable($row, $protocol)) {
-        if ($hint ne ''){
-            $hint = $hint . "<br />";
-        }
-        $hint = $hint. $self->getProtocolHint($row, $protocol);
-    }
-
-    # 加入RDP
-    $protocol = "RDP";
-    if ($self->isProtocolEnable($row, $protocol)) {
-        if ($hint ne '')
-        {
-            $hint = $hint . "<br />";
-        }
-        $hint = $hint . $self->getProtocolHint($row, $protocol);  
-    }
-
-    # 取得Other Redirect Ports
-    my $domainName = $row->valueByName("domainName");
-    my $redirOther = $row->subModel('redirOther');
-
-    my $redirOtherForMod = '';
-    for my $subId (@{$redirOther->ids()}) {
-
-        my $redirRow = $redirOther->row($subId);
-
-        my $extPort = $self->getOtherExtPort($row, $redirRow);
-        my $intPort = $redirRow->valueByName('intPort');
-        my $desc = $redirRow->valueByName('description');
-        my $secure = $redirRow->valueByName('secure');
-
-        my $portEnable = $self->getLibrary()->isEnable($redirRow);
-        my $schema = $redirRow->valueByName("redirOther_scheme");
-
-        if ($secure) {
-            $desc = '[' . $desc . ']';
+        # 加入Pound
+        $protocol = "POUND";
+        if ($self->isProtocolEnable($row, $protocol)) {
+            if ($hint ne ''){
+                $hint = $hint . "<br />";
+            }
+            $hint = $hint. $self->getProtocolHint($row, $protocol);
         }
 
-        $desc = '<strong>' . $desc . "</strong>";
-        if ($portEnable == 0) {
-            next;
+        # 加入HTTP
+        $protocol = "HTTP";
+        if ($self->isProtocolEnable($row, $protocol)) {
+            if ($hint ne ''){
+                $hint = $hint . "<br />";
+            }
+            $hint = $hint. $self->getProtocolHint($row, $protocol);
         }
-        elsif ($schema ne 'none') {
-            my $link = $domainName . ":" . $extPort . "/";
-            if ($schema eq "http") {
-                $link = "http\://" . $link;
+
+        # 加入HTTPS
+        $protocol = "HTTPS";
+        if ($self->isProtocolEnable($row, $protocol)) {
+            if ($hint ne ''){
+                $hint = $hint . "<br />";
+            }
+            $hint = $hint. $self->getProtocolHint($row, $protocol);
+        }
+
+
+        # 加入SSH
+        $protocol = "SSH";
+        if ($self->isProtocolEnable($row, $protocol)) {
+            if ($hint ne ''){
+                $hint = $hint . "<br />";
+            }
+            $hint = $hint. $self->getProtocolHint($row, $protocol);
+        }
+
+        # 加入RDP
+        $protocol = "RDP";
+        if ($self->isProtocolEnable($row, $protocol)) {
+            if ($hint ne '')
+            {
+                $hint = $hint . "<br />";
+            }
+            $hint = $hint . $self->getProtocolHint($row, $protocol);  
+        }
+
+        # 取得Other Redirect Ports
+        my $domainName = $row->valueByName("domainName");
+        my $redirOther = $row->subModel('redirOther');
+
+        my $redirOtherForMod = '';
+        for my $subId (@{$redirOther->ids()}) {
+
+            my $redirRow = $redirOther->row($subId);
+
+            my $extPort = $self->getOtherExtPort($row, $redirRow);
+            my $intPort = $redirRow->valueByName('intPort');
+            my $desc = $redirRow->valueByName('description');
+            my $secure = $redirRow->valueByName('secure');
+
+            my $portEnable = $self->getLibrary()->isEnable($redirRow);
+            my $schema = $redirRow->valueByName("redirOther_scheme");
+
+            if ($secure == 1) {
+                $desc = '[' . $desc . ']';
+            }
+            elsif ($secure == 2) {
+                $desc = '(' . $desc . ')';
+            }
+
+            $desc = '<strong>' . $desc . "</strong>";
+            if ($portEnable == 0) {
+                next;
+            }
+            elsif ($schema ne 'none') {
+                my $link = $domainName . ":" . $extPort . "/";
+                if ($schema eq "http") {
+                    $link = "http\://" . $link;
+                }
+                else {
+                    $link = "https\://" . $link;
+                }
+                
+                
+                $link = '<a href="'.$link.'" ' 
+                    . 'target="_blank" ' 
+                    . 'style="background: none;text-decoration: underline;color: #A3BD5B;">' 
+                    . $desc 
+                    . '</a>';
+                $desc = $link;
+            }
+
+            if ($hint ne '') {
+                $hint = $hint . "<br />";
+            }
+
+            #$hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort.""; 
+            if ($self->getLibrary()->isEnable($row) == 1) {
+                $hint = $hint . $desc . ": " . $extPort ." &gt; " . $intPort.""; 
             }
             else {
-                $link = "https\://" . $link;
+                $hint = $hint . '<span style="text-decoration: line-through">' . $desc . ": " . $extPort ." &gt; " . $intPort . '</span>'; 
             }
-            $link = '<a href="'.$link.'" ' 
-                . 'target="_blank" ' 
-                . 'style="background: none;text-decoration: underline;color: #A3BD5B;">' 
-                . $desc 
-                . '</a>';
-            $desc = $link;
+
+            if ($redirOtherForMod ne '') {
+                $redirOtherForMod = $redirOtherForMod . "\n";
+            }
+
+            $redirOtherForMod = $redirOtherForMod . $redirRow->valueByName('description');
+        }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
+
+        $row->elementByName('redirOther_subMod')->setValue($redirOtherForMod);
+
+        # 最後結尾
+        if ($hint ne '')
+        {
+            #$hint = "<ul style='text-align:left;'>". $hint . "</ul>";
+            $hint = "<div style='text-align:left;'>". $hint . "</div>";
+        }
+        else
+        {
+            $hint = "<span>-</span>";
         }
 
-        if ($hint ne '') {
-            $hint = $hint . "<br />";
-        }
+        $row->elementByName('redirPorts')->setValue($hint);
 
-        #$hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort.""; 
-        $hint = $hint . $desc . ": " . $extPort ." &gt; " . $intPort.""; 
-
-        if ($redirOtherForMod ne '') {
-            $redirOtherForMod = $redirOtherForMod . "\n";
-        }
-
-        $redirOtherForMod = $redirOtherForMod . $redirRow->valueByName('description');
-    }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
-
-    $row->elementByName('redirOther_subMod')->setValue($redirOtherForMod);
-
-    # 最後結尾
-    if ($hint ne '')
-    {
-        #$hint = "<ul style='text-align:left;'>". $hint . "</ul>";
-        $hint = "<div style='text-align:left;'>". $hint . "</div>";
-    }
-    else
-    {
-        $hint = "<span>-</span>";
-    }
-
-    $row->elementByName('redirPorts')->setValue($hint);
-
-    #$row->store();
+        #$row->store();
 
     } catch {
-        $self->getLibrary()->show_exceptions($_);
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryRedirect->updateRedirectPorts() ) ');
     };
 }
 

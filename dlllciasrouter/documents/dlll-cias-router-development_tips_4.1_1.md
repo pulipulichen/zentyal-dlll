@@ -73,6 +73,7 @@ From original code
 
 * Update [dlllciasrouter.yaml](https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/schemas/dlllciasrouter.yaml) if you add any file or change file's name 
 * [DataTable.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/CGI/Controller/DataTable.pm)
+* File location: `/usr/share/zentyal/www/dlllciasrouter/files`
 
 ----------
 
