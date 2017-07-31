@@ -24,8 +24,7 @@ use EBox::Sudo;
 
 use Try::Tiny;
 
-#use CGI;
-
+use CGI;
 
 sub new
 {
@@ -35,13 +34,44 @@ sub new
     my $self = $class->SUPER::new(@_);
     bless ($self, $class);
 
+    #$self->{'directory'} = $self->findRowByModel();
+    #$self->{'backview'} = '/dlllciasrouter/Composite/VMServerComposite';
+
     return $self;
 }
+
+##
+# 20170731 Pulipuli Chen
+# @departed
+##
+#sub findRowByModel
+#{
+#    my ($self) = @_;
+#
+#    my $query = new CGI;
+#    my $directory = $query->param('directory');
+#    # VMServer/keys/vms5/attachedFiles
+#    
+#    my @parts = split('/', $directory);
+#    my $modelName = $parts[0];
+#    #my $id = $parts[2];
+#
+#    #my $lib = $self->getLibrary();
+#    #my $mod = $lib->loadLibrary($modelName);
+#
+#    return $modelName;
+#    #my $row = $mod->findId(id => $id);
+#
+#    #return $row;
+#}
 
 sub pageTitle
 {
     my ($self) = @_;
-    my $row = $self->parentRow();
+    #my $row = $self->parentRow();
+
+    my $lib = $self->getLibrary();
+    my $row = $lib->getParentRow($self);
     
     #if (defined($row))
     #{
@@ -53,11 +83,17 @@ sub pageTitle
 #    else {
 #        return
 #    } 
+    #my $query = new CGI;
 
-    return '<a href="' . '/dlllciasrouter/Composite/VMServerComposite' . '">' 
-            . __('Virtual Machines') 
-            . '</a> <span class="title_link_sep">❱</span> ' 
-            . __("Attached Files");
+    return $row . __("Attached Files");
+
+    #return '<a href="' . '/dlllciasrouter/Composite/VMServerComposite' . '">' 
+    #        . __('Virtual Machines') 
+    #        . $self->{'directory'}
+    #        . 'aaa'
+    #        . $query->param('directory')
+    #        . '</a> <span class="title_link_sep">❱</span> ' 
+    #        . __("Attached Files");
 }
 
 sub _table
@@ -85,7 +121,7 @@ sub _table
     my $dataTable =
     {
         'tableName' => 'AttachedFiles',
-        'pageTitle' => $self->pageTitle(),
+        #'pageTitle' => 'bbb' . $self->pageTitle(),
         # 'printableTableName' => __('Attached File'),
         'printableRowName' => __('Attached File'),
         'modelDomain' => 'dlllciasrouter',

@@ -77,6 +77,6 @@ From original code
 
 # Check error logs
 
-* Zentyal logs: ```` ~/zentyal-dlll/dlllciasrouter/log.sh ```` <br /> Log path: ````/var/log/zentyal/zentyal.log````
-* Zentyal error logs: ```` ~/zentyal-dlll/dlllciasrouter/error.sh ```` <br /> Log path: ````/var/log/zentyal/error.log````
-
+* Zentyal logs: `~/zentyal-dlll/dlllciasrouter/log.sh` <br /> Log path: `/var/log/zentyal/zentyal.log`
+* Zentyal error logs: `~/zentyal-dlll/dlllciasrouter/error.sh ` <br /> Log path: `/var/log/zentyal/error.log`
+* If Zentyal cannot be compiled, try to restart Zentyal: `~/zentyal-dlll/dlllciasrouter/zentyal_restart.sh`

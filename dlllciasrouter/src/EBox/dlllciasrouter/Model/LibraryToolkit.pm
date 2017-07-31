@@ -74,6 +74,34 @@ sub isEnable
     return $row->valueByName('configEnable');
 }
 
+##
+# 20170731 Pulipuli Chen
+# 改進原本Zentyal問題的取得上一層row的作法
+##
+sub getParentRow
+{
+    my ($self, $obj) = @_;
+    
+    my $row = $obj->parentRow();
+
+    if (defined($row)) {
+        return $row;
+    }
+
+    #return $self->parentModule()->model($library);
+    my $directory = $obj->{'directory'};
+    my @parts = split('/', $directory);
+    my $modelName = $parts[0];
+    my $id = $parts[2];
+
+    #return $modelName;
+
+    my $mod = $self->loadLibrary($modelName);
+    $row = $mod->row($id);
+
+    return $row;
+}
+
 # ----------------------------
 
 1;

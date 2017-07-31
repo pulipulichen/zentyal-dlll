@@ -632,17 +632,17 @@ sub addRedirectRow
     
     try {
 
-    my $gl = EBox::Global->getInstance();
-    my $firewall = $gl->modInstance('firewall');
-    my $redirMod = $firewall->model('RedirectsTable');
+        my $gl = EBox::Global->getInstance();
+        my $firewall = $gl->modInstance('firewall');
+        my $redirMod = $firewall->model('RedirectsTable');
 
-    my $id = $redirMod->findId(
-        description => $params{description},
-    );
-    
-    if (defined($id) == 0) {
-        $redirMod->addRow(%params);
-    }
+        my $id = $redirMod->findId(
+            description => $params{description},
+        );
+
+        if (defined($id) == 0) {
+            $redirMod->addRow(%params);
+        }
 
     } catch {
         $self->getLibrary()->show_exceptions($_);
