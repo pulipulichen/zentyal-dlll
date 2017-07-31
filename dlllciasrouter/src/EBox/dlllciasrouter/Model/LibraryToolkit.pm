@@ -33,6 +33,8 @@ use LWP::Simple;
 use POSIX qw(strftime);
 use Try::Tiny;
 
+use CGI;
+
 ##
 # 讀取LibraryToolkit
 # @author Pulipuli Chen
@@ -82,24 +84,40 @@ sub getParentRow
 {
     my ($self, $obj) = @_;
     
-    my $row = $obj->parentRow();
+    try {
+        #$self->show_exceptions('env: ' . $ENV{'REQUEST_URI'});
 
-    if (defined($row)) {
+        my $row = $obj->parentRow();
+
+        #if ($row) {
+        #    return $row;
+        #}
+
+        #return $self->parentModule()->model($library);
+        my $directory = $obj->{'directory'};
+
+        #my $query = new CGI;
+        #my $directory = $query->param('directory');
+        #$self->show_exceptions('directory: ' . $directory . "; " . $obj->{'directory'});
+
+        my @parts = split('/', $directory);
+        my $modelName = $parts[0];
+        my $id = $parts[2];
+
+        #return $modelName;
+
+        my $mod = $self->loadLibrary($modelName);
+        $row = $mod->row($id);
+
+        #if (not $row) {
+        #    $self->show_exceptions('directory: ' . $directory);
+        #}
+
         return $row;
     }
-
-    #return $self->parentModule()->model($library);
-    my $directory = $obj->{'directory'};
-    my @parts = split('/', $directory);
-    my $modelName = $parts[0];
-    my $id = $parts[2];
-
-    #return $modelName;
-
-    my $mod = $self->loadLibrary($modelName);
-    $row = $mod->row($id);
-
-    return $row;
+    catch {
+        $self->show_exceptions($_ . ' (LibraryToolkit->getParentRow() )');
+    }
 }
 
 # ----------------------------

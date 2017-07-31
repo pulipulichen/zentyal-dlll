@@ -24,7 +24,7 @@ use EBox::Sudo;
 
 use Try::Tiny;
 
-use CGI;
+#use CGI;
 
 sub new
 {
@@ -36,6 +36,9 @@ sub new
 
     #$self->{'directory'} = $self->findRowByModel();
     #$self->{'backview'} = '/dlllciasrouter/Composite/VMServerComposite';
+    
+    my $lib = $self->getLibrary();
+    my $row = $lib->getParentRow($self);
 
     return $self;
 }
@@ -68,32 +71,12 @@ sub new
 sub pageTitle
 {
     my ($self) = @_;
-    #my $row = $self->parentRow();
-
     my $lib = $self->getLibrary();
     my $row = $lib->getParentRow($self);
-    
-    #if (defined($row))
-    #{
-        #my $domainName = $row->printableValueByName('domainName');
-        #my $ip = $row->printableValueByName('ipaddr');
-        #return $domainName . " (" . $ip . ")";
-#        return $row->id() . __("Attached Files");
-#    }
-#    else {
-#        return
-#    } 
-    #my $query = new CGI;
 
-    return $row . __("Attached Files");
-
-    #return '<a href="' . '/dlllciasrouter/Composite/VMServerComposite' . '">' 
-    #        . __('Virtual Machines') 
-    #        . $self->{'directory'}
-    #        . 'aaa'
-    #        . $query->param('directory')
-    #        . '</a> <span class="title_link_sep">❱</span> ' 
-    #        . __("Attached Files");
+    my $domainName = $row->printableValueByName('domainName');
+    my $ip = $row->printableValueByName('ipaddr');
+    return $domainName . " (" . $ip . "): " . __('Attached Files');
 }
 
 sub _table
@@ -121,8 +104,8 @@ sub _table
     my $dataTable =
     {
         'tableName' => 'AttachedFiles',
-        #'pageTitle' => 'bbb' . $self->pageTitle(),
-        # 'printableTableName' => __('Attached File'),
+        'pageTitle' => 'bbb' . $self->pageTitle(),
+        'printableTableName' => __('Attached File'),
         'printableRowName' => __('Attached File'),
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,
@@ -203,11 +186,11 @@ sub updatedRowNotify
 
     try {
 
-    if ($ROW_NEED_UPDATE == 0) {
-        $ROW_NEED_UPDATE = 1;
-    
-        $self->addedRowNotify($subRow);
-    }   # if ($ROW_NEED_UPDATE == 0) {
+        if ($ROW_NEED_UPDATE == 0) {
+            $ROW_NEED_UPDATE = 1;
+
+            $self->addedRowNotify($subRow);
+        }   # if ($ROW_NEED_UPDATE == 0) {
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '; Please add domain name again. (AttachedFiles->updatedRowNotify)');
