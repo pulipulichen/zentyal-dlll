@@ -59,6 +59,11 @@ sub loadLibrary
 #    }
 #    return escaped;
 #},
+
+##
+# 20170731 Pulipuli Chen
+# @departed 查了一下，好像沒人用
+##
 sub escapeToUtf16 {
     my ($self, $str) = @_;
     my $escaped = "";
@@ -91,6 +96,11 @@ sub escapeToUtf16 {
 #    }
 #    return unescaped;
 #},
+
+##
+# 20170731 Pulipuli Chen
+# 其他程式會用到
+##
 sub convertUtf16CodesToString {
     my ($self, @utf16_codes) = @_;
     
@@ -116,6 +126,10 @@ sub convertUtf16CodesToString {
 
 #print convertUtf16CodesToString("+003C+0070+003E+00E6+00B8+00AC+00E8+00A9+00A6+003C+002F+0070+003E");
 
+##
+# 20170731 Pulipuli Chen
+# 其他程式會用到
+##
 sub convertEscapedCodesToCodes {
     my ($self, $str, $prefix, $base, $num_bits) = @_;
 
@@ -170,6 +184,10 @@ sub convertEscapedCodesToCodes {
 #    return codes;
 #},
 
+##
+# 20170731 Pulipuli Chen
+# 其他程式會用到
+##
 sub convertEscapedUtf16CodesToUtf16Codes {
     my ($self, @str) = @_;
     return $self->convertEscapedCodesToCodes(@str, "+", 16, 16);
@@ -179,7 +197,11 @@ sub convertEscapedUtf16CodesToUtf16Codes {
 #    return this.convertEscapedCodesToCodes(str, "+", 16, 16);
 #},
 
+##
+# 20170731 Pulipuli Chen
 # 解壓縮主要使用的方法
+# 所以是由JavaScript把字串壓縮成UTF16，然後再由Perl還原成原本的字串
+##
 sub unescapeFromUtf16 {
     my ($self, $str) = @_;
 
@@ -220,4 +242,24 @@ sub stripsHtmlTags {
 #    var utf16_codes = this.convertEscapedUtf16CodesToUtf16Codes(str);
 #    return this.convertUtf16CodesToString(utf16_codes);
 #}
+
+
+##
+# 20170731 Pulipuli Chen
+# 改進原本的encode_entities
+##
+sub encodeEntities
+{
+    my ($self, $str) = @_;
+    my @lines = split(/\n/, $str);
+    my $contents = '';
+    for my $line (@lines) {
+        if ($contents ne '') {
+            $contents = $contents . "<br />";
+        }
+        $contents = $contents . encode_entities($line);
+    }
+    return $contents;
+}
+
 1;

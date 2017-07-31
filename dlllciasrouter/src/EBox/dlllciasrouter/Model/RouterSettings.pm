@@ -199,6 +199,9 @@ sub _table
         
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
 
+    my $poundCfg = '<a class="btn btn-icon btn-log" title="/etc/pound/pound.cfg" target="_blank" href="/dlllciasrouter/View/PoundSettings?backview=/dlllciasrouter/Composite/SettingComposite&backview_title=Settings&backview_hash=RouterSettings_hr_PoundConfig_hr_row">pound.cfg</a>';
+    push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_pound_cfg", $poundCfg));
+
     #my $port = $self->value("port");
     my $port = $self->{pound_port};
     my $logPound = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$address.'&filter-fw_dpt='.$port.'">POUND LOGS</a>';

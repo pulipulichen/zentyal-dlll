@@ -311,14 +311,14 @@ sub createFieldExternalIPAddressWithSubmask
 sub createFieldInternalPort
 {
     my $field = new EBox::Types::Port(
-            'fieldName' => 'port',
-            'printableName' => __('Internal Port'),
-            'defaultValue' => 80,
-            'editable' => 1,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
-            'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
-        );
+        'fieldName' => 'port',
+        'printableName' => __('Internal Port'),
+        'defaultValue' => 80,
+        'editable' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
+    );
 
     return $field;
 }
@@ -332,14 +332,14 @@ sub createFieldInternalPortDefaultValue
     my ($self, $defaultValue) = @_;
 
     my $field = new EBox::Types::Port(
-            'fieldName' => 'port',
-            'printableName' => __('Internal Port'),
-            'defaultValue' => $defaultValue,
-            'editable' => 1,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
-            #'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
-        );
+        'fieldName' => 'port',
+        'printableName' => __('Internal Port'),
+        'defaultValue' => $defaultValue,
+        'editable' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        #'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
+    );
 
     return $field;
 }
@@ -347,17 +347,17 @@ sub createFieldInternalPortDefaultValue
 sub createFieldMACAddr
 {
     my $field = new EBox::Types::MACAddr(
-            fieldName => 'macaddr',
-            printableName => __('Network Card MAC Address'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => __('Set MAC to assign Internal IP by DHCP. For example: 00:A0:C9:14:C8:29. '  )
-                . '<a href="https://lh3.googleusercontent.com/-KrrvguQ6wSg/WXmZXy9IXfI/AAAAAAADO90/qH3Je2-ekg8NCYQ_rko8xjLKzmsZnNyzACHMYCw/s0/2017-07-27_15-40-42.png" target="_blank">' 
-                    . __('How to find out MAC address?') 
-                . '</a>',
-        );
+        fieldName => 'macaddr',
+        printableName => __('Network Card MAC Address'),
+        editable => 1,
+        optional=>1,
+        hiddenOnSetter => 0,
+        hiddenOnViewer => 1,
+        help => __('Set MAC to assign Internal IP by DHCP. For example: 00:A0:C9:14:C8:29. '  )
+            . '<a href="https://lh3.googleusercontent.com/-KrrvguQ6wSg/WXmZXy9IXfI/AAAAAAADO90/qH3Je2-ekg8NCYQ_rko8xjLKzmsZnNyzACHMYCw/s0/2017-07-27_15-40-42.png" target="_blank">' 
+                . __('How to find out MAC address?') 
+            . '</a>',
+    );
 
     return $field;
 }
@@ -366,13 +366,13 @@ sub createFieldNetworkDisplay
 {
     my ($self) = @_;
     my $field = new EBox::Types::HTML(
-            fieldName => 'network_display',
-            printableName => __('Network'),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
-        );
+        fieldName => 'network_display',
+        printableName => __('Network'),
+        editable => 0,
+        optional => 1,
+        hiddenOnSetter => 1,
+        hiddenOnViewer => 0,
+    );
     return $field;
 }
 
@@ -1710,12 +1710,12 @@ sub createFieldFileDescriptionDisplay
 {
     my ($self, $help) = @_;
     my $field = new EBox::Types::HTML(
-            fieldName => 'fileDescription',
-            printableName => __('Fille Description '),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
+            'fieldName' => 'fileDescription',
+            'printableName' => __('Fille Description '),
+            'editable' => 0,
+            'optional' => 1,
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 0,
         );
     return $field;
 }
@@ -1846,13 +1846,13 @@ sub createFieldTitledHTMLDisplay
     $fullFieldName =~ s/\s/_/g;
 
     my $field = new EBox::Types::HTML(
-            "fieldName" => $fullFieldName,
-            "printableName" => $title,
-            "editable" => 0,
-            "optional"=> 0,
-            "defaultValue" => "<span></span>",
-            "help" => $html,
-        );
+        "fieldName" => $fullFieldName,
+        "printableName" => $title,
+        "editable" => 0,
+        "optional" => 0,
+        "defaultValue" => "<span></span>",
+        "help" => $html,
+    );
 
     return $field;
 }

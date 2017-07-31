@@ -59,7 +59,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldDomainName());
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
     push(@fields, $fieldsFactory->createFieldExternalIPAddressWithSubmask(1, ""));
-    push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
+    push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1, $options->{IPHelp}));
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('ht_main', __('Main Network Settings')));
 

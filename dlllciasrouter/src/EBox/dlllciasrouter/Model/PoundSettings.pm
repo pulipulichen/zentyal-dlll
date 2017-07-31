@@ -21,7 +21,10 @@ use EBox::Types::IPAddr;
 use EBox::Network;
 
 use Try::Tiny;
+use File::Slurp;
+#use HTML::Entities;
 
+#use Data::Dumper;
 
 sub getOptions
 {
@@ -30,6 +33,7 @@ sub getOptions
     my $options = ();
     $options->{tableName} = "PoundSettings";
     $options->{printableName} = __("Pound Settings");
+    $options->{pageTitle} = __("Pound Settings");
     
     return $options;
 }
@@ -54,20 +58,34 @@ sub _table
 
     my @fields = ();
 
-    my $pound_cfg = 'File content: /etc/pound/pound.cfg';
-    push(@fields, $fieldsFactory->createFieldTitledHTMLDisplay($tableName . "_pound_cfg"
-        , __('/etc/pound/pound.cfg')
-        , $pound_cfg));
+    #my $pound_cfg = 'File content: /etc/pound/pound.cfg';
+    #my $file = '/etc/pound/pound.cfg';
+    #my $pound_cfg = '<pre>' . read_file( $file ) . '</pre>';
+    my $pound_cfg_title = __('/etc/pound/pound.cfg (Save changes to check modefied pound.cfg) ');
+    my $pound_cfg_fieldName = $tableName . "_pound_cfg";
+
+    #push(@fields, $fieldsFactory->createFieldTitledHTMLDisplay($pound_cfg_fieldName
+    #    , $pound_cfg_title
+    #    , $pound_cfg));
+
+    push(@fields, new EBox::Types::HTML(
+        'fieldName' => $pound_cfg_fieldName,
+        'printableName' => $pound_cfg_title,
+        'editable' => 0,
+        'optional' => 0,
+        'defaultValue' => '<span></span>',
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 0,
+    ));
 
     my $dataTable = {
-            'tableName' => $tableName,
-            'pageTitle' => '',
-            'printableTableName' => $options->{printableName},
-            'modelDomain'     => 'dlllciasrouter',
-            'defaultActions' => [ 'editField' ],
-            'tableDescription' => \@fields,
-            #'HTTPUrlView'=> 'dlllciasrouter/Composite/StorageServerComposite',
-        };
+        'tableName' => $tableName,
+        'pageTitle' => $options->{pageTitle},
+        'printableTableName' => $options->{printableName} . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
+        'modelDomain' => 'dlllciasrouter',
+        'defaultActions' => [ ],
+        'tableDescription' => \@fields,
+    };
 
     return $dataTable;
 }
@@ -85,6 +103,27 @@ sub loadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
+}
+
+##
+# 20170731 Pulipuli Chen
+# 重新從檔案讀取
+##
+sub updateCfg
+{
+    my ($self) = @_;
+
+    my $options = $self->getOptions();
+    my $tableName = $options->{tableName};
+    my $pound_cfg_fieldName = $tableName . "_pound_cfg";
+    
+    my $file = '/etc/pound/pound.cfg';
+    my $pound_cfg = read_file( $file );
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    my $pound_cfg_contents = $libEnc->encodeEntities($pound_cfg);
+
+    $pound_cfg = '<pre>' . $pound_cfg_contents . '</pre>';
+    $self->setValue($pound_cfg_fieldName, $pound_cfg);
 }
 
 # -----------------------

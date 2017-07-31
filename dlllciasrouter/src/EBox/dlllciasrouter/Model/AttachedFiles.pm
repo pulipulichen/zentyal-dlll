@@ -25,7 +25,7 @@ use EBox::Sudo;
 use Try::Tiny;
 
 #use CGI;
-use Data::Dumper;
+#use Data::Dumper;
 
 sub new
 {
