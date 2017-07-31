@@ -122,7 +122,11 @@ sub addedRowNotify
     try {
 
         my $libDN = $self->loadLibrary('LibraryDomainName');
+        #$subRow = $self->row();
         my $row = $self->parentRow();
+        
+        $self->getLibrary()->show_exceptions( $row->id() );
+        #$row->subModel('OtherDomainNames')->
 
         my $isRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($row);
         my $isSubRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($subRow);

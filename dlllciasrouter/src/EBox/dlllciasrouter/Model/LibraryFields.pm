@@ -106,38 +106,43 @@ sub createFieldDomainNameLink
     return $field;
 }
 
-
+##
 # 20150514 Pulipuli Chen
-# 輸入其他連接埠
+# 輸入其他Domain Name的功能。如果一個伺服器有很多的名稱，可以用這個功能來設定。
+##
 sub createFieldOtherDomainNamesButton
 {
     my ($self, $backView) = @_;
     my $field = new EBox::Types::HasMany(
-            'fieldName' => 'otherDomainName',
-            'printableName' => __('Other <br />Domain <br />Names'),
-            'foreignModel' => 'OtherDomainNames',
-            'view' => '/dlllciasrouter/View/OtherDomainNames',
-            'backView' => $backView,
-            'size' => '1',
-            'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 0,
-       );
+        'fieldName' => 'otherDomainName',
+        'printableName' => __('Other') . '<br />' . __('Domain') . '<br />' . __('Names'),
+        'foreignModel' => 'OtherDomainNames',
+        'view' => '/dlllciasrouter/View/OtherDomainNames',
+        'backView' => $backView,
+        'size' => '1',
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 0,
+   );
     return $field;
 }
 
+##
 # 20150515 Pulipuli Chen
+# 其他的Domain Name設定
+# 如果一個伺服器有多個名字，可以用這個來設定
+##
 sub createFieldOtherDomainNamesSubModel
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'otherDomainName_subMod',
-            'printableName' => __(''),
-            #'defaultValue' => '',
-            'editable' => 0,
-            'optional' => 1,
-            'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 1,
-       );
+        'fieldName' => 'otherDomainName_subMod',
+        'printableName' => __(''),
+        #'defaultValue' => '',
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+   );
     return $field;
 }
 
