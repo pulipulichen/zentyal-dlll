@@ -34,6 +34,7 @@ use POSIX qw(strftime);
 use Try::Tiny;
 
 use CGI;
+use Data::Dumper;
 
 ##
 # 讀取LibraryToolkit
@@ -89,16 +90,26 @@ sub getParentRow
 
         my $row = $obj->parentRow();
 
-        #if ($row) {
-        #    return $row;
-        #}
+        if ($row) {
+            return $row;
+        }
 
         #return $self->parentModule()->model($library);
         my $directory = $obj->{'directory'};
 
-        #my $query = new CGI;
-        #my $directory = $query->param('directory');
-        #$self->show_exceptions('directory: ' . $directory . "; " . $obj->{'directory'});
+        #my $query = CGI->new;
+        #my @dirs = split('/', $obj->model()->directory());
+        #my $queryDirectory = $query->param('directory');
+        #$self->show_exceptions('directory: ' . $queryDirectory 
+        #    . "\n;<br /> " . $obj->{'directory'} 
+        #    . "\n;<br /> ENV: " . $ENV{'REQUEST_URI'}
+        #    . "\n;<br /> ENV: " . $ENV{'QUERY_STRING'}
+        #    . "\n;<br /> ENV: " . $ENV{'directory'}
+        #    . "\n;<br /> " . $query->url_param('directory')
+            #. "\n;<br /> dirs" . Dumper(@dirs)
+        #    . "\n;<br /> " . Dumper($query)
+            #. "\n;<br /> " . Dumper($obj->getParams())
+        #    . "\n;<br /> " . Dumper($obj));
 
         my @parts = split('/', $directory);
         my $modelName = $parts[0];
@@ -109,14 +120,42 @@ sub getParentRow
         my $mod = $self->loadLibrary($modelName);
         $row = $mod->row($id);
 
-        #if (not $row) {
-        #    $self->show_exceptions('directory: ' . $directory);
-        #}
+        if (not $row) {
+            $self->show_exceptions('error directory: ' . $directory);
+        }
 
         return $row;
     }
     catch {
         $self->show_exceptions($_ . ' (LibraryToolkit->getParentRow() )');
+    }
+}
+
+##
+# 20170731 Pulipuli Chen
+# 改進原本Zentyal問題的取得上一層row的作法
+##
+sub getBackview
+{
+    my ($self, $obj) = @_;
+    try {
+        return $self->getParameter("backview");
+    }
+    catch {
+        $self->show_exceptions($_ . ' (LibraryToolkit->getBackview() )');
+    }
+}
+
+sub getParameter
+{
+    my ($self, $parameterName) = @_;
+    try {
+        my $query = new CGI;
+        my $p = $query->param($parameterName);
+        return $p;
+    }
+    catch {
+        $self->show_exceptions($_ . ' (LibraryToolkit->getParameter() )');
     }
 }
 

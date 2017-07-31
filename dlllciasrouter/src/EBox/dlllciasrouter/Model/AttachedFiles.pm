@@ -25,6 +25,7 @@ use EBox::Sudo;
 use Try::Tiny;
 
 #use CGI;
+use Data::Dumper;
 
 sub new
 {
@@ -34,11 +35,13 @@ sub new
     my $self = $class->SUPER::new(@_);
     bless ($self, $class);
 
+    #my $query = CGI->new;
+    #$self->{'directory'} = $query->param('directory');
     #$self->{'directory'} = $self->findRowByModel();
     #$self->{'backview'} = '/dlllciasrouter/Composite/VMServerComposite';
     
-    my $lib = $self->getLibrary();
-    my $row = $lib->getParentRow($self);
+    #my $lib = $self->getLibrary();
+    #my $row = $lib->getParentRow($self);
 
     return $self;
 }
@@ -71,12 +74,20 @@ sub new
 sub pageTitle
 {
     my ($self) = @_;
-    my $lib = $self->getLibrary();
-    my $row = $lib->getParentRow($self);
+    try {
+        my $lib = $self->getLibrary();
+        my $row = $lib->getParentRow($self);
+        #my $backview = $lib->getBackview($self);
 
-    my $domainName = $row->printableValueByName('domainName');
-    my $ip = $row->printableValueByName('ipaddr');
-    return $domainName . " (" . $ip . "): " . __('Attached Files');
+        my $domainName = $row->printableValueByName('domainName');
+        my $ip = $row->printableValueByName('ipaddr');
+        #return $domainName . " (" . $ip . ") : " . $backview . " | " . Dumper($self);
+        return $domainName . " (" . $ip . ")";
+    }
+    catch {
+        #return __('Attached Files: ' . $_);
+        return __('Attached Files');
+    }
 }
 
 sub _table
@@ -105,7 +116,7 @@ sub _table
     {
         'tableName' => 'AttachedFiles',
         'pageTitle' => 'bbb' . $self->pageTitle(),
-        'printableTableName' => __('Attached File'),
+        'printableTableName' => __('Attached File') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
         'printableRowName' => __('Attached File'),
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,

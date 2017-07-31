@@ -1,5 +1,5 @@
 if (typeof(_do_filtered) === 'undefined') {
-	_do_filtered = false;
+    _do_filtered = false;
 }
 
 $(function () {
