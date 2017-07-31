@@ -356,7 +356,7 @@ sub updateDomainNameLink
             $secure = $dnRow->valueByName('redirPOUND_secure');
             my $otherDomainName = $dnRow->valueByName("domainName");
             my $otherLink = $self->updateDomainNameLinkDeco($otherDomainName, $enable, $secure, $doBreakUrl);
-            $link = $link . "<br />" . $otherLink;
+            $link = $link . "<br /> - " . $otherLink;
 
             if ($subMod ne '') {
                 $subMod = $subMod . "\n";
@@ -415,7 +415,8 @@ sub updateDomainNameLinkDeco
     $link = '<a href="'.$link.'" ' 
         . ' title="' . $title . '" '
         . 'target="_blank" ' 
-        . 'style="background: none;text-decoration: '.$textDecoration.';color: #A3BD5B;">' 
+        . 'style="background: none;text-decoration: ' . $textDecoration . ';color: #A3BD5B;" '
+        . 'id="filter_' . $domainName . '" >' 
         . $brokenDomainName 
         . '</a>';
 

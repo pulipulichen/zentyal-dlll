@@ -47,7 +47,6 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldConfigEnable());
     push(@fields, $fieldsFactory->createFieldDomainName());
-    push(@fields, $fieldsFactory->createFieldDomainNameLink());
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
 
     if ($options->{enableVMID} == 0) {
@@ -61,6 +60,8 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldNetworkDisplay());
     
+    push(@fields, $fieldsFactory->createFieldDomainNameLink());
+
     push(@fields, $fieldsFactory->createFieldMACAddr());
 
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView));
