@@ -103,7 +103,10 @@ sub getDataTable
 
 # ---------------------------------------------------------
 
-# 20150516 更新表單的動作
+##
+# 20150516 Pulipuli Chen
+# 更新表單的動作
+##
 sub updatedRowNotify
 {
     my ($self, $mod, $row, $oldRow, $options) = @_;
@@ -112,108 +115,108 @@ sub updatedRowNotify
 
     try {
 
-    #my $extIp = $row->elementByName('extIpaddr')->ip();
-    #my $extMask = $row->elementByName('extIpaddr')->mask();
-    my $extIp = $row->valueByName('extIpaddr');
-    my $extMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+        #my $extIp = $row->elementByName('extIpaddr')->ip();
+        #my $extMask = $row->elementByName('extIpaddr')->mask();
+        my $extIp = $row->valueByName('extIpaddr');
+        my $extMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
 
-    $self->loadLibrary($options->{moduleName})->checkInternalIP($row);
+        $self->loadLibrary($options->{moduleName})->checkInternalIP($row);
 
-    #$self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
+        #$self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
 
-    # 新增 Domain Name
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    #$libDN->deleteDomainName($oldRow->valueByName('domainName'), 'PoundServices');
-    $libDN->deleteDomainName($oldRow->valueByName('domainName'), 'dlllciasrouter-pound');
+        # 新增 Domain Name
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        #$libDN->deleteDomainName($oldRow->valueByName('domainName'), 'PoundServices');
+        $libDN->deleteDomainName($oldRow->valueByName('domainName'), 'dlllciasrouter-pound');
 
-    if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-        $libDN->addDomainNameWithIP($row->valueByName('domainName'), $extIp);
-    }
-
-    # 新增 Redirect
-    my $libREDIR = $self->loadLibrary('LibraryRedirect');
-    my $tableName = $options->{moduleName} . "Setting";
-    my $extPort = $row->valueByName('redirMain_extPort');
-    my $intPort = $row->valueByName("port");
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamDMZ($oldRow, $tableName, $extPort, $intPort, 'Main'));
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $extPort, $intPort, 'Main'));
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $extPort, $intPort, 'Main'));
-    
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamDMZ($row, $tableName, $extPort, $intPort, 'Main'));
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $extPort, $intPort, 'Main'));
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $extPort, $intPort, 'Main'));
-    
-    my $SSHextPort = $row->valueByName('redirSSH_extPort');
-    my $SSHintPort = $row->valueByName("redirSSH_intPort");
-    if ($intPort eq 'redirSSH_default') {
-        $intPort = 22;
-    }
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
-    $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
-    
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
-    $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
-    
-
-    # 設定按鈕
-    my $domainName = $row->valueByName('domainName');
-    my $scheme = $row->valueByName('redirMain_scheme');
-
-    my $intIpaddr = $row->valueByName('ipaddr');
-    my $logButton = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$intIpaddr.'">LOGS</a>';
-
-    my $sshLink = "";
-    if ($row->valueByName('redirSSH_enable') == 1) {
-        $sshLink =  '<br /><a href="ssh://' . $domainName . ":" . $options->{externalSSHPortDefaultValue} . '" target="_blank">' . "ssh://" . $domainName . ":" . $options->{externalSSHPortDefaultValue} . "</a>";
-    }
-
-    my $libEnc = $self->loadLibrary("LibraryEncoding");
-
-    my $button = '<span></span>';
-    if ($scheme ne "none") {
-        my $port = ":" . $extPort;
-        if ($port eq ":80") {
-            $port = "";
+        if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+            $libDN->addDomainNameWithIP($row->valueByName('domainName'), $extIp);
         }
-        my $link = $scheme . "://" . $domainName . $port . "/";
-        my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
 
-        my $configView = '/dlllciasrouter/View/'.$options->{moduleName}.'Setting';
-        my $buttonConfigBtn = '<a href="' . $configView . '" class="btn btn-icon btn-config" style="padding-left: 40px !important;">Main Server Setting</a>';
-        my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>';
+        # 新增 Redirect
+        my $libREDIR = $self->loadLibrary('LibraryRedirect');
+        my $tableName = $options->{moduleName} . "Setting";
+        my $extPort = $row->valueByName('redirMain_extPort');
+        my $intPort = $row->valueByName("port");
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamDMZ($oldRow, $tableName, $extPort, $intPort, 'Main'));
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $extPort, $intPort, 'Main'));
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $extPort, $intPort, 'Main'));
 
-        $button = "<span>" . $buttonBtn . " " . $buttonConfigBtn . " " . $logButton . "<br/>"  . $buttonLink . $sshLink . "</span>";
-        $button = $button . "<div>" . $libEnc->unescapeFromUtf16($row->valueByName('description')) . "</div>";
-    }   # if ($shceme ne "none") {}
-    else {
-        $button = $logButton . $sshLink;
-    }
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamDMZ($row, $tableName, $extPort, $intPort, 'Main'));
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $extPort, $intPort, 'Main'));
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $extPort, $intPort, 'Main'));
 
-    my $fieldName = $tableName . '_web_button';
-    if ($row->elementExists($fieldName)) {
-        $row->elementByName($fieldName)->setValue($button);
-    }
+        my $SSHextPort = $row->valueByName('redirSSH_extPort');
+        my $SSHintPort = $row->valueByName("redirSSH_intPort");
+        if ($intPort eq 'redirSSH_default') {
+            $intPort = 22;
+        }
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamOrigin($oldRow, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
+        $libREDIR->deleteRedirectRow($libREDIR->getServerRedirectParamZentyal($oldRow, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
 
-    # 儲存他
-    $row->store();
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamOrigin($row, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
+        $libREDIR->addRedirectRow($libREDIR->getServerRedirectParamZentyal($row, $tableName, $SSHextPort, $SSHintPort, 'SSH'));
 
-    # 更新另外一個模組的資料
-    my $headerModule = $options->{moduleName} . 'Header';
-    my $headerFieldName = $headerModule . "_web_button";
-    my $header = $self->parentModule->model($headerModule);
-    $header->setValue($headerFieldName, $button);
+        # 設定按鈕
+        my $domainName = $row->valueByName('domainName');
+        my $scheme = $row->valueByName('redirMain_scheme');
 
-    # 設定敘述
-    my $desc = $row->valueByName('description');
-    $desc = $libEnc->unescapeFromUtf16($desc);
-    #$desc = $libEnc->stripsHtmlTags($desc);
-    $desc = "<span>" . $desc . "</span>";
-    #$header->setValue("description_display", $desc);
+        my $intIpaddr = $row->valueByName('ipaddr');
+        my $logButton = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$intIpaddr.'">LOGS</a>';
 
-    # 設定Virtual Interface
-    #$extMask = $self->loadLibrary('LibraryNetwork')->bitwiseShiftMask($extMask);
-    $self->loadLibrary('LibraryNetwork')->setVirtualInterface(
-        $options->{moduleName}, $extIp, $extMask);
+        my $sshLink = "";
+        if ($row->valueByName('redirSSH_enable') == 1) {
+            $sshLink =  '<br /><a href="ssh://' . $domainName . ":" . $options->{externalSSHPortDefaultValue} . '" target="_blank">' . "ssh://" . $domainName . ":" . $options->{externalSSHPortDefaultValue} . "</a>";
+        }
+
+        my $libEnc = $self->loadLibrary("LibraryEncoding");
+
+        my $button = '<span></span>';
+        if ($scheme ne "none") {
+            my $port = ":" . $extPort;
+            if ($port eq ":80") {
+                $port = "";
+            }
+            my $link = $scheme . "://" . $domainName . $port . "/";
+            my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
+
+            my $configView = '/dlllciasrouter/View/'.$options->{moduleName}.'Setting';
+            my $buttonConfigBtn = '<a href="' . $configView . '" class="btn btn-icon btn-config" style="padding-left: 40px !important;">Main Server Setting</a>';
+            my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>';
+
+            $button = "<span>" . $buttonBtn . " " . $buttonConfigBtn . " " . $logButton . "<br/>"  . $buttonLink . $sshLink . "</span>";
+            $button = $button . "<div>" . $libEnc->unescapeFromUtf16($row->valueByName('description')) . "</div>";
+        }   # if ($shceme ne "none") {}
+        else {
+            $button = $logButton . $sshLink;
+        }
+
+        my $fieldName = $tableName . '_web_button';
+        if ($row->elementExists($fieldName)) {
+            $row->elementByName($fieldName)->setValue($button);
+        }
+
+        # 儲存他
+        $row->store();
+
+        # 更新另外一個模組的資料
+        my $headerModule = $options->{moduleName} . 'Header';
+        my $headerFieldName = $headerModule . "_web_button";
+        my $header = $self->parentModule->model($headerModule);
+        $header->setValue($headerFieldName, $button);
+
+        # 設定敘述
+        my $desc = $row->valueByName('description');
+        $desc = $libEnc->unescapeFromUtf16($desc);
+        #$desc = $libEnc->stripsHtmlTags($desc);
+        $desc = "<span>" . $desc . "</span>";
+        #$header->setValue("description_display", $desc);
+
+        # 設定Virtual Interface
+        #$extMask = $self->loadLibrary('LibraryNetwork')->bitwiseShiftMask($extMask);
+        $self->loadLibrary('LibraryNetwork')->setVirtualInterface(
+            $options->{moduleName}, $extIp, $extMask
+        );
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( LibrarySetting->updatedRowNotify() )');

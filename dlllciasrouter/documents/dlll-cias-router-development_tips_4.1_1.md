@@ -75,6 +75,10 @@ From original code
 * [DataTable.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/CGI/Controller/DataTable.pm)
 * File location: `/usr/share/zentyal/www/dlllciasrouter/files`
 
+# Network Tips
+
+* How to effect DNS instantly? Edit your `/etc/host` file.
+
 ----------
 
 # Check error logs

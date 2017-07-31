@@ -545,18 +545,18 @@ sub getRedirectParameter
     my $localIpaddr = $row->valueByName('ipaddr');
 
     return (
-        interface => $iface,
-        origDest_selected => "origDest_ebox",
-        protocol => "tcp/udp",
-        external_port_range_type => 'single',
-        external_port_single_port => $extPort,
-        source_selected => 'source_any',
-        destination => $localIpaddr,
-        destination_port_selected => "destination_port_other",
-        destination_port_other => $intPort,
-        description => $domainName. " (" . $localIpaddr . "): " . $desc,
-        snat => 0,
-        log => $log,
+        'interface' => $iface,
+        'origDest_selected' => "origDest_ebox",
+        'protocol' => "tcp/udp",
+        'external_port_range_type' => 'single',
+        'external_port_single_port' => $extPort,
+        'source_selected' => 'source_any',
+        'destination' => $localIpaddr,
+        'destination_port_selected' => "destination_port_other",
+        'destination_port_other' => $intPort,
+        'description' => $domainName. " (" . $localIpaddr . "): " . $desc,
+        'snat' => 0,
+        'log' => $log,
     );
 }
 
@@ -582,21 +582,21 @@ sub getRedirectParameterSecure
     }
 
     return (
-        interface => $iface,
-        origDest_selected => "origDest_ebox",
-        protocol => "tcp/udp",
-        external_port_range_type => 'single',
-        external_port_single_port => $extPort,
-        source_selected => 'source_object',
-        source_object => $objectRowId,
-        #source_ipaddr_ip => $source->{sourceIp},
-        #source_ipaddr_mask => $source->{sourceMask},
-        destination => $localIpaddr,
-        destination_port_selected => "destination_port_other",
-        destination_port_other => $intPort,
-        description => $domainName. " (" . $localIpaddr . "): " . $desc,
-        snat => 0,
-        log => $log,
+        'interface' => $iface,
+        'origDest_selected' => "origDest_ebox",
+        'protocol' => "tcp/udp",
+        'external_port_range_type' => 'single',
+        'external_port_single_port' => $extPort,
+        'source_selected' => 'source_object',
+        'source_object' => $objectRowId,
+        #'source_ipaddr_ip => $source->{sourceIp},
+        #'source_ipaddr_mask => $source->{sourceMask},
+        'destination' => $localIpaddr,
+        'destination_port_selected' => "destination_port_other",
+        'destination_port_other' => $intPort,
+        'description' => $domainName. " (" . $localIpaddr . "): " . $desc,
+        'snat' => 0,
+        'log' => $log,
     );
 }
 
@@ -1035,8 +1035,8 @@ sub getServerRedirectParamDMZ
         destination => $row->valueByName("ipaddr"),
         destination_port_selected => "destination_port_same",
 
-        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(DMZ)',
-        snat => 1,
+        description => $domainName. " (" . $localIpaddr . "): " . $desc . ' (DMZ)',
+        snat => 1,  # 不做Replace source address，必有它的用意吧
         log => 1,
     );
 
@@ -1080,8 +1080,8 @@ sub getServerRedirectParamOrigin
         'destination_port_selected' => "destination_port_other",
         'destination_port_other' => $intPort,
 
-        'description' => $domainName. " (" . $localIpaddr . "): " . $desc . '('. $protocol .' Original)',
-        'snat' => 1,
+        'description' => $domainName. " (" . $localIpaddr . "): " . $desc . ' ('. $protocol .' Original)',
+        'snat' => 1,  # 不做Replace source address，必有它的用意吧
         'log' => 1,
     );
 
@@ -1105,27 +1105,27 @@ sub getServerRedirectParamZentyal
     #my $intPort = $row->valueByName("port");
 
     my %param = (
-        interface => $iface,
-        origDest_selected => "origDest_ebox",
-        protocol => "tcp/udp",
+        'interface' => $iface,
+        'origDest_selected' => "origDest_ebox",
+        'protocol' => "tcp/udp",
 
-        external_port_range_type => 'single',
-        external_port_single_port => $extPort,
+        'external_port_range_type' => 'single',
+        'external_port_single_port' => $extPort,
 
-        source_selected => 'source_object',
-        source_object => $objectRowId,
-        #source_selected => 'source_ipaddr',
-        #source_ipaddr_ip => $source->{sourceIp},
-        #source_ipaddr_mask => $source->{sourceMask},
+        'source_selected' => 'source_object',
+        'source_object' => $objectRowId,
+        #'source_selected' => 'source_ipaddr',
+        #'source_ipaddr_ip' => $source->{sourceIp},
+        #'source_ipaddr_mask' => $source->{sourceMask},
 
-        destination => $row->valueByName("ipaddr"),
+        'destination' => $row->valueByName("ipaddr"),
         
-        destination_port_selected => "destination_port_other",
-        destination_port_other => $intPort,
+        'destination_port_selected' => "destination_port_other",
+        'destination_port_other' => $intPort,
 
-        description => $domainName. " (" . $localIpaddr . "): " . $desc . '(' . $protocol . ' Zentyal)',
-        snat => 1,
-        log => 1,
+        'description' => $domainName. " (" . $localIpaddr . "): " . $desc . ' (' . $protocol . ' Zentyal)',
+        'snat' => 1,  # 不做Replace source address，必有它的用意吧
+        'log' => 1,
     );
 
     return %param;
