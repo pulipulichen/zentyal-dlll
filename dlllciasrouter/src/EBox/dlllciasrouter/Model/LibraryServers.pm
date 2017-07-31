@@ -62,7 +62,10 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldNetworkDisplay());
     
     push(@fields, $fieldsFactory->createFieldMACAddr());
+
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView));
+    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
+
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());
 
     # ----------------------------
@@ -189,7 +192,7 @@ sub getDataTable
     # --------------------------------
     # Other Redirect Ports
 
-    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
+    #push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
     push(@fields, $fieldsFactory->createFieldOtherRedirectPortsHint());
     push(@fields, $fieldsFactory->createFieldOtherRedirectPortsSubModel());
 
