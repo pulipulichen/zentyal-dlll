@@ -95,6 +95,7 @@ sub getDataTable
         #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_hardware', __('Management Information')));
 
         push(@fields, $fieldsFactory->createFieldPhysicalLocation());
+        push(@fields, $fieldsFactory->createFieldOS());
         if ($options->{enableKVM} == 1) {
             push(@fields, $fieldsFactory->createFieldHardwareKVM());
         }

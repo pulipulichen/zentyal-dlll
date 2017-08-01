@@ -66,59 +66,71 @@ sub addDomainNameWithIP
     my ($self, $domainName, $ipaddr) = @_;
 
     if ($domainName eq '') {
+        #return;
+        $self->getLibrary()->show_exceptions($_ 
+            . ' Domain name is empty. '
+            . '(LibraryDomainName->addDomainNameWithIP() )');
         return;
     }
 
-    # 建立預設的DomainName
-    #my $defaultDomainName = $self->setupDefaultDomainName();
+    try {
+        # 建立預設的DomainName
+        #my $defaultDomainName = $self->setupDefaultDomainName();
 
-    my $gl = EBox::Global->getInstance();
-    my $dns = $gl->modInstance('dns');
-    my $domModel = $dns->model('DomainTable');
-    my $id = $domModel->findId(domain => $domainName);
-    if (defined($id)) {
-        $domModel->removeRow($id);
-    }
-    $domModel->addDomain({
-        'domain_name' => $domainName,
-    });
-
-    $id = $domModel->findId(domain => $domainName);
-    my $domainRow = $domModel->row($id);
-
-    # 刪掉多餘的IP
-    my $ipTable;
-    $ipTable = $domainRow->subModel("ipAddresses");
-    $ipTable->removeAll();
-
-    # 幫ipTable加上指定的IP
-    $ipTable->addRow(
-        ip => , $ipaddr
-    );
-
-    # 刪掉多餘的Hostname
-    my $hostnameTable = $domainRow->subModel("hostnames");
-    #my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
-    my $zentyalHostnameID;
-    my $zentyalRow;
-    for $zentyalHostnameID (@{$hostnameTable->ids()}) {
-        $zentyalRow = $hostnameTable->row($zentyalHostnameID);
-        if (defined($zentyalRow)) {
-            last;
+        my $gl = EBox::Global->getInstance();
+        my $dns = $gl->modInstance('dns');
+        my $domModel = $dns->model('DomainTable');
+        my $id = $domModel->findId(domain => $domainName);
+        if (defined($id)) {
+            $domModel->removeRow($id);
         }
-    }
+        $domModel->addDomain({
+            'domain_name' => $domainName,
+        });
 
-    #if (!defined($zentyalRow)) {
-    #    $zentyalRow = $hostnameTable->row();
-    #}
-    
-    my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
-    $zentyalIpTable->removeAll();
-    
-    # 幫zentyalIpTalbe加上指定的IP
-    $zentyalIpTable->addRow(
-        ip => , $ipaddr
-    );
+        $id = $domModel->findId(domain => $domainName);
+        my $domainRow = $domModel->row($id);
+
+        # 刪掉多餘的IP
+        my $ipTable;
+        $ipTable = $domainRow->subModel("ipAddresses");
+        $ipTable->removeAll();
+
+        # 幫ipTable加上指定的IP
+        $ipTable->addRow(
+            ip => , $ipaddr
+        );
+
+        # 刪掉多餘的Hostname
+        my $hostnameTable = $domainRow->subModel("hostnames");
+        #my $zentyalHostnameID = $hostnameTable->findId("hostname"=> 'zentyal');
+        my $zentyalHostnameID;
+        my $zentyalRow;
+        for $zentyalHostnameID (@{$hostnameTable->ids()}) {
+            $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+            if (defined($zentyalRow)) {
+                last;
+            }
+        }
+
+        #if (!defined($zentyalRow)) {
+        #    $zentyalRow = $hostnameTable->row();
+        #}
+
+        my $zentyalIpTable = $zentyalRow->subModel("ipAddresses");
+        $zentyalIpTable->removeAll();
+
+        # 幫zentyalIpTalbe加上指定的IP
+        $zentyalIpTable->addRow(
+            ip => , $ipaddr
+        );
+    } catch {
+
+        $self->getLibrary()->show_exceptions($_ 
+            . ' <a href="/DHCP/View/Interfaces">DHCP Module</a> '
+            . '(LibraryDomainName->addDomainNameWithIP() )');
+
+    }
 }
 
 sub deleteDomainName
@@ -569,6 +581,7 @@ sub initDefaultDomainName
 ## 
 sub getDefaultDomainName
 {
+    #return 'default-domain-name.dlll.nccu.edu.tw';
     return 'dlll.nccu.edu.tw';
     # 20170801 Pulipuli Chen
     # 調整為預設新增dlll.nccu.edu.tw

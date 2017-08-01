@@ -181,12 +181,14 @@ sub setHardwareDisplay
     }
 
     my $location = $row->valueByName('physicalLocation');
+    my $os = $row->valueByName('hardwareOS');
     my $cpu = $row->valueByName('hardwareCPU');
     my $ram = $row->valueByName('hardwareRAM');
     my $disk = $row->valueByName('hardwareDisk');
 
     my $link = '';
     $link = $link . "@" . $location . "<br />";
+    $link = $link . $os . "<br />";
     if ($row->elementExists("hardwareKVM") == 1) {
         my $kvm = "[KVM enabled]<br />";
         if ($row->valueByName("hardwareKVM") == 0) {
@@ -195,8 +197,8 @@ sub setHardwareDisplay
         $link = $link . $kvm;
     }
 
-    $link = $link . "CPU: " . $cpu . "<br />";
-    $link = $link . "RAM: " . $ram . "<br />";
+    $link = $link . "CPU: " . $cpu . " / ";
+    $link = $link . "RAM: " . $ram . " / ";
     $link = $link . "Disk: " . $disk;
 
     $link = "<span>".$link."</span>";

@@ -14,7 +14,7 @@ sub getOptions
 {
     my $options = ();
     #$options->{pageTitle} = __('Storage Servers');
-    $options->{pageTitle} = __('Distributed Storage');
+    $options->{pageTitle} = __('Storage Server');
     $options->{printableTableName} = __('Servers') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-data-table-filter.js"></script>';
     $options->{printableRowName} = __('Server');
     $options->{tableName} = 'StorageServer';
@@ -25,7 +25,7 @@ sub getOptions
                 . __('Example:') . ' 10.6.1.4'
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'http';
-    $options->{poundSecure} = 0;
+    $options->{poundSecure} = 1;
     $options->{enableOtherFunction} = 0;
     $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = 'NEVER';

@@ -1321,6 +1321,25 @@ sub createFieldPhysicalLocation
 }
 
 ##
+# 20170801 Pulipuli Chen
+# 記錄伺服器作業系統
+##
+sub createFieldOS
+{
+    my ($self) = @_;
+
+    my $field = new EBox::Types::Text(
+            fieldName => 'hardwareOS',
+            printableName => __('Operating System or Machine Model'),
+            editable => 1,
+            #defaultValue => '',
+            hiddenOnSetter => 0,
+            hiddenOnViewer => 1,
+        );
+    return $field;
+}
+
+##
 # 20150506 Pulipuli Chen
 # 記錄伺服器CPU
 ##
