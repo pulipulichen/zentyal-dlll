@@ -21,13 +21,13 @@ sub _description
     my $pageTitle = 'Distributed Storage';
 
     my $description =
-      {
-       layout          => 'top-bottom',
-       name            => 'StorageServerComposite',
-       pageTitle       => $pageTitle,
-       printableName   => $pageTitle,
-       compositeDomain => 'dlllciasrouter',
-      };
+    {
+        layout          => 'top-bottom',
+        name            => 'StorageServerComposite',
+        pageTitle       => $pageTitle,
+        printableName   => $pageTitle,
+        compositeDomain => 'dlllciasrouter',
+    };
 
     return $description;
 }

@@ -187,8 +187,9 @@ sub setHardwareDisplay
     my $disk = $row->valueByName('hardwareDisk');
 
     my $link = '';
-    $link = $link . "@" . $location . "<br />";
     $link = $link . $os . "<br />";
+    $link = $link . "@" . $location . "<br />";
+    
     if ($row->elementExists("hardwareKVM") == 1) {
         my $kvm = "[KVM enabled]<br />";
         if ($row->valueByName("hardwareKVM") == 0) {

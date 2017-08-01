@@ -15,7 +15,7 @@ sub getOptions
     my $options = ();
     #$options->{pageTitle} = __('Storage Servers');
     $options->{pageTitle} = __('Storage Server');
-    $options->{printableTableName} = __('Servers') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-data-table-filter.js"></script>';
+    $options->{printableTableName} = __('NAS Servers') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-data-table-filter.js"></script>';
     $options->{printableRowName} = __('Server');
     $options->{tableName} = 'StorageServer';
     $options->{IPHelp} = __('The 1st part should be') . ' 10, <br />'

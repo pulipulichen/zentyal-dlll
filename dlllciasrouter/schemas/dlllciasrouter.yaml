@@ -53,7 +53,7 @@ models:
 composites:
     SettingComposite: [RouterLinks, RouterSettings]
     #StorageServerComposite: [StorageServerHeader, StorageServer]
-    StorageServerComposite: [MfsSettings, StorageServer, ExportsSetting]
+    StorageServerComposite: [StorageServer, MfsSettings, ExportsSetting]
     VEServerComposite: [VEServerHeader, VEServer]
     VMServerComposite: [VMServerHeader, VMServer]
     OtherRoutingSettingComposite: [DNS, URLRedirect]

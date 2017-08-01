@@ -36,7 +36,7 @@ sub getOptions
 
     my $options = ();
     $options->{tableName} = "ExportsSetting";
-    $options->{printableName} = __("Exports");
+    $options->{printableName} = __("MooseFS Chunkserver Exports");
     $options->{printableRowName} = __("Export");
     $options->{expiryDate} = __("NEVER");
     return $options;
@@ -55,25 +55,25 @@ sub _table
     push(@fields, $fieldsFactory->createFieldConfigEnable());
 
     push(@fields, new EBox::Types::DomainName(
-              'fieldName'     => 'dir',
-              'printableName' => __('Share Directory '),
-              'help' => __("Use server's domain name."),
-              "editable" => 1,
-             ));
+        'fieldName'     => 'dir',
+        'printableName' => __('Share Directory '),
+        'help' => __("Use server's domain name."),
+        'editable' => 1,
+   ));
 
     # http://linux.vbird.org/linux_server/0330nfs.php#nfsserver_exports
     # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Deployment_Guide/s1-nfs-server-config-exports.html
 
     # 範圍
     push(@fields, new EBox::Types::Text(
-            'fieldName'     => 'host',
-            'printableName' => __('Share Network'),
-            "editable" => 1,
-            'defaultValue' => "10.0.0.0/8",
-            "help" => __("Single host: IP, 10.0.0.254. <br />" 
-                . "Wildcard (*) with domain name: *.excample.com. <br />"
-                . "IP networks: 10.0.0.0/8"),
-        ));
+        'fieldName'     => 'host',
+        'printableName' => __('Share Network'),
+        'editable' => 1,
+        'defaultValue' => "10.0.0.0/8",
+        'help' => __("Single host: IP, 10.0.0.254. <br />" 
+            . "Wildcard (*) with domain name: *.excample.com. <br />"
+            . "IP networks: 10.0.0.0/8"),
+    ));
 
     push(@fields, new EBox::Types::Boolean(
             'fieldName'     => 'readOnly',
@@ -132,19 +132,19 @@ sub _table
 sub _populateFieldSquash 
 {
     return [
-                {
-                    value => 'no_root_squash',
-                    printableValue => __('no_root_squash: Allow original root permission'),
-                },
-                {
-                    value => 'root_squash',
-                    printableValue => __('root_squash: Root will be squashed to "nfsnobody".'),
-                },
-                {
-                    value => 'all_squash',
-                    printableValue => __('all_squash: Any user will be squashed to "nfsnobody".'),
-                },
-            ];
+        {
+            'value' => 'no_root_squash',
+            'printableValue' => __('no_root_squash: Allow original root permission'),
+        },
+        {
+            'value' => 'root_squash',
+            'printableValue' => __('root_squash: Root will be squashed to "nfsnobody".'),
+        },
+        {
+            'value' => 'all_squash',
+            'printableValue' => __('all_squash: Any user will be squashed to "nfsnobody".'),
+        },
+    ];
 }
 
 # -----------------------------------------
@@ -192,7 +192,9 @@ sub addedRowNotify
 
         $row->store();
     } catch {
-        $lib->show_exceptions($_ . "(ExportsSetting->updateRowNotify())");
+
+        $lib->show_exceptions($_ . " ( ExportsSetting->updateRowNotify() ) ");
+
     };
     
     $ROW_NEED_UPDATE = 0;
@@ -206,7 +208,7 @@ sub deletedRowNotify
     {
 
     } catch {
-        $lib->show_exceptions($_ . "(ExportsSetting->updateRowNotify())");
+        $lib->show_exceptions($_ . " ( ExportsSetting->updateRowNotify() ) ");
     };
 }
 
@@ -228,7 +230,7 @@ sub updatedRowNotify
 
             $row->store();
         } catch {
-            $lib->show_exceptions($_ . "(ExportsSetting->updateRowNotify())");
+            $lib->show_exceptions($_ . " ( ExportsSetting->updateRowNotify() ) ");
         };
         $ROW_NEED_UPDATE = 0;
     }

@@ -925,7 +925,10 @@ sub writeConfFileOnce
     }
 }
 
+##
 # 20150528 Pulipuli Chen
+# 把NFS掛載到本機伺服器上
+##
 sub updateNFSExports
 {
     # 從這邊取得資料出來
@@ -1012,7 +1015,9 @@ sub updateNFSExports
     return ($nfsChanged == 1 || $mfsChanged == 1 );
 }
 
+##
 # 20150528 Pulipuli Chen
+##
 sub updateMountServers
 {
     my ($self) = @_;
