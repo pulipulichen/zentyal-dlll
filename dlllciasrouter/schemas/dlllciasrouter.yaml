@@ -16,7 +16,7 @@ models:
     - RouterSettings
     - RouterLinks
     - LibraryToolkit
-    - PortRedirect
+    #- PortRedirect
     - URLRedirect
     - DNS
     - LibraryMAC
