@@ -41,6 +41,7 @@ models:
     - VMServerHeader
     - ServerPortRedirect
     - OtherDomainNames
+    - VEOtherDomainNames
     - LibraryServers
     - LibrarySetting
     - LibraryHeader

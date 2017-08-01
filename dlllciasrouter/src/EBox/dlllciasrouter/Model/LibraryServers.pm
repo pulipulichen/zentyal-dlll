@@ -50,11 +50,11 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
 
     if ($options->{enableVMID} == 0) {
-        push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1,$options->{IPHelp}));
+        push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1, $options->{IPHelp}));
     }
     else {
-        push(@fields, $fieldsFactory->createFieldInternalVirtualMachineIdentify(1,$options->{IPHelp}));
-        push(@fields, $fieldsFactory->createFieldInternalIPAddressHide(1,$options->{IPHelp}));
+        push(@fields, $fieldsFactory->createFieldInternalVirtualMachineIdentify(1, $options->{IPHelp}));
+        push(@fields, $fieldsFactory->createFieldInternalIPAddressHide(1, $options->{IPHelp}));
     }
     
 
@@ -64,7 +64,7 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldMACAddr());
 
-    push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView));
+    push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView, $options->{otherDomainNameModel}));
     push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
 
     push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());

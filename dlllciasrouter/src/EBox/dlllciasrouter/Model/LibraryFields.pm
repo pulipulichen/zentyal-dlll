@@ -122,12 +122,12 @@ sub createFieldDomainNameLink
 ##
 sub createFieldOtherDomainNamesButton
 {
-    my ($self, $backView) = @_;
+    my ($self, $backView, $model) = @_;
     my $field = new EBox::Types::HasMany(
         'fieldName' => 'otherDomainName',
         'printableName' => __('Other') . '<br />' . __('Domain') . '<br />' . __('Names'),
-        'foreignModel' => 'OtherDomainNames',
-        'view' => '/dlllciasrouter/View/OtherDomainNames',
+        'foreignModel' => $model, #'OtherDomainNames',
+        'view' => '/dlllciasrouter/View/' . $model,
         'backView' => $backView,
         'size' => '1',
         'hiddenOnSetter' => 1,

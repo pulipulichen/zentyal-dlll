@@ -26,6 +26,7 @@ sub getOptions
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-environment-server-proxmox" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'https';
     $options->{poundSecure} = 1;
+    $options->{otherDomainNameModel} = 'VEOtherDomainNames';
     $options->{internalPortDefaultValue} = 8006;
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;

@@ -32,6 +32,7 @@ VMID:&nbsp;<span style="background-color: #00ffff;">3</span><span style="backgro
 <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-machine" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'http';
     $options->{poundSecure} = 0;
+    $options->{otherDomainNameModel} = 'OtherDomainNames';
     $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = '';
     $options->{enableHTTP} = 1;
