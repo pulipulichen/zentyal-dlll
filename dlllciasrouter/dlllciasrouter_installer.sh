@@ -54,7 +54,8 @@ zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
 pound lighttpd \
 moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
 nfs-kernel-server nfs-common \
-vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound
+vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
+mutt sendmail
     sudo updatedb
 fi
 echo "All modules are installed."

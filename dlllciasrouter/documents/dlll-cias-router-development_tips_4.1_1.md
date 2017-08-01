@@ -86,3 +86,4 @@ From original code
 * Zentyal logs: `~/zentyal-dlll/dlllciasrouter/log.sh` <br /> Log path: `/var/log/zentyal/zentyal.log`
 * Zentyal error logs: `~/zentyal-dlll/dlllciasrouter/error.sh ` <br /> Log path: `/var/log/zentyal/error.log`
 * If Zentyal cannot be compiled, try to restart Zentyal: `~/zentyal-dlll/dlllciasrouter/zentyal_restart.sh`
+* [Backup command](https://forum.zentyal.org/index.php?topic=11006.0#msg59278): `/usr/share/zentyal/make-backup`
