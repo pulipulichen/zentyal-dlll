@@ -569,7 +569,9 @@ sub initDefaultDomainName
 ## 
 sub getDefaultDomainName
 {
-    return 'default-domain-name.dlll.nccu.edu.tw';
+    return 'dlll.nccu.edu.tw';
+    # 20170801 Pulipuli Chen
+    # 調整為預設新增dlll.nccu.edu.tw
 }
 
 1;

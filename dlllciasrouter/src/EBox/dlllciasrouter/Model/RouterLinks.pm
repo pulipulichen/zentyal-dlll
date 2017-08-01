@@ -76,14 +76,25 @@ sub _table
             'uri' => '/Network/Diag',
             'icon' => 'icon-network',
         }, 
+        {
+            'text' => __('Global DNS Checker'),
+            'uri' => 'https://www.whatsmydns.net/#A/',
+            'icon' => 'icon-network',
+        }, 
     );
 
     my $html = "";
     for (my $i = 0; $i <= $#links; $i++) {
-        my $button = '<a href="'.$links[$i]{'uri'}.'" '
+        my $target = "_self";
+        if (substr($links[$i]{'uri'}, 0, 1) ne ('/')) {
+            $target = "_blank";
+        }
+
+        my $button = '<a href="' . $links[$i]{'uri'} . '" '
             . ' style="  height: 150%;line-height: 150%;padding-left: 50px !important;" '
-            .' class="btn btn-icon  '.$links[$i]{'icon'}.'">'
-            .$links[$i]{'text'}.'</a> ';
+            . ' class="btn btn-icon  '.$links[$i]{'icon'}.'" '
+            . ' target="' . $target . '" >'
+            . $links[$i]{'text'}.'</a> ';
         $html = $html . $button;
     }
 
