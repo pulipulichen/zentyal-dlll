@@ -15,7 +15,7 @@ sub getOptions
     my $options = ();
     #$options->{pageTitle} = __('Virtual Environment Servers');
     $options->{pageTitle} = __('Virtual Environment');
-    $options->{printableTableName} = __('Servers');
+    $options->{printableTableName} = __('Servers') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-data-table-filter.js"></script>';
     $options->{printableRowName} = __('Server');
     $options->{tableName} = 'VEServer';
     $options->{IPHelp} = __('The 1st part should be') . ' 10, <br />'
@@ -25,6 +25,7 @@ sub getOptions
                 . __('Example:') . ' 10.6.0.55'
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-environment-server-proxmox" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'https';
+    $options->{poundSecure} = 1;
     $options->{internalPortDefaultValue} = 8006;
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;

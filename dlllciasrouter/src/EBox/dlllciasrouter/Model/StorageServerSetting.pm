@@ -46,6 +46,7 @@ sub getOptions
                 . __('Example:') . ' 10.6.1.4'
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'https';
+    $options->{poundSecure} = 1;
     $options->{internalPortDefaultValue} = 443;
     $options->{externalPortDefaultValue} = 61000;
     $options->{enableSSH} = 1;

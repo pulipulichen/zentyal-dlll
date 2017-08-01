@@ -23,6 +23,20 @@ use EBox::Types::HTML;
 
 use Try::Tiny;
 
+# -----------------------------------
+
+sub getOptions
+{
+    my $options = ();
+    $options->{tableName} = 'OtherDomainNames';
+    $options->{pageTitle} = __("Other Domain Names");
+    $options->{printableTableName} = __('Other Domain Names')  . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>';
+    $options->{printableRowName} = __("Other Domain Name");
+
+    return $options;
+}
+
+# -----------------------------------
 
 sub new
 {
@@ -47,15 +61,17 @@ sub pageTitle
         return $domainName . " (" . $ip . ")";
     }
     catch {
-        return __("Other Domain Names");
+        my $options = $self->getOptions();
+        return $options->{pageTitle};
     }
 }
 
 sub _table
 {
-
     my ($self) = @_;  
     
+    my $options = $self->getOptions();
+
     my $libFactory = $self->parentModule()->model('LibraryFields');
 
     my @fields = (
@@ -74,10 +90,10 @@ sub _table
 
     my $dataTable =
     {
-        'tableName' => 'OtherDomainNames',
+        'tableName' => $options->{tableName},
         'pageTitle' => $self->pageTitle(),
-        'printableTableName' => __('Other Domain Names')  . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>',
-        'printableRowName' => __('Other Domain Name'),
+        'printableTableName' => $options->{printableTableName},
+        'printableRowName' => $options->{printableRowName},
         'modelDomain' => 'dlllciasrouter',
         'automaticRemove' => 1,
         'defaultController' => '/dlllciasrouter/Controller/OtherDomainNames',

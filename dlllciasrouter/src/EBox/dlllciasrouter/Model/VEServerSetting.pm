@@ -46,6 +46,7 @@ sub getOptions
                 . __('Example:') . ' 10.6.0.55'
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-environment-server-proxmox" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'https';
+    $options->{poundSecure} = 1;
     $options->{internalPortDefaultValue} = 8006;
     $options->{externalPortDefaultValue} = 60000;
     $options->{enableSSH} = 1;

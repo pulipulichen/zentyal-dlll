@@ -57,8 +57,10 @@ $(function () {
             }
             else {
                 //alert(_uri);
-                _h1.find("a:eq(1)").attr("href", _uri);
+                //console.log(_uri);
+                _h1.find("a[href]").attr("href", _uri);
             }
+            console.log("backview setup");
         }
         else if (_backview_title !== undefined) {
             if (_backview_hash !== undefined) {
@@ -66,6 +68,7 @@ $(function () {
             }
             _a = $('<span><a href="' + _backview + '">' + _backview_title + '</a>  &gt;</span>');
             _h1.prepend(_a);
+            console.log("backview setup");
         }
         else {
             if (_backview_hash !== undefined) {
@@ -73,6 +76,7 @@ $(function () {
             }
             _a = $('<a href="' + _backview + '">' + _h1.html() + '</a>');
             _setup_h1(_h1, _a);
+            console.log("backview setup");
         }
     }
 });
