@@ -504,6 +504,7 @@ sub updateVMIDIPAddr
 }
 
 ##
+# 20170801 Pulipuli Chen
 # 更新NetworkDisplay欄位
 # 顯示IP跟MAC
 # @param $row 欄
@@ -513,15 +514,31 @@ sub updateNetworkDisplay
     my ($self, $row, $enableVMID) = @_;
 
     my $ipaddr = $row->valueByName('ipaddr');
+    my $display = '';
+
+    # 20170801 Pulipuli Chen
+    # 加上連結
+
+    my $ipSchema = "http";
+    #$ipSchema = $row->valueByName('poundProtocolScheme');
+    $ipSchema = $row->valueByName('redirPOUND_scheme');
+    my $ipPort = 80;
+    $ipPort = $row->valueByName('port');
+    
+    $display = '<a href="' . $ipSchema . '://' . $ipaddr . ':' . $ipPort . '/"' 
+        . ' style="background: none;text-decoration: underline;color: #A3BD5B;" '
+        . ' target="_blank">' . $ipaddr .'</a>';
+
+    # ------------------------------------
 
     if ($enableVMID == 1) {
         my $vmid = $self->getVMID($ipaddr);
-        $ipaddr = $ipaddr . ' <br /> <strong>VMID:</strong> ' . $vmid;
+        $display = $display . ' <br /><strong>VMID:</strong> ' . $vmid;
     }
 
     my $macaddr = $row->valueByName('macaddr');
     if (defined($macaddr) && $macaddr ne '') {
-        $ipaddr = $ipaddr . ' <br /> <strong>MAC:</strong> ' . $macaddr;
+        $display = $display . ' <br /><strong>MAC:</strong> ' . $macaddr;
     }
 
     if ($row->elementExists("mountEnable") 
@@ -529,12 +546,12 @@ sub updateNetworkDisplay
         && defined($row->valueByName("mountPath")) ) {
         my $type = $row->valueByName("mountType");
         $type = uc($type);
-        $ipaddr = $ipaddr . "<br />[".$type."]";
+        $display = $display . "<br />[".$type."]";
     }
     
-    $ipaddr = '<span>' . $ipaddr . '</span>';
+    $display = '<span>' . $display . '</span>';
 
-    $row->elementByName('network_display')->setValue($ipaddr);
+    $row->elementByName('network_display')->setValue($display);
 }
 
 1;

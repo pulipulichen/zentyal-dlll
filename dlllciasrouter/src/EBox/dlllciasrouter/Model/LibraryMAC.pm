@@ -13,6 +13,7 @@ use EBox::Exceptions::Internal;
 use EBox::Exceptions::External;
 
 use EBox::NetWrappers qw(:all);
+use Try::Tiny;
 
 ##
 # 讀取指定的Model
@@ -252,10 +253,15 @@ sub initDHCPfixedIP
     $id = $fixedAddresses->findId('description' => $desc);
 
     if (!defined($id)) {
-        $fixedAddresses->addRow(
-            'object' => $objectRowID,
-            'description' => $desc,
-        );
+        try {
+            $fixedAddresses->addRow(
+                'object' => $objectRowID,
+                'description' => $desc,
+            );
+        }
+        catch {
+            # 增加失敗則略過，通常是已經新增了
+        }
     }
 }
 

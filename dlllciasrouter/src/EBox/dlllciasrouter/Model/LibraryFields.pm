@@ -853,30 +853,33 @@ sub _populateFieldProtocolScheme
 {
     # life time values must be in hours
     return  [
-                {
-                    value => 'http',
-                    printableValue => __('HTTP (http://)'),
-                },
-                {
-                    value => 'https',
-                    printableValue => __('HTTPS (https://)'),
-                },
-                {
-                    value => 'none',
-                    printableValue => __('Not a link'),
-                },
-            ];
+        {
+            'value' => 'http',
+            'printableValue' => __('HTTP (http://)'),
+        },
+        {
+            'value' => 'https',
+            'printableValue' => __('HTTPS (https://)'),
+        },
+        {
+            'value' => 'none',
+            'printableValue' => __('Not a link'),
+        },
+    ];
 }
 
+##
+# 20170801 Pulipuli Chen
+# 好像是不用的樣子
+##
 sub createFieldPoundProtocolScheme
 {
     my ($self) = @_;
     my $field = new EBox::Types::Union(
-            'fieldName' => 'poundProtocolScheme',
-            'printableName' => __('Pound Protocol'),
-            'unique' => 0,
-            'subtypes' =>
-            [
+        'fieldName' => 'poundProtocolScheme',
+        'printableName' => __('Pound Protocol'),
+        'unique' => 0,
+        'subtypes' => [
             new EBox::Types::Port(
                 'fieldName' => 'poundProtocolScheme_http',
                 'printableName' => __('HTTP (http://)'),
@@ -893,10 +896,10 @@ sub createFieldPoundProtocolScheme
                 'defaultValue' => '',
                 'hidden' => 1,
                 'editable' => 0,),
-            ],
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        ],
+        hiddenOnSetter => 0,
+        hiddenOnViewer => 1,
+    );
 
     return $field;
 }

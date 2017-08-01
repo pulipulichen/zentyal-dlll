@@ -177,12 +177,16 @@ sub updatedRowNotify
             if ($port eq ":80") {
                 $port = "";
             }
+
             my $link = $scheme . "://" . $domainName . $port . "/";
+            my $lanLink = $scheme . "://" . $intIpaddr . ':' . $intPort . "/";
+
             my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
 
             my $configView = '/dlllciasrouter/View/'.$options->{moduleName}.'Setting';
             my $buttonConfigBtn = '<a href="' . $configView . '" class="btn btn-icon btn-config" style="padding-left: 40px !important;">Main Server Setting</a>';
-            my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>';
+            my $buttonLink = '<a target="_blank" href="'.$link.'" >'.$link.'</a>'
+                . '<br /><a target="_blank" href="'.$lanLink.'" >'.$lanLink.'</a>';
 
             $button = "<span>" . $buttonBtn . " " . $buttonConfigBtn . " " . $logButton . "<br/>"  . $buttonLink . $sshLink . "</span>";
             $button = $button . "<div>" . $libEnc->unescapeFromUtf16($row->valueByName('description')) . "</div>";
