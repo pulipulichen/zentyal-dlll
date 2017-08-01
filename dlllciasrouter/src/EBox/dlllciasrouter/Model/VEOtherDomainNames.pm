@@ -29,9 +29,9 @@ sub getOptions
 {
     my $options = ();
     $options->{tableName} = 'VEOtherDomainNames';
-    $options->{pageTitle} = __("Other Domain Names");
-    $options->{printableTableName} = __('Other Domain Names')  . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>';
-    $options->{printableRowName} = __("Other Domain Name");
+    $options->{pageTitle} = __("VE Other Domain Names");
+    $options->{printableTableName} = __('VE Other Domain Names')  . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-backview.js"></script>';
+    $options->{printableRowName} = __("VE Other Domain Name");
 
     return $options;
 }
@@ -115,10 +115,9 @@ sub getLibrary
 }
 
 ##
+# 20140312 Pulipuli Chen
 # 讀取指定的Model
-#
-# 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
-# @author 20140312 Pulipuli Chen
+##
 sub loadLibrary
 {
     my ($self, $library) = @_;
@@ -138,19 +137,13 @@ sub addedRowNotify
     try {
 
         my $libDN = $self->loadLibrary('LibraryDomainName');
-        #$subRow = $self->row();
-        #my $row = $self->parentRow();
 
         my $row = $self->getLibrary()->getParentRow($self);
         
-        #my $isRowEnable = $self->getLibrary()->isEnable($row);
-        #my $isSubRowEnable = $self->getLibrary()->isEnable($subRow);
         my $isRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($row);
-        #my $isSubRowEnable = $self->loadLibrary('LibraryServers')->isDomainNameEnable($subRow);
-
+        
         # 1. 更新自己欄位的domain name連線資訊
         $libDN->updateDomainNameLink($subRow, 0);
-        #if ($isRowEnable == 1 && $isSubRowEnable == 1) {
         if ($isRowEnable == 1) {
             $libDN->addDomainName($subRow->valueByName('domainName'));
         }

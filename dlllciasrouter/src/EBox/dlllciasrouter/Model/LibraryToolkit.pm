@@ -90,7 +90,7 @@ sub getParentRow
 
         my $row = $obj->parentRow();
 
-        if ($row) {
+        if (!not $row) {
             return $row;
         }
 
@@ -121,7 +121,7 @@ sub getParentRow
         $row = $mod->row($id);
 
         if (not $row) {
-            $self->show_exceptions('error directory: ' . $directory);
+            $self->show_exceptions(' error directory: ' . $directory . ' ');
         }
 
         return $row;
