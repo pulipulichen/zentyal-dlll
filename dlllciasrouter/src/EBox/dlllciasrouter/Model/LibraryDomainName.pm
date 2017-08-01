@@ -391,7 +391,9 @@ sub updateDomainNameLink
             $subMod = $subMod . $otherDomainName;
         }   # for my $dnId (@{$otherDN->ids()}) {
 
-        $row->elementByName('otherDomainName_subMod')->setValue($subMod);
+        if ($row->elementExists("otherDomainName_subMod")) {
+            $row->elementByName('otherDomainName_subMod')->setValue($subMod);
+        }
     }
 
     $row->elementByName("domainNameLink")->setValue($link);
@@ -479,7 +481,11 @@ sub updatePortDescription
         $desc = '(' . $desc . ')';
     }
 
-    my $schema = $redirRow->valueByName("redirOther_scheme");
+    my $schema = 'none';
+
+    if ($row->elementExists("redirOther_subMod")) {
+        $schema = $redirRow->valueByName("redirOther_scheme");
+    }
     my $link = $desc;
     
     if ($enable == 0) {

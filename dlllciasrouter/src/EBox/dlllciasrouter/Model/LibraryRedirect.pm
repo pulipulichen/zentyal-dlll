@@ -144,21 +144,23 @@ sub deleteRedirects
     }
     
     # 刪除Other Redir
-    my $redirOtherForMod = $row->valueByName('redirOther_subMod'); 
-    if (defined($redirOtherForMod) && $redirOtherForMod ne '') {
+    if ($row->elementExists("redirOther_subMod")) {
+        my $redirOtherForMod = $row->valueByName('redirOther_subMod'); 
+        if (defined($redirOtherForMod) && $redirOtherForMod ne '') {
 
-        my @redirOtherForModAry = split(/\n/, $redirOtherForMod);
-        for my $redirDesc (@redirOtherForModAry) {
-            %param = (
-                'description' => $row->valueByName('domainName') 
-                    . ' ' 
-                    . '(' . $row->valueByName('ipaddr') . '): Other (' . $redirDesc . ')'
-            );
+            my @redirOtherForModAry = split(/\n/, $redirOtherForMod);
+            for my $redirDesc (@redirOtherForModAry) {
+                %param = (
+                    'description' => $row->valueByName('domainName') 
+                        . ' ' 
+                        . '(' . $row->valueByName('ipaddr') . '): Other (' . $redirDesc . ')'
+                );
 
-            $self->deleteRedirectParam(%param);
-        }
+                $self->deleteRedirectParam(%param);
+            }
 
-    }   # if (defined($redirOtherForMod) && $redirOtherForMod ne '') {}
+        }   # if (defined($redirOtherForMod) && $redirOtherForMod ne '') {}
+    }   # if ($row->elementExists("redirOther_subMod")) {
 }
 
 sub addOtherPortRedirect
@@ -778,71 +780,75 @@ sub updateRedirectPorts
         }
 
         # 取得Other Redirect Ports
-        my $domainName = $row->valueByName("domainName");
-        my $redirOther = $row->subModel('redirOther');
-
         my $redirOtherForMod = '';
-        for my $subId (@{$redirOther->ids()}) {
+        if ($row->elementExists("redirOther_subMod")) {
+            my $domainName = $row->valueByName("domainName");
+            my $redirOther = $row->subModel('redirOther');
 
-            my $redirRow = $redirOther->row($subId);
+            for my $subId (@{$redirOther->ids()}) {
 
-            my $extPort = $self->getOtherExtPort($row, $redirRow);
-            my $intPort = $redirRow->valueByName('intPort');
-            my $desc = $redirRow->valueByName('description');
-            my $secure = $redirRow->valueByName('secure');
+                my $redirRow = $redirOther->row($subId);
 
-            my $portEnable = $self->getLibrary()->isEnable($redirRow);
-            my $schema = $redirRow->valueByName("redirOther_scheme");
+                my $extPort = $self->getOtherExtPort($row, $redirRow);
+                my $intPort = $redirRow->valueByName('intPort');
+                my $desc = $redirRow->valueByName('description');
+                my $secure = $redirRow->valueByName('secure');
 
-            if ($secure == 1) {
-                $desc = '[' . $desc . ']';
-            }
-            elsif ($secure == 2) {
-                $desc = '(' . $desc . ')';
-            }
+                my $portEnable = $self->getLibrary()->isEnable($redirRow);
+                my $schema = $redirRow->valueByName("redirOther_scheme");
 
-            $desc = '<strong>' . $desc . "</strong>";
-            if ($portEnable == 0) {
-                next;
-            }
-            elsif ($schema ne 'none') {
-                my $link = $domainName . ":" . $extPort . "/";
-                if ($schema eq "http") {
-                    $link = "http\://" . $link;
+                if ($secure == 1) {
+                    $desc = '[' . $desc . ']';
+                }
+                elsif ($secure == 2) {
+                    $desc = '(' . $desc . ')';
+                }
+
+                $desc = '<strong>' . $desc . "</strong>";
+                if ($portEnable == 0) {
+                    next;
+                }
+                elsif ($schema ne 'none') {
+                    my $link = $domainName . ":" . $extPort . "/";
+                    if ($schema eq "http") {
+                        $link = "http\://" . $link;
+                    }
+                    else {
+                        $link = "https\://" . $link;
+                    }
+
+
+                    $link = '<a href="'.$link.'" ' 
+                        . 'target="_blank" ' 
+                        . 'style="background: none;text-decoration: underline;color: #A3BD5B;">' 
+                        . $desc 
+                        . '</a>';
+                    $desc = $link;
+                }
+
+                if ($hint ne '') {
+                    $hint = $hint . "<br />";
+                }
+
+                #$hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort.""; 
+                if ($self->getLibrary()->isEnable($row) == 1) {
+                    $hint = $hint . $desc . ": " . $extPort ." &gt; " . $intPort.""; 
                 }
                 else {
-                    $link = "https\://" . $link;
+                    $hint = $hint . '<span style="text-decoration: line-through">' . $desc . ": " . $extPort ." &gt; " . $intPort . '</span>'; 
                 }
-                
-                
-                $link = '<a href="'.$link.'" ' 
-                    . 'target="_blank" ' 
-                    . 'style="background: none;text-decoration: underline;color: #A3BD5B;">' 
-                    . $desc 
-                    . '</a>';
-                $desc = $link;
-            }
 
-            if ($hint ne '') {
-                $hint = $hint . "<br />";
-            }
+                if ($redirOtherForMod ne '') {
+                    $redirOtherForMod = $redirOtherForMod . "\n";
+                }
 
-            #$hint = $hint . $desc . ": <br />" . $extPort ." &gt; " . $intPort.""; 
-            if ($self->getLibrary()->isEnable($row) == 1) {
-                $hint = $hint . $desc . ": " . $extPort ." &gt; " . $intPort.""; 
-            }
-            else {
-                $hint = $hint . '<span style="text-decoration: line-through">' . $desc . ": " . $extPort ." &gt; " . $intPort . '</span>'; 
-            }
+                $redirOtherForMod = $redirOtherForMod . $redirRow->valueByName('description');
+            }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
+        }   #if ($row->elementExists("redirOther_subMod")) { 
 
-            if ($redirOtherForMod ne '') {
-                $redirOtherForMod = $redirOtherForMod . "\n";
-            }
-
-            $redirOtherForMod = $redirOtherForMod . $redirRow->valueByName('description');
-        }   # for my $subId (@{$row->subModel('redirOther')->ids()}) {
-
-        $row->elementByName('redirOther_subMod')->setValue($redirOtherForMod);
+        if ($row->elementExists("redirOther_subMod")) {
+            $row->elementByName('redirOther_subMod')->setValue($redirOtherForMod);
+        }   # if ($row->elementExists("redirOther_subMod")) {
 
         # 最後結尾
         if ($hint ne '')

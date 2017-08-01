@@ -64,10 +64,12 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldMACAddr());
 
-    push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView, $options->{otherDomainNameModel}));
-    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
+    if ($options->{enableOtherFunction} == 1) {
+        push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView, "OtherDomainNames"));
+        push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
 
-    push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());
+        push(@fields, $fieldsFactory->createFieldOtherDomainNamesSubModel());
+    }
 
     # ----------------------------
     #push(@fields, $fieldsFactory->createFieldHr('hr_contact'));
@@ -193,9 +195,11 @@ sub getDataTable
     # --------------------------------
     # Other Redirect Ports
 
-    #push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
-    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsHint());
-    push(@fields, $fieldsFactory->createFieldOtherRedirectPortsSubModel());
+    if ($options->{enableOtherFunction} == 1) {
+        #push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
+        push(@fields, $fieldsFactory->createFieldOtherRedirectPortsHint());
+        push(@fields, $fieldsFactory->createFieldOtherRedirectPortsSubModel());
+    }
 
     # --------------------------------
     # Date Display
@@ -266,7 +270,9 @@ sub serverAddedRowNotify
 
         if ($self->isDomainNameEnable($row) == 1) {
             $libDN->addDomainName($row->valueByName('domainName'));
-            $libDN->addOtherDomainNames($row->valueByName('otherDomainName_subMod'));
+            if ($row->elementExists("otherDomainName_subMod")) {
+                $libDN->addOtherDomainNames($row->valueByName('otherDomainName_subMod'));
+            }
         }
 
         my $libREDIR = $self->loadLibrary('LibraryRedirect');
@@ -297,7 +303,9 @@ sub serverDeletedRowNotify
         #$libDN->deleteDomainName($row->valueByName('domainName'), 'PoundServices');
         #$libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'PoundServices');
         $libDN->deleteDomainName($row->valueByName('domainName'), 'dlllciasrouter-pound');
-        $libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'dlllciasrouter-pound');
+        if ($row->elementExists("otherDomainName_subMod")) {
+            $libDN->deleteOtherDomainNames($row->valueByName('otherDomainName_subMod'), 'dlllciasrouter-pound');
+        }
 
         my $libREDIR = $self->loadLibrary('LibraryRedirect');
         $libREDIR->deleteRedirects($row);
@@ -306,7 +314,7 @@ sub serverDeletedRowNotify
         $libMAC->removeDHCPfixedIPMember($row);
 
     } catch {
-        $self->getLibrary()->show_exceptions($_ . ' ( LibraryServices->deletedRowNotify() )');
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryServers->deletedRowNotify() )');
     };
 }
 
@@ -351,7 +359,9 @@ sub serverUpdatedRowNotify
     try {
         if ($self->isDomainNameEnable($row) == 1) {
             $libDN->addDomainName($row->valueByName('domainName'));
-            $libDN->addOtherDomainNames($row->valueByName('otherDomainName_subMod'));
+            if ($row->elementExists("otherDomainName_subMod")) {
+                $libDN->addOtherDomainNames($row->valueByName('otherDomainName_subMod'));
+            }
         }
 
         $libREDIR->deleteRedirects($row);
@@ -369,13 +379,15 @@ sub serverUpdatedRowNotify
     };
 
     try {
-        my $redirOther = $row->subModel('redirOther');
+        if ($row->elementExists("redirOther_subMod")) {
+            my $redirOther = $row->subModel('redirOther');
 
-        for my $subId (@{$redirOther->ids()}) {
-            my $redirRow = $redirOther->row($subId);
-            $redirOther->deleteRedirect($oldRow, $redirRow);
-            $redirOther->updateExtPortHTML($row, $redirRow);
-            $redirOther->addRedirect($row, $redirRow);
+            for my $subId (@{$redirOther->ids()}) {
+                my $redirRow = $redirOther->row($subId);
+                $redirOther->deleteRedirect($oldRow, $redirRow);
+                $redirOther->updateExtPortHTML($row, $redirRow);
+                $redirOther->addRedirect($row, $redirRow);
+            }
         }
     } catch {
         $lib->show_exceptions($_  . ' ( LibraryServers->serverUpdatedRowNotify() redirOther )');

@@ -26,7 +26,7 @@ sub getOptions
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'http';
     $options->{poundSecure} = 0;
-    $options->{otherDomainNameModel} = 'OtherDomainNames';
+    $options->{enableOtherFunction} = 0;
     $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
