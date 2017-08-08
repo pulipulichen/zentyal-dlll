@@ -328,8 +328,8 @@ sub updatePoundCfg
     my $port = $settings->value('port');
     my $alive = $settings->value('alive');
 
-    #my $timeout = $settings->value('timeout');
-    my $timeout = 1;    # 20150517 測試用，記得要移除
+    my $timeout = $settings->value('timeout');
+    #my $timeout = 1;    # 20150517 測試用，記得要移除
 
     #my $enableError = $settings->value('enableError');
     #my $enableError = 1;

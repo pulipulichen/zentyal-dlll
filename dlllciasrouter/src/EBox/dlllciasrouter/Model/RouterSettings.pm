@@ -188,13 +188,13 @@ sub _table
               help => __("Check backend every X secs. Default is 30 sec."),
              ));
     push(@fields, new EBox::Types::Text(
-              fieldName     => 'timeout',
-              printableName => __('TimeOut'),
-              editable      => 1,
-              unique        => 0,
-              defaultValue => 300,
-              optional => 0,
-              help => __("Wait for response X secs. Default is 30 sec."),
+              "fieldName"     => 'timeout',
+              "printableName" => __('TimeOut'),
+              "editable"      => 1,
+              "unique"        => 0,
+              "defaultValue" => 300,
+              "optional" => 0,
+              "help" => __("Wait for response X secs. Default is 30 sec."),
         ));
         
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
