@@ -552,6 +552,9 @@ sub getServiceParam
                 $httpsPortValue = $libRedir->getServerMainPort($ipaddrValue);
                 $httpSecurityValue = $dnRow->valueByName('redirPOUND_secure');
                 $httpPortValue = $httpsPortValue;
+                #$httpPortValue = $dnRow->valueByName('port');
+                #$httpsPortValue = $httpPortValue;
+                $portValue = $dnRow->valueByName('port');
 
                 # -----------------
 
