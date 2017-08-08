@@ -22,6 +22,9 @@ https://github.com/pulipulichen/zentyal-dlll/tree/master/dlllciasrouter/document
 
 # Part 5. Usage
 
+## Domain Name Rule
+https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/domain-name-rule.md
+
 ## Network IP Configuration
 https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md
 
