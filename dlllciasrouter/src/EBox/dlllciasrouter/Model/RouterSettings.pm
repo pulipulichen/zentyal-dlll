@@ -194,7 +194,7 @@ sub _table
               "unique"        => 0,
               "defaultValue" => 300,
               "optional" => 0,
-              "help" => __("Wait for response X secs. Default is 30 sec."),
+              "help" => __("Wait for response X secs. Default is 300 sec."),
         ));
         
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
