@@ -89,12 +89,13 @@ sub createFieldDomainName
 sub createFieldDomainNameUnique
 {
     my $field = new EBox::Types::DomainName(
-        fieldName => 'domainName',
-        printableName => __('Domain Name'),
-        editable => 1,
+        'fieldName' => 'domainName',
+        'printableName' => __('Domain Name'),
+        'editable' => 1,
         'unique' => 1,
-        hiddenOnSetter => 0,
-        hiddenOnViewer => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-kals-2017.dlll.nccu.edu.tw',
     );
 
     return $field;
@@ -105,13 +106,13 @@ sub createFieldDomainNameUnique
 sub createFieldDomainNameLink
 {
     my $field = new EBox::Types::HTML(
-            fieldName => 'domainNameLink',
-            printableName => __('Domain Name'),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
-        );
+        'fieldName' => 'domainNameLink',
+        'printableName' => __('Domain Name'),
+        'editable' => 0,
+        'optional' =>1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 0,
+    );
 
     return $field;
 }
@@ -161,13 +162,13 @@ sub createFieldOtherDomainNamesSubModel
 sub createFieldIpaddrLink
 {
     my $field = new EBox::Types::HTML(
-            fieldName => 'ipaddrLink',
-            printableName => __('Link'),
-            editable => 0,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 0,
-        );
+        'fieldName' => 'ipaddrLink',
+        'printableName' => __('Link'),
+        'editable' => 0,
+        'optional' =>1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 0,
+    );
 
     return $field;
 }
@@ -175,11 +176,11 @@ sub createFieldIpaddrLink
 sub createFieldInternalIPAddress
 {
     my $field = new EBox::Types::HostIP(
-            fieldName => 'ipaddr',
-            printableName => __('Internal IP Address'),
-            editable => 1,
-            #'unique' => 1,
-            help => '
+        fieldName => 'ipaddr',
+        printableName => __('Internal IP Address'),
+        editable => 1,
+        #'unique' => 1,
+        help => '
 VMID: <span style="background-color: #ffCCEE;">2</span><span style="background-color: #00ff00;">43</span> 
 = IP: 10.0.<span style="background-color: #ffCCEE;">2</span>.<span style="background-color: #00ff00;">43</span>
 <br />
@@ -190,7 +191,7 @@ VMID:&nbsp;<span style="background-color: #00ffff;">3</span><span style="backgro
 = IP: 10.<span style="background-color: #00ffff;">3</span>.<span style="background-color: #ffCCEE;">1</span>.<span style="background-color: #00ff00;">24</span>
 <br />
 <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-machine" target="_blank">' . __('More details') . '</a>',
-        );
+    );
 
     return $field;
 }
