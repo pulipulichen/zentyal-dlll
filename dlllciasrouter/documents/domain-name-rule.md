@@ -1,6 +1,75 @@
 Domain Name Rule
 =======
 
+## Format
+
+Domain Name Section Format:
+
+**"<font color="#9b00d3">[type]</font>-<font color="#0000ff">[name]</font>-<font color="#8fb08c">[year]</font>.<font color="#f79646">[upper-domain-name]</font>"**
+
+For example:
+
+**"<font color="#9b00d3">test</font>-<font color="#0000ff">zentyal</font>-<font color="#8fb08c">2013</font>.<font color="#f79646">dlll.nccu.edu.tw</font>"**
+
+## Section
+
+### <font color="#9b00d3">[type]</font>
+
+Usage.
+
+*   **exp** (experiment): for 1 semester.   
+    <font color="#9b00d3">**exp**</font>-kals-2012.dlll.nccu.edu.tw
+*   **test**: discard in anytime.  
+    <font color="#9b00d3">**test**</font>-pudding-2013.dlll.nccu.edu.tw
+*   **pc** (personal computer): for 3 years.  
+    <font color="#9b00d3">**pc**</font>-pudding-2013.dlll.nccu.edu.tw
+*   **teach**: for 1 semester.  
+    **<font color="#9b00d3">teach</font>**-dspace-dlll-2013.dlll.nccu.edu.tw
+*   **demo**: for a long time  
+    **<font color="#9b00d3">demo</font>**-kals-2013.dlll.nccu.edu.tw
+*   **public**: for a long time.  
+    **<font color="#9b00d3">public</font>**-kals-2013.dlll.nccu.edu.tw
+*   **(non-type)**: equal to type public, for a long time.  
+    reading-club-2013.dlll.nccu.edu.tw  
+
+### <font color="#0000ff">[name]</font>
+
+Project name or user’s name.
+
+*   **<font color="#0000ff">kals</font>**: a project name.  
+    demo-<font color="#0000ff">**kals**</font>-2009.dlll.nccu.edu.tw  
+
+*   **<font color="#0000ff">dspace-dlll</font>**: a project name.  
+    demo-<font color="#0000ff">**dspace-dlll**</font>-2013.nccu.edu.tw  
+
+*   **<font color="#333333">dspace-dlll-01</font>**: a project name for group 01.  
+    teach-<font color="#0000ff">**dspace-dlll-01**</font>-2013.dlll.nccu.edu.tw
+*   <font color="#0000ff">**pudding**</font>: a user name.  
+    pc-<font color="#0000ff">**pudding**</font>-2013.dlll.nccu.edu.tw
+*   **<font color="#0000ff">red</font>**: a user name.  
+    pc-<font color="#0000ff">**red**</font>-2012.dlll.nccu.edu.tw
+
+### <font color="#8fb08c">[year]</font>
+
+Created year.
+
+*   <font color="#8fb08c">**2012**</font>: Created from 2012.  
+    pc-red-<font color="#9bbb59">**2012**</font>.dlll.nccu.edu.tw
+*   <font color="#8fb08c">**2013**</font>: Created from 2013.  
+    demo-dspace-dlll-<font color="#8fb08c">**2013**</font>.nccu.edu.tw  
+
+### <font color="#f79646">[upper-domain-name]</font>
+
+Domain name which DNS could control.
+
+*   **<font color="#f79646">dlll.nccu.edu.tw</font>**: for DLLL LAB use.  
+    teach-dspace-dlll-01-2013.<font color="#f79646">**dlll.nccu.edu.tw**  
+    </font>
+*   **<font color="#f79646">lias.nccu.edu.tw</font>**: for LIAS use.  
+    teach-koha-2013.**<font color="#f79646">lias.nccu.edu.tw</font>**
+
+----
+
 ## Domain Name(網址)申請原則
 
 #### lias.nccu.edu.tw 網域底下的網址格式
