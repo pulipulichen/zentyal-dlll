@@ -81,6 +81,7 @@ sub createFieldDomainName
         #'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
+        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-kals-2017.dlll.nccu.edu.tw',
     );
 
     return $field;
