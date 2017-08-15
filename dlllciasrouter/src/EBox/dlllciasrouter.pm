@@ -161,10 +161,10 @@ sub _daemons
     }
     
     $daemons[$i] = {
-                name => 'pound',
-                type => 'init.d',
-                pidfiles => ['/var/run/pound.pid']
-            };
+        'name' => 'pound',
+        'type' => 'init.d',
+        'pidfiles' => ['/var/run/pound.pid']
+    };
     $i++;
 
     $daemons[$i] = {
@@ -698,6 +698,44 @@ sub initApache
             "dlllciasrouter/ports.conf.mas",
             \@nullParams,
             { uid => '0', gid => '0', mode => '644' }
+        );
+    }
+}
+
+##
+# 初始化排程工作
+# 20170815 Pulipuli Chen
+##
+sub initRootCrontab
+{
+     my ($self) = @_;
+
+    if (-e '/etc/crontab') {
+
+        my @nullParams = ();
+        $self->writeConfFile(
+            '/etc/crontab',
+            "dlllciasrouter/crontab.mas",
+            \@nullParams,
+            { uid => '0', gid => '0', mode => '644' }
+        );
+
+        # ------------------------
+
+        my $dirPath = "/root/dlllciasrouter-scripts";
+
+        if (! -d $dirPath) {
+            system('sudo mkdir -p ' . $dirPath);
+        }
+
+        # ------------------------
+
+        my @backupParams = ();
+        $self->writeConfFile(
+            '/root/dlllciasrouter-scripts/backup-zentyal.sh',
+            "dlllciasrouter/backup-zentyal.sh.mas",
+            \@backupParams,
+            { uid => '0', gid => '0', mode => '744' }   #這邊權限必須是7才能執行
         );
     }
 }
