@@ -122,30 +122,36 @@ sub initAdministorNetworkMember
 {
     my ($self) = @_;
 
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    try {
+        my $libNET = $self->loadLibrary('LibraryNetwork');
 
-    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
-    my $sourceMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+        my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+        my $sourceMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
 
-    my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
-    my $ip_broadcast = EBox::NetWrappers::ip_broadcast($address, $sourceMask);
+        #$self->getLibrary()->show_exceptions("sourceMask: " . $sourceMask .  '( LibraryMAC->initAdministorNetworkMember() )');
 
-    my $objectRow = $self->getObjectRow('Administrator-List');
-    my $memberModel = $objectRow->subModel('members');
-    # 先移除既有的
-    my $id = $memberModel->findId('name' => 'default');
-    if (!defined($id)) {
-        #my $macaddr;
-        # 加入新的 
-        $id = $memberModel->addRow(
-            name => 'default',
-            address_selected => 'iprange',
-            iprange_begin => $ip_network,
-            iprange_end => $ip_broadcast,
-            #macaddr => $macaddr,
-        );
-    }
-    return $memberModel->row($id);
+        my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
+        my $ip_broadcast = EBox::NetWrappers::ip_broadcast($address, $sourceMask);
+
+        my $objectRow = $self->getObjectRow('Administrator-List');
+        my $memberModel = $objectRow->subModel('members');
+        # 先移除既有的
+        my $id = $memberModel->findId('name' => 'default');
+        if (!defined($id)) {
+            #my $macaddr;
+            # 加入新的 
+            $id = $memberModel->addRow(
+                name => 'default',
+                address_selected => 'iprange',
+                iprange_begin => $ip_network,
+                iprange_end => $ip_broadcast,
+                #macaddr => $macaddr,
+            );
+        }
+        return $memberModel->row($id);
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryMAC->initAdministorNetworkMember() )');
+    };
 }
 
 ##
@@ -156,26 +162,43 @@ sub initWorkplaceNetworkMember
 {
     my ($self) = @_;
 
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    try {
+        my $libNET = $self->loadLibrary('LibraryNetwork');
 
-    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
-    my $sourceMask = '16';
+        my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+        my $sourceMask = '255.255.0.0';
 
-    my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
-    my $ip_broadcast = EBox::NetWrappers::ip_broadcast($address, $sourceMask);
+        my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
 
-    my $objectRow = $self->getObjectRow('Workplace-List');
-    my $memberModel = $objectRow->subModel('members');
-    my $id = $memberModel->findId('name' => 'default');
-    if (!defined($id)) {
-        $id = $memberModel->addRow(
-            name => 'default',
-            address_selected => 'iprange',
-            iprange_begin => $ip_network,
-            iprange_end => $ip_broadcast,
-        );
-    }
-    return $memberModel->row($id);
+        if ($ip_network eq "0.0.0.0") {
+            $self->getLibrary()->show_exceptions("iprange_begin should not be 0.0.0.0. address = " . $address . ' ( LibraryMAC->initWorkplaceNetworkMember() )');
+        }
+
+        my $ip_broadcast = EBox::NetWrappers::ip_broadcast($address, $sourceMask);
+
+        if ($ip_broadcast eq "0.0.0.0") {
+            $self->getLibrary()->show_exceptions("iprange_end should not be 0.0.0.0. address = " . $address . ' ( LibraryMAC->initWorkplaceNetworkMember() )');
+        }
+
+        #$self->getLibrary()->show_exceptions("break point: " . $ip_network .  '( LibraryMAC->initWorkplaceNetworkMember() )');
+
+        # ----------------------------
+
+        my $objectRow = $self->getObjectRow('Workplace-List');
+        my $memberModel = $objectRow->subModel('members');
+        my $id = $memberModel->findId('name' => 'default');
+        if (!defined($id)) {
+            $id = $memberModel->addRow(
+                name => 'default',
+                address_selected => 'iprange',
+                iprange_begin => $ip_network,
+                iprange_end => $ip_broadcast,
+            );
+        }
+        return $memberModel->row($id);
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryMAC->initWorkplaceNetworkMember() )');
+    };
 }
 
 ##
@@ -186,7 +209,12 @@ sub initBlackListMember
 {
     my ($self) = @_;
 
-    my $objectRow = $self->getObjectRow('Blacklist');
+    try {
+        my $objectRow = $self->getObjectRow('Blacklist');
+        # 實際上並沒有設定黑名單，只是建立名為「Blacklist」黑名單的Object而已
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryMAC->initBlackListMember() )');
+    };
 }
 
 ##
@@ -216,53 +244,57 @@ sub initDHCPfixedIP
 {
     my ($self) = @_;
 
-    my $name = 'DHCP-fixed-IP';
-    my $objectRowID = $self->getObjectRow($name)->id();
+    try {
+        my $name = 'DHCP-fixed-IP';
+        my $objectRowID = $self->getObjectRow($name)->id();
 
-    my $iface = $self->loadLibrary('LibraryNetwork')->getInternalIface();
-    if (!defined($iface)) {
-        return;
-    }
-    my $dhcpModule = EBox::Global->modInstance('dhcp');
-    my $interfacesModel = $dhcpModule->model('Interfaces');
+        my $iface = $self->loadLibrary('LibraryNetwork')->getInternalIface();
+        if (!defined($iface)) {
+            return;
+        }
+        my $dhcpModule = EBox::Global->modInstance('dhcp');
+        my $interfacesModel = $dhcpModule->model('Interfaces');
 
-    # 先找尋有啟用的裝置，取得第一個
-    my $id = $interfacesModel->findId('iface'=>$iface);
-    if (defined($id) == 0) {
-        # 沒有裝置啟動，不使用
-        return;
-    }
+        # 先找尋有啟用的裝置，取得第一個
+        my $id = $interfacesModel->findId('iface'=>$iface);
+        if (defined($id) == 0) {
+            # 沒有裝置啟動，不使用
+            return;
+        }
 
-    my $enabledInterface = $interfacesModel->row($id);
-    my $configuration = $enabledInterface->subModel('configuration');
+        my $enabledInterface = $interfacesModel->row($id);
+        my $configuration = $enabledInterface->subModel('configuration');
 
-    my $RangeTable = $configuration->componentByName('RangeTable');
-    $name = 'Reverse Proxy Ranges (DHCP)';
-    $id = $RangeTable->findId('name' => $name);
-    if (!defined($id)) {
-        $RangeTable->addRow(
-            'name' => $name,
-            'from' => "10.6.2.1",
-            'to' => "10.6.2.254",
-        );
-    }
-
-    my $fixedAddresses = $configuration->componentByName('FixedAddressTable');
-    # 先找找有沒有已經設定的群組
-    my $desc = 'Reverse Proxy Fixed Address Object (DHCP-fixed-IP)';
-    $id = $fixedAddresses->findId('description' => $desc);
-
-    if (!defined($id)) {
-        try {
-            $fixedAddresses->addRow(
-                'object' => $objectRowID,
-                'description' => $desc,
+        my $RangeTable = $configuration->componentByName('RangeTable');
+        $name = 'Reverse Proxy Ranges (DHCP)';
+        $id = $RangeTable->findId('name' => $name);
+        if (!defined($id)) {
+            $RangeTable->addRow(
+                'name' => $name,
+                'from' => "10.6.2.1",
+                'to' => "10.6.2.254",
             );
         }
-        catch {
-            # 增加失敗則略過，通常是已經新增了
+
+        my $fixedAddresses = $configuration->componentByName('FixedAddressTable');
+        # 先找找有沒有已經設定的群組
+        my $desc = 'Reverse Proxy Fixed Address Object (DHCP-fixed-IP)';
+        $id = $fixedAddresses->findId('description' => $desc);
+
+        if (!defined($id)) {
+            try {
+                $fixedAddresses->addRow(
+                    'object' => $objectRowID,
+                    'description' => $desc,
+                );
+            }
+            catch {
+                # 增加失敗則略過，通常是已經新增了
+            }
         }
-    }
+    } catch {
+        $self->getLibrary()->show_exceptions($_ . ' ( LibraryMAC->initDHCPfixedIP() )');
+    };
 }
 
 ##

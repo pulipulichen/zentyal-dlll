@@ -153,7 +153,7 @@ sub getExternalIface
 sub getExternalMask
 {
     my ($self) = @_;
-    my $sourceMask = '24';
+    my $sourceMask = '255.255.255.0';
 
     my $network = EBox::Global->modInstance('network');
     

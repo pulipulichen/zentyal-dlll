@@ -54,13 +54,20 @@ sub dlllciasrouter_init
         $self->startMooseFS();
         $self->initNFSServer();
         $self->startNFSServer();
+    } catch {
+        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
+    };
 
-
+    try {
         $self->initDefaultPound();
 
         $self->model("LibraryLogs")->enableLogs();
         $self->model("LibraryDomainName")->initDefaultDomainName();
+    } catch {
+        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.2 )');
+    };
 
+    try {
         $self->model("LibraryService")->getPoundService();
         $self->model("LibraryService")->getZentyalAdminService();
         $self->model("LibraryService")->getDNSServerService();
@@ -69,13 +76,20 @@ sub dlllciasrouter_init
 
         $self->model("RouterSettings")->initServicePort();
         $self->model("MfsSettings")->initServicePort();
+    } catch {
+        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.3 )');
+    };
 
-
+    try {
         $self->model('LibraryMAC')->initAdministorNetworkMember();
         $self->model('LibraryMAC')->initWorkplaceNetworkMember();
         $self->model('LibraryMAC')->initBlackListMember();
         $self->model("LibraryMAC")->initDHCPfixedIP();
+    } catch {
+        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.4 )');
+    };
 
+    try {
         $self->model("LibraryFilter")->initZentyalAdminFilter();
         $self->model("LibraryFilter")->initDNSServerFilter();
         $self->model("LibraryFilter")->initNFSFilter();
@@ -83,11 +97,8 @@ sub dlllciasrouter_init
         $self->model("LibraryFilter")->initPoundFilter();
         $self->model("LibraryFilter")->initPoundLogFilter();
         $self->model("LibraryFilter")->initBlackListFilter();
-
-    
-
     } catch {
-        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() )');
+        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.5 )');
     };
 }
 
