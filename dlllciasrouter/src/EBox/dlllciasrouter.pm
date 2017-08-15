@@ -49,6 +49,7 @@ sub dlllciasrouter_init
     try {
         $self->initLighttpd();
         $self->initApache();
+        $self->initRootCrontab();
         $self->initNFSClient();
         $self->initMooseFS();
         $self->startMooseFS();
