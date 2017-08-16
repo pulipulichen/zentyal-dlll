@@ -55,6 +55,8 @@ sub dlllciasrouter_init
         $self->startMooseFS();
         $self->initNFSServer();
         $self->startNFSServer();
+
+        $self->initTemplateMas();
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
     };
@@ -98,6 +100,7 @@ sub dlllciasrouter_init
         $self->model("LibraryFilter")->initPoundFilter();
         $self->model("LibraryFilter")->initPoundLogFilter();
         $self->model("LibraryFilter")->initBlackListFilter();
+
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.5 )');
     };
@@ -732,9 +735,9 @@ sub initRootCrontab
         # ------------------------
 
         my @backupParams = ();
-        push(@backupParams, 'mailAddress' => 'pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com');
-        push(@backupParams, 'mailSubject' => 'Zentyal backup (DLLL-CIAS Router) from 10.0.0.254');
-        push(@backupParams, 'mailBody' => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll');
+        push(@backupParams, 'backupMailAddress' => 'pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com');
+        push(@backupParams, 'backupMailSubject' => 'Zentyal backup (DLLL-CIAS Router) from 10.0.0.254');
+        push(@backupParams, 'backupMailBody' => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll');
         push(@backupParams, 'backupLimit' => '3');
         $self->writeConfFile(
             '/root/dlllciasrouter-scripts/backup-zentyal.sh',
@@ -1248,4 +1251,13 @@ sub stopMount
     system('sudo /opt/mfschunkservers/nfs-umount.sh');
 }
 
+##
+# 設定templates的MAS檔案
+# 20170816 Pulipuli Chen
+## 
+sub initTemplateMas
+{
+    # dlllciasrouter/templates/ajax/setter/textareaSetter.mas
+    system('sudo cp -f /usr/share/zentyal/www/dlllciasrouter/templates/ajax/setter/*.mas /usr/share/zentyal/templates/ajax/setter/');
+}
 1;

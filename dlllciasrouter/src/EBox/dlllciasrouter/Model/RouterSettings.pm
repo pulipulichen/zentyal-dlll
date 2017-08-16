@@ -116,6 +116,40 @@ sub _table
         'defaultValue'  => 'pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com',
         'optional'      => 0,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+    ));
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName'     => 'backupMailSubject',
+        'printableName' => __('Backup mail subject'),
+        'help' => __('{IP} will be replaced as Zentyal\'s IP.'),
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue'  => 'Zentyal backup (DLLL-CIAS Router) from {IP}',
+        'optional'      => 0,
+        'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+    ));
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName'     => 'backupMailBody',
+        'printableName' => __('Backup mail body'),
+        'help' => __('{DATE} will be replaced as backup time.'),
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue'  => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll',
+        'optional'      => 0,
+        'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
+    ));
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName'     => 'backupLimit',
+        'printableName' => __('Max backup file number'),
+        'editable'      => 1,
+        'unique'        => 0,
+        'defaultValue' => 10,
+        'optional' => 0,
     ));
 
     # ----------------------------------
@@ -184,13 +218,14 @@ sub _table
             ]
         ));
     push(@fields, new EBox::Types::Port(
-              fieldName     => 'port',
-              printableName => __('External Port'),
-              editable      => 1,
-              unique        => 1,
-              defaultValue => 80,
-              optional => 0,
-             ));
+        'fieldName'     => 'port',
+        'printableName' => __('External Port'),
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue' => 80,
+        'optional' => 0,
+    ));
+
     push(@fields, new EBox::Types::Text(
         'fieldName'     => 'alive',
         'printableName' => __('Alive Time'),
@@ -200,6 +235,7 @@ sub _table
         'optional' => 0,
         'help' => __("Check backend every X secs. Default is 30 sec."),
     ));
+
     push(@fields, new EBox::Types::Text(
         "fieldName"     => 'timeout',
         "printableName" => __('TimeOut'),

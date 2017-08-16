@@ -52,7 +52,7 @@ sub _table
         'fieldName' => 'websiteTitle',
         'printableName' => __('Website Title'),
         'editable' => 1,
-        'optional' =>0,
+        'optional' => 0,
         'defaultValue' => __('Website Title'),
         'allowUnsafeChars' => 1,
     ));
@@ -60,9 +60,9 @@ sub _table
     # menu homepage
     push(@fields, new EBox::Types::Text(
         'fieldName' => 'homeText',
-        'printableName' => __('Honepage Label'),
+        'printableName' => __('Homepage Label'),
         'editable' => 1,
-        'optional' =>0,
+        'optional' => 0,
         'defaultValue' => __('HOMEPAGE'),
         'allowUnsafeChars' => 1,
     ));
@@ -71,7 +71,7 @@ sub _table
         'fieldName' => 'homeURL',
         'printableName' => __('Honepage URL'),
         'editable' => 1,
-        'optional' =>0,
+        'optional' => 0,
         'defaultValue' => "https://github.com/pulipulichen/zentyal-dlll",
         'allowUnsafeChars' => 1,
     ));
@@ -90,7 +90,7 @@ sub _table
         'fieldName' => 'aboutURL',
         'printableName' => __('About URL'),
         'editable' => 1,
-        'optional' =>0,
+        'optional' => 0,
         'defaultValue' => "https://github.com/pulipulichen/zentyal-dlll",
         'allowUnsafeChars' => 1,
     ));

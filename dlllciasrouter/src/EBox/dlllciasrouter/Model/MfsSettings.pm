@@ -77,12 +77,13 @@ sub _table
 
     push(@fields, new EBox::Types::Text(
         'fieldName'     => 'localhostSize',
-        'printableName' => __('Localhost Size '),
+        'printableName' => __('Localhost Size'),
         'editable'      => 1,
         'unique'        => 1,
         'defaultValue' => $options->{localhostSize},
         'optional' => 0,
         'allowUnsafeChars' => 1,
+        'help' => __('For example: 1GiB'),
     ));
     
     

@@ -82,6 +82,7 @@ sub createFieldDomainName
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-kals-2017.dlll.nccu.edu.tw',
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
     return $field;
@@ -97,6 +98,7 @@ sub createFieldDomainNameUnique
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-kals-2017.dlll.nccu.edu.tw',
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
     return $field;
@@ -389,6 +391,7 @@ sub createFieldContactName
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
     return $field;
@@ -406,6 +409,7 @@ sub createFieldContactNameDisplayOnViewer
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 0,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
     return $field;
@@ -414,36 +418,41 @@ sub createFieldContactNameDisplayOnViewer
 sub createFieldContactEmail
 {
     my $field = new EBox::Types::MailAddress(
-            fieldName => 'contactEmail',
-            printableName => __('Contact Email'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
-
-    return $field;
-}
-
-sub createFieldEmailKMDescription
-{
-    my $field = new EBox::Types::Text(
-        'fieldName' => 'description',
-        'printableName' => __('Description'),
+        'fieldName' => 'contactEmail',
+        'printableName' => __('Contact Email'),
         'editable' => 1,
-        'optional' =>0,
+        'optional' => 0,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => 
-            '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\');return false;">'
-            . __('Create New Post') 
-            . '</button><br />'
-            . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
-        'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
     return $field;
 }
+
+##
+# @departed 20170816
+# 現在不跟EMAIL-KM結合了，不需要這個欄位了
+##
+#sub createFieldEmailKMDescription
+#{
+#    my $field = new EBox::Types::Text(
+#        'fieldName' => 'description',
+#        'printableName' => __('Description'),
+#        'editable' => 1,
+#        'optional' =>0,
+#        'hiddenOnSetter' => 0,
+#        'hiddenOnViewer' => 1,
+#        'help' => 
+#            '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\');return false;">'
+#            . __('Create New Post') 
+#            . '</button><br />'
+#            . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
+#        'allowUnsafeChars' => 1,
+#    );
+#
+#    return $field;
+#}
 
 sub createFieldDescription
 {
@@ -526,6 +535,7 @@ sub createFieldExpiryDate
         # 加上說明
         'help' => __('Example: NEVER or 2015/1/1'),
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
     return $field;
@@ -934,8 +944,9 @@ sub createFieldProtocolNote
         'optional' =>1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => ( 'Login account / password, or using this port for other usage'),
+        'help' => __( 'Login account / password, or using this port for other usage'),
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     );
 
     return $field;
@@ -948,11 +959,12 @@ sub createFieldProtocolNoteWithHr
         'fieldName' => 'redir'.$protocol.'_note',
         'printableName' => __($protocol.' Note'),
         'editable' => 1,
-        'optional' =>1,
+        'optional' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'help' => ( 'Login account / password, or using this port for other usage <br /> <hr />'),
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     );
 
     return $field;
@@ -1194,7 +1206,7 @@ sub createFieldOtherRedirectPortsHint
         'printableName' => __('Other Redirect Ports'),
         'defaultValue' => __('You have to add this row before setting up other redirection at following table.'),
         'editable' => 0,
-        'optional' =>0,
+        'optional' => 0,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
@@ -1331,6 +1343,7 @@ sub createFieldPhysicalLocation
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
@@ -1351,6 +1364,7 @@ sub createFieldOS
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
@@ -1371,6 +1385,7 @@ sub createFieldHardwareCPU
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
@@ -1391,6 +1406,7 @@ sub createFieldHardwareRAM
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
@@ -1509,6 +1525,7 @@ sub createFieldHardwareDisk
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
@@ -2048,6 +2065,7 @@ sub createFieldMountPath
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
@@ -2069,6 +2087,7 @@ sub createFieldMountUsername
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
@@ -2090,6 +2109,7 @@ sub createFieldMountPassword
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
 }
