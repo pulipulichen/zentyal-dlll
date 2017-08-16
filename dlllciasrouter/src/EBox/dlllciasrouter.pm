@@ -169,10 +169,10 @@ sub _daemons
     $i++;
 
     $daemons[$i] = {
-                name => 'lighttpd',
-                type => 'init.d',
-                pidfiles => ['/var/run/lighttpd.pid']
-            };
+        'name' => 'lighttpd',
+        'type' => 'init.d',
+        'pidfiles' => ['/var/run/lighttpd.pid']
+    };
     $i++;
 
     # 20150528 Pulipuli Chen 加入MooseFS的控制
@@ -732,6 +732,10 @@ sub initRootCrontab
         # ------------------------
 
         my @backupParams = ();
+        push(@backupParams, 'mailAddress' => 'pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com');
+        push(@backupParams, 'mailSubject' => 'Zentyal backup (DLLL-CIAS Router) from 10.0.0.254');
+        push(@backupParams, 'mailBody' => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll');
+        push(@backupParams, 'backupLimit' => '3');
         $self->writeConfFile(
             '/root/dlllciasrouter-scripts/backup-zentyal.sh',
             "dlllciasrouter/backup-zentyal.sh.mas",

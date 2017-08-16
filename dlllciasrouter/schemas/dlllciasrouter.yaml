@@ -48,7 +48,7 @@ models:
     - ErrorMessage
     - AttachedFiles
     - ExportsSetting
-    
+    - TypesOnebox
 
 composites:
     SettingComposite: [RouterLinks, RouterSettings]

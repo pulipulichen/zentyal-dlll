@@ -73,6 +73,7 @@ sub _table
         'help' => __("Single host: IP, 10.0.0.254. <br />" 
             . "Wildcard (*) with domain name: *.excample.com. <br />"
             . "IP networks: 10.0.0.0/8"),
+        'allowUnsafeChars' => 1,
     ));
 
     push(@fields, new EBox::Types::Boolean(

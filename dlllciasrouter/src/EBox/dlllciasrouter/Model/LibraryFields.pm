@@ -154,6 +154,7 @@ sub createFieldOtherDomainNamesSubModel
         'optional' => 1,
         'hiddenOnSetter' => 1,
         'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
    );
     return $field;
 }
@@ -381,13 +382,14 @@ sub createFieldNetworkDisplay
 sub createFieldContactName
 {
     my $field = new EBox::Types::Text(
-            fieldName => 'contactName',
-            printableName => __('Contact Name'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'contactName',
+        'printableName' => __('Contact Name'),
+        'editable' => 1,
+        'optional' => 0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -397,13 +399,14 @@ sub createFieldContactName
 sub createFieldContactNameDisplayOnViewer
 {
     my $field = new EBox::Types::Text(
-            fieldName => 'contactName',
-            printableName => __('Contact Name'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 0,
-        );
+        'fieldName' => 'contactName',
+        'printableName' => __('Contact Name'),
+        'editable' => 1,
+        'optional' =>0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 0,
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -425,18 +428,19 @@ sub createFieldContactEmail
 sub createFieldEmailKMDescription
 {
     my $field = new EBox::Types::Text(
-            fieldName => 'description',
-            printableName => __('Description'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => 
-                '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\');return false;">'
-                . __('Create New Post') 
-                . '</button><br />'
-                . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
-        );
+        'fieldName' => 'description',
+        'printableName' => __('Description'),
+        'editable' => 1,
+        'optional' =>0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => 
+            '<button onclick="window.open(\'http://email-km.dlll.nccu.edu.tw/wp-admin/post-new.php?post_title=[CLOUD-SERVICE]\', \'_blank\');return false;">'
+            . __('Create New Post') 
+            . '</button><br />'
+            . __('Please using EMAIL-KM to create a host post and input URL in this field. '),
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -446,14 +450,15 @@ sub createFieldDescription
     my ($self) = @_;
 
     my $field = new EBox::Types::Text(
-            fieldName => 'description',
-            printableName => __('Description'),
-            editable => 0,
-            optional => 1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => $self->createFieldDescriptionEditor(),
-        );
+        'fieldName' => 'description',
+        'printableName' => __('Description'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => $self->createFieldDescriptionEditor(),
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -509,18 +514,19 @@ sub createFieldExpiryDate
     my ($self, $defaultValue) = @_;
 
     my $field = new EBox::Types::Text(
-            fieldName => 'expiry',
-            printableName => __('Expiry Date'),
-            editable => 1,
-            optional=>0,
-            defaultValue => $defaultValue,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
+        'fieldName' => 'expiry',
+        'printableName' => __('Expiry Date'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => $defaultValue,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
 
-            # 20140207 Pulipuli Chen
-            # 加上說明
-            help => __('Example: NEVER or 2015/1/1'),
-        );
+        # 20140207 Pulipuli Chen
+        # 加上說明
+        'help' => __('Example: NEVER or 2015/1/1'),
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -528,17 +534,18 @@ sub createFieldExpiryDate
 sub createFieldExpiryDateWithHR
 {
     my $field = new EBox::Types::Text(
-            fieldName => 'expiry',
-            printableName => __('Expiry Date'),
-            editable => 1,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
+        'fieldName' => 'expiry',
+        'printableName' => __('Expiry Date'),
+        'editable' => 1,
+        'optional' => 0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
 
-            # 20140207 Pulipuli Chen
-            # 加上說明
-            help => __('Example: NEVER or 2015/1/1 <br /> <hr />'),
-        );
+        # 20140207 Pulipuli Chen
+        # 加上說明
+        'help' => __('Example: NEVER or 2015/1/1 <br /> <hr />'),
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -921,14 +928,15 @@ sub createFieldProtocolNote
 {
     my ($self, $protocol) = @_;
     my $field = new EBox::Types::Text(
-            fieldName => 'redir'.$protocol.'_note',
-            printableName => __($protocol.' Note'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => ( 'Login account / password, or using this port for other usage'),
-        );
+        'fieldName' => 'redir'.$protocol.'_note',
+        'printableName' => __($protocol.' Note'),
+        'editable' => 1,
+        'optional' =>1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => ( 'Login account / password, or using this port for other usage'),
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -937,14 +945,15 @@ sub createFieldProtocolNoteWithHr
 {
     my ($self, $protocol) = @_;
     my $field = new EBox::Types::Text(
-            fieldName => 'redir'.$protocol.'_note',
-            printableName => __($protocol.' Note'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-            help => ( 'Login account / password, or using this port for other usage <br /> <hr />'),
-        );
+        'fieldName' => 'redir'.$protocol.'_note',
+        'printableName' => __($protocol.' Note'),
+        'editable' => 1,
+        'optional' =>1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => ( 'Login account / password, or using this port for other usage <br /> <hr />'),
+        'allowUnsafeChars' => 1,
+    );
 
     return $field;
 }
@@ -1181,14 +1190,15 @@ sub createFieldOtherRedirectPortsHint
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            fieldName => 'redirOtherHelp',
-            printableName => __('Other Redirect Ports'),
-            defaultValue => __('You have to add this row before setting up other redirection at following table.'),
-            editable => 0,
-            optional=>0,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'redirOtherHelp',
+        'printableName' => __('Other Redirect Ports'),
+        'defaultValue' => __('You have to add this row before setting up other redirection at following table.'),
+        'editable' => 0,
+        'optional' =>0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -1197,14 +1207,15 @@ sub createFieldOtherRedirectPortsSubModel
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'redirOther_subMod',
-            'printableName' => __(''),
-            #'defaultValue' => '',
-            'editable' => 0,
-            'optional' => 1,
-            'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 1,
-       );
+        'fieldName' => 'redirOther_subMod',
+        'printableName' => __(''),
+        #'defaultValue' => '',
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+   );
     return $field;
 }
 
@@ -1229,13 +1240,14 @@ sub createFieldCreateDateData
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            fieldName => 'createDateField',
-            printableName => __('Create Date'),
-            editable => 1,
-            optional=>1,
-            hiddenOnSetter => 1,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'createDateField',
+        'printableName' => __('Create Date'),
+        'editable' => 1,
+        'optional' => 1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -1312,13 +1324,14 @@ sub createFieldPhysicalLocation
     my ($self) = @_;
 
     my $field = new EBox::Types::Text(
-            fieldName => 'physicalLocation',
-            printableName => __('Physical Location'),
-            editable => 1,
-            #defaultValue => '',
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'physicalLocation',
+        'printableName' => __('Physical Location'),
+        'editable' => 1,
+        #'defaultValue' => '',
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -1331,13 +1344,14 @@ sub createFieldOS
     my ($self) = @_;
 
     my $field = new EBox::Types::Text(
-            fieldName => 'hardwareOS',
-            printableName => __('Operating System or Machine Model'),
-            editable => 1,
-            #defaultValue => '',
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'hardwareOS',
+        'printableName' => __('Operating System or Machine Model'),
+        'editable' => 1,
+        #'defaultValue' => '',
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -1350,13 +1364,14 @@ sub createFieldHardwareCPU
     my ($self) = @_;
 
     my $field = new EBox::Types::Text(
-            fieldName => 'hardwareCPU',
-            printableName => __('CPU'),
-            editable => 1,
-            defaultValue => '',
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'hardwareCPU',
+        'printableName' => __('CPU'),
+        'editable' => 1,
+        'defaultValue' => '',
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -1369,13 +1384,14 @@ sub createFieldHardwareRAM
     my ($self) = @_;
 
     my $field = new EBox::Types::Text(
-            fieldName => 'hardwareRAM',
-            printableName => __('RAM'),
-            editable => 1,
-            defaultValue => '',
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'hardwareRAM',
+        'printableName' => __('RAM'),
+        'editable' => 1,
+        'defaultValue' => '',
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -1486,13 +1502,14 @@ sub createFieldHardwareDisk
     my ($self) = @_;
 
     my $field = new EBox::Types::Text(
-            fieldName => 'hardwareDisk',
-            printableName => __('Disk'),
-            editable => 1,
-            defaultValue => '',
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'hardwareDisk',
+        'printableName' => __('Disk'),
+        'editable' => 1,
+        'defaultValue' => '',
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -1523,14 +1540,15 @@ sub createFieldPortDescription
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'description',
-            'printableName' => __('Port Description'),
-            'editable' => 1,
-            'optional' => 0,
-            'unique' => 1,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
-        );
+        'fieldName' => 'description',
+        'printableName' => __('Port Description'),
+        'editable' => 1,
+        'optional' => 0,
+        'unique' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -2020,16 +2038,17 @@ sub createFieldMountPath
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'mountPath',
-            'printableName' => __('Path'),
-            'help' => "Option is the <u>underline</u> part. For example: <br />" 
-                . " NFS: mount -t nfs 10.6.1.1:<u>/mnt/nfs</u> /opt/mfschunkservers/10.6.1.1 <br />"
-                . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;password&quot; //10.6.1.1<u>/cifs</u> /opt/mfschunkservers/10.6.1.1",
-            'editable' => 1,
-            'optional' => 1,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
-        );
+        'fieldName' => 'mountPath',
+        'printableName' => __('Path'),
+        'help' => "Option is the <u>underline</u> part. For example: <br />" 
+            . " NFS: mount -t nfs 10.6.1.1:<u>/mnt/nfs</u> /opt/mfschunkservers/10.6.1.1 <br />"
+            . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;password&quot; //10.6.1.1<u>/cifs</u> /opt/mfschunkservers/10.6.1.1",
+        'editable' => 1,
+        'optional' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -2041,15 +2060,16 @@ sub createFieldMountUsername
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'mountUsername',
-            'printableName' => __('Username'),
-            'help' => "Username is the <u>underline</u> part. For example: <br />" 
-                . " Samba (CIFS)): mount -t cifs -o username=&quot;<u>user</u>&quot;,password=&quot;password&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
-            'editable' => 1,
-            'optional' => 1,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
-        );
+        'fieldName' => 'mountUsername',
+        'printableName' => __('Username'),
+        'help' => "Username is the <u>underline</u> part. For example: <br />" 
+            . " Samba (CIFS)): mount -t cifs -o username=&quot;<u>user</u>&quot;,password=&quot;password&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
+        'editable' => 1,
+        'optional' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 
@@ -2061,15 +2081,16 @@ sub createFieldMountPassword
 {
     my ($self) = @_;
     my $field = new EBox::Types::Text(
-            'fieldName' => 'mountPassword',
-            'printableName' => __('Password'),
-            'help' => "Password is the <u>underline</u> part. For example: <br />" 
-                . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;<u>password</u>&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
-            'editable' => 1,
-            'optional' => 1,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
-        );
+        'fieldName' => 'mountPassword',
+        'printableName' => __('Password'),
+        'help' => "Password is the <u>underline</u> part. For example: <br />" 
+            . " Samba (CIFS)): mount -t cifs -o username=&quot;user&quot;,password=&quot;<u>password</u>&quot; //10.6.1.1/cifs /opt/mfschunkservers/10.6.1.1",
+        'editable' => 1,
+        'optional' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+    );
     return $field;
 }
 

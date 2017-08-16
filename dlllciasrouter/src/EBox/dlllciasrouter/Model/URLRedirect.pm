@@ -17,7 +17,7 @@ use EBox::Types::Port;
 use EBox::Types::HTML;
 use EBox::Types::Date;
 use EBox::Types::Boolean;
-use EBox::Types::Text;
+#use EBox::Types::Text;
 use EBox::Types::URI;
 
 use POSIX qw(strftime);

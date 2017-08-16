@@ -14,7 +14,7 @@ use warnings;
 use EBox::Gettext;
 
 use EBox::Types::Port;
-use EBox::Types::Text;
+#use EBox::Types::Text;
 use EBox::Types::Boolean;
 use EBox::Types::Int;
 use EBox::Types::Union;

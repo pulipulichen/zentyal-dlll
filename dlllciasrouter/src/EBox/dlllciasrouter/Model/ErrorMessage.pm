@@ -49,60 +49,69 @@ sub _table
     my $tableName = $options->{moduleName};
 
     push(@fields, new EBox::Types::Text(
-            'fieldName' => 'websiteTitle',
-            'printableName' => __('Website Title'),
-            'editable' => 1,
-            'optional'=>0,
-            'defaultValue' => __('Website Title'),
-        ));
+        'fieldName' => 'websiteTitle',
+        'printableName' => __('Website Title'),
+        'editable' => 1,
+        'optional' =>0,
+        'defaultValue' => __('Website Title'),
+        'allowUnsafeChars' => 1,
+    ));
 
     # menu homepage
     push(@fields, new EBox::Types::Text(
-            'fieldName' => 'homeText',
-            'printableName' => __('Honepage Label'),
-            'editable' => 1,
-            'optional'=>0,
-            'defaultValue' => __('HOMEPAGE'),
-        ));
+        'fieldName' => 'homeText',
+        'printableName' => __('Honepage Label'),
+        'editable' => 1,
+        'optional' =>0,
+        'defaultValue' => __('HOMEPAGE'),
+        'allowUnsafeChars' => 1,
+    ));
+
     push(@fields, new EBox::Types::Text(
-            'fieldName' => 'homeURL',
-            'printableName' => __('Honepage URL'),
-            'editable' => 1,
-            'optional'=>0,
-            'defaultValue' => "https://github.com/pulipulichen/zentyal-dlll",
-        ));
+        'fieldName' => 'homeURL',
+        'printableName' => __('Honepage URL'),
+        'editable' => 1,
+        'optional' =>0,
+        'defaultValue' => "https://github.com/pulipulichen/zentyal-dlll",
+        'allowUnsafeChars' => 1,
+    ));
 
     # menu about
     push(@fields, new EBox::Types::Text(
-            'fieldName' => 'aboutText',
-            'printableName' => __('About Label'),
-            'editable' => 1,
-            'optional' => 0,
-            'defaultValue' => __('ABOUT'),
-        ));
+        'fieldName' => 'aboutText',
+        'printableName' => __('About Label'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => __('ABOUT'),
+        'allowUnsafeChars' => 1,
+    ));
+
     push(@fields, new EBox::Types::Text(
-            'fieldName' => 'aboutURL',
-            'printableName' => __('About URL'),
-            'editable' => 1,
-            'optional'=>0,
-            'defaultValue' => "https://github.com/pulipulichen/zentyal-dlll",
-        ));
+        'fieldName' => 'aboutURL',
+        'printableName' => __('About URL'),
+        'editable' => 1,
+        'optional' =>0,
+        'defaultValue' => "https://github.com/pulipulichen/zentyal-dlll",
+        'allowUnsafeChars' => 1,
+    ));
     
     # menu contact
     push(@fields, new EBox::Types::Text(
-            'fieldName' => 'contactText',
-            'printableName' => __('Contact Us Label'),
-            'editable' => 1,
-            'optional'=>0,
-            'defaultValue' => __('CONTACT US'),
-        ));
+        'fieldName' => 'contactText',
+        'printableName' => __('Contact Us Label'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => __('CONTACT US'),
+        'allowUnsafeChars' => 1,
+    ));
+
     push(@fields, new EBox::Types::MailAddress(
-            'fieldName' => 'contactEMAIL',
-            'printableName' => __('Contact Us Email'),
-            'editable' => 1,
-            'optional' => 0,
-            'defaultValue' => 'pulipuli.chen@gmail.com',
-        ));
+        'fieldName' => 'contactEMAIL',
+        'printableName' => __('Contact Us Email'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => 'pulipuli.chen@gmail.com',
+    ));
 
     #  error message
 #    my $desc = '<h2>Oops! It looks something went completely wrong.</h2>'
@@ -123,15 +132,16 @@ sub _table
     my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
 
     push(@fields, new EBox::Types::Text(
-            'fieldName'  => 'errorMessage',
-            'printableName' => __('Right Column Error Message'),
-            'editable' => 0,
-            'optional' => 0,
-            'hiddenOnSetter' => 0,
-            'hiddenOnViewer' => 1,
-            'help' => $self->loadLibrary('LibraryFields')->createFieldDescriptionEditor(),
-            'defaultValue' => $desc,
-        ));
+        'fieldName'  => 'errorMessage',
+        'printableName' => __('Right Column Error Message'),
+        'editable' => 0,
+        'optional' => 0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'help' => $self->loadLibrary('LibraryFields')->createFieldDescriptionEditor(),
+        'defaultValue' => $desc,
+        'allowUnsafeChars' => 1,
+    ));
 
     # 預覽畫面
     my $errorMessagePreview = 'http://' . $address;

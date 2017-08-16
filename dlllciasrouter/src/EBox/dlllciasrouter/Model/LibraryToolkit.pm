@@ -11,7 +11,7 @@ use EBox::Types::DomainName;
 use EBox::Types::HostIP;
 use EBox::Types::Port;
 use EBox::Types::MACAddr;
-use EBox::Types::Text;
+#use EBox::Types::Text;
 use EBox::Types::HTML;
 use EBox::Types::Boolean;
 use EBox::Types::Union;

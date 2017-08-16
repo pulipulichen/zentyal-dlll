@@ -17,6 +17,7 @@ use EBox::Types::HTML;
 use EBox::Types::URI;
 use EBox::Types::Boolean;
 use EBox::Types::IPAddr;
+use EBox::Types::Text;
 
 use EBox::Network;
 
@@ -75,13 +76,14 @@ sub _table
              ));
 
     push(@fields, new EBox::Types::Text(
-              fieldName     => 'localhostSize',
-              printableName => __('Localhost Size '),
-              editable      => 1,
-              unique        => 1,
-              defaultValue => $options->{localhostSize},
-              optional => 0,
-             ));
+        'fieldName'     => 'localhostSize',
+        'printableName' => __('Localhost Size '),
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue' => $options->{localhostSize},
+        'optional' => 0,
+        'allowUnsafeChars' => 1,
+    ));
     
     
     # Chunkserver OpenVZ Template

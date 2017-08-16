@@ -24,6 +24,8 @@ use EBox::Network;
 
 use Try::Tiny;
 
+use EBox::Types::Text;
+
 # Group: Public methods
 
 # Constructor: new
@@ -105,6 +107,17 @@ sub _table
     # @TODO 20170727 這邊應該改成按下去就立刻備份的HTML
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Backup?selected=local#backup_description", 1));
 
+    push(@fields, new EBox::Types::Text(
+        'fieldName'     => 'backupMailAddress',
+        'printableName' => __('Backup mail addresses'),
+        'help' => __('Split multiple addresses by SPACE. For example: admin1@dlll.cias.router.org admin2@dlll.cias.router.org'),
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue'  => 'pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com',
+        'optional'      => 0,
+        'allowUnsafeChars' => 1,
+    ));
+
     # ----------------------------------
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_admin', __('Zentyal Administrator')));
@@ -136,13 +149,13 @@ sub _table
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ ZentyalPorts', __('Zentyal Ports')));
 
     push(@fields, new EBox::Types::Port(
-              fieldName     => 'webadminPort',
-              printableName => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator List') . ")",
-              editable      => 1,
-              unique        => 1,
-              defaultValue => 64443,
-              optional => 0,
-             ));
+        'fieldName'     => 'webadminPort',
+        'printableName' => __('Zentyal Webadmin Port. ') . "(" . __('Only For Administrator List') . ")",
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue'  => 64443,
+        'optional'      => 0,
+    ));
 
     push(@fields, new EBox::Types::Port(
             fieldName     => 'adminPort',
@@ -179,23 +192,23 @@ sub _table
               optional => 0,
              ));
     push(@fields, new EBox::Types::Text(
-              fieldName     => 'alive',
-              printableName => __('Alive Time'),
-              editable      => 1,
-              unique        => 0,
-              defaultValue => 30,
-              optional => 0,
-              help => __("Check backend every X secs. Default is 30 sec."),
-             ));
+        'fieldName'     => 'alive',
+        'printableName' => __('Alive Time'),
+        'editable'      => 1,
+        'unique'        => 0,
+        'defaultValue' => 30,
+        'optional' => 0,
+        'help' => __("Check backend every X secs. Default is 30 sec."),
+    ));
     push(@fields, new EBox::Types::Text(
-              "fieldName"     => 'timeout',
-              "printableName" => __('TimeOut'),
-              "editable"      => 1,
-              "unique"        => 0,
-              "defaultValue" => 300,
-              "optional" => 0,
-              "help" => __("Wait for response X secs. Default is 300 sec."),
-        ));
+        "fieldName"     => 'timeout',
+        "printableName" => __('TimeOut'),
+        "editable"      => 1,
+        "unique"        => 0,
+        "defaultValue" => 300,
+        "optional" => 0,
+        "help" => __("Wait for response X secs. Default is 300 sec."),
+    ));
         
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
 
@@ -326,7 +339,7 @@ sub updatedRowNotify
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
 
-    $self->setCloudConfigBackup($row);
+    #$self->setCloudConfigBackup($row);
 }
 
 sub setWebadminPort
@@ -386,36 +399,40 @@ sub getExtIPAddress
     return $address;
 }
 
+##
+# 本功能因為Zentyal不運作CloudBackup了，所以現在不使用
+# @Departed 20170816
 # 20150605 Pulipuli Chen
-sub setCloudConfigBackup
-{
-    my ($self, $row) = @_;
-
-    my $email = $row->valueByName("adminMail");
-    my $password = $row->valueByName("adminPassword");
-
-    my $hostname = EBox::Global->modInstance('sysinfo')->hostName();
-
-    
-    # 清除未註冊的帳號
-    my $remoteservices = EBox::Global->getInstance()->modInstance('remoteservices');
-    #$remoteservices->_removeSubscriptionData();
-    my $username = $remoteservices->username();
-    if ($username ne $email) {
-        # 登入
-        try {
-            $remoteservices->registerAdditionalCommunityServer($email, $password, $hostname);
-        }
-        catch {
-            try {
-                $remoteservices->registerFirstCommunityServer($email, $password, $hostname);
-
-            }
-            catch {
-                $self->getLibrary()->show_exceptions("Your password is wrong. Please reset your password from <a href=\"https://remote.zentyal.com/reset/\" target=\"zentyal_remote\">Zentyal Remote</a>.");
-            };
-        };
-    }
-}
+##
+#sub setCloudConfigBackup
+#{
+#    my ($self, $row) = @_;
+#
+#    my $email = $row->valueByName("adminMail");
+#    my $password = $row->valueByName("adminPassword");
+#
+#    my $hostname = EBox::Global->modInstance('sysinfo')->hostName();
+#
+#    
+#    # 清除未註冊的帳號
+#    my $remoteservices = EBox::Global->getInstance()->modInstance('remoteservices');
+#    #$remoteservices->_removeSubscriptionData();
+#    my $username = $remoteservices->username();
+#    if ($username ne $email) {
+#        # 登入
+#        try {
+#            $remoteservices->registerAdditionalCommunityServer($email, $password, $hostname);
+#        }
+#        catch {
+#            try {
+#                $remoteservices->registerFirstCommunityServer($email, $password, $hostname);
+#
+#            }
+#            catch {
+#                $self->getLibrary()->show_exceptions("Your password is wrong. Please reset your password from <a href=\"https://remote.zentyal.com/reset/\" target=\"zentyal_remote\">Zentyal Remote</a>.");
+#            };
+#        };
+#    }
+#}
 
 1;
