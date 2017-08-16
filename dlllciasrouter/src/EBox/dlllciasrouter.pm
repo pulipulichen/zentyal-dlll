@@ -16,6 +16,8 @@ use EBox::Sudo;
 use Try::Tiny;
 use File::Slurp;
 
+use POSIX;
+
 # Method: _create
 #
 # Overrides:
@@ -734,11 +736,31 @@ sub initRootCrontab
 
         # ------------------------
 
+        my $settings = $self->model('RouterSettings');
         my @backupParams = ();
-        push(@backupParams, 'backupMailAddress' => 'pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com');
-        push(@backupParams, 'backupMailSubject' => 'Zentyal backup (DLLL-CIAS Router) from 10.0.0.254');
-        push(@backupParams, 'backupMailBody' => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll');
-        push(@backupParams, 'backupLimit' => '3');
+
+        my $extIP = $self->model('LibraryNetwork')->getExternalIpaddr();
+        my $date = POSIX::strftime( "%A, %B %d, %Y", localtime());
+        # my $date = strftime "%a %b %e %H:%M:%S %Y", gmtime;
+        # printf("date and time - $date\n");
+        # DateTime->now->ymd;
+
+        my $backupMailAddress = $settings->value('backupMailAddress');
+        push(@backupParams, 'backupMailAddress' => $backupMailAddress);
+
+        my $backupMailSubject = $settings->value('backupMailSubject');
+        $backupMailSubject =~ s/\{IP\}/$extIP/g;
+        push(@backupParams, 'backupMailSubject' => $backupMailSubject);
+
+        my $backupMailBody = $settings->value('backupMailBody');
+        # my $backupMailBody = "Zentyal backup (DLLL-CIAS Router) from {IP}";
+        # my $IP = "192.168.11.101";
+        
+        # print $backupMailBody;
+        $backupMailBody =~ s/\{DATE\}/$date/g;
+        push(@backupParams, 'backupMailBody' => $backupMailBody);
+        
+        push(@backupParams, 'backupLimit' => $settings->value('backupLimit'));
         $self->writeConfFile(
             '/root/dlllciasrouter-scripts/backup-zentyal.sh',
             "dlllciasrouter/backup-zentyal.sh.mas",

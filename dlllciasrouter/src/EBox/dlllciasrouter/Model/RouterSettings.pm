@@ -134,10 +134,11 @@ sub _table
     push(@fields, new EBox::Types::Text(
         'fieldName'     => 'backupMailBody',
         'printableName' => __('Backup mail body'),
-        'help' => __('{DATE} will be replaced as backup time.'),
+        #'help' => __('{DATE} will be replaced as backup time.'),
         'editable'      => 1,
         'unique'        => 1,
-        'defaultValue'  => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll',
+        #'defaultValue'  => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\n\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll',
+        'defaultValue'  => 'Dear Zentyal Administrator,\n\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\nAttachment is the back from Zentyal.\n\nYours faithfully,\n\n--\n\nFrom Zentyal server (DLLL-CIAS Router)\nhttps://github.com/pulipulichen/zentyal-dlll',
         'optional'      => 0,
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
