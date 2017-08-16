@@ -23,10 +23,10 @@ tar zcvf "$BACKUP_FILE_GZ" $BACKUP_FILE
 # echo "This is the message body" | mutt -a "/var/lib/zentyal/conf/backups/2017-08-01-111247.tar" -s "subject of message" -- pulipuli.chen@gmail.com
 # echo "This is the message body" | mutt -a "/tmp/test.txt" -s "subject of message" -- pulipuli.chen@gmail.com pudding@nccu.edu.tw
 # 用空格就能寄出多個信件
-MAIL_ADDRESS="pulipuli.chen@gmail.com pudding@nccu.edu.tw"
-MAIL_SUBJECT="subject of message"
-MAIL_BODY="This is the message body"
-echo "$MAIL_BODY" | mutt -a "$BACKUP_FILE_GZ" -s "$MAIL_SUBJECT" -- $MAIL_ADDRESS
+MAIL_ADDRESS="pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com"
+MAIL_SUBJECT="Zentyal backup (DLLL-CIAS Router) from 10.0.0.254"
+MAIL_BODY="Dear Zentyal Administrator,\n\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\nAttachment is the back from Zentyal in {DATE}.\n\nYours faithfully,\n\n--\nFrom Zentyal server (DLLL-CIAS Router)\nhttps://github.com/pulipulichen/zentyal-dlll"
+printf "$MAIL_BODY" | mutt -a "$BACKUP_FILE_GZ" -s "$MAIL_SUBJECT" -- $MAIL_ADDRESS
 
 # 2-4. Delete the compressed file
 rm "$BACKUP_FILE_GZ"

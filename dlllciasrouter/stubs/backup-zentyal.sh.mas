@@ -5,10 +5,10 @@ BACKUP_FILE_GZ="$BACKUP_FILE".gz
 
 tar zcvf "$BACKUP_FILE_GZ" $BACKUP_FILE
  
-MAIL_ADDRESS="pulipuli.chen@gmail.com pudding@nccu.edu.tw"
-MAIL_SUBJECT="subject of message"
-MAIL_BODY="This is the message body"
-echo "$MAIL_BODY" | mutt -a "$BACKUP_FILE_GZ" -s "$MAIL_SUBJECT" -- $MAIL_ADDRESS
+MAIL_ADDRESS="pulipuli.chen+dlllciasrouter1@gmail.com pulipuli.chen+dlllciasrouter2@gmail.com"
+MAIL_SUBJECT="Zentyal backup (DLLL-CIAS Router) from 10.0.0.254"
+MAIL_BODY="Dear Zentyal Administrator,\n\nYou got this mail because you were setted as Zentyal Administrator from DLLL-CIAS Router module.\nAttachment is the back from Zentyal in {DATE}.\n\nYours faithfully,\n\n--\nFrom Zentyal server (DLLL-CIAS Router)\nhttps://github.com/pulipulichen/zentyal-dlll"
+printf "$MAIL_BODY" | mutt -a "$BACKUP_FILE_GZ" -s "$MAIL_SUBJECT" -- $MAIL_ADDRESS
 
 rm "$BACKUP_FILE_GZ"
 
