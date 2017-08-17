@@ -38,10 +38,10 @@ $(function () {
  * @author Pulipuli Chen 20170817
  */
 var _setupDetailsEditorClickEvent = function () {
-    var _desc_td = $("#VMServer_tbody > tr > td.tcenter > span.description");
+    var _desc_td = $(".dataTable > tbody > tr > td.tcenter > span.description");
     
     if (_desc_td.length === 0) {
-        _desc_td = $("#VMServer_tbody > tr > td.tcenter:eq(7)");
+        _desc_td = $(".dataTable > tbody > tr > td.tcenter:nth-last-child(3)");
     }
     
     _desc_td.click(function () {
@@ -53,7 +53,8 @@ var _setupDetailsEditorClickEvent = function () {
         // Zentyal.TableHelper.showChangeRowForm('/dlllciasrouter/Controller/VMServer','VMServer','VMServer','changeEdit','vms1', 0, 0)
         eval(_onclick);
         setTimeout(function () {
-            location.href = "#VMServer_description_row";
+            var _id = $('[id*=_description_row]').attr("id");
+            location.href = "#" + _id;
         }, 100);
     });
 };
