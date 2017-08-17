@@ -42,7 +42,12 @@ Tools
 TODO
 ====
 
-* [Backup function](https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/backup-zentyal.sh)
 * [MooseFS function is not work?](https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/src/EBox/dlllciasrouter/Model/ExportsSetting.pm)
-* [Pound SSL Configuration (--with-ssl=ssl_dir   -- OpenSSL home directory)](http://www.apsis.ch/pound/pound_list/archive/2011/2011-03/1301440192000)
 * 開始安裝的時候，不知道為什麼，會把兩張網卡設為DHCP，但應該要取消一張非WAN的網卡
+
+TODO (draft)
+====
+* [Pound SSL Configuration (--with-ssl=ssl_dir   -- OpenSSL home directory)](http://www.apsis.ch/pound/pound_list/archive/2011/2011-03/1301440192000)：放棄，維持port forwarding
+http://www.project-open.com/en/howto-pound-https-configuration
+* Pound logging: 放棄，步驟太複雜
+http://myfreshthoughts.blogspot.tw/2008/07/howto-tell-pound-to-log-into-its-own.html
