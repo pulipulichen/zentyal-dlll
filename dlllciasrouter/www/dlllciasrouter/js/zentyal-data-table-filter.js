@@ -38,9 +38,13 @@ $(function () {
  * @author Pulipuli Chen 20170817
  */
 var _setupDetailsEditorClickEvent = function () {
-    var _desc_td = $("#VMServer_tbody > tr > td.tcenter > span.")
+    var _desc_td = $("#VMServer_tbody > tr > td.tcenter > span.description");
     
-    $("#VMServer_tbody > tr > td.tcenter:eq(7)").click(function () {
+    if (_desc_td.length === 0) {
+        _desc_td = $("#VMServer_tbody > tr > td.tcenter:eq(7)");
+    }
+    
+    _desc_td.click(function () {
         var _td = $(this);
         var _tr = _td.parents("tr:first");
         var _action_edit = _tr.children().filter("td:last").find("button.btn-edit");
