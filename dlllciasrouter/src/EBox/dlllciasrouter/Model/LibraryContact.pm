@@ -99,8 +99,8 @@ sub setContactLink
         my $short_desc = $desc;
         if (length($short_desc) > 10) {
             $short_desc = substr($short_desc, 0, 10) . "...";
-            $short_desc = "<span title=\"".$desc."\">".$short_desc."</span>"
         }
+        $short_desc = "<span class=\"description\" title=\"".$desc."\">".$short_desc."</span>";
 
         if ($short_desc ne '') {
             $short_desc = $short_desc . '<br />';

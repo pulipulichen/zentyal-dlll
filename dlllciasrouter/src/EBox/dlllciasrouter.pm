@@ -59,6 +59,7 @@ sub dlllciasrouter_init
         $self->startNFSServer();
 
         $self->initTemplateMas();
+        $self->chmodJS();
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
     };
@@ -1281,5 +1282,15 @@ sub initTemplateMas
 {
     # dlllciasrouter/templates/ajax/setter/textareaSetter.mas
     system('sudo cp -f /usr/share/zentyal/www/dlllciasrouter/templates/ajax/setter/*.mas /usr/share/zentyal/templates/ajax/setter/');
+}
+
+##
+# 設定js的權限
+# 20170817 Pulipuli Chen
+## 
+sub chmodJS
+{
+    # dlllciasrouter/templates/ajax/setter/textareaSetter.mas
+    system('sudo chmod 777 /usr/share/zentyal/www/dlllciasrouter/js/*.js');
 }
 1;
