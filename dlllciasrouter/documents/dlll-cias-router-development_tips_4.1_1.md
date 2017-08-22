@@ -32,7 +32,7 @@ From original code
 		* [Boolean.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Boolean.pm)
 		* [Int.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Int.pm)
 		* [Float.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Float.pm)
-		* [Text.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Text.pm): Cannot use special text, ex: ", /, : .
+		* [Text.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Text.pm): Enable ` 'allowUnsafeChars' => 1,` option to use any characters. You can use other two field style: `'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas'` or `'HTMLSetter' => '/ajax/setter/textareaSetter.mas'`. Please read [the example code](https://github.com/pulipulichen/zentyal-dlll/blob/ebf8582e2ac829b97be9df45f2596cf155554b03/dlllciasrouter/src/EBox/dlllciasrouter/Model/LibraryFields.pm#L384).
 		* [Password.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/Password.pm)
 		* [MailAddress.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/MailAddress.pm)
 		* [File.pm](https://github.com/zentyal/zentyal/blob/faaa32a0323787c527bd0d17e74cbe4df2830ee6/main/core/src/EBox/Types/File.pm): Speical one

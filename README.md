@@ -44,6 +44,11 @@ TODO
 
 * [MooseFS function is not work?](https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/src/EBox/dlllciasrouter/Model/ExportsSetting.pm)
 * 開始安裝的時候，不知道為什麼，會把兩張網卡設為DHCP，但應該要取消一張非WAN的網卡
+* 未來可能要開放VPN功能? 讓他更好管理？
+* Disable "Enable Emergency Restarter" features
+* 備份加上連結選項： https://{ExtIP}:{AdminPort}/dlllciasrouter/Composite/SettingComposite#RouterSettings_hr_ Zentyal_backup_hr_row
+* Pound要不要改用 Apache Traffic Server？ http://blog.sina.cn/dpool/blog/s/blog_502c8cc40100mw7n.html
+* 確認看看有沒有收到Zentyal的信: 沒收到，檢查排程跟錯誤訊息  
 
 TODO (draft)
 ====
