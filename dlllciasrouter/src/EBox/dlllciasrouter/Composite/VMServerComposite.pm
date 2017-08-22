@@ -18,7 +18,7 @@ use EBox::Global;
 #
 sub _description
 {
-    my $pageTitle = 'Virtual Machines';
+    my $pageTitle = 'Virtual Machine';
 
     my $description =
       {

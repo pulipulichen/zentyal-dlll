@@ -13,8 +13,8 @@ use EBox::Global;
 sub getOptions
 {
     my $options = ();
-    #$options->{pageTitle} = __('Virtual Machine Servers');
-    $options->{pageTitle} = __('Virtual Machines');
+    #$options->{pageTitle} = __('Virtual Machine');
+    $options->{pageTitle} = __('Virtual Machine');
     $options->{printableTableName} = __('Servers') . '<script type="text/javascript" src="/data/dlllciasrouter/js/zentyal-data-table-filter.js"></script>';
     # https://cloud-router.dlll.nccu.edu.tw:64443/data/dlllciasrouter/js/zentyal-data-table-filter.js
     $options->{printableRowName} = __('Server');

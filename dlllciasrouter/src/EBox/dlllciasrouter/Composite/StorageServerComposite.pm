@@ -18,7 +18,7 @@ use EBox::Global;
 #
 sub _description
 {
-    my $pageTitle = 'Distributed Storage';
+    my $pageTitle = 'Storage';
 
     my $description =
     {

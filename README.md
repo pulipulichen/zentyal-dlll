@@ -49,6 +49,8 @@ TODO
 * 備份加上連結選項： https://{ExtIP}:{AdminPort}/dlllciasrouter/Composite/SettingComposite#RouterSettings_hr_ Zentyal_backup_hr_row
 * Pound要不要改用 Apache Traffic Server？ http://blog.sina.cn/dpool/blog/s/blog_502c8cc40100mw7n.html
 * 確認看看有沒有收到Zentyal的信: 沒收到，檢查排程跟錯誤訊息  
+* Pound的負載平衡設定尚未確定能不能運作
+
 
 TODO (draft)
 ====

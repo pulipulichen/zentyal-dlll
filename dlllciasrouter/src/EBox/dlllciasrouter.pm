@@ -131,7 +131,7 @@ sub menu
 
     
     $folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/Composite/VMServerComposite',
-                                      'text' => __('Virtual Machines')));
+                                      'text' => __('Virtual Machine')));
 
     
     #$folder->add(new EBox::Menu::Item('url' => 'dlllciasrouter/View/PoundServices',
