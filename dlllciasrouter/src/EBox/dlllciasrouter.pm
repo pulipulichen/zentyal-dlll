@@ -741,7 +741,7 @@ sub initRootCrontab
         my @backupParams = ();
 
         my $extIP = $self->model('LibraryNetwork')->getExternalIpaddr();
-        my $port = $self->model('RouterSettings')->value('adminPort');
+        my $port = $self->model('RouterSettings')->value('webadminPort');
         my $date = POSIX::strftime( "%A, %B %d, %Y", localtime());
         # my $date = strftime "%a %b %e %H:%M:%S %Y", gmtime;
         # printf("date and time - $date\n");
