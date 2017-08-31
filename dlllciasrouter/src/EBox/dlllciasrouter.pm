@@ -741,6 +741,7 @@ sub initRootCrontab
         my @backupParams = ();
 
         my $extIP = $self->model('LibraryNetwork')->getExternalIpaddr();
+        my $port = $self->model('RouterSettings')->value('adminPort');
         my $date = POSIX::strftime( "%A, %B %d, %Y", localtime());
         # my $date = strftime "%a %b %e %H:%M:%S %Y", gmtime;
         # printf("date and time - $date\n");
@@ -751,6 +752,7 @@ sub initRootCrontab
 
         my $backupMailSubject = $settings->value('backupMailSubject');
         $backupMailSubject =~ s/\{IP\}/$extIP/g;
+        $backupMailSubject =~ s/\{PORT\}/$port/g;
         push(@backupParams, 'backupMailSubject' => $backupMailSubject);
 
         my $backupMailBody = $settings->value('backupMailBody');
@@ -759,6 +761,8 @@ sub initRootCrontab
         
         # print $backupMailBody;
         $backupMailBody =~ s/\{DATE\}/$date/g;
+        $backupMailBody =~ s/\{IP\}/$extIP/g;
+        $backupMailBody =~ s/\{PORT\}/$port/g;
         push(@backupParams, 'backupMailBody' => $backupMailBody);
         
         push(@backupParams, 'backupLimit' => $settings->value('backupLimit'));
