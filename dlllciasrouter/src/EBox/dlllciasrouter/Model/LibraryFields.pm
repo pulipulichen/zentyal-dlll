@@ -624,15 +624,15 @@ sub createFieldIsHTTPS
 sub createFieldBoundLocalDNS
 {
     my $field = new EBox::Types::Boolean(
-            fieldName => 'boundLocalDns',
-            printableName => __('Bound Local DNS'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'),
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'boundLocalDns',
+        'printableName' => __('Bound Local DNS'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => 1,
+        'help' => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'),
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
 
     return $field;
 }
@@ -658,16 +658,16 @@ sub createFieldBoundLocalDNSHidden
 sub createFieldBoundLocalDNSwithHR
 {
     my $field = new EBox::Types::Boolean(
-            fieldName => 'boundLocalDns',
-            printableName => __('Setup In Local DNS'),
-            editable => 1,
-            optional => 0,
-            defaultValue => 1,
-            help => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'
-                . "<br /> <hr />"),
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'boundLocalDns',
+        'printableName' => __('Setup In Local DNS'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => 1,
+        'help' => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'
+            . "<br /> <hr />"),
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
 
     return $field;
 }
@@ -679,14 +679,14 @@ sub createFieldProtocolRedirect
 {
     my ($self, $protocol, $enable) = @_;
     my $field = new EBox::Types::Boolean(
-            fieldName => 'redir'.$protocol.'_enable',
-            printableName => __('Enable '.$protocol.' Redirect'),
-            editable => 1,
-            optional => 0,
-            defaultValue => $enable,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'redir'.$protocol.'_enable',
+        'printableName' => __('Enable '.$protocol.' Redirect'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => $enable,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
 
     return $field;
 }
@@ -743,16 +743,16 @@ sub _populateProtocolSecureSelection
 {
     return [
         {
-            value => 0,
-            printableValue => __('Public'),
+            'value' => 0,
+            'printableValue' => __('Public'),
         },
         {
-            value => 1,
-            printableValue => __('Only for Administrator List'),
+            'value' => 1,
+            'printableValue' => __('Only for Administrator List'),
         },
         {
-            value => 2,
-            printableValue => __('Only for Workplace List'),
+            'value' => 2,
+            'printableValue' => __('Only for Workplace List'),
         },
     ];
 }
@@ -761,15 +761,15 @@ sub createFieldProtocolLog
 {
     my ($self, $protocol, $enable) = @_;
     my $field = new EBox::Types::Boolean(
-            fieldName => 'redir'.$protocol.'_log',
-            printableName => __('Enable Zentyal Log'),
-            #help => __('Only for local lan, like 140.119.61.0/24.'),
-            editable => 1,
-            optional => 0,
-            defaultValue => $enable,
-            hiddenOnSetter => 0,
-            hiddenOnViewer => 1,
-        );
+        'fieldName' => 'redir'.$protocol.'_log',
+        'printableName' => __('Enable Zentyal Log'),
+        #'help' => __('Only for local lan, like 140.119.61.0/24.'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => $enable,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
 
     return $field;
 }
@@ -1958,8 +1958,10 @@ sub createFieldURL
         'fieldName' => 'url',
         'printableName' => __($title),
         'editable' => 1,
-        hiddenOnSetter => 0,
-        hiddenOnViewer => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'help' => __('For example: http://www.dlll.nccu.edu.tw/'),
     );
 
     return $field;

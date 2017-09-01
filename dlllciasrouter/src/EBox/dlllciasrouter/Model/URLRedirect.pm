@@ -56,6 +56,7 @@ sub _table
             'hiddenOnSetter' => 1,
             'hiddenOnViewer' => 0,
             'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+            'help' => __('For example: http://www.dlll.nccu.edu.tw/'),
         ),
         $fieldsFactory->createFieldContactName(),
         $fieldsFactory->createFieldContactEmail(),
