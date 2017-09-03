@@ -111,3 +111,12 @@ fi
 
 # 20170731 系統檔案功能需要
 sudo mkdir -p /usr/share/zentyal/www/dlllciasrouter/files
+
+# 20170903 增加排程備份的任務
+LIST=`crontab -l`
+SOURCE="/root/dlllciasrouter-scripts/backup-zentyal.sh"
+if echo "$LIST" | grep -q "$SOURCE"; then
+  echo "The back job had been added.";
+else
+  crontab -l | { cat; echo "0  6  * * 7   root    /root/dlllciasrouter-scripts/backup-zentyal.sh"; } | crontab -
+fi
