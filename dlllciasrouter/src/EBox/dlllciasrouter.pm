@@ -717,15 +717,7 @@ sub initRootCrontab
 {
      my ($self) = @_;
 
-    if (-e '/etc/crontab') {
-
-        my @nullParams = ();
-        $self->writeConfFile(
-            '/etc/crontab',
-            "dlllciasrouter/crontab.mas",
-            \@nullParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
+    #if (-e '/etc/crontab') {
 
         # ------------------------
 
@@ -772,7 +764,7 @@ sub initRootCrontab
             \@backupParams,
             { uid => '0', gid => '0', mode => '744' }   #這邊權限必須是7才能執行
         );
-    }
+    #}  # if (-e '/etc/crontab') {
 }
 
 # 20150519 Pulipuli Chen

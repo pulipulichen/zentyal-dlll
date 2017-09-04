@@ -118,5 +118,5 @@ SOURCE="/root/dlllciasrouter-scripts/backup-zentyal.sh"
 if echo "$LIST" | grep -q "$SOURCE"; then
   echo "The back job had been added.";
 else
-  crontab -l | { cat; echo "0  6  * * 7   root    /root/dlllciasrouter-scripts/backup-zentyal.sh"; } | crontab -
+  crontab -l | { cat; echo "0  6  * * 7   $SOURCE"; } | crontab -
 fi
