@@ -1,0 +1,9 @@
+<%args>
+    $mailAddress
+    $mailSubject
+    $mailBody
+</%args>
+MAIL_ADDRESS="<% $mailAddress %>"
+MAIL_SUBJECT="<% $mailSubject %>"
+MAIL_BODY="<% $mailBody %>"
+printf "$MAIL_BODY" | mutt -s "$MAIL_SUBJECT" -- $MAIL_ADDRESS

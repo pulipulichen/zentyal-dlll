@@ -116,7 +116,16 @@ sudo mkdir -p /usr/share/zentyal/www/dlllciasrouter/files
 LIST=`crontab -l`
 SOURCE="/root/dlllciasrouter-scripts/backup-zentyal.sh"
 if echo "$LIST" | grep -q "$SOURCE"; then
-  echo "The back job had been added.";
+  echo "The backup job had been added.";
 else
   crontab -l | { cat; echo "0  6  * * 7   $SOURCE"; } | crontab -
+fi
+
+# 20170917 增加排程備份的任務：重開機之後執行
+LIST=`crontab -l`
+SOURCE="/root/dlllciasrouter-scripts/startup-message.sh"
+if echo "$LIST" | grep -q "$SOURCE"; then
+  echo "The startup job had been added.";
+else
+  crontab -l | { cat; echo "@reboot $SOURCE"; } | crontab -
 fi

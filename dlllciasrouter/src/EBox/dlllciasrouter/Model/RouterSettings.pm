@@ -122,7 +122,7 @@ sub _table
     push(@fields, new EBox::Types::Text(
         'fieldName'     => 'backupMailSubject',
         'printableName' => __('Backup mail subject'),
-        'help' => __('{IP} will be replaced as Zentyal\'s IP.'),
+        'help' => __('{IP} and {PORT} will be replaced as Zentyal\'s IP address and port.'),
         'editable'      => 1,
         'unique'        => 1,
         'defaultValue'  => 'Zentyal backup (DLLL-CIAS Router) from {IP}',
@@ -134,15 +134,62 @@ sub _table
     push(@fields, new EBox::Types::Text(
         'fieldName'     => 'backupMailBody',
         'printableName' => __('Backup mail body'),
-        #'help' => __('{DATE} will be replaced as backup time.'),
+        'help' => __('{IP} will be replaced as Zentyal\'s IP.'),
         'editable'      => 1,
         'unique'        => 1,
         #'defaultValue'  => 'Dear Zentyal Administrator,\\n\\nYou got this mail because you were set as Zentyal Administrator from DLLL-CIAS Router module.\\nAttachment is the back from Zentyal in {DATE}.\\n\\nYours faithfully,\\n\\n--\\n\\nFrom Zentyal server (DLLL-CIAS Router)\\nhttps://github.com/pulipulichen/zentyal-dlll',
-        'defaultValue'  => 'Dear Zentyal Administrator,\n\nYou got this mail because you were set as Zentyal Administrator from DLLL-CIAS Router module.\nAttachment is the back from Zentyal.\nYou can change the configuration from following URL:\nhttps://{IP}:{PORT}/dlllciasrouter/Composite/SettingComposite#RouterSettings_backupMailAddress_row\n\nYours faithfully,\n\n--\n\nFrom Zentyal server (DLLL-CIAS Router)\nhttps://github.com/pulipulichen/zentyal-dlll',
+        'defaultValue'  => 'Dear Zentyal Administrator,\n\n' 
+            . 'You got this mail because you were set as Zentyal Administrator from DLLL-CIAS Router module.\n' 
+            . 'Attachment is the back from Zentyal.\n' 
+            . 'You can change the configuration from following URL:\n' 
+            . 'https://{IP}:{PORT}/dlllciasrouter/Composite/SettingComposite#RouterSettings_backupMailAddress_row\n\n' 
+            . 'Yours faithfully,\n\n' 
+            . '--\n\n' 
+            . 'From Zentyal server (DLLL-CIAS Router)\n' 
+            . 'https://github.com/pulipulichen/zentyal-dlll',
         'optional'      => 0,
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     ));
+
+    # ---------------------------------
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName'     => 'startupMailSubject',
+        'printableName' => __('Start mail subject'),
+        'help' => __('{IP} will be replaced as Zentyal\'s IP.'),
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue'  => 'Zentyal startup (DLLL-CIAS Router) from {IP}',
+        'optional'      => 0,
+        'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+    ));
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName'     => 'startupMailBody',
+        'printableName' => __('Startup message mail body'),
+        'help' => __('{IP} and {PORT} will be replaced as Zentyal\'s IP address and port. {VEDomainName} will be replaced as Virtual Environment\'s main server domain name. ') 
+            . '<a href="/dlllciasrouter/View/VEServerSetting#VEServerSetting_domainName_row" target="_blank">(Configuration)</a>',
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue'  => 'Dear Zentyal Administrator,\n\n' 
+            . 'You got this mail because you were set as Zentyal Administrator from DLLL-CIAS Router module.\n\n' 
+            . 'Zentyal server had been started recently. Please check following TODO list:\n\n' 
+            . '- Check air conditioners work.\n' 
+            . '- Check virtual environment work: https://{VEDomainName}:60000/\n\n' 
+            . 'You can change the configuration from following URL:\n' 
+            . 'https://{IP}:{PORT}/dlllciasrouter/Composite/SettingComposite#RouterSettings_backupMailAddress_row\n\n' 
+            . 'Yours faithfully,\n\n' 
+            . '--\n\n' 
+            . 'From Zentyal server (DLLL-CIAS Router)\n' 
+            . 'https://github.com/pulipulichen/zentyal-dlll',
+        'optional'      => 0,
+        'allowUnsafeChars' => 1,
+        'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
+    ));
+
+    # ---------------------------------
 
     push(@fields, new EBox::Types::Text(
         'fieldName'     => 'backupLimit',

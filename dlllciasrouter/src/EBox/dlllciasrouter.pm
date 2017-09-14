@@ -764,6 +764,32 @@ sub initRootCrontab
             \@backupParams,
             { uid => '0', gid => '0', mode => '744' }   #這邊權限必須是7才能執行
         );
+
+        # -------------------------------------
+
+        my @startupParams = ();
+
+        push(@startupParams, 'mailAddress' => $backupMailAddress);
+
+        my $startupMailSubject = $settings->value('startupMailSubject');
+        $startupMailSubject =~ s/\{IP\}/$extIP/g;
+        $startupMailSubject =~ s/\{PORT\}/$port/g;
+        push(@startupParams, 'mailSubject' => $startupMailSubject);
+
+        my $startupMailBody = $settings->value('startupMailBody');
+        $startupMailBody =~ s/\{DATE\}/$date/g;
+        $startupMailBody =~ s/\{IP\}/$extIP/g;
+        $startupMailBody =~ s/\{PORT\}/$port/g;
+        my $veDomainName = $self->model('VEServerSetting')->value("domainName");
+        $startupMailBody =~ s/\{VEDomainName\}/$veDomainName/g;
+        push(@startupParams, 'mailBody' => $startupMailBody);
+
+        $self->writeConfFile(
+            '/root/dlllciasrouter-scripts/startup-message.sh',
+            "dlllciasrouter/startup-message.sh.mas",
+            \@startupParams,
+            { uid => '0', gid => '0', mode => '744' }   #這邊權限必須是7才能執行
+        );
     #}  # if (-e '/etc/crontab') {
 }
 
