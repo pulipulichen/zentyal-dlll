@@ -248,6 +248,15 @@ sub _table
             optional => 0,
         ));
 
+    push(@fields, new EBox::Types::Port(
+            fieldName     => 'xrdpPort',
+            printableName => __('Zentyal XRDP Port. ') . "(" . __('Only For Administrator List') . ")",
+            editable      => 1,
+            unique        => 1,
+            defaultValue => 64489,
+            optional => 0,
+        ));
+
     # ----------------------------------------------------------
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundConfig', __('Pound Configuration')));
@@ -458,6 +467,7 @@ sub initServicePort
 
         $libServ->addServicePort("dlllciasrouter-admin", $self->value('webadminPort'), 1);
         $libServ->addServicePort("dlllciasrouter-admin", $self->value('adminPort'), 1);
+        $libServ->addServicePort("dlllciasrouter-admin", $self->value('xrdpPort'), 1);
 
         #dns server
         $libServ->addServicePort("dlllciasrouter-dns", 53, 0);

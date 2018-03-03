@@ -129,3 +129,9 @@ if echo "$LIST" | grep -q "$SOURCE"; then
 else
   crontab -l | { cat; echo "@reboot $SOURCE"; } | crontab -
 fi
+
+# 20180303 增加遠端桌面連線的功能
+sudo apt-get -y --force-yes install xrdp xfce4 xfce4-goodies tightvncserver
+sudo vncserver
+# 這裡要設定vncserver帳號密碼
+sudo /etc/init.d/xrdp restart

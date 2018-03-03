@@ -45,7 +45,7 @@ sub getZentyalAdminService
     my ($self) = @_;
 
     my $name = "dlllciasrouter-admin";
-    my $desc = __("Zentyal Webadmin, SSH & MooseFS");
+    my $desc = __("Zentyal Webadmin, SSH, XRDP & MooseFS");
     return $self->initService($name, $desc);
 }
 

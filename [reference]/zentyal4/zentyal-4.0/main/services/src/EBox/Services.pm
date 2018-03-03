@@ -127,7 +127,7 @@ sub _defaultServices
          'name' => 'ssh',
          'printableName' => 'SSH',
          'description' => __('Secure Shell'),
-         'protocol' => 'tcp',
+         'protocol' => './tcp',
          'destinationPort' => '22',
          'internal' => 0,
         },
