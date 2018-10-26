@@ -802,8 +802,12 @@ sub initRootCrontab
         $startupMailBody =~ s/\{DATE\}/$date/g;
         $startupMailBody =~ s/\{IP\}/$extIP/g;
         $startupMailBody =~ s/\{PORT\}/$port/g;
-        my $veDomainName = $self->model('VEServerSetting')->value("domainName");
-        $startupMailBody =~ s/\{VEDomainName\}/$veDomainName/g;
+        try {
+          my $veDomainName = $self->model('VEServerSetting')->value("domainName");
+          $startupMailBody =~ s/\{VEDomainName\}/$veDomainName/g;
+        } catch {
+          $self->model("LibraryToolkit")->show_exceptions($_ . ' Virtual Environment domain name is empty. ');
+        }
         push(@startupParams, 'mailBody' => $startupMailBody);
 
         $self->writeConfFile(
