@@ -136,3 +136,7 @@ sudo vncserver
 # 這裡要設定vncserver帳號密碼
 sudo /etc/init.d/xrdp restart
 sudo updatedb
+
+echo "===================================";
+echo "DLLL-CIAS Router is ready"
+echo "===================================";
