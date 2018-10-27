@@ -62,6 +62,7 @@ sub dlllciasrouter_init
         $self->initTemplateMas();
         $self->chmodJS();
         $self->copyPackageIcons();
+        $self->copyTextSetter();
         
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
@@ -1368,6 +1369,12 @@ sub setPublicCSS
 sub copyPackageIcons
 {
   system('sudo cp /usr/share/zentyal/www/dlllciasrouter/images/package-icons/*.png /usr/share/zentyal/www/images/package-icons/');
+}
+
+# 20181028 Pulipuli Chen
+sub copyTextSetter
+{
+  system('sudo cp -f /usr/share/zentyal/www/dlllciasrouter/local_scripts/textSetter.mas /usr/share/zentyal/templates/ajax/setter/');
 }
 
 # 20181027 Pulipuli Chen
