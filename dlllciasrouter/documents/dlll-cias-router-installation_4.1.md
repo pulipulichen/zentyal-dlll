@@ -110,4 +110,4 @@ Server's administration ports are changed:
 
 * Web administration: **https://your-server-ip:64443/**
 * SSH: **your-server-ip:64422**  
-
+* RDP: **your-server-ip:64489**  
