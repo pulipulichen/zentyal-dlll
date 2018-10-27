@@ -1,6 +1,8 @@
 # 啟用Sudo
 sudo ls >> /dev/null
 
+chmod +x ~/d.sh
+
 if [ -f ~/git-init.sh ] ; then
     # 已經下載的狀態下，我們只做程式碼的更新
     bash ~/zentyal-dlll/dlllciasrouter/git_update_compile.sh
