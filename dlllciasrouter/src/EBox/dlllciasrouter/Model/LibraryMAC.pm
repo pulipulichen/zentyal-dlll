@@ -213,16 +213,20 @@ sub initBlackListMember
         # my $objectRow = $self->getObjectRow('Blacklist');
         # 實際上並沒有設定黑名單，只是建立名為「Blacklist」黑名單的Object而已
 
+        # 20181028
         my $name = 'Blacklist';
         my $objectRow = $self->getObjectRow($name);
         my $memberModel = $objectRow->subModel('members');
-        # 20181028
-        $memberModel->addRow(
-            name => "default",
-            address_selected => 'ipaddr',
-            ipaddr_ip => '1.1.1.1',
-            ipaddr_mask => '32'
-        );
+        my $id = $memberModel->findId('name' => "default");
+        if (!defined($id)) {
+          $memberModel->addRow(
+              name => "default",
+              address_selected => 'ipaddr',
+              ipaddr_ip => '1.1.1.1',
+              ipaddr_mask => '32'
+          );
+        }
+        
     } catch {
         $self->getLibrary()->show_exceptions($_ . ' ( LibraryMAC->initBlackListMember() )');
     };
