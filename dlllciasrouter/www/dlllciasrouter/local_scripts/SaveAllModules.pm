@@ -10,7 +10,7 @@ my $file = "/tmp/SaveAllModules.pm.lock";
 
 if (-f $file)
 { 
-  print "SaveAllModules.pm is locked.";
+  print "SaveAllModules.pm is locked.\n";
   exit;
 }
 
