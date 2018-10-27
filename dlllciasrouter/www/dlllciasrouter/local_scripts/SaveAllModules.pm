@@ -8,7 +8,7 @@ use EBox::Global;
 
 my $file = "/tmp/SaveAllModules.pm.lock";
 
-if (-f $base_path)
+if (-f $file)
 { 
   print "SaveAllModules.pm is locked.";
   exit;
