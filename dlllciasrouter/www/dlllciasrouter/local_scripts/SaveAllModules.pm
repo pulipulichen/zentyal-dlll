@@ -33,6 +33,6 @@ print "Saving all modules\n";
 my $global = EBox::Global->getInstance();
 $global->saveAllModules();
 
-unlink $file;
+system('sudo rm -rf /tmp/SaveAllModules.pm.lock');
 
 print "Modules saved\n";
