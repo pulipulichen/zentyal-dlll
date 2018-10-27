@@ -61,6 +61,8 @@ sub dlllciasrouter_init
 
         $self->initTemplateMas();
         $self->chmodJS();
+        $self->copyPackageIcons();
+        
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
     };
@@ -1358,5 +1360,11 @@ sub setPublicCSS
     );
 
     EBox::Sudo::root("service ssh restart");
+}
+
+# 20181027 Pulipuli Chen
+sub copyPackageIcons
+{
+  system('sudo cp /usr/share/zentyal/www/dlllciasrouter/images/package-icons/*.png /usr/share/zentyal/www/images/package-icons/');
 }
 1;
