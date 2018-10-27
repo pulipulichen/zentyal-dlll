@@ -1,11 +1,14 @@
 # 啟用Sudo
 sudo ls >> /dev/null
 
-#if ! [ -f ~/git-init.sh ] ; then
+if ! [ -f ~/git-init.sh ] ; then
     # 已經下載的狀態下，我們只做程式碼的更新
-    
-#    exit
-#fi
+    bash ~/zentyal-dlll/dlllciasrouter/git_update_compile.sh
+    echo "===================================";
+    echo "DLLL-CIAS Router is updated"
+    echo "===================================";
+    exit
+fi
 
 # 必須要設定內部網路
 if ! echo `ifconfig` | grep 10.0.0.254  > /dev/null; then
