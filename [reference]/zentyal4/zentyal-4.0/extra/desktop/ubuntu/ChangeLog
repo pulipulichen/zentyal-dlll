@@ -1,9 +1,0 @@
-0.4
-	+ Added support for slave Zentyal Servers
-	+ Fixed bug in software autoconfiguration
-0.3
-	+ Roaming profiles
-0.2
-	+ Perl reimplementation with W32 common code
-0.1
-	+ Initial release

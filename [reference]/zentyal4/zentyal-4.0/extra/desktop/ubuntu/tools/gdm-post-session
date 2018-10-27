@@ -1,7 +1,0 @@
-#!/bin/sh
-
-cd /home/$USER
-
-su $USER -c /usr/share/zentyal-desktop/zentyal-sync-profile
-
-exit 0

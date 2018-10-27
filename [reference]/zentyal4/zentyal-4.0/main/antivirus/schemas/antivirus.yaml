@@ -1,6 +1,0 @@
-class: 'EBox::AntiVirus'
-depends:
-    - network
-
-models:
-    - FreshclamStatus

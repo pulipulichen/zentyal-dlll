@@ -1,6 +1,0 @@
-class: 'EBox::FTP'
-enabledepends:
-    - users
-
-models:
-    - Options

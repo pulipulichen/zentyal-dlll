@@ -1,7 +1,0 @@
-
-label -
-  menu separator
-  menu label ^
-label thanks_for_testing
-  menu separator
-  menu label ^Zentyal 4.0 Daily Build (DATE)

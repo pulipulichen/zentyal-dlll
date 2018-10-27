@@ -1,4 +1,0 @@
-#!/bin/bash
-
-# Allow to read CDROM devices
-adduser ebox cdrom

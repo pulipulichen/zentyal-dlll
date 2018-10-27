@@ -1,5 +1,0 @@
-<%args>
-$trailingText
-</%args>
-% $trailingText or return;
-<span><% $trailingText %></span>

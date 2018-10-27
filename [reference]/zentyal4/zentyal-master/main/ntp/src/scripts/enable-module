@@ -1,9 +1,0 @@
-#!/bin/bash
-
-# disable ntp daemon executed by Ubuntu networking services during boot
-IFUP=/etc/network/if-up.d/ntpdate
-[ -x $IFUP ] && chmod -x $IFUP
-EXITHOOK=/etc/dhcp/dhclient-exit-hooks.d/ntp
-[ -x $EXITHOOK ] && chmod -x $EXITHOOK
-
-exit 0

@@ -1,4 +1,0 @@
-#!/bin/bash -x
-
-# populate LDAP
-/usr/share/zentyal-asterisk/asterisk-ldap update

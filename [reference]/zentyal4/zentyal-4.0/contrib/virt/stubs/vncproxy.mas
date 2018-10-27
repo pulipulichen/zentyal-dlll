@@ -1,6 +1,0 @@
-<%args>
-$listenport
-$vncport
-</%args>
-
-exec /usr/bin/websockify --web /usr/share/novnc <% $listenport %> localhost:<% $vncport %>

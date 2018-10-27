@@ -1,6 +1,0 @@
-<%args>
-@hostnames
-</%args>
-% foreach my $hostname (@hostnames) {
-/^<% $hostname %>$/ 501 Dont use my own domain/hostname
-% }

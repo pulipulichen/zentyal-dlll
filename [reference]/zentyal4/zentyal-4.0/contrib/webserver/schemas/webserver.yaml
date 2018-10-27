@@ -1,9 +1,0 @@
-class: 'EBox::WebServer'
-
-models:
-    - ListeningPorts
-    - PublicFolder
-    - VHostTable
-
-composites:
-    General: [ListeningPorts, PublicFolder, VHostTable]

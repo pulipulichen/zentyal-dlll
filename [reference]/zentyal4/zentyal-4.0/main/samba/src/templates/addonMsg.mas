@@ -1,4 +1,0 @@
-<%args>
-$params
-</%args>
-<& /msg.mas, class => $params->{class}, msg => $params->{msg} &>

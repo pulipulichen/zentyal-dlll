@@ -1,8 +1,0 @@
-<%args>
-$data
-</%args>
-<%init>
-    my $text = $data->printableName();
-    my $link = $data->value();
-</%init>
-<a href=<% $link %>><% $text %></a>

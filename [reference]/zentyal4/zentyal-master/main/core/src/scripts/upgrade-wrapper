@@ -1,3 +1,0 @@
-#!/bin/sh
-
-sudo /usr/share/zentyal/release-upgrade > /var/log/zentyal/upgrade.log 2>&1

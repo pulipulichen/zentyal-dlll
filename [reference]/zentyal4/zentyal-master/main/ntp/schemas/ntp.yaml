@@ -1,5 +1,0 @@
-class: 'EBox::NTP'
-
-models:
-    - Settings
-    - Servers
