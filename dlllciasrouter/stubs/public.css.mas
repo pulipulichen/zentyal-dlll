@@ -1908,7 +1908,7 @@ body.first-install {
     font-weight: bold;
 }
 #content .notification_container.tip {
-  /*display: none;*/
+  display: none;
 }
 .disabledCustomAction {
     opacity: 0.5;
