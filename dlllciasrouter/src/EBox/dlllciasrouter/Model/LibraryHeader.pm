@@ -52,8 +52,14 @@ sub getDataTable
     #push(@fields, $fieldsFactory->createFieldDescriptionDisplay());
     if (defined($options->{help})) {
         my $help = $options->{help};
-        $help = "<div>111" . $help . "</div>";
+        $help = "<div>" . $help . "</div>";
         push(@fields, $fieldsFactory->createFieldHTMLDisplay("help", $help));
+    }
+
+    my $button = '<span>222</span>';
+    my $fieldName = $tableName . '_web_button';
+    if ($row->elementExists($fieldName)) {
+        $row->elementByName($fieldName)->setValue($button);
     }
 
     my $pageTitle = __('Main Server');
