@@ -53,7 +53,6 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldHr('hr_setting'));
 
-
     #push(@fields, $fieldsFactory->createFieldWebLinkButton($options->{tableName}));
 
     push(@fields, $fieldsFactory->createFieldDomainName());

@@ -56,12 +56,6 @@ sub getDataTable
         push(@fields, $fieldsFactory->createFieldHTMLDisplay("help", $help));
     }
 
-    my $button = '<span>222</span>';
-    my $fieldName = $tableName . '_web_button';
-    if ($row->elementExists($fieldName)) {
-        $row->elementByName($fieldName)->setValue($button);
-    }
-
     my $pageTitle = __('Main Server');
 
     my $dataTable =
