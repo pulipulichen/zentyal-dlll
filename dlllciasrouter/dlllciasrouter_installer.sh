@@ -56,7 +56,8 @@ moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-clien
 nfs-kernel-server nfs-common \
 vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
 mutt sendmail \
-openjdk-7-jre icedtea-7-plugin
+openjdk-7-jre icedtea-7-plugin \
+xrdp xfce4 xfce4-goodies tightvncserver
     sudo updatedb
 fi
 echo "All modules are installed."
@@ -131,7 +132,7 @@ else
 fi
 
 # 20180303 增加遠端桌面連線的功能
-sudo apt-get -y --force-yes install xrdp xfce4 xfce4-goodies tightvncserver
 sudo vncserver
 # 這裡要設定vncserver帳號密碼
 sudo /etc/init.d/xrdp restart
+sudo updatedb

@@ -57,6 +57,7 @@ sub dlllciasrouter_init
         $self->startMooseFS();
         $self->initNFSServer();
         $self->startNFSServer();
+        $self->setPublicCSS();
 
         $self->initTemplateMas();
         $self->chmodJS();
@@ -1341,5 +1342,21 @@ sub chmodJS
 {
     # dlllciasrouter/templates/ajax/setter/textareaSetter.mas
     system('sudo chmod 777 /usr/share/zentyal/www/dlllciasrouter/js/*.js');
+}
+
+# 20181027 Pulipuli Chen
+sub setPublicCSS
+{
+    my ($self, $port) = @_;
+    my @params = (
+    );
+    $self->writeConfFile(
+        '/var/lib/zentyal/dynamicwww/css/public.css',
+        "dlllciasrouter/public.css.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    EBox::Sudo::root("service ssh restart");
 }
 1;
