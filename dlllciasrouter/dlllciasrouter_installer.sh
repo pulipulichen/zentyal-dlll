@@ -5,7 +5,6 @@ chmod +x ~/d.sh
 
 if [ -f ~/git-init.sh ] ; then
     # 已經下載的狀態下，我們只做程式碼的更新
-    chmod +x "~/zentyal-dlll/*/*.sh"
     bash ~/zentyal-dlll/dlllciasrouter/git_update_compile.sh
     echo "===================================";
     echo "DLLL-CIAS Router is updated"
@@ -148,6 +147,9 @@ sudo vncserver
 # 這裡要設定vncserver帳號密碼
 sudo /etc/init.d/xrdp restart
 sudo updatedb
+
+chmod +x ~/zentyal-dlll/dlllciasrouter/SaveAllModules.pm
+sudo ~/zentyal-dlll/dlllciasrouter/SaveAllModules.pm
 
 echo "===================================";
 echo "DLLL-CIAS Router is ready"
