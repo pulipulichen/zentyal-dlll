@@ -30,6 +30,8 @@ sudo /etc/init.d/zentyal dlllciasrouter restart
 
 if ! echo `sudo /etc/init.d/zentyal dlllciasrouter status` | grep "$GREP_STR" > /dev/null; then
     echo "Please enable DLLL-CIAS Router module in Zentyal."
+else
+    sudo ~/zentyal-dlll/dlllciasrouter/SaveAllModules.pm
 fi
 
 tail /var/log/zentyal/zentyal.log
