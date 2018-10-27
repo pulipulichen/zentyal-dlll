@@ -808,6 +808,7 @@ sub initRootCrontab
         } catch {
           $self->model("LibraryToolkit")->show_exceptions($_ . ' Virtual Environment domain name is empty. ');
         };
+
         push(@startupParams, 'mailBody' => $startupMailBody);
 
         $self->writeConfFile(
