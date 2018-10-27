@@ -260,6 +260,7 @@ sub _setConf
     # 20181028 試著加入儲存設定看看？
     #EBox::CGI::SaveChanges->saveAllModulesAction();
     #$self->saveModuleChange();
+    # 20181028 還是不行，放棄
 }
 
 sub getLibrary
