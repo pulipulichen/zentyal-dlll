@@ -1,5 +1,5 @@
 if [ -z "$GIT_BRANCH" ]; then GIT_BRANCH=origin/master; fi
-if [ -z "$GIT_PATH" ]; then GIT_PATH=/home/zentyal/zentyal-dlll/; fi
+if [ -z "$GIT_PATH" ]; then GIT_PATH=~/zentyal-dlll/; fi
 
 #echo $GIT_PATH
 
