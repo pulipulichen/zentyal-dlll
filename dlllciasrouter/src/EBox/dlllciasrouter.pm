@@ -257,9 +257,9 @@ sub _setConf
         $self->stopMount();
     }
     
-    
-
+    # 20181028 試著加入儲存設定看看？
     #EBox::CGI::SaveChanges->saveAllModulesAction();
+    $self->saveModuleChange()
 }
 
 sub getLibrary
@@ -1366,5 +1366,12 @@ sub setPublicCSS
 sub copyPackageIcons
 {
   system('sudo cp /usr/share/zentyal/www/dlllciasrouter/images/package-icons/*.png /usr/share/zentyal/www/images/package-icons/');
+}
+
+# 20181027 Pulipuli Chen
+sub saveModuleChange
+{
+  system('sudo chmod +x /usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm');
+  system('sudo /usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm');
 }
 1;
