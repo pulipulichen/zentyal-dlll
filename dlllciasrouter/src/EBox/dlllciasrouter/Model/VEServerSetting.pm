@@ -37,7 +37,7 @@ sub _table
 sub getOptions
 {
     my $options = ();
-    $options->{pageTitle} = __('VE Main Server Setting');
+    $options->{pageTitle} = __('Virtual Environment Main Server Setting');
     $options->{moduleName} = 'VEServer';
     $options->{IPHelp} = __('The 1st part should be') . ' 10, <br />'
                 . __('the 2nd part should be') . ' 6, <br />'
