@@ -89,6 +89,17 @@ https://goo.gl/Z8t8tp is dlllciasrouter_installer.sh ( https://github.com/pulipu
 5. [sudo] password for zentyal: **password** <br />
 ![](https://lh3.googleusercontent.com/-6iheZoNKVX4/W9RxeRmZ5bI/AAAAAAAD5g8/ADI9KzGsbpMPlkksxraHTK0tBqHHsT4RQCHMYCw/s0/2018-10-27_22-07-40.png)
 
+----
+
+
+![](https://lh3.googleusercontent.com/-5MmhwGUWmCE/W9RUtPW05pI/AAAAAAAD5fU/Z7-MJxk2wygXKJQmfB2VaIl9KdnSKxUZQCHMYCw/s0/hourglass.png)
+
+
+----
+
+6. Finish. <br />
+![](https://lh3.googleusercontent.com/-4zW3X-Uwmkc/W9SnJhtAAzI/AAAAAAAD5ho/JgxXSS2QKpUXZxtAstVoFIvomo7LY0GNgCHMYCw/s0/2018-10-28_01-56-41.png)
+
 ------------
 
 ## Zentyal Web Administration
@@ -96,15 +107,23 @@ https://goo.gl/Z8t8tp is dlllciasrouter_installer.sh ( https://github.com/pulipu
 1. Open **Zentyal Administration** <br />
 ![](https://lh3.googleusercontent.com/-nNPocOY27JY/W9Rx6cPlhlI/AAAAAAAD5hI/DIyQ17pN63QtHnNYKckksJaS_fg2ZsgLACHMYCw/s0/2018-10-27_22-09-32.png)
 
-2. Open **Module Status**
+2. Insecure Connection
+	1. Click **Advanced** button. <br />
+![](https://lh3.googleusercontent.com/-zs7pPmftaKU/W9SnlQpgbwI/AAAAAAAD5hw/UGTs0iF26ZMoMLjKcjI8x_lcUrWDLuQRACHMYCw/s0/2018-10-28_01-58-33.png)
+	2. Click **Add Exception...** button. <br />
+![](https://lh3.googleusercontent.com/-SL_mYwH45RA/W9SntnveVkI/AAAAAAAD5h0/QcADQyutliAtG6O7YL1hCLHo5r3CZrUrQCHMYCw/s0/2018-10-28_01-59-06.png)
+	3. Click **Confirm Security Exception** button. <br />
+![](https://lh3.googleusercontent.com/-2RTOxD73gYA/W9Sn8RZtrxI/AAAAAAAD5h8/o0q6JIcqBAg5efUZPiSCkRWe8yWmK5WBACHMYCw/s0/2018-10-28_02-00-05.png)
+
+3. Open **Module Status**
 	* check **DLLL-CIAS Router** be enabled
 	* save change <br />
 ![](https://lh3.googleusercontent.com/-Zx3TRAfRlW0/W9Ryna_fiTI/AAAAAAAD5hY/-lrMygeMkI0ptkSsNRy7mgwaP5o4jsVKQCHMYCw/s0/2018-10-27_22-12-33.png) 
 
-2. Confrim DLLL-CIAS Router module is ready 
+4. Confrim DLLL-CIAS Router module is ready 
 ![](https://lh3.googleusercontent.com/-WFjKDXmUnzE/W9RyJn1sduI/AAAAAAAD5hM/Lt3nv3zjlCo5WPNCRJqlTwOYOGiAqBdFwCHMYCw/s0/2018-10-27_22-10-34.png)
 
-## New Server Administration
+## Server Administration
 
 Server's administration ports are changed:
 
