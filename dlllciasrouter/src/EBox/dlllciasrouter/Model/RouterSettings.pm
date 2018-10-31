@@ -313,7 +313,7 @@ sub _table
     my $logPound = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$address.'&filter-fw_dpt='.$port.'">POUND LOGS</a>';
     push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_log_pound", $logPound));
 
-    my $errPort = 1088;
+    my $errPort = 888;
     my $logErr = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$address.'&filter-fw_dpt='.$errPort.'">POUND ERROR LOGS</a>';
     push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_log_err", $logErr));
 
@@ -463,7 +463,7 @@ sub initServicePort
 
         my $libServ = $self->loadLibrary("LibraryService");
         $libServ->addServicePort("dlllciasrouter-pound", $self->value('port'), 0);
-        $libServ->addServicePort("dlllciasrouter-pound", 1088, 0); # lighttpd
+        $libServ->addServicePort("dlllciasrouter-pound", 888, 0); # lighttpd
 
         $libServ->addServicePort("dlllciasrouter-admin", $self->value('webadminPort'), 1);
         $libServ->addServicePort("dlllciasrouter-admin", $self->value('adminPort'), 1);
