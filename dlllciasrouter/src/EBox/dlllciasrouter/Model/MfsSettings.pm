@@ -63,7 +63,7 @@ sub _table
     my $cgiserv = "http://" . $address . ":9425/";
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_mfsInfo", __('MFS INFO'), $cgiserv, 1));
 
-    $cgiserv = "https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/mfs-usage-instruction.md";
+    $cgiserv = "https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/mfs-usage-instruction.md";
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_mfsUsageInstruction", __('MFS USAGE INSTRUCTION'), $cgiserv, 1));
     
     push(@fields, new EBox::Types::Boolean(

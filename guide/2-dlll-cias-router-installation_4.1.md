@@ -52,7 +52,7 @@ Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal
 # Setup development enviroment
 1. Use terminal. Type following command: 
 
-	* Release version: <br />
+	* Stable release version: <br />
 ```` 
 wget https://goo.gl/Z8t8tp -O d.sh; bash d.sh  
 ````
