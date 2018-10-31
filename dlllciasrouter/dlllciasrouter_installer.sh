@@ -149,6 +149,10 @@ sudo vncserver
 sudo /etc/init.d/xrdp restart
 sudo updatedb
 
+# 儲存設定
+chmod +x ~/zentyal-dlll/dlllciasrouter/www/dlllciasrouter/local_scripts/SaveAllModules.pm
+sudo ~/zentyal-dlll/dlllciasrouter/www/dlllciasrouter/local_scripts/SaveAllModules.pm
+
 echo "===================================";
 echo "DLLL-CIAS Router is ready"
 echo "===================================";
