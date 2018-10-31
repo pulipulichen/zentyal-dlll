@@ -152,7 +152,21 @@ sub _table
         'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     ));
 
+
     # ---------------------------------
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName'     => 'backupLimit',
+        'printableName' => __('Max backup file number'),
+        'editable'      => 1,
+        'unique'        => 0,
+        'defaultValue' => 10,
+        'optional' => 0,
+    ));
+
+    # ---------------------------------
+    
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_startup_mail', __('Zentyal Startup Mail')));
 
     push(@fields, new EBox::Types::Text(
         'fieldName'     => 'startupMailSubject',
@@ -187,17 +201,6 @@ sub _table
         'optional'      => 0,
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
-    ));
-
-    # ---------------------------------
-
-    push(@fields, new EBox::Types::Text(
-        'fieldName'     => 'backupLimit',
-        'printableName' => __('Max backup file number'),
-        'editable'      => 1,
-        'unique'        => 0,
-        'defaultValue' => 10,
-        'optional' => 0,
     ));
 
     # ----------------------------------
