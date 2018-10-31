@@ -85,7 +85,7 @@ sub _table
         $libFactory->createFieldProtocolScheme('POUND', 0, 'http'),
         $libFactory->createFieldInternalPortDefaultValue(80),
         $libFactory->createFieldPoundOnlyForLAN(0),
-        $libFactory->createFieldEmergencyRestarter(),
+        #$libFactory->createFieldEmergencyRestarter(),
     );
 
     my $dataTable =

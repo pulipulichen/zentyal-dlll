@@ -10,8 +10,8 @@ Zentyal Installation
 
 3. Install Zentyal with **English** (Don't use Chinese, please) <br />
 ![enter image description here](https://lh3.googleusercontent.com/-MvcoHFWdKtY/WXYMBA0i1KI/AAAAAAADOwA/tz1fdFDMIZACEWs5Xi6xmrmM-Ib17UnbwCHMYCw/s0/2017-07-24_23-00-56.png)
-4. **Install Zentyal 5.0-development (delete all disk)** <br />
-![enter image description here](https://lh3.googleusercontent.com/-6CtyW-zvEGQ/WXYMdJsGpDI/AAAAAAADOwE/c3DdEXHAspgZZGC4vVPcunce0hm0EcMdQCHMYCw/s0/2017-07-24_23-02-47.png)
+4. **Install Zentyal 4.1-development (delete all disk)** <br />
+![enter image description here](https://lh3.googleusercontent.com/-EgkMNhRAodc/W9lsrG1n8KI/AAAAAAAD5mU/Yv79DQVwuq0fsNYZ0_JnqsyJmITrtcQLQCHMYCw/s0/2018-10-31_16-48-28.png)
 5. Select a language: English ![enter image description here](https://lh3.googleusercontent.com/-c_uAGF026aE/WXYMzOAGd0I/AAAAAAADOwI/VX2bSrlRKEARavClTRHIbrmnBYQHMkn4ACHMYCw/s0/2017-07-24_23-04-15.png)
 6. Select your location (related to time zone): **Other/Asia/Taiwan** <br />
 ![enter image description here](https://lh3.googleusercontent.com/-kwcM_q8gTJo/WXYNTFeFoxI/AAAAAAADOwM/2-wxH-8zRTYeKkfWVzMUiYFBSQv4YndJACHMYCw/s0/2017-07-24_23-06-24.png)
