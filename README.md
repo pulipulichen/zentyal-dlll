@@ -42,6 +42,8 @@ Tools
 TODO
 ====
 
+TODO列這邊：https://github.com/pulipulichen/zentyal-dlll/issues
+
 * [MooseFS function is not work?](https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/src/EBox/dlllciasrouter/Model/ExportsSetting.pm)
 * 開始安裝的時候，不知道為什麼，會把兩張網卡設為DHCP，但應該要取消一張非WAN的網卡
 * 未來可能要開放VPN功能? 讓他更好管理？
