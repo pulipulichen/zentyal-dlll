@@ -42,21 +42,4 @@ Tools
 TODO
 ====
 
-TODO列這邊：https://github.com/pulipulichen/zentyal-dlll/issues
-
-* [MooseFS function is not work?](https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/src/EBox/dlllciasrouter/Model/ExportsSetting.pm)
-* 開始安裝的時候，不知道為什麼，會把兩張網卡設為DHCP，但應該要取消一張非WAN的網卡
-* 未來可能要開放VPN功能? 讓他更好管理？
-* Disable "Enable Emergency Restarter" features
-* 備份加上連結選項： https://{ExtIP}:{AdminPort}/dlllciasrouter/Composite/SettingComposite#RouterSettings_hr_ Zentyal_backup_hr_row
-* Pound要不要改用 Apache Traffic Server？ http://blog.sina.cn/dpool/blog/s/blog_502c8cc40100mw7n.html
-* 確認看看有沒有收到Zentyal的信: 沒收到，檢查排程跟錯誤訊息  
-* Pound的負載平衡設定尚未確定能不能運作
-
-
-TODO (draft)
-====
-* [Pound SSL Configuration (--with-ssl=ssl_dir   -- OpenSSL home directory)](http://www.apsis.ch/pound/pound_list/archive/2011/2011-03/1301440192000)：放棄，維持port forwarding
-http://www.project-open.com/en/howto-pound-https-configuration
-* Pound logging: 放棄，步驟太複雜
-http://myfreshthoughts.blogspot.tw/2008/07/howto-tell-pound-to-log-into-its-own.html
+https://github.com/pulipulichen/zentyal-dlll/issues
