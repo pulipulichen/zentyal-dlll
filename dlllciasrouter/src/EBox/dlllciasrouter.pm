@@ -792,7 +792,7 @@ sub initRootCrontab
             '/root/dlllciasrouter-scripts/backup-zentyal.sh',
             "dlllciasrouter/backup-zentyal.sh.mas",
             \@backupParams,
-            { uid => '0', gid => '0', mode => '744' }   #這邊權限必須是7才能執行
+            { uid => '0', gid => '0', mode => '777' }   #這邊權限必須是7才能執行
         );
 
         # -------------------------------------
@@ -821,7 +821,7 @@ sub initRootCrontab
             '/root/dlllciasrouter-scripts/startup-message.sh',
             "dlllciasrouter/startup-message.sh.mas",
             \@startupParams,
-            { uid => '0', gid => '0', mode => '744' }   #這邊權限必須是7才能執行
+            { uid => '0', gid => '0', mode => '777' }   #這邊權限必須是7才能執行
         );
     #}  # if (-e '/etc/crontab') {
 }

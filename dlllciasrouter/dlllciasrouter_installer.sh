@@ -68,7 +68,8 @@ nfs-kernel-server nfs-common \
 vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
 mutt sendmail \
 openjdk-7-jre icedtea-7-plugin \
-xrdp xfce4 xfce4-goodies tightvncserver
+xrdp xfce4 xfce4-goodies tightvncserver \
+mailutils
     sudo updatedb
 fi
 echo "All modules are installed."
