@@ -308,7 +308,7 @@ sub updatePoundErrorMessage
     my @params = ();
 
     my $address = $self->model('LibraryNetwork')->getExternalIpaddr();
-    push(@params, 'baseURL' => "http://" . $address . ":88");
+    push(@params, 'baseURL' => "http://" . $address . ":1088");
 
     push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
     push(@params, 'homeText' => $mod->value('homeText'));
