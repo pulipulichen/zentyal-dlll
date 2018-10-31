@@ -308,8 +308,8 @@ sub urlToLink
         $url = substr($url, 0, 20) . "...";
     }
 
-    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a> ' 
-      . '<a target="_blank" href="https://www.whatsmydns.net/#A/' . $originalUrl . '" style="background: none;border-width: 0"><img src="/data/dlllciasrouter/images/dns.png" border="0" /></a>';
+    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>' 
+      . '<br /><a target="_blank" href="https://www.whatsmydns.net/#A/' . $originalUrl . '" style="background: none;border-width: 0"><img src="/data/dlllciasrouter/images/dns.png" border="0" /></a>';
 
     return $link;
 }
@@ -463,7 +463,7 @@ sub updateDomainNameLinkDeco
         . 'id="filter_' . $domainName . '" >' 
         . $brokenDomainName 
         . '</a>'
-        . ' <a target="_blank" href="https://www.whatsmydns.net/#A/' . $originalUrl . '" style="background: none;border-width: 0"><img src="/data/dlllciasrouter/images/dns.png" border="0" /></a>';
+        . '<br /><a target="_blank" href="https://www.whatsmydns.net/#A/' . $originalUrl . '" style="background: none;border-width: 0"><img src="/data/dlllciasrouter/images/dns.png" border="0" /></a>';
 
     return $link;
 }
