@@ -456,6 +456,7 @@ sub updateDomainNameLinkDeco
         $title = "For Workplace: " . $link;
     }
 
+    # 20181031 加上了DNS即時查詢功能
     $link = '<a href="'.$link.'" ' 
         . ' title="' . $title . '" '
         . 'target="_blank" ' 
