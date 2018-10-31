@@ -419,6 +419,7 @@ sub updateDomainNameLinkDeco
 {
     my ($self, $domainName, $enable, $secure, $doBreakUrl) = @_;
 
+    my $originalUrl = $domainName;
     my $brokenDomainName = $domainName;
     if ($doBreakUrl == 1) {
         $brokenDomainName = $self->breakUrl($brokenDomainName);
