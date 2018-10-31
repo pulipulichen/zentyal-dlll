@@ -126,21 +126,21 @@ fi
 sudo mkdir -p /usr/share/zentyal/www/dlllciasrouter/files
 
 # 20170903 增加排程備份的任務
-LIST=`crontab -l`
-SOURCE="/usr/share/zentyal/www/dlllciasrouter/local_scripts/backup-zentyal.sh"
+LIST=`sudo crontab -l`
+SOURCE="/root/dlllciasrouter/backup-zentyal.sh"
 if echo "$LIST" | grep -q "$SOURCE"; then
   echo "The backup job had been added.";
 else
-  crontab -l | { cat; echo "0  6  * * 7   $SOURCE"; } | crontab -
+  sudo crontab -l | { cat; echo "0  6  * * 7   $SOURCE"; } | sudo crontab -
 fi
 
 # 20170917 增加排程備份的任務：重開機之後執行
-LIST=`crontab -l`
-SOURCE="/usr/share/zentyal/www/dlllciasrouter/local_scripts/startup-message.sh"
+LIST=`sudo crontab -l`
+SOURCE="/root/dlllciasrouter/startup-message.sh"
 if echo "$LIST" | grep -q "$SOURCE"; then
   echo "The startup job had been added.";
 else
-  crontab -l | { cat; echo "@reboot $SOURCE"; } | crontab -
+  sudo crontab -l | { cat; echo "@reboot $SOURCE"; } | sudo crontab -
 fi
 
 # 20180303 增加遠端桌面連線的功能

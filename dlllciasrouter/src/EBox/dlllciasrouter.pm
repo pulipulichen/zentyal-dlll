@@ -751,7 +751,7 @@ sub initRootCrontab
 
         # ------------------------
 
-        my $dirPath = "/usr/share/zentyal/www/dlllciasrouter/local_scripts";
+        my $dirPath = "/root/dlllciasrouter";
 
         if (! -d $dirPath) {
             system('sudo mkdir -p ' . $dirPath);
@@ -789,7 +789,7 @@ sub initRootCrontab
         
         push(@backupParams, 'backupLimit' => $settings->value('backupLimit'));
         $self->writeConfFile(
-            '/usr/share/zentyal/www/dlllciasrouter/local_scripts/backup-zentyal.sh',
+            '/root/dlllciasrouter/backup-zentyal.sh',
             "dlllciasrouter/backup-zentyal.sh.mas",
             \@backupParams,
             { uid => '0', gid => '0', mode => '777' }   #這邊權限必須是7才能執行
@@ -818,7 +818,7 @@ sub initRootCrontab
         push(@startupParams, 'mailBody' => $startupMailBody);
 
         $self->writeConfFile(
-            '/usr/share/zentyal/www/dlllciasrouter/local_scripts/startup-message.sh',
+            '/root/dlllciasrouter/startup-message.sh',
             "dlllciasrouter/startup-message.sh.mas",
             \@startupParams,
             { uid => '0', gid => '0', mode => '777' }   #這邊權限必須是7才能執行
