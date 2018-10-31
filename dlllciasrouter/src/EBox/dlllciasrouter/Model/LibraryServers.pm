@@ -131,7 +131,7 @@ sub getDataTable
     #push(@fields, $fieldsFactory->createFieldPoundProtocolScheme());
 
     push(@fields, $fieldsFactory->createFieldPoundOnlyForLAN($options->{poundSecure}));
-    #push(@fields, $fieldsFactory->createFieldEmergencyRestarter());
+    push(@fields, $fieldsFactory->createFieldEmergencyRestarter());
 
     #push(@fields, $fieldsFactory->createFieldHr('hr1'));
 
