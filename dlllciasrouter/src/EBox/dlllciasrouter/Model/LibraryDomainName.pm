@@ -297,6 +297,7 @@ sub urlToLink
 {
     my ($self, $url) = @_;
 
+    my $originalUrl = $url;
     my $link = $url;
     if ( (substr($link, 0, 7) ne 'http://') &&  (substr($link, 0, 8) ne 'https://')) {
         $link = "http://" . $link . "/";
@@ -307,7 +308,7 @@ sub urlToLink
         $url = substr($url, 0, 20) . "...";
     }
 
-    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a>';
+    $link = '<a style="background: none;text-decoration: underline;color: #A3BD5B;"  href="'.$link.'" target="_blank">'.$url.'</a> <a target="_blank" href="https://www.whatsmydns.net/#A/' . $originalUrl . '" style="background: none;border-width: 0"><img src="/data/dlllciasrouter/images/dns.png" border="0" /></a>';
 
     return $link;
 }

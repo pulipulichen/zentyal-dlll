@@ -44,7 +44,7 @@ sub getOptions
                 . __('the 3rd part should be') . ' 1, and <br />'
                 . __('the 4th part should be between') . ' 1~99. <br />'
                 . __('Example:') . ' 10.6.1.4'
-                . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
+                . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'https';
     $options->{poundSecure} = 1;
     $options->{internalPortDefaultValue} = 443;

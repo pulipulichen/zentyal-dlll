@@ -443,7 +443,7 @@ sub getVMID
 }
 
 # 20170727 Pulipuli Chen
-# IP對應表說明：https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-machine
+# IP對應表說明：https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#virtual-machine
 sub convertVMIDtoIPAddr
 {
     my ($self, $vmid) = @_;

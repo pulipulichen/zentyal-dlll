@@ -81,7 +81,7 @@ sub createFieldDomainName
         #'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-kals-2017.dlll.nccu.edu.tw',
+        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw',
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -97,7 +97,7 @@ sub createFieldDomainNameUnique
         'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-kals-2017.dlll.nccu.edu.tw',
+        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw',
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -194,7 +194,7 @@ VMID: <span style="background-color: #00ffff;">1</span><span style="background-c
 VMID:&nbsp;<span style="background-color: #00ffff;">3</span><span style="background-color: #ffCCEE;">1</span><span style="background-color: #00ff00;">24</span>&nbsp;
 = IP: 10.<span style="background-color: #00ffff;">3</span>.<span style="background-color: #ffCCEE;">1</span>.<span style="background-color: #00ff00;">24</span>
 <br />
-<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/dlllciasrouter/documents/network-ip-range.md#virtual-machine" target="_blank">' . __('More details') . '</a>',
+<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#virtual-machine" target="_blank">' . __('More details') . '</a>',
     );
 
     return $field;
