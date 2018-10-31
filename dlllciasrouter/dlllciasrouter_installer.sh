@@ -74,7 +74,10 @@ mailutils
 fi
 echo "All modules are installed."
 
+# -----------------------------------
 # 檢查模組的啟用狀態
+# -----------------------------------
+
 #echo "Check module enabled...";
 DISABLED_MODULES=""
 GREP_STR="\[ RUNNING \]"
@@ -108,19 +111,8 @@ if [ -f ~/zentyal-dlll/dlllciasrouter/debs-ppa/zentyal-dlllciasrouter_3.4_all.de
 fi
 
 # -----------------------------------
-# Setup GIT
+# 檔案控制
 # -----------------------------------
-
-mkdir -p ~/zentyal-dlll
-cd ~
-wget https://pulipulichen.github.io/zentyal-dlll/dlllciasrouter/git-init.sh -O git-init.sh
-bash git-init.sh
-
-sudo /etc/init.d/zentyal dlllciasrouter restart
-
-if ! echo `sudo /etc/init.d/zentyal dlllciasrouter status` | grep "$GREP_STR" > /dev/null; then
-    echo "Please enable DLLL-CIAS Router module in Zentyal."
-fi
 
 # 20170731 系統檔案功能需要
 sudo mkdir -p /usr/share/zentyal/www/dlllciasrouter/files
@@ -148,6 +140,21 @@ sudo vncserver
 # 這裡要設定vncserver帳號密碼
 sudo /etc/init.d/xrdp restart
 sudo updatedb
+
+# -----------------------------------
+# Setup GIT
+# -----------------------------------
+
+mkdir -p ~/zentyal-dlll
+cd ~
+wget https://pulipulichen.github.io/zentyal-dlll/dlllciasrouter/git-init.sh -O git-init.sh
+bash git-init.sh
+
+sudo /etc/init.d/zentyal dlllciasrouter restart
+
+if ! echo `sudo /etc/init.d/zentyal dlllciasrouter status` | grep "$GREP_STR" > /dev/null; then
+    echo "Please enable DLLL-CIAS Router module in Zentyal."
+fi
 
 # 儲存設定
 chmod +x ~/zentyal-dlll/dlllciasrouter/www/dlllciasrouter/local_scripts/SaveAllModules.pm
