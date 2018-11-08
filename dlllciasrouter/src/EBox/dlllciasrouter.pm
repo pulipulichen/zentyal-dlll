@@ -1123,7 +1123,7 @@ sub updateNFSExports
         $i++;
     }
     
-    my $pveDirPath = "/mnt/mfs/pve";
+    my $pveDirPath = "/mnt/mfs/ve_storage";
     if (! -d $pveDirPath) {
         system('sudo mkdir -p ' . $pveDirPath);
     }
