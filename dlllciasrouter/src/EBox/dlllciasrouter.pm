@@ -85,7 +85,7 @@ sub dlllciasrouter_init
         $self->model("LibraryService")->getMFSService();
 
         $self->model("RouterSettings")->initServicePort();
-        $self->model("MfsSettings")->initServicePort();
+        $self->model("MfsSetting")->initServicePort();
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.3 )');
     };
@@ -245,7 +245,7 @@ sub _setConf
     $self->updatePoundCfg();
     $self->updateXRDPCfg();
     my $mountChanged = $self->updateMountServers();
-    if ($self->model("MfsSettings")->value("mfsEnable") == 1) {
+    if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
         # 20150528 測試使用，先關閉
         if ($mountChanged == 1) {
             $self->restartMooseFS();
@@ -952,7 +952,7 @@ sub initMooseFS
 
     if (! -e '/etc/mfs/mfshdd.cfg') {
         my @hddParams = ();
-        my $mfsMod = $self->model("MfsSettings");
+        my $mfsMod = $self->model("MfsSetting");
         push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
         push(@hddParams, 'paths' => []);
         $self->writeConfFileOnce(
@@ -1123,7 +1123,7 @@ sub updateNFSExports
         $i++;
     }
     
-    my $pveDirPath = "/mnt/mfs/ve_storage";
+    my $pveDirPath = "/mnt/mfs/pve";
     if (! -d $pveDirPath) {
         system('sudo mkdir -p ' . $pveDirPath);
     }
@@ -1232,7 +1232,7 @@ sub updateMountServers
     # -------------------------------------
 
     my @hddParams = ();
-    my $mfsMod = $self->model("MfsSettings");
+    my $mfsMod = $self->model("MfsSetting");
     push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
     push(@hddParams, 'paths' => @paths);
 
