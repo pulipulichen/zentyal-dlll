@@ -1,5 +1,7 @@
-Zentyal NFS Usage
+Zentyal NFS Server Usage
 ====
+
+WARNING: Zentyal NFS Server will use all disk space of Zentyal. Be careful to DISK SPACE FULL error!   
 
 ## Proxmox Virtual Environment 3.4 ##
 
