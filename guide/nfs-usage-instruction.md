@@ -11,7 +11,7 @@ Zentyal NFS Usage
 	* Server: 10.0.0.254
 	* Export: /mnt/mfs/pve
 	* Content: Disk image, ISO image, OpenVZ template, VZDump backup file 
-<br />
+
 ![](https://lh3.googleusercontent.com/-OtGGXQP72vU/W-Pc1a3sRPI/AAAAAAAD6U4/T8T87pvDQJEZexfbCH5SGpHtR5z0HorwQCHMYCw/s0/2018-11-08_144533%2B-%2BCopy.png)
 
 
