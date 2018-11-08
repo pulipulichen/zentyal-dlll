@@ -58,7 +58,7 @@ sub _table
 
     my @fields = ();
     
-    $usageInstruction = "https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/nfs-usage-instruction.md";
+    my $usageInstruction = "https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/nfs-usage-instruction.md";
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_nfsUsageInstruction", __('NFS USAGE INSTRUCTION'), $usageInstruction, 1));
 
     my $dataTable = {
