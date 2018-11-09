@@ -12,27 +12,7 @@ if [ -f ~/git-init.sh ] ; then
     exit
 fi
 
-# ----------------------------
-
-# 設定安裝的東西
-if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-master ] && [ -f /etc/init.d/nfs-kernel-server ] ) ; then
-    sudo apt-get -y --force-yes update
-    sudo apt-get -y --force-yes install zentyal-network zentyal-objects \
-zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
-pound lighttpd \
-moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
-nfs-kernel-server nfs-common \
-vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
-mutt sendmail sendmail-bin \
-openjdk-7-jre icedtea-7-plugin \
-xrdp xfce4 xfce4-goodies tightvncserver \
-mailutils
-    sudo updatedb
-fi
-echo "All modules are installed."
-
 # -------------------------------
-
 
 # 必須要設定內部網路
 if ! echo `ifconfig` | grep 10.0.0.254  > /dev/null; then
@@ -79,6 +59,36 @@ fi
 sudo chown -R mfs:mfs /var/lib/mfs
 echo "MooseFS directories are ready."
  
+# ----------------------------
+
+# 設定安裝的東西
+if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-master ] && [ -f /etc/init.d/nfs-kernel-server ] ) ; then
+    sudo apt-get -y --force-yes update
+
+    sudo apt-get -y --force-yes install zentyal-network zentyal-objects \
+zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
+pound lighttpd \
+moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
+nfs-kernel-server nfs-common \
+vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
+mutt sendmail sendmail-bin mailutils \
+openjdk-7-jre icedtea-7-plugin \
+xrdp xfce4 xfce4-goodies tightvncserver
+
+    sudo apt-get -y --force-yes install zentyal-network zentyal-objects \
+zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
+pound lighttpd \
+moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
+nfs-kernel-server nfs-common \
+vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
+mutt sendmail sendmail-bin mailutils \
+openjdk-7-jre icedtea-7-plugin \
+xrdp xfce4 xfce4-goodies tightvncserver
+
+    sudo updatedb
+fi
+echo "All modules are installed."
+
 
 # -----------------------------------
 # 檢查模組的啟用狀態
