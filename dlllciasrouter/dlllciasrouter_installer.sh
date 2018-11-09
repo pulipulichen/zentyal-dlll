@@ -174,11 +174,10 @@ chmod +x ~/zentyal-dlll/dlllciasrouter/www/dlllciasrouter/local_scripts/SaveAllM
 sudo ~/zentyal-dlll/dlllciasrouter/www/dlllciasrouter/local_scripts/SaveAllModules.pm
 
 # 20181109 增加vncserver自動啟動的功能
-if ![ -f /etc/init.d/vnc ] ; then
+if ! [ -f /etc/init.d/vnc ] ; then
     sudo cp -f ~/zentyal-dlll/dlllciasrouter/vnc /etc/init.d/
     sudo chmod +x /etc/init.d/vnc
     sudo sed -i -e "s/ZENTYAL_USER/$USER/" /etc/init.d/vnc
-    sudo vim /etc/init.d/vnc
 fi
 
 # 20181109 增加vncserver啟動任務
@@ -196,3 +195,6 @@ sudo updatedb
 echo "===================================";
 echo "DLLL-CIAS Router is ready"
 echo "===================================";
+
+# 20181109 完成時再來
+sudo reboot
