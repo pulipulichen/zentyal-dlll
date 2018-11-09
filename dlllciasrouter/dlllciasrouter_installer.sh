@@ -65,7 +65,7 @@ echo "MooseFS directories are ready."
 if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-master ] && [ -f /etc/init.d/nfs-kernel-server ] ) ; then
     sudo apt-get -y --force-yes update
 
-    sudo apt-get -y --force-yes install zentyal-network zentyal-objects \
+PACKAGE="zentyal-network zentyal-objects \
 zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
 pound lighttpd \
 moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
@@ -73,17 +73,11 @@ nfs-kernel-server nfs-common \
 vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
 mutt sendmail sendmail-bin mailutils \
 openjdk-7-jre icedtea-7-plugin \
-xrdp xfce4 xfce4-goodies tightvncserver
+xrdp xfce4 xfce4-goodies tightvncserver"
 
-    sudo apt-get -y --force-yes install zentyal-network zentyal-objects \
-zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
-pound lighttpd \
-moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
-nfs-kernel-server nfs-common \
-vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
-mutt sendmail sendmail-bin mailutils \
-openjdk-7-jre icedtea-7-plugin \
-xrdp xfce4 xfce4-goodies tightvncserver
+    sudo apt-get -y --force-yes install $PACKAGE
+
+    sudo apt-get -y --force-yes install $PACKAGE
 
     sudo updatedb
 fi
@@ -135,6 +129,7 @@ sudo mkdir -p /usr/share/zentyal/www/dlllciasrouter/files
 
 # 20170903 增加排程備份的任務
 LIST=`sudo crontab -l`
+echo "$LIST"
 SOURCE="/root/dlllciasrouter/backup-zentyal.sh"
 if echo "$LIST" | grep -q "$SOURCE"; then
   echo "The backup job had been added.";
@@ -143,19 +138,21 @@ else
 fi
 
 # 20170917 增加排程備份的任務：重開機之後執行
-LIST=`sudo crontab -l`
 SOURCE="/root/dlllciasrouter/startup-message.sh"
 if echo "$LIST" | grep -q "$SOURCE"; then
-  echo "The startup job had been added.";
+  echo "The startup message job had been added.";
 else
   sudo crontab -l | { cat; echo "@reboot $SOURCE"; } | sudo crontab -
 fi
 
 # 20180303 增加遠端桌面連線的功能
-sudo vncserver
+vncserver
 # 這裡要設定vncserver帳號密碼
 sudo /etc/init.d/xrdp restart
-sudo updatedb
+
+# 20181109 增加firefox的啟動指令
+echo 'pkill -f firefox;/usr/share/zenbuntu-desktop/firefox-launcher' >> ~/Desktop/start-Firefox.sh
+chmod +x ~/Desktop/start-Firefox.sh
 
 # -----------------------------------
 # Setup GIT
@@ -175,6 +172,26 @@ fi
 # 儲存設定
 chmod +x ~/zentyal-dlll/dlllciasrouter/www/dlllciasrouter/local_scripts/SaveAllModules.pm
 sudo ~/zentyal-dlll/dlllciasrouter/www/dlllciasrouter/local_scripts/SaveAllModules.pm
+
+# 20181109 增加vncserver自動啟動的功能
+if ![ -f /etc/init.d/vnc ] ; then
+    sudo cp -f ~/zentyal-dlll/dlllciasrouter/vnc /etc/init.d/
+    sudo chmod +x /etc/init.d/vnc
+    sudo sed -i -e "s/ZENTYAL_USER/$USER/" /etc/init.d/vnc
+    sudo vim /etc/init.d/vnc
+fi
+
+# 20181109 增加vncserver啟動任務
+LIST=`sudo crontab -l`
+SOURCE="service vnc start"
+if echo "$LIST" | grep -q "$SOURCE"; then
+  echo "The vncserver startup job had been added.";
+else
+  sudo crontab -l | { cat; echo "@reboot $SOURCE"; } | sudo crontab -
+fi
+
+# 20181109 設定locate的索引，一定要擺到最後執行
+sudo updatedb
 
 echo "===================================";
 echo "DLLL-CIAS Router is ready"
