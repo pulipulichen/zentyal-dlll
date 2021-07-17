@@ -537,7 +537,7 @@ sub createFieldExpiryDate
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>  <br /> <hr />') 
+        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>') 
           . $self->setExpiryDateDefaultValue('expiry'),
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
@@ -562,7 +562,7 @@ sub setExpiryDateDefaultValue
       . '_script.type=\'text/javascript\';'
       . '_script.src=\''.$script.'\';'
       . 'document.getElementsByTagName(\'body\')[0].appendChild(_script);'
-      . 'setTimeout(()=>{' . $initScript . '}, 1000)'
+      . 'setTimeout(()=>{' . $initScript . '}, 3000)'
     .'}else{' . $initScript . '}</script>';
 }
 
@@ -579,7 +579,8 @@ sub createFieldExpiryDateWithHR
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>  <br /> <hr />'),
+        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>  <br /> <hr />')
+          . $self->setExpiryDateDefaultValue('expiry'),
         'allowUnsafeChars' => 1,
     );
 

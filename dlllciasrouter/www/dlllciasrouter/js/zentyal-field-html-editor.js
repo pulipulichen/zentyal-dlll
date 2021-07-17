@@ -53,7 +53,7 @@ if (_ZENTYAL_UTIL_init === undefined) {
               }
               this.inited = true
 
-              console.log('到底是錯在哪裡？', id)
+              //console.log('到底是錯在哪裡？', id)
 
               // 測試用
               //var _content = "+003C+0070+003E+6A21+64EC+5A18+5A18+5EDF+6A21+64EC+5EAB+6A21+584A+003C+002F+0070+003E";

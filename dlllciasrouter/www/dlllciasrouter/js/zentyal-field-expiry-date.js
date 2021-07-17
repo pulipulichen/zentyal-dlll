@@ -1,4 +1,4 @@
-if (!ZENTYAL_FIELD_EXPIRY_DATE) {
+if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === 'undefined') {
   let jquery_url = '/data/dlllciasrouter/js/jquery.min.js'
   let load_jquery = function() {
     return Promise((resolve) => {
@@ -34,7 +34,7 @@ if (!ZENTYAL_FIELD_EXPIRY_DATE) {
     })
   }
   
-  var ZENTYAL_FIELD_EXPIRY_DATE = async function (scriptElement) {
+  ZENTYAL_FIELD_EXPIRY_DATE = async function (scriptElement) {
     if (!scriptElement) {
       console.error('no script element')
       return false
@@ -57,7 +57,6 @@ if (!ZENTYAL_FIELD_EXPIRY_DATE) {
       + '/'
       + (oneYearFromNow.getDate())
     
-    let input = $(scriptElement).parents('div:first').find('input.inputText')
     input.val(dateString)
   }
 }
