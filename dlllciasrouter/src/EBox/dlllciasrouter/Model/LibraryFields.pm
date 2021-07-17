@@ -236,20 +236,43 @@ sub createFieldInternalVirtualMachineIdentify
 #20150526 Pulipuli Chen
 sub createFieldInternalIPAddressHideView
 {
-    my ($self, $unique, $help) = @_;
+    my ($self, $unique, $help, $template) = @_;
 
     my $field = new EBox::Types::HostIP(
             'fieldName' => 'ipaddr',
             'printableName' => __('Internal IP Address'),
             'editable' => 1,
             'unique' => $unique,
-            'help' => __($help),
+            'help' => __($help) . $self->setFieldDefaultValueScript('ipaddr',$template),
             'hiddenOnSetter' => 0,
             'hiddenOnViewer' => 1,
         );
 
     return $field;
 }
+
+
+sub setFieldDefaultValueScript
+{
+    my ($self, $id, $defaultValue) = @_;
+
+    $id ||= "";
+    $defaultValue ||= "";
+
+    my $script = "/data/dlllciasrouter/js/zentyal-field-default-value.js";
+    
+    my $initScript = 'ZENTYAL_FIELD_DEFAULT_VALUE("setFieldCacheScriptAnchor' . $id . '", "' . $defaultValue . '")';
+
+    return '<div id="setFieldCacheScriptAnchor' . $id . '"></div>'
+      . '<script>if (typeof(ZENTYAL_FIELD_DEFAULT_VALUE) === "undefined") {'
+      . 'var _script=document.createElement(\'script\');'
+      . '_script.type=\'text/javascript\';'
+      . '_script.src=\''.$script.'\';'
+      . 'document.getElementsByTagName(\'body\')[0].appendChild(_script);'
+      . 'setTimeout(()=>{' . $initScript . '}, 1000)'
+    .'}else{' . $initScript . '}</script>';
+}
+
 
 #20150526 Pulipuli Chen
 sub createFieldInternalIPAddressHide

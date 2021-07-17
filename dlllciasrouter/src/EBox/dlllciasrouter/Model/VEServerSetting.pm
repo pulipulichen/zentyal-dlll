@@ -45,6 +45,7 @@ sub getOptions
                 . __('the 4th part should be between') . ' 1~99. <br />'
                 . __('Example:') . ' 10.6.0.55'
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#virtual-environment-server-proxmox" target="_blank">' . __('More details') . '</a>';
+    $options->{IPTemplate} = '10.6.0.';
     $options->{poundScheme} = 'https';
     $options->{poundSecure} = 1;
     $options->{internalPortDefaultValue} = 8006;

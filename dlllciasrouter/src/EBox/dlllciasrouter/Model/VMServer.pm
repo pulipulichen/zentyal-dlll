@@ -30,6 +30,7 @@ VMID:&nbsp;<span style="background-color: #00ffff;">3</span><span style="backgro
 = IP: 10.<span style="background-color: #00ffff;">3</span>.<span style="background-color: #ffCCEE;">1</span>.<span style="background-color: #00ff00;">24</span>
 <br />
 <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#virtual-machine" target="_blank">' . __('More details') . '</a>';
+    $options->{IPTemplate} = '10.6..';
     $options->{poundScheme} = 'http';
     $options->{poundSecure} = 0;
     $options->{enableOtherFunction} = 1;

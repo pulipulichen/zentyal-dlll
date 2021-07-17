@@ -50,7 +50,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
 
     if ($options->{enableVMID} == 0) {
-        push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1, $options->{IPHelp}));
+        push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1, $options->{IPHelp}, $options->{IPTemplate}));
     }
     else {
         push(@fields, $fieldsFactory->createFieldInternalVirtualMachineIdentify(1, $options->{IPHelp}));
