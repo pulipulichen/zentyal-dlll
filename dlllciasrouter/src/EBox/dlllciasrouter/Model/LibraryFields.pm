@@ -465,7 +465,7 @@ sub createFieldDescription
         'optional' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => $self->createFieldDescriptionEditor(),
+        'help' => $self->createFieldDescriptionEditor('Description'),
         'allowUnsafeChars' => 1,
     );
 
@@ -474,18 +474,20 @@ sub createFieldDescription
 
 sub createFieldDescriptionEditor
 {
+    my ($self, $id) = @_;
+
     # https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js
     #my $script = "https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js";
     my $script = "/data/dlllciasrouter/js/zentyal-field-html-editor.js";
     #my $script = "http://pc-pudding.dlll.nccu.edu.tw/zentyal-dlll/dlllciasrouter/javascript/zentyal-field-html-editor.js";      # 不能用HTTP!!
     
-    return '<div class="html-editor"></div>'
-    .'<span class="init-span">'
-        .'<button type="button" class="init-button"  '
-    .'onclick="this.className=\'init-button trigger\';this.innerHTML=\'LOADING\';this.disabled=true;if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\''.$script.'\';document.getElementsByTagName(\'body\')[0].appendChild(_script);} else {_ZENTYAL_UTIL.init()}"'
+    return '<div class="html-editor" id="FieldDescriptionEditor' . $id . '_HTMLEditor"></div>'
+    .'<span class="init-span" id="FieldDescriptionEditor' . $id . '_InitSpan">'
+        .'<button type="button" class="init-button" id="FieldDescriptionEditor' . $id . '_InitButton" '
+    .'onclick="this.className=\'init-button trigger\';this.innerHTML=\'LOADING\';this.disabled=true;if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\''.$script.'\';document.getElementsByTagName(\'body\')[0].appendChild(_script);} else {_ZENTYAL_UTIL.init("FieldDescriptionEditor' . $id . '")}"'
     .'>LOAD</button> </span>'
     .'<script type="text/javascript">'
-        .'document.getElementsByClassName("init-button")[0].click();'
+        .'document.getElementsByID("FieldDescriptionEditor' . $id . '").click();'
     .'</script>';
 }
 
@@ -948,7 +950,7 @@ sub createFieldProtocolNote
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         #'help' => __( 'Login account / password, or using this port for other usage'),
-        'help' => $self->createFieldDescriptionEditor(),
+        'help' => $self->createFieldDescriptionEditor($protocol.'_Note'),
         'allowUnsafeChars' => 1,
         #'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     );

@@ -1,3 +1,5 @@
+/* global tinymce */
+
 /**
  * The input contains invalid characters. All alphanumeric characters, 
  * plus these non alphanumeric chars: /.?&+:-@ and spaces are allowed.
@@ -10,8 +12,10 @@ if (_ZENTYAL_UTIL === undefined) {
             field: '.init-span',
             hint: '.html-editor'
         },
+        container: null,
         get_container: function () {
-            return jQuery(".zentyal-util-base-container");
+          // return jQuery(".zentyal-util-base-container");  
+          return this.get_container;
         },
         get_input: function () {
             var _ = this;
@@ -29,8 +33,15 @@ if (_ZENTYAL_UTIL === undefined) {
         set_view: function (_content) {
             this.get_container().find(".html-editor-view").html(_content);
         },
-        init: function() {
+        inited: false,
+        init: function(id) {
             var _ = this;
+            
+            if (this.inited === true) {
+              return false
+            }
+            this.inited = true
+            
             
             // 測試用
             //var _content = "+003C+0070+003E+6A21+64EC+5A18+5A18+5EDF+6A21+64EC+5EAB+6A21+584A+003C+002F+0070+003E";
@@ -38,13 +49,28 @@ if (_ZENTYAL_UTIL === undefined) {
 
             this.load_jquery(function() {
                 //console.log("jquery 讀取完畢");
-                var _trigger = jQuery(".init-button.trigger");
+                //var _trigger = jQuery(".init-button.trigger");
+                var _trigger
+                if (id) {
+                  _trigger = jQuery("#" + id + '_InitButton');
+                }
+                else {
+                  _trigger = jQuery(".init-button.trigger");
+                }
                 var _container = _trigger.parents(_.config.field + ":first").parent();
-                _container.addClass('zentyal-util-base-container');
+                _container.addClass('zentyal-util-base-container')
+                _.container = _container
                 //console.log(["_container.length", _container.length]);
                 
-                jQuery(".html-editor")
-                    .css("color", "black")
+                let editor
+                if (id) {
+                  editor = jQuery("#" + id + '_HTMLEditor')
+                }
+                else {
+                  jQuery(".html-editor")
+                }
+                
+                editor.css("color", "black")
                     .hide();
                 
                 // 移除文字節點
@@ -57,7 +83,7 @@ if (_ZENTYAL_UTIL === undefined) {
                 // 把view放進去
                 var _view = jQuery('<div class="html-editor-view" style=""></div>');
                 _view.attr("style", "position: relative;background-color: #fff;box-shadow: 0 0 0 1px rgba(39,41,43,.15),0 1px 2px 0 rgba(0,0,0,.05);padding: 1em;border-radius: .2857rem;border: none;");
-                jQuery(".html-editor").prepend(_view);
+                editor.prepend(_view);
 
                 _.load_tinymce(function() {
                     //console.log("tinymce 讀取完畢");
@@ -70,8 +96,17 @@ if (_ZENTYAL_UTIL === undefined) {
                         //var _edit_button = _.get_container().find("button.edit");
                         //console.log(['_edit_button.length', _edit_button.length]);
 
-                        jQuery(".init-button").remove();
-                        jQuery(".init-span").remove();
+                        _trigger.remove();
+                        
+                        let initSpan
+                        if (id) {
+                          initSpan = jQuery('#' + id + '_InitSpan')
+                        }
+                        else {
+                          initSpan = jQuery(".init-span")
+                        }
+                        
+                        initSpan.remove();
 
                         //_edit_button.click();
 
@@ -161,7 +196,7 @@ if (_ZENTYAL_UTIL === undefined) {
                     // 開啟時要載入參數
                     var _input = _.get_input();
                     var _content = jQuery.trim(_input.val());
-                    console.log(['content', _content]);
+                    //console.log(['content', _content]);
                     if (_content !== undefined && _content !== "") {
                         if (_content.length > 1 && _content.substr(0,1) === "+") {
                             _content = _.decode(_content);
