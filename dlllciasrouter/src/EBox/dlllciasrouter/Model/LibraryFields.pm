@@ -535,13 +535,33 @@ sub createFieldExpiryDate
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>  <br /> <hr />'),
+        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>  <br /> <hr />') 
+          . $self->setExpiryDateDefaultValue('expiry'),
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
     return $field;
 }
+
+
+sub setExpiryDateDefaultValue
+{
+    my ($self, $id) = @_;
+
+    my $script = "/data/dlllciasrouter/js/zentyal-field-expiry-date.js";
+    
+    return '<script>if (!ZENTYAL_FIELD_EXPIRY_DATE) {'
+      . 'var _script=document.createElement(\'script\');'
+      . '_script.type=\'text/javascript\';'
+      . '_script.src=\''.$script.'\';'
+      . 'document.getElementsByTagName(\'body\')[0].appendChild(_script);'
+    .'}</script>'
+    .'<script type="text/javascript">'
+        .'ZENTYAL_FIELD_EXPIRY_DATE(document.currentScript)'
+    .'</script>';
+}
+
 
 sub createFieldExpiryDateWithHR
 {
