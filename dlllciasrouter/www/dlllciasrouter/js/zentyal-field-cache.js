@@ -49,18 +49,17 @@ if (typeof(ZENTYAL_FIELD_CACHE) === 'undefined') {
       return false
     }
     
-    let input = scriptElement.parents('div:first').find('input.inputText')
-    if (input.val() !== '') {
-      // 已經有資料了，不設定
-      return false
-    }
+    let input = scriptElement.parents('div:first').find('input:first')
     
     
     // 嘗試從cache找尋資料
     let key = 'ZENTYAL_FIELD_CACHE_' + id
-    let data = localStorage.getItem(key)
-    if (data) {
-      input.val(data)
+    
+    if (input.val() === '') {
+      let data = localStorage.getItem(key)
+      if (data) {
+        input.val(data)
+      }
     }
     
     input.change(function () {

@@ -491,7 +491,7 @@ sub createFieldDescriptionEditor
     return '<div class="html-editor" id="FieldDescriptionEditor' . $id . '_HTMLEditor"></div>'
     .'<span class="init-span" id="FieldDescriptionEditor' . $id . '_InitSpan">'
         .'<button type="button" class="init-button" id="FieldDescriptionEditor' . $id . '_InitButton" '
-    .'onclick="this.className=\'init-button trigger\';this.innerHTML=\'LOADING\';this.disabled=true;if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\''.$script.'\';document.getElementsByTagName(\'body\')[0].appendChild(_script);setTimeout(()=>{_ZENTYAL_UTIL_init(\'FieldDescriptionEditor' . $id . '\')},3000)} else {_ZENTYAL_UTIL_init(\'FieldDescriptionEditor' . $id . '\')}"'
+    .'onclick="this.className=\'init-button trigger\';this.innerHTML=\'LOADING\';this.disabled=true;if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\''.$script.'\';document.getElementsByTagName(\'body\')[0].appendChild(_script);setTimeout(()=>{_ZENTYAL_UTIL_init(\'FieldDescriptionEditor' . $id . '\')},1000)} else {_ZENTYAL_UTIL_init(\'FieldDescriptionEditor' . $id . '\')}"'
     .'>LOAD</button> </span>'
     .'<script type="text/javascript">'
         .'document.getElementById("FieldDescriptionEditor' . $id . '_InitButton").click();'
@@ -567,7 +567,7 @@ sub setExpiryDateDefaultValue
       . '_script.type=\'text/javascript\';'
       . '_script.src=\''.$script.'\';'
       . 'document.getElementsByTagName(\'body\')[0].appendChild(_script);'
-      . 'setTimeout(()=>{' . $initScript . '}, 3000)'
+      . 'setTimeout(()=>{' . $initScript . '}, 1000)'
     .'}else{' . $initScript . '}</script>';
 }
 
@@ -588,7 +588,7 @@ sub setFieldCacheScript
       . '_script.type=\'text/javascript\';'
       . '_script.src=\''.$script.'\';'
       . 'document.getElementsByTagName(\'body\')[0].appendChild(_script);'
-      . 'setTimeout(()=>{' . $initScript . '}, 3000)'
+      . 'setTimeout(()=>{' . $initScript . '}, 1000)'
     .'}else{' . $initScript . '}</script>';
 }
 
