@@ -27,6 +27,7 @@ sub getOptions
     $options->{poundScheme} = 'http';
     $options->{poundSecure} = 1;
     $options->{enableOtherFunction} = 0;
+    $options->{enableRedirectPorts} = 1;
     $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
