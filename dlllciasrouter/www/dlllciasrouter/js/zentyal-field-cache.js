@@ -45,7 +45,7 @@ if (typeof(ZENTYAL_FIELD_CACHE) === 'undefined') {
     
     scriptElement = jQuery('#' + scriptElement)
     if (scriptElement.length === 0) {
-      console.error('no script element')
+      console.error('no script element: ' + scriptElement)
       return false
     }
     

@@ -582,7 +582,7 @@ sub setFieldCacheScript
     
     my $initScript = 'ZENTYAL_FIELD_CACHE("setFieldCacheScriptAnchor' . $id . '")';
 
-    return '<div id="setExpiryDateDefaultValueAnchor' . $id . '"></div>'
+    return '<div id="setFieldCacheScriptAnchor' . $id . '"></div>'
       . '<script>if (typeof(ZENTYAL_FIELD_CACHE) === "undefined") {'
       . 'var _script=document.createElement(\'script\');'
       . '_script.type=\'text/javascript\';'
