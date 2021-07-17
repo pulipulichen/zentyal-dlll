@@ -487,7 +487,7 @@ sub createFieldDescriptionEditor
     .'onclick="this.className=\'init-button trigger\';this.innerHTML=\'LOADING\';this.disabled=true;if (typeof(_ZENTYAL_UTIL) === \'undefined\') {var _script=document.createElement(\'script\');_script.type=\'text/javascript\';_script.src=\''.$script.'\';document.getElementsByTagName(\'body\')[0].appendChild(_script);} else {_ZENTYAL_UTIL.init("FieldDescriptionEditor' . $id . '")}"'
     .'>LOAD</button> </span>'
     .'<script type="text/javascript">'
-        .'document.getElementByID("FieldDescriptionEditor' . $id . '").click();'
+        .'document.getElementById("FieldDescriptionEditor' . $id . '").click();'
     .'</script>';
 }
 
