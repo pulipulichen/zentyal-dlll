@@ -85,6 +85,8 @@ sub _table
 
         $libFactory->createFieldPortSecureSelection(),
         $libFactory->createFieldPortEnableLog(),
+
+        $libFactory->createFieldDescription()
     );
 
     my $dataTable =
