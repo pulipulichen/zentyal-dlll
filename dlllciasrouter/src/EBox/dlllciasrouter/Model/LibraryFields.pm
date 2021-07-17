@@ -569,6 +569,8 @@ sub setExpiryDateDefaultValue
 
 sub createFieldExpiryDateWithHR
 {
+  my ($self) = @_;
+
     my $field = new EBox::Types::Text(
         'fieldName' => 'expiry',
         'printableName' => __('Expiry Date'),
