@@ -64,11 +64,8 @@ sub getDataTable
 
     push(@fields, $fieldsFactory->createFieldMACAddr());
 
-    if ($options->{enableOtherFunction} == 1) {
-        push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView, "OtherDomainNames"));
-    }
-
     if ($options->{enableRedirectPorts} == 1) {
+        push(@fields, $fieldsFactory->createFieldOtherDomainNamesButton($backView, "OtherDomainNames"));
         push(@fields, $fieldsFactory->createFieldOtherRedirectPortsButton($backView));
     }
 
