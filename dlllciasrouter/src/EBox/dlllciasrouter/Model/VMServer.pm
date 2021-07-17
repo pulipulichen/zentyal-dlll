@@ -33,7 +33,7 @@ VMID:&nbsp;<span style="background-color: #00ffff;">3</span><span style="backgro
     $options->{poundScheme} = 'http';
     $options->{poundSecure} = 0;
     $options->{enableOtherFunction} = 1;
-    $options->{enableRedirectPorts} = 1;
+    #$options->{enableRedirectPorts} = 1;
     $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = '';
     $options->{enableHTTP} = 1;

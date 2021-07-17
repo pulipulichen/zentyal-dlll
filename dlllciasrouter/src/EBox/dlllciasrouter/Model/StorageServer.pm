@@ -26,8 +26,8 @@ sub getOptions
                 . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
     $options->{poundScheme} = 'http';
     $options->{poundSecure} = 1;
-    $options->{enableOtherFunction} = 0;
-    $options->{enableRedirectPorts} = 1;
+    $options->{enableOtherFunction} = 1;
+    #$options->{enableRedirectPorts} = 1;
     $options->{internalPortDefaultValue} = 80;
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
