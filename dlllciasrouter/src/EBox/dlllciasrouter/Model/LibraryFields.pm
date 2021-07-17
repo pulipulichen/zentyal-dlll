@@ -412,7 +412,6 @@ sub createFieldContactNameDisplayOnViewer
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 0,
         'allowUnsafeChars' => 1,
-        'help' => $self->setFieldCacheScript('contactName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
