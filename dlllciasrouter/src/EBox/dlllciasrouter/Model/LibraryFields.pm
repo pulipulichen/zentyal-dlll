@@ -950,7 +950,7 @@ sub createFieldProtocolNote
         #'help' => __( 'Login account / password, or using this port for other usage'),
         'help' => $self->createFieldDescriptionEditor(),
         'allowUnsafeChars' => 1,
-        'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
+        #'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     );
 
     return $field;
