@@ -383,6 +383,8 @@ sub createFieldNetworkDisplay
 
 sub createFieldContactName
 {
+  my ($self) = @_;
+
     my $field = new EBox::Types::Text(
         'fieldName' => 'contactName',
         'printableName' => __('Contact Name'),
@@ -391,6 +393,7 @@ sub createFieldContactName
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('contactName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -409,6 +412,7 @@ sub createFieldContactNameDisplayOnViewer
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 0,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('contactName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -417,6 +421,8 @@ sub createFieldContactNameDisplayOnViewer
 
 sub createFieldContactEmail
 {
+  my ($self) = @_;
+
     my $field = new EBox::Types::MailAddress(
         'fieldName' => 'contactEmail',
         'printableName' => __('Contact Email'),
@@ -558,6 +564,27 @@ sub setExpiryDateDefaultValue
     my $initScript = 'ZENTYAL_FIELD_EXPIRY_DATE("setExpiryDateDefaultValueAnchor' . $id . '")';
 
     return '<div id="setExpiryDateDefaultValueAnchor' . $id . '"></div><script>if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === "undefined") {'
+      . 'var _script=document.createElement(\'script\');'
+      . '_script.type=\'text/javascript\';'
+      . '_script.src=\''.$script.'\';'
+      . 'document.getElementsByTagName(\'body\')[0].appendChild(_script);'
+      . 'setTimeout(()=>{' . $initScript . '}, 3000)'
+    .'}else{' . $initScript . '}</script>';
+}
+
+
+sub setFieldCacheScript
+{
+    my ($self, $id) = @_;
+
+    $id ||= "";
+
+    my $script = "/data/dlllciasrouter/js/zentyal-field-cache.js";
+    
+    my $initScript = 'ZENTYAL_FIELD_CACHE("setFieldCacheScriptAnchor' . $id . '")';
+
+    return '<div id="setExpiryDateDefaultValueAnchor' . $id . '"></div>'
+      . '<script>if (typeof(ZENTYAL_FIELD_CACHE) === "undefined") {'
       . 'var _script=document.createElement(\'script\');'
       . '_script.type=\'text/javascript\';'
       . '_script.src=\''.$script.'\';'

@@ -1,4 +1,4 @@
-if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === 'undefined') {
+if (typeof(ZENTYAL_FIELD_CACHE) === 'undefined') {
   let jquery_url = '/data/dlllciasrouter/js/jquery.min.js'
   let load_jquery = function() {
     return new Promise((resolve) => {
@@ -34,8 +34,8 @@ if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === 'undefined') {
     })
   }
   
-  ZENTYAL_FIELD_EXPIRY_DATE = async function (scriptElement) {
-    
+  ZENTYAL_FIELD_CACHE = async function (scriptElement) {
+    let id = scriptElement
     if (!scriptElement) {
       console.error('no script element')
       return false
@@ -55,15 +55,17 @@ if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === 'undefined') {
       return false
     }
     
-    var oneYearFromNow = new Date();
-    oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 3);
     
-    let dateString = oneYearFromNow.getFullYear()
-      + '/' 
-      + (oneYearFromNow.getMonth() + 1)
-      + '/'
-      + (oneYearFromNow.getDate())
+    // 嘗試從cache找尋資料
+    let key = 'ZENTYAL_FIELD_CACHE_' + id
+    let data = localStorage.getItem(key)
+    if (data) {
+      input.val(data)
+    }
     
-    input.val(dateString)
+    input.change(function () {
+      let value = this.value
+      localStorage.setItem(key, value)
+    })
   }
 }
