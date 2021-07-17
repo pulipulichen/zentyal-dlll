@@ -120,7 +120,7 @@ https://goo.gl/Z8t8tp is dlllciasrouter_installer.sh ( https://github.com/pulipu
 	* save change <br />
 ![](https://lh3.googleusercontent.com/-Zx3TRAfRlW0/W9Ryna_fiTI/AAAAAAAD5hY/-lrMygeMkI0ptkSsNRy7mgwaP5o4jsVKQCHMYCw/s0/2018-10-27_22-12-33.png) 
 
-4. Confrim DLLL-CIAS Router module is ready 
+4. Confrim DLLL-CIAS Router module is ready <br />
 ![](https://lh3.googleusercontent.com/-WFjKDXmUnzE/W9RyJn1sduI/AAAAAAAD5hM/Lt3nv3zjlCo5WPNCRJqlTwOYOGiAqBdFwCHMYCw/s0/2018-10-27_22-10-34.png)
 
 ## Server Administration

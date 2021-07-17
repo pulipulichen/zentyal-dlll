@@ -81,7 +81,7 @@ sub createFieldDomainName
         #'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/domain-name-rule.md" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw',
+        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw',
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
