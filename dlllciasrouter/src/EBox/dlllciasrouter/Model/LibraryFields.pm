@@ -476,6 +476,8 @@ sub createFieldDescriptionEditor
 {
     my ($self, $id) = @_;
 
+    $id ||= "";
+
     # https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js
     #my $script = "https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/zentyal-field-html-editor.js";
     my $script = "/data/dlllciasrouter/js/zentyal-field-html-editor.js";
@@ -548,6 +550,8 @@ sub createFieldExpiryDate
 sub setExpiryDateDefaultValue
 {
     my ($self, $id) = @_;
+
+    $id ||= "";
 
     my $script = "/data/dlllciasrouter/js/zentyal-field-expiry-date.js";
     
