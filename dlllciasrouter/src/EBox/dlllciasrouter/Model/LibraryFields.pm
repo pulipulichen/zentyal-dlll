@@ -553,7 +553,7 @@ sub createFieldExpiryDateWithHR
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: NEVER or 2015/1/1 <br /> <hr />'),
+        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>  <br /> <hr />'),
         'allowUnsafeChars' => 1,
     );
 
@@ -933,7 +933,10 @@ sub createFieldPoundOnlyForLAN
 }
 
 
-
+##
+# 20210717 Pulipuli Chen
+# 現在要想辦法處理這一格
+## 
 sub createFieldProtocolNote
 {
     my ($self, $protocol) = @_;
@@ -944,7 +947,8 @@ sub createFieldProtocolNote
         'optional' =>1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => __( 'Login account / password, or using this port for other usage'),
+        #'help' => __( 'Login account / password, or using this port for other usage'),
+        'help' => $self->createFieldDescriptionEditor(),
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     );

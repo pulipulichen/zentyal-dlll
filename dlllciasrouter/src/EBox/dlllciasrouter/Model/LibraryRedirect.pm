@@ -948,14 +948,14 @@ sub getProtocolHint
     if ($secure == 1) {
         #$protocolTitle = '[' .$protocolTitle . ']';
 
-        $hint = '<span title="' . $protocolTitle . ' (for Administrator): ' . $extPort ." &gt; " . $intPort . '">' 
+        $hint = '<span title="' . $protocolTitle . ' (only for administrators): ' . $extPort ." &gt; " . $intPort . '">' 
             . "<strong>[".$protocolTitle."]</strong>: ". $extPort 
             . "</span>";
     }
     elsif ($secure == 2) {
         #$protocolTitle = '(' .$protocolTitle . ')';
 
-        $hint = '<span title="' . $protocolTitle . ' (for Workplace): ' . $extPort ." &gt; " . $intPort . '">' 
+        $hint = '<span title="' . $protocolTitle . ' (only in workplace): ' . $extPort ." &gt; " . $intPort . '">' 
             . "<strong>(".$protocolTitle.")</strong>: ". $extPort 
             . "</span>";
     }
