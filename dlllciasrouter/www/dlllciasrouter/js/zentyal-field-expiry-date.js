@@ -35,6 +35,7 @@ if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === 'undefined') {
   }
   
   ZENTYAL_FIELD_EXPIRY_DATE = async function (scriptElement) {
+    
     if (!scriptElement) {
       console.error('no script element')
       return false
@@ -42,7 +43,13 @@ if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === 'undefined') {
     
     await load_jquery()
     
-    let input = $(scriptElement).parents('div:first').find('input.inputText')
+    scriptElement = jQuery('#' + scriptElement)
+    if (scriptElement.length === 0) {
+      console.error('no script element')
+      return false
+    }
+    
+    let input = scriptElement.parents('div:first').find('input.inputText')
     if (input.val() !== '') {
       // 已經有資料了，不設定
       return false
