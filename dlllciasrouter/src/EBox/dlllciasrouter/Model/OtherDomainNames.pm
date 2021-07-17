@@ -86,6 +86,7 @@ sub _table
         $libFactory->createFieldInternalPortDefaultValue(80),
         $libFactory->createFieldPoundOnlyForLAN(0),
         $libFactory->createFieldEmergencyRestarter(),
+        $libFactory->createFieldDescriptionHTML()
     );
 
     my $dataTable =
