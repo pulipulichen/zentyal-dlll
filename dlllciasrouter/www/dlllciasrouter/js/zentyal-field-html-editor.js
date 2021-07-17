@@ -29,6 +29,12 @@ if (_ZENTYAL_UTIL_init === undefined) {
               if (_input.length === 0) {
                   _input = _field.parents("div:first").find('input:first');
               }
+              if (_input.length === 0) {
+                throw Error('input is not found. Container: ', _field)
+              }
+              else {
+                //console.log('input', _input)
+              }
               return _input;
           },
           set_input: function (_content) {

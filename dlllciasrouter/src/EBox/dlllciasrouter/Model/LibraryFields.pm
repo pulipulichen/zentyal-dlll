@@ -945,7 +945,7 @@ sub createFieldProtocolNote
     my $field = new EBox::Types::Text(
         'fieldName' => 'redir'.$protocol.'_note',
         'printableName' => __($protocol.' Note'),
-        'editable' => 1,
+        'editable' => 0,
         'optional' =>1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
