@@ -555,9 +555,9 @@ sub setExpiryDateDefaultValue
 
     my $script = "/data/dlllciasrouter/js/zentyal-field-expiry-date.js";
     
-    my $initScript = 'ZENTYAL_FIELD_EXPIRY_DATE(document.currentScript)' 
+    my $initScript = 'ZENTYAL_FIELD_EXPIRY_DATE(document.currentScript)';
 
-    return '<script>if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === \'undefined\') {'
+    return '<script>if (typeof(ZENTYAL_FIELD_EXPIRY_DATE) === "undefined") {'
       . 'var _script=document.createElement(\'script\');'
       . '_script.type=\'text/javascript\';'
       . '_script.src=\''.$script.'\';'
