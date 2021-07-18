@@ -659,6 +659,7 @@ sub getTestServiceParam
 
     my $settings = $self->model('RouterSettings');
 
+    my $domainNameValue = $settings->value('testDomainName');
 
     return ($domainHash, $domainHTTPSHash, $i);
 }
