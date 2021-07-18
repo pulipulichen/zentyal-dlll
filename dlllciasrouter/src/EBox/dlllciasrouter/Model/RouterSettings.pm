@@ -17,6 +17,7 @@ use EBox::Types::HTML;
 use EBox::Types::URI;
 use EBox::Types::Boolean;
 use EBox::Types::IPAddr;
+use EBox::Types::DomainName;
 use EBox::Types::MailAddress;
 use EBox::Types::Password;
 
@@ -277,12 +278,22 @@ sub _table
                 'editable' => 1,),
             ]
         ));
+
     push(@fields, new EBox::Types::Port(
         'fieldName'     => 'port',
-        'printableName' => __('External Port'),
+        'printableName' => __('External HTTP Port'),
         'editable'      => 1,
         'unique'        => 1,
         'defaultValue' => 80,
+        'optional' => 0,
+    ));
+
+    push(@fields, new EBox::Types::Port(
+        'fieldName'     => 'portHTTPS',
+        'printableName' => __('External HTTPS Port'),
+        'editable'      => 1,
+        'unique'        => 1,
+        'defaultValue' => 443,
         'optional' => 0,
     ));
 
@@ -296,9 +307,19 @@ sub _table
         'help' => __("Check backend every X secs. Default is 30 sec."),
     ));
 
+    push(@fields, new EBox::Types::DomainName(
+        "fieldName"     => 'testDomainName',
+        "printableName" => __('Test Domain Name'),
+        "editable"      => 1,
+        "unique"        => 1,
+        "defaultValue" => "test.dlll.nccu.edu.tw",
+        "optional" => 0,
+        "help" => __("Host by lightted."),
+    ));
+
     push(@fields, new EBox::Types::Text(
         "fieldName"     => 'timeout',
-        "printableName" => __('TimeOut'),
+        "printableName" => __('Timeout'),
         "editable"      => 1,
         "unique"        => 0,
         "defaultValue" => 300,
@@ -466,6 +487,7 @@ sub initServicePort
 
         my $libServ = $self->loadLibrary("LibraryService");
         $libServ->addServicePort("dlllciasrouter-pound", $self->value('port'), 0);
+        $libServ->addServicePort("dlllciasrouter-pound", $self->value('portHTTPS'), 0);
         $libServ->addServicePort("dlllciasrouter-pound", 888, 0); # lighttpd
 
         $libServ->addServicePort("dlllciasrouter-admin", $self->value('webadminPort'), 1);

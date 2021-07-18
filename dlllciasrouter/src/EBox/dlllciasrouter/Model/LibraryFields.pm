@@ -372,6 +372,49 @@ sub createFieldInternalPortDefaultValue
     return $field;
 }
 
+
+##
+# 20210718 Pulipuli Chen
+# 調整內部port的設定：HTTP的部分
+##
+sub createFieldHTTPInternalPortDefaultValue
+{
+    my ($self, $defaultValue) = @_;
+
+    my $field = new EBox::Types::Port(
+        'fieldName' => 'port',
+        'printableName' => __('HTTP Internal Port'),
+        'defaultValue' => 80,
+        'editable' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        #'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
+    );
+
+    return $field;
+}
+
+##
+# 20210718 Pulipuli Chen
+# 調整內部port的設定：HTTP的部分
+##
+sub createFieldHTTPSInternalPortDefaultValue
+{
+    my ($self, $defaultValue) = @_;
+
+    my $field = new EBox::Types::Port(
+        'fieldName' => 'portHTTPS',
+        'printableName' => __('HTTPS Internal Port'),
+        'defaultValue' => 443,
+        'editable' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        #'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
+    );
+
+    return $field;
+}
+
 sub createFieldMACAddr
 {
     my $field = new EBox::Types::MACAddr(
@@ -968,38 +1011,39 @@ sub _populateFieldProtocolScheme
 ##
 # 20170801 Pulipuli Chen
 # 好像是不用的樣子
+# 20210718 全面改用SSL了，不用這個
 ##
-sub createFieldPoundProtocolScheme
-{
-    my ($self) = @_;
-    my $field = new EBox::Types::Union(
-        'fieldName' => 'poundProtocolScheme',
-        'printableName' => __('Pound Protocol'),
-        'unique' => 0,
-        'subtypes' => [
-            new EBox::Types::Port(
-                'fieldName' => 'poundProtocolScheme_http',
-                'printableName' => __('HTTP (http://)'),
-                'defaultValue' => 80,
-                'editable' => 1,),
-            new EBox::Types::Port(
-                'fieldName' => 'poundProtocolScheme_https',
-                'printableName' => __('HTTPS (https://)'),
-                'defaultValue' => 443,
-                'editable' => 1,),
-            new EBox::Types::Union::Text(
-                'fieldName' => 'poundProtocolScheme_none',
-                'printableName' => __('Not a link'),
-                'defaultValue' => '',
-                'hidden' => 1,
-                'editable' => 0,),
-        ],
-        hiddenOnSetter => 0,
-        hiddenOnViewer => 1,
-    );
-
-    return $field;
-}
+#sub createFieldPoundProtocolScheme
+#{
+#    my ($self) = @_;
+#    my $field = new EBox::Types::Union(
+#        'fieldName' => 'poundProtocolScheme',
+#        'printableName' => __('Pound Protocol'),
+#        'unique' => 0,
+#        'subtypes' => [
+#            new EBox::Types::Port(
+#                'fieldName' => 'poundProtocolScheme_http',
+#                'printableName' => __('HTTP (http://)'),
+#                'defaultValue' => 80,
+#                'editable' => 1,),
+#            new EBox::Types::Port(
+#                'fieldName' => 'poundProtocolScheme_https',
+#                'printableName' => __('HTTPS (https://)'),
+#                'defaultValue' => 443,
+#                'editable' => 1,),
+#            new EBox::Types::Union::Text(
+#                'fieldName' => 'poundProtocolScheme_none',
+#                'printableName' => __('Not a link'),
+#                'defaultValue' => '',
+#                'hidden' => 1,
+#                'editable' => 0,),
+#        ],
+#        hiddenOnSetter => 0,
+#        hiddenOnViewer => 1,
+#    );
+#
+#    return $field;
+#}
 
 sub createFieldPoundOnlyForLAN
 {
