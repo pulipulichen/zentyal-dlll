@@ -657,38 +657,13 @@ sub getTestServiceParam
 {
     my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
 
-    try {
       my $settings = $self->model('RouterSettings');
 
       my $domainNameValue = $settings->valueByName('testDomainName');
-      printf("test domain name: " . $domainNameValue);
       if ($domainNameValue ne '') {
         my $backEnd = ();
         my @backEndArray;
-        $backEnd->{ipaddrValue} = '0.0.0.0';
-        $backEnd->{portValue} = 888;
-        $backEnd->{descriptionValue} = 'test';
-        $backEnd->{httpToHttpsValue} = 0;
-        $backEnd->{httpsPortValue} = 0;
-
-        $backEnd->{httpSecurityValue} = 0;
-        $backEnd->{httpPortValue} = 888;
-
-        $backEnd->{emergencyValue} = 0;
-        $backEnd->{redirHTTP_enable} = 0;
-
-        $backEndArray[$#backEndArray+1] = $backEnd;
-
-        $domainHash->{$domainNameValue} = \@backEndArray;
-
-        $i++;
       }
-      
-    } catch {
-      $self->model("LibraryToolkit")->show_exceptions($_ 
-        . ' ( getTestServiceParam )');
-      printf("error!!!!!!\n");
-    }
 
     return ($domainHash, $domainHTTPSHash, $i);
 }
