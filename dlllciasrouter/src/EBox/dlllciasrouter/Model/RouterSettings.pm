@@ -306,7 +306,7 @@ sub _table
         'help' => __("Check backend every X secs. Default is 30 sec."),
     ));
 
-    push(@fields, new EBox::Types::URL(
+    push(@fields, new EBox::Types::DomainName(
         "fieldName"     => 'testDomainName',
         "printableName" => __('Test Domain Name'),
         "editable"      => 1,
