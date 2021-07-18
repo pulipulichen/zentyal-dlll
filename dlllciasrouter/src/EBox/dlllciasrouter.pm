@@ -684,7 +684,7 @@ sub getTestServiceParam
     }
       
 
-    return ($domainHash, $domainHTTPSHash, $vmHash, $i);
+    return ($domainHash, $domainHTTPSHash, $i);
 }
 
 
