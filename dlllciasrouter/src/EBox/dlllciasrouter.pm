@@ -657,13 +657,8 @@ sub getTestServiceParam
 {
     my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
 
-      my $settings = $self->model('RouterSettings');
+    my $settings = $self->model('RouterSettings');
 
-      my $domainNameValue = $settings->valueByName('testDomainName');
-      if ($domainNameValue ne '') {
-        my $backEnd = ();
-        my @backEndArray;
-      }
 
     return ($domainHash, $domainHTTPSHash, $i);
 }
