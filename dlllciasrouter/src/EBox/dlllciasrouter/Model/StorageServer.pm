@@ -33,7 +33,7 @@ sub getOptions
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
     $options->{enableHTTPS} = 0;
-    $options->{enableSSH} = 1;
+    $options->{enableSSH} = 0;
     $options->{enableRDP} = 0;
     $options->{enableHardware} = 1;
     $options->{enableVMID} = 0;
