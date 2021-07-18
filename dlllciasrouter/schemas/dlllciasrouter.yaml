@@ -15,6 +15,7 @@ enabledepends:
 models:
     - RouterSettings
     - RouterLinks
+    - RouterDocumentation
     - LibraryToolkit
     #- PortRedirect
     - URLRedirect
