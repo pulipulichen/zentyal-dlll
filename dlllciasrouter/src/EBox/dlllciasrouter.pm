@@ -661,7 +661,7 @@ sub getTestServiceParam
       my $settings = $self->model('RouterSettings');
 
       my $domainNameValue = $settings->valueByName('testDomainName');
-
+      printf("test domain name: " . $domainNameValue);
       if ($domainNameValue ne '') {
         my $backEnd = ();
         my @backEndArray;
