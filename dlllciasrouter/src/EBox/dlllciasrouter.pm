@@ -402,12 +402,14 @@ sub updatePoundCfg
     # Iterate over table
     #my @paramsArray = ();
     my $domainHash = (); 
+    my $domainHTTPSHash = (); 
     my $vmHash = ();
     my $i = 0;
 
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
+    ($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
+    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
+    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
+    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
 
     # ----------------------------
     # 轉址
@@ -435,6 +437,7 @@ sub updatePoundCfg
 
     #push(@servicesParams, 'services' => \@paramsArray);
     push(@servicesParams, 'domainHash' => $domainHash);
+    push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
 
     push(@servicesParams, 'redir' => \@redirArray);
     
@@ -490,7 +493,7 @@ sub updateXRDPCfg
 
 sub getServiceParam
 {
-    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
+    my ($self, $modName, $domainHash, $domainHTTPSHash, $vmHash, $i) = @_;
 
     my $libRedir = $self->model('LibraryRedirect');
     my $lib = $self->getLibrary();
@@ -645,8 +648,44 @@ sub getServiceParam
         }   # if ($row->elementExists('otherDomainName')) {
     }   # for my $id (@{$services->ids()}) {}
 
-    return ($domainHash, $vmHash, $i);
+    return ($domainHash, $domainHTTPSHash, $vmHash, $i);
 }
+
+# 20210718 Pulipuli Chen
+# 取得測試伺服器的資料
+sub getTestServiceParam
+{
+    my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
+
+    my $settings = $self->model('RouterSettings');
+
+    my $domainNameValue = $settings->valueByName('testDomainName');
+
+    if ($domainNameValue ne '') {
+      my $backEnd = ();
+      $backEnd->{ipaddrValue} = '0.0.0.0';
+      $backEnd->{portValue} = 888;
+      $backEnd->{descriptionValue} = 'test';
+      $backEnd->{httpToHttpsValue} = 0;
+      $backEnd->{httpsPortValue} = 0;
+
+      $backEnd->{httpSecurityValue} = 0;
+      $backEnd->{httpPortValue} = 888;
+
+      $backEnd->{emergencyValue} = 0;
+      $backEnd->{redirHTTP_enable} = 0;
+
+      $backEndArray[$#backEndArray+1] = $backEnd;
+
+      $domainHash->{$domainNameValue} = \@backEndArray;
+
+      $i++;
+    }
+      
+
+    return ($domainHash, $domainHTTPSHash, $vmHash, $i);
+}
+
 
 # 20150519 Pulipuli Chen
 sub getURLRedirectParam

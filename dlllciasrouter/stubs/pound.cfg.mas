@@ -67,14 +67,7 @@ ListenHTTP
 % print "#                End\n";
 % print "#        End\n\n";
 
-% print "        Service\n";
-% print "                HeadRequire \"Host: <% $testDomainName %>.*\"\n";
-% print "                BackEnd\n";
-% print "                        Address 127.0.0.1\n";
-% print "                        Port    888\n";
-% print "                End\n";
-% print "        End\n\n";
-%
+
 % if (length($domainHash)) {
 %   while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
 %
