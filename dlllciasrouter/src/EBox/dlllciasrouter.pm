@@ -662,7 +662,7 @@ sub getTestServiceParam
 
       my $domainNameValue = $settings->valueByName('testDomainName');
 
-      if ($domainNameValue eq '') {
+      if ($domainNameValue ne '') {
         my $backEnd = ();
         my @backEndArray;
         $backEnd->{ipaddrValue} = '0.0.0.0';
