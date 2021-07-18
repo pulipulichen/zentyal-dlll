@@ -406,7 +406,7 @@ sub updatePoundCfg
     my $vmHash = ();
     my $i = 0;
 
-    #($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
+    ($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
     ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
     ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
     ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
@@ -657,32 +657,39 @@ sub getTestServiceParam
 {
     my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
 
-    my $settings = $self->model('RouterSettings');
+    try {
+      my $settings = $self->model('RouterSettings');
 
-    my $domainNameValue = $settings->valueByName('testDomainName');
+      my $domainNameValue = $settings->valueByName('testDomainName');
 
-    if ($domainNameValue eq '') {
-      my $backEnd = ();
-      my @backEndArray;
-      $backEnd->{ipaddrValue} = '0.0.0.0';
-      $backEnd->{portValue} = 888;
-      $backEnd->{descriptionValue} = 'test';
-      $backEnd->{httpToHttpsValue} = 0;
-      $backEnd->{httpsPortValue} = 0;
+      if ($domainNameValue eq '') {
+        my $backEnd = ();
+        my @backEndArray;
+        $backEnd->{ipaddrValue} = '0.0.0.0';
+        $backEnd->{portValue} = 888;
+        $backEnd->{descriptionValue} = 'test';
+        $backEnd->{httpToHttpsValue} = 0;
+        $backEnd->{httpsPortValue} = 0;
 
-      $backEnd->{httpSecurityValue} = 0;
-      $backEnd->{httpPortValue} = 888;
+        $backEnd->{httpSecurityValue} = 0;
+        $backEnd->{httpPortValue} = 888;
 
-      $backEnd->{emergencyValue} = 0;
-      $backEnd->{redirHTTP_enable} = 0;
+        $backEnd->{emergencyValue} = 0;
+        $backEnd->{redirHTTP_enable} = 0;
 
-      $backEndArray[$#backEndArray+1] = $backEnd;
+        $backEndArray[$#backEndArray+1] = $backEnd;
 
-      $domainHash->{$domainNameValue} = \@backEndArray;
+        $domainHash->{$domainNameValue} = \@backEndArray;
 
-      $i++;
-    }
+        $i++;
+      }
       
+    } catch {
+
+        $self->getLibrary()->show_exceptions($_ 
+            . 'DLLL cias router error ');
+
+    }
 
     return ($domainHash, $domainHTTPSHash, $i);
 }
