@@ -315,6 +315,7 @@ sub _table
         "defaultValue" => "test.dlll.nccu.edu.tw",
         "optional" => 0,
         "help" => __("Host by lightted."),
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     ));
 
     push(@fields, new EBox::Types::Text(
