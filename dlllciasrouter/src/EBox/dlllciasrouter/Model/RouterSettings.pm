@@ -434,23 +434,29 @@ sub updatedRowNotify
 
     try {
 
-    $self->setWebadminPort($row->valueByName("webadminPort"));
+      $self->setWebadminPort($row->valueByName("webadminPort"));
 
-    my $libServ = $self->loadLibrary("LibraryService");
+      my $libServ = $self->loadLibrary("LibraryService");
 
-    $libServ->updateServicePort("dlllciasrouter-admin"
-        , $oldRow->valueByName("webadminPort")
-        , $row->valueByName("webadminPort")
-        , 1);
-    $libServ->updateServicePort("dlllciasrouter-admin"
-        , $oldRow->valueByName("adminPort")
-        , $row->valueByName("adminPort")
-        , 1);
-    $libServ->updateServicePort('dlllciasrouter-pound'
-        , $oldRow->valueByName("port")
-        , $row->valueByName("port")
-        , 1);
-    $self->{pound_port} = $row->valueByName("port");
+      $libServ->updateServicePort("dlllciasrouter-admin"
+          , $oldRow->valueByName("webadminPort")
+          , $row->valueByName("webadminPort")
+          , 1);
+      $libServ->updateServicePort("dlllciasrouter-admin"
+          , $oldRow->valueByName("adminPort")
+          , $row->valueByName("adminPort")
+          , 1);
+      $libServ->updateServicePort('dlllciasrouter-pound'
+          , $oldRow->valueByName("port")
+          , $row->valueByName("port")
+          , 1);
+      $self->{pound_port} = $row->valueByName("port");
+
+      if ($row->valueByName('testDomainName') ne $oldRow->valueByName('testDomainName')) {
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        $libDN->deleteDomainName($oldRow->valueByName('testDomainName'));
+        $libDN->addDomainName($row->valueByName('testDomainName'));
+      }
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
