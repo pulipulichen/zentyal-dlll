@@ -53,7 +53,7 @@ sub _table
         }, 
         {
             'text' => __('Network IP Range'),
-            'uri' => '/dlllciasrouter/View/ManualDomainName',
+            'uri' => '/dlllciasrouter/View/ManualNetworkIPRange',
             'icon' => 'icon-network',
         }
     );

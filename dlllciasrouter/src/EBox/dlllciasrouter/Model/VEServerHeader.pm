@@ -16,7 +16,7 @@ sub getOptions
     $options->{moduleName} = 'VEServer';
     $options->{help} = '<div class="tip">
 <p>IP: 10.<span style="background-color: #00ffff;">6</span>.<span style="background-color: ##ffCCEE;">0</span>.<span style="background-color: #00ff00;">12</span></p>
-<p><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#virtual-environment-server-proxmox" target="_blank">' . __('More details') . '</a></p>
+<p><a href="/dlllciasrouter/View/ManualNetworkIPRange" target="_blank">' . __('More details') . '</a></p>
 </div>';
     return $options;
 }
