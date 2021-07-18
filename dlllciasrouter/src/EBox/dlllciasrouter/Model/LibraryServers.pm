@@ -525,6 +525,9 @@ sub updateNetworkDisplay
     $ipSchema = $row->valueByName('redirPOUND_scheme');
     my $ipPort = 80;
     $ipPort = $row->valueByName('port');
+    if ($ipSchema eq 'https') {
+      $ipPort = $row->valueByName('portHTTPS');
+    }
     
     $display = '<a href="' . $ipSchema . '://' . $ipaddr . ':' . $ipPort . '/"' 
         . ' style="background: none;text-decoration: underline;color: #A3BD5B;" '
