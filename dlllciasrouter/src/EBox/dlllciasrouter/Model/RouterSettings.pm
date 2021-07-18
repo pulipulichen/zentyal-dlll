@@ -296,9 +296,19 @@ sub _table
         'help' => __("Check backend every X secs. Default is 30 sec."),
     ));
 
+    push(@fields, new EBox::Types::URL(
+        "fieldName"     => 'testDomainName',
+        "printableName" => __('Test Domain Name'),
+        "editable"      => 1,
+        "unique"        => 1,
+        "defaultValue" => "test.dlll.nccu.edu.tw",
+        "optional" => 0,
+        "help" => __("Host by lightted."),
+    ));
+
     push(@fields, new EBox::Types::Text(
         "fieldName"     => 'timeout',
-        "printableName" => __('TimeOut'),
+        "printableName" => __('Timeout'),
         "editable"      => 1,
         "unique"        => 0,
         "defaultValue" => 300,

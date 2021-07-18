@@ -55,7 +55,7 @@ sub getDataTable
 
     #push(@fields, $fieldsFactory->createFieldWebLinkButton($options->{tableName}));
 
-    push(@fields, $fieldsFactory->createFieldDomainName());
+    push(@fields, $fieldsFactory->createFieldDomainName())
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
     push(@fields, $fieldsFactory->createFieldExternalIPAddressWithSubmask(1, ""));
     push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1, $options->{IPHelp}, $options->{IPTemplate}));

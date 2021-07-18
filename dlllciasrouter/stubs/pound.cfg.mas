@@ -7,6 +7,7 @@
     $restarterPort
     $domainHash
     $redir
+    $testDomainName
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
@@ -43,7 +44,7 @@ Control "/var/run/pound/poundctl.socket"
 
 % print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
 ListenHTTP
-	Address <% $address %>
+	Address 0.0.0.0
 	Port	<% $port %>
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
@@ -65,6 +66,14 @@ ListenHTTP
 % print "#                        Port    80\n";
 % print "#                End\n";
 % print "#        End\n\n";
+
+% print "        Service\n";
+% print "                HeadRequire \"Host: <% $testDomainName %>.*\"\n";
+% print "                BackEnd\n";
+% print "                        Address 127.0.0.1\n";
+% print "                        Port    888\n";
+% print "                End\n";
+% print "        End\n\n";
 %
 % if (length($domainHash)) {
 %   while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	

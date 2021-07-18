@@ -390,6 +390,11 @@ sub updatePoundCfg
         $senderEmail = $settings->value('senderEmail');
     }
 
+    my $testDomainName;
+    if ($settings->row->elementExists('testDomainName')) {
+        $testDomainName = $settings->value('testDomainName');
+    }
+
     # ----------------------------
     # Back End
     # ----------------------------
@@ -418,6 +423,7 @@ sub updatePoundCfg
     my @servicesParams = ();
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
+    push(@servicesParams, 'testDomainName' => $testDomainName);
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'timeout' => $timeout);
     #push(@servicesParams, 'enableError' => $enableError);
