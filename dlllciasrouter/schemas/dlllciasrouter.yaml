@@ -51,6 +51,8 @@ models:
     - AttachedFiles
     - ExportsSetting
     - TypesOnebox
+    - ManualDomainName
+    - ManualNetworkIPRange
 
 composites:
     SettingComposite: [RouterLinks, RouterSettings, RouterDocumentation]
