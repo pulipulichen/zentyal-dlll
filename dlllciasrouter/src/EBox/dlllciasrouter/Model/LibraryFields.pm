@@ -83,7 +83,9 @@ sub createFieldDomainName
         #'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => __('<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw') 
+        'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
+          . __('Domain name rule') 
+          . '</a>: exp-example-2018.dlll.nccu.edu.tw') 
           . $self->setFieldCacheScript('domainName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
@@ -102,7 +104,9 @@ sub createFieldDomainNameUnique
         'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => __('<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw')
+        'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
+            . __(' Domain name rule') 
+          . '</a>: exp-example-2018.dlll.nccu.edu.tw')
            . $self->setFieldCacheScript('domainName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
@@ -615,7 +619,7 @@ sub createFieldExpiryDate
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: 2015/1/1 or NEVER. <a href="/dlllciasrouter/View/ManualDomainName">(How to determine the expiration date?)</a>') 
+        'help' => __('Example: 2015/1/1 or NEVER. ') . '<a href="/dlllciasrouter/View/ManualDomainName">' . __('(How to determine the expiration date?)') . '</a>') 
           . $self->setExpiryDateDefaultValue('expiry'),
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
@@ -680,7 +684,7 @@ sub createFieldExpiryDateWithHR
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: 2015/1/1 or NEVER. <a href="/dlllciasrouter/View/ManualDomainName">(How to determine the expiration date?)</a>  <br /> <hr />')
+        'help' => __('Example: 2015/1/1 or NEVER.') . '<a href="/dlllciasrouter/View/ManualDomainName">' . __('(How to determine the expiration date?)' . '</a>  <br /> <hr />')
           . $self->setExpiryDateDefaultValue('expiry'),
         'allowUnsafeChars' => 1,
     );
