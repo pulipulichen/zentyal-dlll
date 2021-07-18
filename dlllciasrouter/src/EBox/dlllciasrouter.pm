@@ -685,9 +685,8 @@ sub getTestServiceParam
       }
       
     } catch {
-
-        $self->getLibrary()->show_exceptions($_ 
-            . 'DLLL cias router error ');
+      $self->model("LibraryToolkit")->show_exceptions($_ 
+        . ' ( getTestServiceParam )');
 
     }
 
