@@ -67,7 +67,7 @@ if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-mas
 
 PACKAGE="zentyal-network zentyal-objects \
 zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
-pound lighttpd \
+pound lighttpd snapd \
 moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
 nfs-kernel-server nfs-common \
 vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
@@ -80,6 +80,10 @@ xrdp xfce4 xfce4-goodies tightvncserver"
     sudo apt-get -y --force-yes install $PACKAGE
 
     sudo updatedb
+
+    # install certbot with snap
+    sudo snap install --classic certbot
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
 fi
 echo "All modules are installed."
 
@@ -191,6 +195,8 @@ fi
 
 # 20181109 設定locate的索引，一定要擺到最後執行
 sudo updatedb
+
+sudo /etc/init.d/zentyal dlllciasrouter enable
 
 echo "===================================";
 echo "DLLL-CIAS Router is ready"
