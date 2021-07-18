@@ -403,7 +403,7 @@ sub createFieldHTTPSInternalPortDefaultValue
     my ($self, $defaultValue) = @_;
 
     my $field = new EBox::Types::Port(
-        'fieldName' => 'port',
+        'fieldName' => 'portHTTPS',
         'printableName' => __('HTTPS Internal Port'),
         'defaultValue' => 443,
         'editable' => 1,
