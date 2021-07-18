@@ -406,10 +406,12 @@ sub updatePoundCfg
     my $vmHash = ();
     my $i = 0;
 
-    ($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
-    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
-    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
-    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
+    ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
+
+    ($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
 
     # ----------------------------
     # 轉址
@@ -493,7 +495,7 @@ sub updateXRDPCfg
 
 sub getServiceParam
 {
-    my ($self, $modName, $domainHash, $domainHTTPSHash, $vmHash, $i) = @_;
+    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
 
     my $libRedir = $self->model('LibraryRedirect');
     my $lib = $self->getLibrary();
@@ -649,14 +651,14 @@ sub getServiceParam
         }   # if ($row->elementExists('otherDomainName')) {
     }   # for my $id (@{$services->ids()}) {}
 
-    return ($domainHash, $domainHTTPSHash, $vmHash, $i);
+    return ($domainHash, $vmHash, $i);
 }
 
 # 20210718 Pulipuli Chen
 # 取得測試伺服器的資料
 sub getTestServiceParam
 {
-    my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
+    my ($self, $domainHash, $i) = @_;
 
       my $settings = $self->model('RouterSettings');
 
@@ -684,7 +686,7 @@ sub getTestServiceParam
         $i++;
       }
 
-    return ($domainHash, $domainHTTPSHash, $i);
+    return ($domainHash, $i);
 }
 
 
