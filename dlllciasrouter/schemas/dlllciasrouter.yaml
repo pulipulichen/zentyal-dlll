@@ -52,7 +52,7 @@ models:
     - TypesOnebox
 
 composites:
-    SettingComposite: [RouterLinks, RouterSettings]
+    SettingComposite: [RouterLinks, RouterSettings, RouterDocumentation]
     #StorageServerComposite: [StorageServerHeader, StorageServer]
     StorageServerComposite: [NfsSetting, StorageServer, MfsSetting, ExportsSetting]
     VEServerComposite: [VEServerHeader, VEServer]
