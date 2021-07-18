@@ -2128,7 +2128,7 @@ sub createFieldMountEnable
             fieldName => 'mountEnable',
             printableName => __('Mount Enable'),
             editable => 1,
-            defaultValue => 1,
+            defaultValue => 0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         );
