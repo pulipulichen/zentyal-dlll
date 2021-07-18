@@ -47,7 +47,7 @@ ListenHTTP
 	Port	<% $port %>
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
-	xHTTP		1
+	xHTTP		4
 
         Err414 "/etc/pound/error.html"
         Err500 "/etc/pound/error.html"
