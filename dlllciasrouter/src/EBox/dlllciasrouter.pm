@@ -406,7 +406,7 @@ sub updatePoundCfg
     my $vmHash = ();
     my $i = 0;
 
-    ($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
+    #($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
     ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
     ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
     ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
