@@ -122,11 +122,11 @@ sub getDataTable
     #push(@fields, $fieldsFactory->createFieldHr('hr_pound'));
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_pound', __('Pound Network Settings')));
 
-        
     #push(@fields, $fieldsFactory->createFieldRedirectToHTTPS());
 
-    push(@fields, $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}));
-    push(@fields, $fieldsFactory->createFieldInternalPortDefaultValue($options->{internalPortDefaultValue}));
+    #push(@fields, $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}));
+    push(@fields, $fieldsFactory->createFieldHTTPInternalPortDefaultValue();
+    push(@fields, $fieldsFactory->createFieldHTTPSInternalPortDefaultValue();
 
     #push(@fields, $fieldsFactory->createFieldPoundProtocolScheme());
 
