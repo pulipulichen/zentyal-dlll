@@ -663,6 +663,7 @@ sub getTestServiceParam
 
     if ($domainNameValue ne '') {
       my $backEnd = ();
+      my @backEndArray;
       $backEnd->{ipaddrValue} = '0.0.0.0';
       $backEnd->{portValue} = 888;
       $backEnd->{descriptionValue} = 'test';
