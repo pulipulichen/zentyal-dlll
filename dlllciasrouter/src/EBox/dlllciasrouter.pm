@@ -686,6 +686,43 @@ sub getTestServiceParam
     return ($domainHash, $domainHTTPSHash, $i);
 }
 
+# 20210718 Pulipuli Chen
+# 取得測試伺服器的資料
+sub checkSSLCert
+{
+  my ($self, $domainHash, $domainHTTPSHash) = @_;
+
+  # 跑迴圈，看每個資料
+
+  # 測試有沒有已經存在的cert
+
+    # 測試能不能連線
+
+      # 如果可以連線，則建立cert
+
+      ($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
+      
+  # 檢查看看有沒有過期 (必須是距離上次2個月內)
+  
+  # 
+
+  return ($domainHTTPSHash);
+}
+
+# 20210718 Pulipuli Chen
+# 取得測試伺服器的資料
+sub setupSSLCert
+{
+  my ($self, $domainHTTPSHash, $domainNameValue) = @_;
+
+  # 則建立cert
+
+  # 記錄上次更新的時間
+  
+  # 加入 $domainHTTPSHash
+
+  return ($domainHTTPSHash);
+}
 
 # 20150519 Pulipuli Chen
 sub getURLRedirectParam
