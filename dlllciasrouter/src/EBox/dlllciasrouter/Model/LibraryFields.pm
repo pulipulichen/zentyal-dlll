@@ -73,6 +73,8 @@ sub createFieldConfigEnableHidden
 
 sub createFieldDomainName
 {
+  my ($self) = @_;
+
     my $field = new EBox::Types::DomainName(
         'fieldName' => 'domainName',
         'printableName' => __('Domain Name'),
@@ -81,7 +83,10 @@ sub createFieldDomainName
         #'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw',
+        'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
+          . __('Domain name rule') 
+          . '</a>: exp-example-2018.dlll.nccu.edu.tw'
+          . $self->setFieldCacheScript('domainName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -90,6 +95,8 @@ sub createFieldDomainName
 
 sub createFieldDomainNameUnique
 {
+  my ($self) = @_;
+
     my $field = new EBox::Types::DomainName(
         'fieldName' => 'domainName',
         'printableName' => __('Domain Name'),
@@ -97,7 +104,10 @@ sub createFieldDomainNameUnique
         'unique' => 1,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
-        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md" target="_blank">Domain name rule</a>: exp-example-2018.dlll.nccu.edu.tw',
+        'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
+            . __(' Domain name rule') 
+          . '</a>: exp-example-2018.dlll.nccu.edu.tw'
+           . $self->setFieldCacheScript('domainName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -194,7 +204,7 @@ VMID: <span style="background-color: #00ffff;">1</span><span style="background-c
 VMID:&nbsp;<span style="background-color: #00ffff;">3</span><span style="background-color: #ffCCEE;">1</span><span style="background-color: #00ff00;">24</span>&nbsp;
 = IP: 10.<span style="background-color: #00ffff;">3</span>.<span style="background-color: #ffCCEE;">1</span>.<span style="background-color: #00ff00;">24</span>
 <br />
-<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#virtual-machine" target="_blank">' . __('More details') . '</a>',
+<a href="/dlllciasrouter/View/ManualNetworkIPRange" target="_blank">' . __('More details') . '</a>',
     );
 
     return $field;
@@ -495,6 +505,7 @@ sub createFieldContactEmail
         'optional' => 0,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
+        'help' => $self->setFieldCacheScript('contactEmail'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -608,7 +619,10 @@ sub createFieldExpiryDate
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>') 
+        'help' => __('Example: 2015/1/1 or NEVER. ') 
+          . '<a href="/dlllciasrouter/View/ManualDomainName">' 
+          . __('(How to determine the expiration date?)') 
+          . '</a>' 
           . $self->setExpiryDateDefaultValue('expiry'),
         'allowUnsafeChars' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
@@ -673,7 +687,7 @@ sub createFieldExpiryDateWithHR
 
         # 20140207 Pulipuli Chen
         # 加上說明
-        'help' => __('Example: 2015/1/1 or NEVER. <a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md">(How to determine the expiration date?)</a>  <br /> <hr />')
+        'help' => __('Example: 2015/1/1 or NEVER.') . '<a href="/dlllciasrouter/View/ManualDomainName">' . __('(How to determine the expiration date?)' . '</a>  <br /> <hr />')
           . $self->setExpiryDateDefaultValue('expiry'),
         'allowUnsafeChars' => 1,
     );
@@ -1469,6 +1483,7 @@ sub createFieldPhysicalLocation
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('physicalLocation'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
@@ -1511,6 +1526,7 @@ sub createFieldHardwareCPU
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('hardwareCPU'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
@@ -1532,6 +1548,7 @@ sub createFieldHardwareRAM
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('hardwareRAM'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
@@ -1651,6 +1668,7 @@ sub createFieldHardwareDisk
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('hardwareDisk'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
@@ -2128,7 +2146,7 @@ sub createFieldMountEnable
             fieldName => 'mountEnable',
             printableName => __('Mount Enable'),
             editable => 1,
-            defaultValue => 1,
+            defaultValue => 0,
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
         );

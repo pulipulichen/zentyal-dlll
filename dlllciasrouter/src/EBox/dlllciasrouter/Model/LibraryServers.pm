@@ -124,9 +124,9 @@ sub getDataTable
 
     #push(@fields, $fieldsFactory->createFieldRedirectToHTTPS());
 
-    #push(@fields, $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}));
     push(@fields, $fieldsFactory->createFieldHTTPInternalPortDefaultValue());
     push(@fields, $fieldsFactory->createFieldHTTPSInternalPortDefaultValue());
+    push(@fields, $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}));
 
     #push(@fields, $fieldsFactory->createFieldPoundProtocolScheme());
 
@@ -525,6 +525,9 @@ sub updateNetworkDisplay
     $ipSchema = $row->valueByName('redirPOUND_scheme');
     my $ipPort = 80;
     $ipPort = $row->valueByName('port');
+    if ($ipSchema eq 'https') {
+      $ipPort = $row->valueByName('portHTTPS');
+    }
     
     $display = '<a href="' . $ipSchema . '://' . $ipaddr . ':' . $ipPort . '/"' 
         . ' style="background: none;text-decoration: underline;color: #A3BD5B;" '

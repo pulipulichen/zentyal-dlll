@@ -23,7 +23,10 @@ sub getOptions
                 . __('the 3rd part should be') . ' 1, and <br />'
                 . __('the 4th part should be between') . ' 1~99. <br />'
                 . __('Example:') . ' 10.6.1.4'
-                . '<br /><a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-2-network-ip-range.md#storage-servers" target="_blank">' . __('More details') . '</a>';
+                . '<br />'
+                . '<a href="/dlllciasrouter/View/ManualNetworkIPRange" target="_blank">' 
+                  . __('More details') 
+                . '</a>';
     $options->{IPTemplate} = '10.6.1.';
     $options->{poundScheme} = 'http';
     $options->{poundSecure} = 1;
@@ -33,7 +36,7 @@ sub getOptions
     $options->{expiryDate} = 'NEVER';
     $options->{enableHTTP} = 0;
     $options->{enableHTTPS} = 0;
-    $options->{enableSSH} = 1;
+    $options->{enableSSH} = 0;
     $options->{enableRDP} = 0;
     $options->{enableHardware} = 1;
     $options->{enableVMID} = 0;

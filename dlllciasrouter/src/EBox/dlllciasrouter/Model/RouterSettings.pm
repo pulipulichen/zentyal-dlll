@@ -64,6 +64,8 @@ sub _table
 
     my $tableName = 'RouterSettings';
     my $editErrorView = '/dlllciasrouter/View/ErrorMessage';
+    my $manualDomainNameView = '/dlllciasrouter/View/ManualDomainName';
+    my $manualNetworkIPRangeView = '/dlllciasrouter/View/ManualNetworkIPRange';
 
     my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
     #my $submask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
@@ -315,6 +317,7 @@ sub _table
         "defaultValue" => "test.dlll.nccu.edu.tw",
         "optional" => 0,
         "help" => __("Host by lightted."),
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     ));
 
     push(@fields, new EBox::Types::Text(
@@ -328,6 +331,8 @@ sub _table
     ));
         
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT ERROR MESSAGE'), $editErrorView, 1));
+    #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT DOMAIN NAME MANUAL'), $manualDomainNameView, 1));
+    #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName, __('EDIT NETWORK IP RANGE MANUAL'), $manualNetworkIPRangeView, 1));
 
     my $poundCfg = '<a class="btn btn-icon btn-log" title="/etc/pound/pound.cfg" target="_blank" href="/dlllciasrouter/View/PoundSettings?backview=/dlllciasrouter/Composite/SettingComposite&backview_title=Settings&backview_hash=RouterSettings_hr_PoundConfig_hr_row">pound.cfg</a>';
     push(@fields, $fieldsFactory->createFieldHTMLDisplay($tableName . "_pound_cfg", $poundCfg));
@@ -388,12 +393,12 @@ sub _table
         #    optional => 1,
         #),
 
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundDesc', __('Zentyal Description')));
+    #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundDesc', __('Zentyal Description')));
         
-    push(@fields, $fieldsFactory->createFieldDescription());
+    #push(@fields, $fieldsFactory->createFieldDescription());
     #push(@fields, $fieldsFactory->createFieldAttachedFilesButton('/dlllciasrouter/Composite/SettingComposite', 0));
-    my $filePath = "/dlllciasrouter/View/AttachedFiles?directory=RouterSettings/keys/rs1/attachedFiles&backview=/dlllciasrouter/Composite/SettingComposite";
-    push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_attachedFiles", __('UPLOAD FILE'), $filePath, 1));
+    #my $filePath = "/dlllciasrouter/View/AttachedFiles?directory=RouterSettings/keys/rs1/attachedFiles&backview=/dlllciasrouter/Composite/SettingComposite";
+    #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_attachedFiles", __('UPLOAD FILE'), $filePath, 1));
 
     my $pageTitle = __('Setting');
     
@@ -434,23 +439,29 @@ sub updatedRowNotify
 
     try {
 
-    $self->setWebadminPort($row->valueByName("webadminPort"));
+      $self->setWebadminPort($row->valueByName("webadminPort"));
 
-    my $libServ = $self->loadLibrary("LibraryService");
+      my $libServ = $self->loadLibrary("LibraryService");
 
-    $libServ->updateServicePort("dlllciasrouter-admin"
-        , $oldRow->valueByName("webadminPort")
-        , $row->valueByName("webadminPort")
-        , 1);
-    $libServ->updateServicePort("dlllciasrouter-admin"
-        , $oldRow->valueByName("adminPort")
-        , $row->valueByName("adminPort")
-        , 1);
-    $libServ->updateServicePort('dlllciasrouter-pound'
-        , $oldRow->valueByName("port")
-        , $row->valueByName("port")
-        , 1);
-    $self->{pound_port} = $row->valueByName("port");
+      $libServ->updateServicePort("dlllciasrouter-admin"
+          , $oldRow->valueByName("webadminPort")
+          , $row->valueByName("webadminPort")
+          , 1);
+      $libServ->updateServicePort("dlllciasrouter-admin"
+          , $oldRow->valueByName("adminPort")
+          , $row->valueByName("adminPort")
+          , 1);
+      $libServ->updateServicePort('dlllciasrouter-pound'
+          , $oldRow->valueByName("port")
+          , $row->valueByName("port")
+          , 1);
+      $self->{pound_port} = $row->valueByName("port");
+
+      if ($row->valueByName('testDomainName') ne $oldRow->valueByName('testDomainName')) {
+        my $libDN = $self->loadLibrary('LibraryDomainName');
+        $libDN->deleteDomainName($oldRow->valueByName('testDomainName'));
+        $libDN->addDomainName($row->valueByName('testDomainName'));
+      }
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');

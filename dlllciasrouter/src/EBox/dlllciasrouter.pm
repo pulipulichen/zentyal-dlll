@@ -516,12 +516,12 @@ sub getServiceParam
         my $portValue = $row->valueByName('port');
         #my $httpToHttpsValue = $row->valueByName('httpToHttps');
         my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
-        my $httpToHttpsValue;
+        my $httpToHttpsValue = 0;
         if ($redirPound_scheme eq 'http') {
             $httpToHttpsValue = 0;
         }
         elsif ($redirPound_scheme eq 'https') {
-            $httpToHttpsValue = 1;
+            #$httpToHttpsValue = 1;
         }
         else {
             next;
@@ -601,7 +601,8 @@ sub getServiceParam
                     $httpToHttpsValue = 0;
                 }
                 elsif ($redirPound_scheme eq 'https') {
-                    $httpToHttpsValue = 1;
+                    #$httpToHttpsValue = 1;
+                    $httpToHttpsValue = 0;
                 }
                 else {
                     next;
