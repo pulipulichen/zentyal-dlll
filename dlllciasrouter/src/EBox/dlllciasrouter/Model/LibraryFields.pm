@@ -495,6 +495,7 @@ sub createFieldContactEmail
         'optional' => 0,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
+        'help' => $self->setFieldCacheScript('contactEmail'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
 
@@ -1469,6 +1470,7 @@ sub createFieldPhysicalLocation
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('physicalLocation'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
@@ -1511,6 +1513,7 @@ sub createFieldHardwareCPU
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('hardwareCPU'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
@@ -1532,6 +1535,7 @@ sub createFieldHardwareRAM
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('hardwareRAM'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
@@ -1651,6 +1655,7 @@ sub createFieldHardwareDisk
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'allowUnsafeChars' => 1,
+        'help' => $self->setFieldCacheScript('hardwareDisk'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
     return $field;
