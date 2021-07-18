@@ -17,6 +17,7 @@ use EBox::Types::HTML;
 use EBox::Types::URI;
 use EBox::Types::Boolean;
 use EBox::Types::IPAddr;
+use EBox::Types::DomainName;
 use EBox::Types::MailAddress;
 use EBox::Types::Password;
 
