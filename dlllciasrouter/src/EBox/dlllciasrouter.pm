@@ -657,6 +657,7 @@ sub getTestServiceParam
 {
     my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
 
+    try {
       my $settings = $self->model('RouterSettings');
 
       my $domainNameValue = $settings->valueByName('testDomainName');
@@ -682,6 +683,12 @@ sub getTestServiceParam
 
         $i++;
       }
+      
+    } catch {
+      $self->model("LibraryToolkit")->show_exceptions($_ 
+        . ' ( getTestServiceParam )');
+      printf("error!!!!!!\n");
+    }
 
     return ($domainHash, $domainHTTPSHash, $i);
 }
