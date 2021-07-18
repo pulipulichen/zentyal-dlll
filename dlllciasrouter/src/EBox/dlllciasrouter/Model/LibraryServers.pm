@@ -125,8 +125,8 @@ sub getDataTable
     #push(@fields, $fieldsFactory->createFieldRedirectToHTTPS());
 
     #push(@fields, $fieldsFactory->createFieldProtocolScheme('POUND', 0, $options->{poundScheme}));
-    push(@fields, $fieldsFactory->createFieldHTTPInternalPortDefaultValue();
-    push(@fields, $fieldsFactory->createFieldHTTPSInternalPortDefaultValue();
+    push(@fields, $fieldsFactory->createFieldHTTPInternalPortDefaultValue());
+    push(@fields, $fieldsFactory->createFieldHTTPSInternalPortDefaultValue());
 
     #push(@fields, $fieldsFactory->createFieldPoundProtocolScheme());
 
