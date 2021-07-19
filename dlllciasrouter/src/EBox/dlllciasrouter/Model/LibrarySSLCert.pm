@@ -159,6 +159,7 @@ sub setupSSLCert
   
   # certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d test-zentyal-3-2021.pulipuli.info
   my $certbotScript = "certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d " . $domainNameValue;
+  system("echo '" . $certbotScript . "'");
   EBox::Sudo::root($certbotScript);
 
   my $folder = "/etc/letsencrypt/live/" . $domainNameValue;
