@@ -713,7 +713,7 @@ sub checkSSLCert
 
       # 如果可以連線，則建立cert
 
-      ($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
+      #($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
       
   # 檢查看看有沒有過期 (必須是距離上次2個月內)
   
