@@ -73,7 +73,7 @@ sub checkSSLCert
 
         if ($modified == 0) {
           $modified = 1;
-          $self->setupSSLCertSwitchToLighttpd();
+          $self->setupSSLCertSwitchToLighttpd($domainNameValue);
         }
         #next;
 
@@ -209,7 +209,7 @@ sub cloneBackendHTTPtoHTTPS
 # 將設定改為適合certbot的伺服器
 sub setupSSLCertSwitchToLighttpd
 {
-  my ($self) = @_;
+  my ($self, $domainName) = @_;
 
   my @params = ();
 
@@ -225,6 +225,13 @@ sub setupSSLCertSwitchToLighttpd
   system("echo '============================'");
   system("cat /etc/pound/pound.conf");
   system("echo '============================'");
+  
+  sleep(3);
+
+  if ($self->checkSSLCertAvailable($domainName) == 1) {
+    system("echo 'setupSSLCertSwitchToLighttpd FAILED!!!'");
+    return 0;
+  }
 
   system("echo 'setupSSLCertSwitchToLighttpd 0'");
   
@@ -245,7 +252,8 @@ sub setupSSLCertSwitchToLighttpd
       { uid => '0', gid => '0', mode => '744' }
   );
 
-  
+  sleep(3);
+
   system("echo '============================'");
   system("cat /etc/lighttpd/lighttpd.conf");
   system("echo '============================'");
