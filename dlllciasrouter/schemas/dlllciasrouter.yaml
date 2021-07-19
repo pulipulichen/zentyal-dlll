@@ -30,6 +30,7 @@ models:
     - LibraryNetwork
     - LibraryRedirect
     - LibraryContact
+    - LibrarySSLCert
 #    - StorageServerSetting
 #    - StorageServerHeader
     - MfsSetting
