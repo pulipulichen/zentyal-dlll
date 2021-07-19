@@ -58,7 +58,7 @@ sub checkSSLCert
   # 跑迴圈，看每個資料
   if (length($domainHash)) {
     while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
-      #system("echo " . $domainNameValue);
+      system("echo [!] " . $domainNameValue);
       
       if ($self->checkSSLCertExists($domainNameValue) == 1) {
         next;
