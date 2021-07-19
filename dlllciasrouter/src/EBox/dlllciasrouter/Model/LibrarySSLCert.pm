@@ -151,12 +151,84 @@ sub checkSSLCertAvailable
   #system("echo '[!] " . $domainNameValue . " " . $result . " " . $intervalDays . "'");
 
   if ($result eq 1) {
-    system("echo 'OK go'");
+    #system("echo 'OK go'");
     return 1;
   }
   else {
     return 0;
   }
+}
+
+sub getParentDomainNameHash
+{
+  my ($self, $domainHash) = @_;
+
+  my $parentDomainHash = (); 
+  my $parentDomainCheckedHash = (); 
+  
+  if (length($domainHash)) {
+      while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {
+        my $parentDomainNameValue = substr($domainNameValue, index($domainNameValue, ".") + 1);
+        if ( exists $parentDomainCheckedHash->{$parentDomainNameValue}  ) {
+          next;
+        }
+
+        $parentDomainCheckedHash->{$parentDomainNameValue} = 1;
+
+        if ($self->checkParentSSLCertAvailable($parentDomainNameValue)) {
+          $parentDomainHash->{$parentDomainNameValue} = 1;
+        }
+      }
+  }
+
+  return ($parentDomainHash);
+}
+
+# 20210720 Pulipuli Chen
+# 確認上層可行
+sub checkParentSSLCertAvailable
+{
+  my ($self, $parentDomainNameValue) = @_;
+
+  #my $parentDomainNameValue = substr($domainNameValue, index($domainNameValue, ".") + 1);
+  
+  #$domainNameValue = "blog.pulipuli.info";
+  my $testURL = "https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec";
+
+  # -----------------------------------------------------------
+  # 先推測是外面的伺服器
+  my $result = `wget -qO- ${testURL}?q=https://${$parentDomainNameValue}/`;
+  
+  if ($result eq 1) {
+    #system("echo 'OK go'");
+    return 1;
+  }
+
+  # -----------------------------------------------------------
+  # 如果不能連線，表示可能是我們這邊要設定
+  my $resultLocalhost = `wget -qO- ${testURL}?q=http://${$parentDomainNameValue}:888/certbot/`;
+  
+  if ($resultLocalhost eq 0) {
+    #system("echo 'OK go'");
+    # 表示這不是我們可以操控的網域
+    return 0;
+  }
+
+  # -------------------------------------
+  # 確認它的上層是可以SSL
+  my $parent2DomainNameValue = substr($parentDomainNameValue, index($parentDomainNameValue, ".") + 1);
+  my $resultParent2 = `wget -qO- ${testURL}?q=https://${$parent2DomainNameValue}/`;
+  
+  if ($resultParent2 eq 0) {
+    #system("echo 'OK go'");
+    # 表示這不是我們可以申請的網域
+    return 0;
+  }
+
+  # -------------------------------------
+  # 如果可以連線，則開始設定
+  
+  return 1;
 }
 
 # 20210718 Pulipuli Chen
