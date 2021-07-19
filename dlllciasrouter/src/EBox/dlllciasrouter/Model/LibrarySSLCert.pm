@@ -280,7 +280,7 @@ sub setupSSLCertSwitchToLighttpd
 
   system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
-  return;
+  return 1;
 }
 
 # 20210718 Pulipuli Chen
