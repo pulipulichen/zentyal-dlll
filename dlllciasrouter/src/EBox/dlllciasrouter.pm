@@ -697,9 +697,10 @@ sub checkSSLCert
 
   # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
 
-  foreach my $domain (keys %domainHash) { 
+  while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
     system("echo " + $domain);
   }
+  
 
   # 跑迴圈，看每個資料
 
