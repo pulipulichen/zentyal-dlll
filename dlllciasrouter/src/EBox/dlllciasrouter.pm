@@ -248,11 +248,11 @@ sub _setConf
     $self->updatePoundCfg();
     $self->updateXRDPCfg();
     
-    my $libStorage = $self->model("LibraryStorage");
-
-    my $mountChanged = $libStorage->updateMountServers();
-
     if (0) {
+      
+      my $libStorage = $self->model("LibraryStorage");
+      my $mountChanged = $libStorage->updateMountServers();
+
       # 先完全不使用moosefs
       if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
           # 20150528 測試使用，先關閉
