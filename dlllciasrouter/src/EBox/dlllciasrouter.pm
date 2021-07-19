@@ -334,6 +334,8 @@ sub initLighttpd
     # 變更 /usr/share/zentyal/www/dlllciasrouter 權限 
     system('chmod 744  /usr/share/zentyal/www/dlllciasrouter');
     system('chmod 755  /usr/share/zentyal/www/dlllciasrouter/certbot');
+    
+
 }
 
 # 20150519 Pulipuli Chen

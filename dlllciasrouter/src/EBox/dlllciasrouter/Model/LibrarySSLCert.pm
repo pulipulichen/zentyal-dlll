@@ -172,19 +172,10 @@ sub setupSSLCert
     # ok. moving on.
   }
   else {
-    system("echo 'setupSSLCert no folder" . $folder . "'");
+    system("echo 'setupSSLCert no folder " . $folder . "'");
     return 0;
   }
 
-  # ------------------
-  # 確認是否存在
-  my $poundCertFolder = "/etc/pound/cert";
-  if (-d $poundCertFolder) {
-    # ok. moving on.
-  }
-  else {
-    EBox::Sudo::root("mkdir -p " . $poundCertFolder);
-  }
   
   # -------------------
   # 組合檔案
@@ -291,7 +282,7 @@ sub setupSSLCertSwitchToPound
   );
 
   # 2. 重新啟動lighttpd
-  EBox::Sudo::root("service lighttpd restart");
+  #EBox::Sudo::root("service lighttpd restart");
   #EBox::Service::manage('dlllciasrouter.lighttpd', 'restart');
 
   # 3. 啟動pound

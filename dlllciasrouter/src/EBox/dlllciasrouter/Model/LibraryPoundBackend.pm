@@ -61,6 +61,20 @@ sub initDefaultPound
         \@nullParams,
         { uid => '0', gid => '0', mode => '740' }
     );
+
+    # ------------------
+    # 確認是否存在
+    my $poundCertFolder = "/etc/pound/cert";
+    if (-d $poundCertFolder) {
+      # ok. moving on.
+    }
+    else {
+      EBox::Sudo::root("mkdir -p " . $poundCertFolder);
+    }
+
+    system('chmod 755 /etc/pound/cert/');
+    system('chmod 755 /etc/letsencrypt/live/');
+
 }
 
 # ----------------------------------------------------
