@@ -223,6 +223,7 @@ sub setupSSLCertSwitchToLighttpd
 
   # 1. 停止pound
   EBox::Sudo::root("service pound stop");
+  EBox::Sudo::root("pkill pound");
 
   system("echo 'setupSSLCertSwitchToLighttpd 1'");
 
