@@ -51,6 +51,10 @@ sub checkSSLCert
 {
   my ($self, $domainHash, $domainHTTPSHash) = @_;
 
+  if (1) {
+    return 0;
+  }
+
   try {
 
     # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
@@ -186,7 +190,10 @@ sub setupSSLCert
   
   my $build = "cat /etc/letsencrypt/live/" . $domainNameValue . "/privkey.pem /etc/letsencrypt/live/" . $domainNameValue . "/fullchain.pem > " . $targetPem;
   system("echo '" . $build . "'");
-  EBox::Sudo::root($build);
+  
+  #EBox::Sudo::root($build);
+  system("echo 'manual wait 30 sec'");
+  sleep(30);
 
   system("echo 'setupSSLCert finish'");
   
