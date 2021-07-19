@@ -53,10 +53,13 @@ sub dlllciasrouter_init
         $self->initApache();
         $self->initRootCrontab();
         $self->initNFSClient();
-        $self->initMooseFS();
-        $self->startMooseFS();
-        $self->initNFSServer();
-        $self->startNFSServer();
+
+        my $libStorage = $self->model("LibraryStorage");
+        $libStorage->initMooseFS();
+        $libStorage->startMooseFS();
+        $libStorage->initNFSServer();
+        $libStorage->startNFSServer();
+
         $self->setPublicCSS();
 
         $self->initTemplateMas();
@@ -244,23 +247,30 @@ sub _setConf
     $self->updatePoundErrorMessage();
     $self->updatePoundCfg();
     $self->updateXRDPCfg();
-    my $mountChanged = $self->updateMountServers();
-    if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
-        # 20150528 測試使用，先關閉
-        if ($mountChanged == 1) {
-            $self->restartMooseFS();
-            $self->remountChunkserver();
-        }
-
-        my $exportChanged =  $self->updateNFSExports();
-        if ($exportChanged == 1) {
-            $self->restartNFSServer();
-        }
-    }
-    else {
-        $self->stopMount();
-    }
     
+    my $libStorage = $self->model("LibraryStorage");
+
+    my $mountChanged = $libStorage->updateMountServers();
+
+    if (0) {
+      # 先完全不使用moosefs
+      if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
+          # 20150528 測試使用，先關閉
+          if ($mountChanged == 1) {
+              $libStorage->restartMooseFS();
+              $libStorage->remountChunkserver();
+          }
+
+          my $exportChanged =  $libStorage->updateNFSExports();
+          if ($exportChanged == 1) {
+              $libStorage->restartNFSServer();
+          }
+      }
+      else {
+          $libStorage->stopMount();
+      }
+    }
+
     # 20181028 試著加入儲存設定看看？
     #EBox::CGI::SaveChanges->saveAllModulesAction();
     #$self->saveModuleChange();
@@ -899,211 +909,6 @@ sub loadLibrary
     return $self->model($library);
 }
 
-# 20150527 Pulipuli Chen
-sub initMooseFS
-{
-    my ($self) = @_;
-
-    my @params = ();
-    $self->writeConfFileOnce(
-        '/var/lib/mfs/metadata.mfs',
-        "dlllciasrouter/mfs/lib/metadata.mfs.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    # 變更權限 
-    system('chown mfs:mfs  /var/lib/mfs/metadata.mfs');
-
-    # ---------------------------------------------------------
-
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-cgiserv',
-    #    "dlllciasrouter/mfs/default/moosefs-cgiserv.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-chunkserver',
-    #    "dlllciasrouter/mfs/default/moosefs-chunkserver.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-master',
-    #    "dlllciasrouter/mfs/default/moosefs-master.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-metalogger',
-    #    "dlllciasrouter/mfs/default/moosefs-metalogger.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-
-    # --------------------------------------------
-
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfschunkserver.cfg',
-        "dlllciasrouter/mfs/etc/mfschunkserver.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfsmaster.cfg',
-        "dlllciasrouter/mfs/etc/mfsmaster.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfsmetalogger.cfg',
-        "dlllciasrouter/mfs/etc/mfsmetalogger.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfsmount.cfg',
-        "dlllciasrouter/mfs/etc/mfsmount.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfstopology.cfg',
-        "dlllciasrouter/mfs/etc/mfstopology.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    if (! -e '/etc/mfs/mfsexports.cfg') {
-        my @mfsParams = ();
-        $self->writeConfFileOnce(
-            '/etc/mfs/mfsexports.cfg',
-            "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
-            \@mfsParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
-    }
-
-    if (! -e '/etc/exports') {
-        my @nfsParams = ();
-        push(@nfsParams, 'paths' => []);
-        
-        $self->writeConfFileOnce(
-            '/etc/exports',
-            "dlllciasrouter/nfs-server/exports.mas",
-            \@nfsParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
-    }
-
-    if (! -e '/etc/mfs/mfshdd.cfg') {
-        my @hddParams = ();
-        my $mfsMod = $self->model("MfsSetting");
-        push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
-        push(@hddParams, 'paths' => []);
-        $self->writeConfFileOnce(
-            '/etc/mfs/mfshdd.cfg',
-            "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
-            \@hddParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
-    }
-}
-
-# 20150529 Pulipuli Chen
-sub startMooseFS
-{    
-    my ($self) = @_;
-
-    # mfsEnable
-    my $mfsMod = $self->model("MfsSetting");
-    if ($mfsMod->value("mfsEnable") == 0) {
-      return 0;
-    }
-
-    try {
-        if (readpipe("sudo netstat -plnt | grep '/mfsmaster'") eq "") {
-            system('sudo service moosefs-master start');
-            system('sudo service moosefs-metalogger start');
-        }
-        if (readpipe("sudo netstat -plnt | grep '/mfschunkserve'") eq "") {
-            system('sudo service moosefs-chunkserver start');
-            #system("echo 'chunkserver start a'");
-        }
-        if (readpipe("sudo netstat -plnt | grep ':9425'") eq "") {
-            system('sudo service moosefs-cgiserv start');
-        }
-        if (readpipe("sudo netstat -plnt | grep '/mfsmount'") eq "") {
-            system('sudo mfsmount');
-        }
-    } catch {
-        $self->model("LibraryToolkit")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
-    };
-}
-
-# 20150528 Pulipuli Chen
-sub initNFSServer
-{
-    my ($self) = @_;
-
-    my @params = ();
-
-    $self->writeConfFile(
-        '/etc/default/nfs-kernel-server',
-        "dlllciasrouter/nfs-server/nfs-kernel-server.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    $self->writeConfFile(
-        '/etc/default/nfs-common',
-        "dlllciasrouter/nfs-server/nfs-common.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-}
-
-# 20150529 Pulipuli Chen
-sub startNFSServer
-{
-    if (readpipe("sudo netstat -plnt | grep '/rpc.mountd'") eq "") {
-        system('sudo service nfs-kernel-server start');
-    }
-}
-
-# 20150528 Pulipuli Chen
-sub initNFSClient
-{
-    my ($self) = @_;
-
-    if (! -e '/opt/mfschunkservers/nfs-mount.sh') {
-        my @mountParams = ();
-        push(@mountParams, 'servers' => []);
-        $self->writeConfFileOnce(
-            '/opt/mfschunkservers/nfs-mount.sh',
-            "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
-            \@mountParams,
-            { uid => '0', gid => '0', mode => '755' }
-        );
-    }
-
-    my @params = ();
-    $self->writeConfFileOnce(
-        '/opt/mfschunkservers/nfs-umount.sh',
-        "dlllciasrouter/nfs-client/nfs-umount.sh.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '755' }
-    );
-
-    $self->writeConfFileOnce(
-        '/opt/mfschunkservers/mfs-clear-metaid.sh',
-        "dlllciasrouter/nfs-client/mfs-clear-metaid.sh.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '755' }
-    );
-}
-
 sub writeConfFileOnce
 {
     my ($self, $file, $compname, $params, $defaults) = @_;
@@ -1115,196 +920,6 @@ sub writeConfFileOnce
             $defaults
         );
     }
-}
-
-##
-# 20150528 Pulipuli Chen
-# 把NFS掛載到本機伺服器上
-##
-sub updateNFSExports
-{
-    # 從這邊取得資料出來
-    #my $expMod = $self->model("ExportSettings");
-    my ($self) = @_;
-
-    my $mod = $self->model("ExportsSetting");
-
-    my $dirs = ();
-    # 第一次迴圈，先取出資料出來
-    for my $id (@{$mod->ids()}) {
-        my $row = $mod->row($id);
-
-        # /mnt/mfs/pve 10.6.0.0/24(rw,fsid=0,async,no_root_squash,subtree_check)
-        my $host = $row->valueByName("host");
-        my $ro = $row->valueByName("readOnly");
-        if ($ro == 1) {
-            $ro = "ro";
-        }
-        else {
-            $ro = "rw";
-        }
-        my $async = $row->valueByName("async");
-        if ($async == 1) {
-            $async = "async";
-        }
-        else {
-            $async = "sync";
-        }
-        my $squash = $row->valueByName("squash");
-        
-        my $hostConfig = $host."(".$ro.",fsid=0,".$async.",".$squash.",subtree_check".")\t";
-
-        # ---------------------
-
-        my $dir = $row->valueByName("dir");
-        my $dirPath = "/mnt/mfs/".$dir;
-
-        if (! -d $dirPath) {
-            system('sudo mkdir -p ' . $dirPath);
-        }
-
-        if ( ! exists $dirs->{$dir} ) {
-            $dirs->{$dir} = $dirPath."\t";
-        }
-        $dirs->{$dir} = $dirs->{$dir} . $hostConfig;
-    }
-
-    my @paths = [];    # 稍後要從StorageServer取出細節
-    my $i = 0;
-    # 第二次迴圈
-    while (my ($dir, $path) = each(%$dirs)) {
-        $paths[$i] = $path;
-        $i++;
-    }
-    
-    my $pveDirPath = "/mnt/mfs/pve";
-    if (! -d $pveDirPath) {
-        system('sudo mkdir -p ' . $pveDirPath);
-    }
-
-    my @nfsParams = ();
-    # 從這邊取得資料出來
-    #my $expMod = $self->model("ExportSettings");
-    push(@nfsParams, 'paths' => @paths);
-    #push(@nfsParams, 'paths' => []);
-    
-    my $nfsChanged = $self->checkConfigChange(
-        '/etc/exports',
-        "dlllciasrouter/nfs-server/exports.mas",
-        \@nfsParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    # 20150529 本來是要修改的……後來還是算了吧
-    my @mfsParams = ();
-    my $mfsChanged = $self->checkConfigChange(
-        '/etc/mfs/mfsexports.cfg',
-        "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
-        \@mfsParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    return ($nfsChanged == 1 || $mfsChanged == 1 );
-}
-
-##
-# 20150528 Pulipuli Chen
-##
-sub updateMountServers
-{
-    my ($self) = @_;
-
-    #system('sudo /opt/mfschunkservers/nfs-umount.sh');
-
-    my @servers = [];    # 稍後要從StorageServer取出細節
-    my @paths = [];    # 稍後要從StorageServer取出細節
-    my $i = 0;
-    my $mod = $self->model('StorageServer');
-    for my $id (@{$mod->ids()}) {
-        my $row = $mod->row($id);
-
-        if ($row->valueByName("mountEnable") == 0 || !defined($row->valueByName("mountPath")) ) {
-            next;
-        }
-
-        my $ipaddr = $row->valueByName("ipaddr");
-        my $type = $row->valueByName("mountType");
-        my $option = $row->valueByName("mountPath");
-        if ($type eq "cifs") {
-            my $username = $row->valueByName("cifsUsername");
-            my $password = $row->valueByName("cifsPassword");
-            $option = 'username="'.$username.'",password="'.$password.'" //' . $ipaddr . $option;
-        }
-        elsif ($type eq "nfs") {
-            $option = $ipaddr . ":" . $option;
-        }
-        
-        # 如果沒有目錄，則新增目錄
-        my $path = "/opt/mfschunkservers/" . $ipaddr;
-        if (!-d $path) {
-            system('sudo mkdir -p ' . $path);
-            system('sudo chown mfs:mfs ' . $path);
-        }
-        my $mfsPath = $path . "/mfs";
-
-        # mount -t cifs -o username="Username",password="Password" //10.6.1.1/mnt/smb /opt/mfschunkservers/10.6.1.1
-        my $conf = "mount -t " . $type . " " . $option . " " . $path;
-        $servers[$i] = $conf;
-        $paths[$i] = $mfsPath;
-
-        # 此處進行掛載
-        system('sudo ' + $conf + " &");
-        
-        my $isMounted = readpipe("mountpoint " . $path); #10.6.1.1 is not a mountpoint
-        # 建立掛載後的路徑 
-        if ($isMounted eq $path . " is a mountpoint" && !-d $mfsPath) {
-            system('sudo mkdir -p ' . $mfsPath);
-            system('sudo chown mfs:mfs ' . $mfsPath);
-        }
-
-        $i++;
-    }   # for my $id (@{$mod->ids()}) {}
-
-    # -----------------------------------
-
-    my $mountChanged = 0;
-
-    my @mountParams = ();
-    push(@mountParams, 'servers' => @servers);
-
-    
-    #$self->writeConfFile(
-    my $nfsmountChanged = $self->checkConfigChange(
-        '/opt/mfschunkservers/nfs-mount.sh',
-        "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
-        \@mountParams,
-        { uid => '0', gid => '0', mode => '755' }
-    );
-
-    system('sudo /opt/mfschunkservers/nfs-mount.sh');
-
-    # -------------------------------------
-
-    my @hddParams = ();
-    my $mfsMod = $self->model("MfsSetting");
-    push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
-    push(@hddParams, 'paths' => @paths);
-
-    
-    #$self->writeConfFile(
-    my $mfshddChanged = $self->checkConfigChange(
-        '/etc/mfs/mfshdd.cfg',
-        "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
-        \@hddParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    if ($nfsmountChanged == 1 || $mfshddChanged == 1) {
-        $mountChanged = 1;
-    }
-
-    return $mountChanged;
-    #system('sudo mfsmount');
 }
 
 # 20150529 Pulipuli Chen
@@ -1335,53 +950,6 @@ sub checkConfigChange
     return $changed;
 }
 
-# 20150528 Pulipuli Chen
-sub restartMooseFS
-{
-    system('sudo service moosefs-master restart');
-    system('sudo service moosefs-metalogger restart');
-    system('sudo service moosefs-cgiserv restart');
-}
-
-# 20150528 Pulipuli Chen
-sub remountChunkserver
-{
-    system('sudo service moosefs-chunkserver stop');
-    system('sudo /opt/mfschunkservers/nfs-umount.sh');
-    #system('sudo /opt/mfschunkservers/nfs-mount.sh');
-    system('sudo service moosefs-chunkserver start');
-    #system("echo 'chunkserver start b'");
-    if (readpipe("sudo netstat -plnt | grep '/mfschunkserve'") eq "") {
-        # 修復後重新掛載
-        system('sudo /opt/mfschunkservers/mfs-clear-metaid.sh');
-        
-        system('sudo service moosefs-chunkserver start');
-        #system("echo 'chunkserver start c'");
-    }
-    system('sudo mfsmount');
-}
-
-# 20150528 Pulipuli Chen
-sub restartNFSServer
-{
-    #system('sudo service nfs-kernel-server restart');
-    system('sudo exportfs -ar');
-}
-
-# 20150528 Pulipuli Chen
-sub stopMount
-{
-    system('sudo service nfs-kernel-server stop');
-
-    system('sudo service moosefs-cgiserv stop');
-    system('sudo service moosefs-chunkserver stop');
-    system('sudo service moosefs-master stop');
-    system('sudo service moosefs-metalogger stop');
-    system('sudo umount /mnt/mfs');
-
-    system('sudo service moosefs-chunkserver stop');
-    system('sudo /opt/mfschunkservers/nfs-umount.sh');
-}
 
 ##
 # 設定templates的MAS檔案
