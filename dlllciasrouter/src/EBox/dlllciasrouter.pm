@@ -481,7 +481,8 @@ sub updatePoundCfg
       # 一併更新PoundSettings
       $self->model("PoundSettings")->updateCfg();
     } catch {
-        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
+      system('echo "[ERROR]"');
+      $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
     };
 }   # sub updatePoundCfg
 
