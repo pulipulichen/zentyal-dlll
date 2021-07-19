@@ -178,6 +178,8 @@ ListenHTTP
 	End
 % } #foreach my $r (@{$redir}) {
 
+End
+
 % ======================================================================================
 % print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
 ListenHTTPS
@@ -193,14 +195,14 @@ ListenHTTPS
         Err503 "/etc/pound/error.html"
 
 % print "\n# -----------------------------------------\n";
-% print "# Back End\n";
+% print "# Cert\n";
 % print "# -----------------------------------------\n";
 
 % if (length($domainHTTPSHash)) {
 %   while (my ($domainNameValue, $backEndArray) = each ($domainHTTPSHash)) {  	
       Cert    "/etc/pound/cert/<% $domainNameValue %>.pem"
-%   } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
-% } # if (length($domainHash)) {
+%   } # while (my ($domainNameValue, $value) = each ($domainHTTPSHash)) {  
+% } # if (length($domainHTTPSHash)) {
 
 % print "\n# -----------------------------------------\n";
 % print "# Back End\n";
