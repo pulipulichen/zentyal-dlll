@@ -965,30 +965,30 @@ sub initMooseFS
 
     # ---------------------------------------------------------
 
-    $self->writeConfFile(
-        '/etc/default/moosefs-cgiserv',
-        "dlllciasrouter/mfs/default/moosefs-cgiserv.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFile(
-        '/etc/default/moosefs-chunkserver',
-        "dlllciasrouter/mfs/default/moosefs-chunkserver.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFile(
-        '/etc/default/moosefs-master',
-        "dlllciasrouter/mfs/default/moosefs-master.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFile(
-        '/etc/default/moosefs-metalogger',
-        "dlllciasrouter/mfs/default/moosefs-metalogger.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
+    #$self->writeConfFile(
+    #    '/etc/default/moosefs-cgiserv',
+    #    "dlllciasrouter/mfs/default/moosefs-cgiserv.mas",
+    #    \@params,
+    #    { uid => '0', gid => '0', mode => '644' }
+    #);
+    #$self->writeConfFile(
+    #    '/etc/default/moosefs-chunkserver',
+    #    "dlllciasrouter/mfs/default/moosefs-chunkserver.mas",
+    #    \@params,
+    #    { uid => '0', gid => '0', mode => '644' }
+    #);
+    #$self->writeConfFile(
+    #    '/etc/default/moosefs-master',
+    #    "dlllciasrouter/mfs/default/moosefs-master.mas",
+    #    \@params,
+    #    { uid => '0', gid => '0', mode => '644' }
+    #);
+    #$self->writeConfFile(
+    #    '/etc/default/moosefs-metalogger',
+    #    "dlllciasrouter/mfs/default/moosefs-metalogger.mas",
+    #    \@params,
+    #    { uid => '0', gid => '0', mode => '644' }
+    #);
 
     # --------------------------------------------
 
@@ -1063,6 +1063,13 @@ sub initMooseFS
 sub startMooseFS
 {    
     my ($self) = @_;
+
+    # mfsEnable
+    my $mfsMod = $self->model("MfsSetting");
+    if ($mfsMod->value("mfsEnable") == 0) {
+      return 0;
+    }
+
     try {
         if (readpipe("sudo netstat -plnt | grep '/mfsmaster'") eq "") {
             system('sudo service moosefs-master start');
