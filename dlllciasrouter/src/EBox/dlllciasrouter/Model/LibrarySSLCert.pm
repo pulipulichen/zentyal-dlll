@@ -58,10 +58,10 @@ sub checkSSLCert
   # 跑迴圈，看每個資料
   if (length($domainHash)) {
     while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
-      system("echo '[!]" . $domainNameValue . "'");
+      #system("echo '[!] " . $domainNameValue . "'");
       
       if ($self->checkSSLCertExists($domainNameValue) == 1) {
-        next;
+        #next;
       }
       
       if ($self->checkSSLCertAvailable($domainNameValue) == 0) {
@@ -90,16 +90,17 @@ sub checkSSLCertAvailable
 {
   my ($self, $domainNameValue) = @_;
   
-  # 測試有沒有已經存在的cert
+  # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
+  my $testURL = "https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec";
+  my $result = `wget -qO- ${testURL}?q=http://${domainNameValue}:888/certbot/`
+  system("echo '[!] " . $domainNameValue . " " . $result . "'");
 
-    # 測試能不能連線
-
-      # 如果可以連線，則建立cert
-
-      #($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
-      
-  # 檢查看看有沒有過期 (必須是距離上次2個月內)
-  return 1;
+  if ($result eq "1") {
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }
 
 # 20210718 Pulipuli Chen
