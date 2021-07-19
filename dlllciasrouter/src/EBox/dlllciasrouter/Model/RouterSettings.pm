@@ -234,7 +234,8 @@ sub _table
 
     #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmin', __('Zentyal Admin Configuration')));
 
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ ZentyalPorts', __('Zentyal Ports')));
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ ZentyalPorts', __('Zentyal Network')));
+
 
     push(@fields, new EBox::Types::Port(
         'fieldName'     => 'webadminPort',
@@ -263,6 +264,15 @@ sub _table
             optional => 0,
         ));
 
+    push(@fields, new EBox::Types::IP(
+            fieldName     => 'dnsIP',
+            printableName => __('Another DNS IP'),
+            help => __('If you want to use another IP which is different from the external network interface, you can custom the DNS IP in this field.'),
+            editable      => 1,
+            unique        => 1,
+            #defaultValue => 64489,
+            optional => 1,
+        ));
     # ----------------------------------------------------------
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundConfig', __('Pound Configuration')));
