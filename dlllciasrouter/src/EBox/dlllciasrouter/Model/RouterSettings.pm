@@ -265,7 +265,7 @@ sub _table
         ));
 
     push(@fields, new EBox::Types::HostIP(
-            fieldName     => 'dnsIP',
+            fieldName     => 'anotherDNSIP',
             printableName => __('Another DNS IP'),
             help => __('If you want to use another IP which is different from the external network interface, you can custom the DNS IP in this field.'),
             editable      => 1,
