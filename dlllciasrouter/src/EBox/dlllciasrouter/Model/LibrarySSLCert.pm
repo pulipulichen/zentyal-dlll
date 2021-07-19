@@ -219,6 +219,8 @@ sub setupSSLCertSwitchToLighttpd
   # 1. 停止pound
   EBox::Sudo::root("service pound stop");
 
+  system("echo 'setupSSLCertSwitchToLighttpd 1'");
+
   my @params = ();
   $self->parentModule()->writeConfFile(
       '/etc/lighttpd/lighttpd.conf',
@@ -227,9 +229,12 @@ sub setupSSLCertSwitchToLighttpd
       { uid => '0', gid => '0', mode => '744' }
   );
 
+  system("echo 'setupSSLCertSwitchToLighttpd 2'");
+
   # 3. 重新啟動lighttpd
   #EBox::Sudo::root("/etc/init.d/lighttpd restart");
   EBox::Sudo::root("service lighttpd restart");
+
 
   system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
