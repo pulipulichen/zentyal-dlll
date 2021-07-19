@@ -52,7 +52,7 @@ sub checkSSLCert
   my ($self, $domainHash, $domainHTTPSHash) = @_;
 
   if (1) {
-    return 0;
+    return ($domainHTTPSHash);
   }
 
   try {
