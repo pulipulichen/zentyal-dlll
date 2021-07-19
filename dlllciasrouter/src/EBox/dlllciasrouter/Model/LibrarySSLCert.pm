@@ -75,7 +75,7 @@ sub checkSSLCert
           $modified = 1;
           $self->setupSSLCertSwitchToLighttpd();
         }
-        next;
+        #next;
 
         my $result = $self->setupSSLCert($domainNameValue);
         if ($result == 1) {
