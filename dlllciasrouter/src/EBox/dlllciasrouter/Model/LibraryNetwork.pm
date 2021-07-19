@@ -50,7 +50,7 @@ sub getExternalIpaddr
     my ($self) = @_;
 
     my $libSettings = $self->loadLibrary('RouterSettings');
-    my $ipaddr = $libSettings->valueByName("anotherDNSIP");
+    my $ipaddr = $libSettings->value("anotherDNSIP");
     #if (!defined($ipaddr)) {
         #$self->loadLibrary('LibraryToolkit')->show_exceptions(__('Another DNS IP') 
         #    . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
