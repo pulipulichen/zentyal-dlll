@@ -61,11 +61,11 @@ sub checkSSLCert
       #system("echo " . $domainNameValue);
       
       if ($self->checkSSLCertExists($domainNameValue) == 1) {
-        continue;
+        next;
       }
       
       if ($self->checkSSLCertAvailable($domainNameValue) == 0) {
-        continue;
+        next;
       }
       
       if ($modified == 0) {
