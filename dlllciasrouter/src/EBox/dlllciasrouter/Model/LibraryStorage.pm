@@ -63,25 +63,25 @@ sub initMooseFS
 
     # ---------------------------------------------------------
 
-    #$self->writeConfFile(
+    #$self->parentModule()->writeConfFile(
     #    '/etc/default/moosefs-cgiserv',
     #    "dlllciasrouter/mfs/default/moosefs-cgiserv.mas",
     #    \@params,
     #    { uid => '0', gid => '0', mode => '644' }
     #);
-    #$self->writeConfFile(
+    #$self->parentModule()->writeConfFile(
     #    '/etc/default/moosefs-chunkserver',
     #    "dlllciasrouter/mfs/default/moosefs-chunkserver.mas",
     #    \@params,
     #    { uid => '0', gid => '0', mode => '644' }
     #);
-    #$self->writeConfFile(
+    #$self->parentModule()->writeConfFile(
     #    '/etc/default/moosefs-master',
     #    "dlllciasrouter/mfs/default/moosefs-master.mas",
     #    \@params,
     #    { uid => '0', gid => '0', mode => '644' }
     #);
-    #$self->writeConfFile(
+    #$self->parentModule()->writeConfFile(
     #    '/etc/default/moosefs-metalogger',
     #    "dlllciasrouter/mfs/default/moosefs-metalogger.mas",
     #    \@params,
@@ -195,14 +195,14 @@ sub initNFSServer
 
     my @params = ();
 
-    $self->writeConfFile(
+    $self->parentModule()->writeConfFile(
         '/etc/default/nfs-kernel-server',
         "dlllciasrouter/nfs-server/nfs-kernel-server.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
 
-    $self->writeConfFile(
+    $self->parentModule()->writeConfFile(
         '/etc/default/nfs-common',
         "dlllciasrouter/nfs-server/nfs-common.mas",
         \@params,
@@ -322,7 +322,7 @@ sub updateNFSExports
     push(@nfsParams, 'paths' => @paths);
     #push(@nfsParams, 'paths' => []);
     
-    my $nfsChanged = $self->checkConfigChange(
+    my $nfsChanged = $self->parentModule()->checkConfigChange(
         '/etc/exports',
         "dlllciasrouter/nfs-server/exports.mas",
         \@nfsParams,
@@ -331,7 +331,7 @@ sub updateNFSExports
 
     # 20150529 本來是要修改的……後來還是算了吧
     my @mfsParams = ();
-    my $mfsChanged = $self->checkConfigChange(
+    my $mfsChanged = $self->parentModule()->checkConfigChange(
         '/etc/mfs/mfsexports.cfg',
         "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
         \@mfsParams,
@@ -407,8 +407,8 @@ sub updateMountServers
     push(@mountParams, 'servers' => @servers);
 
     
-    #$self->writeConfFile(
-    my $nfsmountChanged = $self->checkConfigChange(
+    #$self->parentModule()->writeConfFile(
+    my $nfsmountChanged = $self->parentModule()->checkConfigChange(
         '/opt/mfschunkservers/nfs-mount.sh',
         "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
         \@mountParams,
@@ -425,8 +425,8 @@ sub updateMountServers
     push(@hddParams, 'paths' => @paths);
 
     
-    #$self->writeConfFile(
-    my $mfshddChanged = $self->checkConfigChange(
+    #$self->parentModule()->writeConfFile(
+    my $mfshddChanged = $self->parentModule()->checkConfigChange(
         '/etc/mfs/mfshdd.cfg',
         "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
         \@hddParams,
