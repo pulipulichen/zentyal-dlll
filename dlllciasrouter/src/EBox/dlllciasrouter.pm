@@ -18,7 +18,7 @@ use File::Slurp;
 
 use POSIX;
 
-use LWP::Simple;
+#use LWP::Simple;
 
 # Method: _create
 #
