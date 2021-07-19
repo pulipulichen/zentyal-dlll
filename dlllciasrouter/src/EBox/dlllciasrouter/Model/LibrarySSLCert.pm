@@ -153,7 +153,7 @@ sub setupSSLCert
 {
   my ($self, $domainNameValue) = @_;
 
-  system("echo 'setupSSLCert'");
+  system("echo 'setupSSLCert start'");
 
   # 則建立cert
   
@@ -186,7 +186,10 @@ sub setupSSLCert
   my $targetPem = $poundCertFolder . "/" . $domainNameValue . ".pem";
   
   my $build = "cat /etc/letsencrypt/live/" . $domainNameValue . "/privkey.pem /etc/letsencrypt/live/" . $domainNameValue . "/fullchain.pem > " . $targetPem;
+  system("echo '" . $build . "'");
   EBox::Sudo::root($build);
+
+  system("echo 'setupSSLCert finish'");
   
   return 1;
 }
@@ -226,6 +229,8 @@ sub setupSSLCertSwitchToLighttpd
 
   # 3. 重新啟動lighttpd
   EBox::Sudo::root("/etc/init.d/lighttpd restart");
+
+  system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
   return;
 }
