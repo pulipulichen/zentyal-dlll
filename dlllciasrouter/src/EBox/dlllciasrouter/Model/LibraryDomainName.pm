@@ -55,12 +55,12 @@ sub addDomainName
     my ($self, $domainName) = @_;
 
     my $libSettings = $self->loadLibrary('RouterSettings');
-    my $ipaddr2 = $libSettings->value("anotherDNSIP");
+    my $ipaddr = $libSettings->value("anotherDNSIP");
 
-    #if ($ipaddr eq "") {
+    if (!defined($ipaddr)) {
       my $libNetwork = $self->loadLibrary('LibraryNetwork');
-      my $ipaddr = $libNetwork->getExternalIpaddr();
-    #}
+      $ipaddr = $libNetwork->getExternalIpaddr();
+    }
 
     $self->addDomainNameWithIP($domainName, $ipaddr);
 }
