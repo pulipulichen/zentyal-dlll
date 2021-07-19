@@ -18,8 +18,6 @@ use File::Slurp;
 
 use POSIX;
 
-#use LWP::Simple;
-
 # Method: _create
 #
 # Overrides:
@@ -408,16 +406,10 @@ sub updatePoundCfg
     my $vmHash = ();
     my $i = 0;
 
-    ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
-
-    #($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
-
-    #my $check1 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://testb.dlll.nccu.edu.tw");
-    #my $check2 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
-    #my $check3 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://blog.pulipuli.info");
+    ($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
+    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
+    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
+    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
 
     # ----------------------------
     # 轉址
@@ -431,13 +423,9 @@ sub updatePoundCfg
     # ----------------------------
 
     my @servicesParams = ();
-
-    #push(@servicesParams, 'check1' => $check1);
-    #push(@servicesParams, 'check2' => $check2);
-    #push(@servicesParams, 'check3' => $check3);
-
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
+    push(@servicesParams, 'testDomainName' => $testDomainName);
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'timeout' => $timeout);
     #push(@servicesParams, 'enableError' => $enableError);
@@ -505,7 +493,7 @@ sub updateXRDPCfg
 
 sub getServiceParam
 {
-    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
+    my ($self, $modName, $domainHash, $domainHTTPSHash, $vmHash, $i) = @_;
 
     my $libRedir = $self->model('LibraryRedirect');
     my $lib = $self->getLibrary();
@@ -528,12 +516,12 @@ sub getServiceParam
         my $portValue = $row->valueByName('port');
         #my $httpToHttpsValue = $row->valueByName('httpToHttps');
         my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
-        my $httpToHttpsValue = 0;
+        my $httpToHttpsValue;
         if ($redirPound_scheme eq 'http') {
             $httpToHttpsValue = 0;
         }
         elsif ($redirPound_scheme eq 'https') {
-            #$httpToHttpsValue = 1;
+            $httpToHttpsValue = 1;
         }
         else {
             next;
@@ -613,8 +601,7 @@ sub getServiceParam
                     $httpToHttpsValue = 0;
                 }
                 elsif ($redirPound_scheme eq 'https') {
-                    #$httpToHttpsValue = 1;
-                    $httpToHttpsValue = 0;
+                    $httpToHttpsValue = 1;
                 }
                 else {
                     next;
@@ -661,81 +648,22 @@ sub getServiceParam
         }   # if ($row->elementExists('otherDomainName')) {
     }   # for my $id (@{$services->ids()}) {}
 
-    return ($domainHash, $vmHash, $i);
+    return ($domainHash, $domainHTTPSHash, $vmHash, $i);
 }
 
 # 20210718 Pulipuli Chen
 # 取得測試伺服器的資料
 sub getTestServiceParam
 {
-    my ($self, $domainHash, $i) = @_;
+    my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
 
-      my $settings = $self->model('RouterSettings');
+    my $settings = $self->model('RouterSettings');
 
-      my $domainNameValue = $settings->value('testDomainName');
-      #printf("test domain name: " . $domainNameValue);
-      if ($domainNameValue ne '') {
-        my $backEnd = ();
-        my @backEndArray;
-        $backEnd->{ipaddrValue} = '0.0.0.0';
-        $backEnd->{portValue} = 888;
-        $backEnd->{descriptionValue} = 'test';
-        $backEnd->{httpToHttpsValue} = 0;
-        $backEnd->{httpsPortValue} = 0;
+    my $domainNameValue = $settings->value('testDomainName');
 
-        $backEnd->{httpSecurityValue} = 0;
-        $backEnd->{httpPortValue} = 888;
-
-        $backEnd->{emergencyValue} = 0;
-        $backEnd->{redirHTTP_enable} = 0;
-
-        $backEndArray[$#backEndArray+1] = $backEnd;
-
-        $domainHash->{$domainNameValue} = \@backEndArray;
-
-        $i++;
-      }
-
-    return ($domainHash, $i);
+    return ($domainHash, $domainHTTPSHash, $i);
 }
 
-# 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
-sub checkSSLCert
-{
-  my ($self, $domainHash, $domainHTTPSHash) = @_;
-
-  # 跑迴圈，看每個資料
-
-  # 測試有沒有已經存在的cert
-
-    # 測試能不能連線
-
-      # 如果可以連線，則建立cert
-
-      #($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
-      
-  # 檢查看看有沒有過期 (必須是距離上次2個月內)
-  
-  # 
-
-  return ($domainHTTPSHash);
-}
-
-# 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
-sub setupSSLCert
-{
-  my ($self, $domainHTTPSHash, $domainNameValue) = @_;
-
-  # 則建立cert
-
-  # 記錄上次更新的時間
-  
-  # 加入 $domainHTTPSHash
-
-  return ($domainHTTPSHash);
-}
 
 # 20150519 Pulipuli Chen
 sub getURLRedirectParam
