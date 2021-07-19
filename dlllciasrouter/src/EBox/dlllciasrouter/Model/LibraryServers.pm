@@ -57,7 +57,7 @@ sub getDataTable
         push(@fields, $fieldsFactory->createFieldInternalIPAddressHide(1, $options->{IPHelp}));
     }
 
-    push(@fields, $fieldsFactory->createFieldUseTestLocalhost();
+    push(@fields, $fieldsFactory->createFieldUseTestLocalhost());
     
     push(@fields, $fieldsFactory->createFieldNetworkDisplay());
     
