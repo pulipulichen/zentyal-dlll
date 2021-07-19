@@ -51,7 +51,7 @@ sub initMooseFS
     my ($self) = @_;
 
     my @params = ();
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/var/lib/mfs/metadata.mfs',
         "dlllciasrouter/mfs/lib/metadata.mfs.mas",
         \@params,
@@ -90,31 +90,31 @@ sub initMooseFS
 
     # --------------------------------------------
 
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/etc/mfs/mfschunkserver.cfg',
         "dlllciasrouter/mfs/etc/mfschunkserver.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/etc/mfs/mfsmaster.cfg',
         "dlllciasrouter/mfs/etc/mfsmaster.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/etc/mfs/mfsmetalogger.cfg',
         "dlllciasrouter/mfs/etc/mfsmetalogger.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/etc/mfs/mfsmount.cfg',
         "dlllciasrouter/mfs/etc/mfsmount.cfg.mas",
         \@params,
         { uid => '0', gid => '0', mode => '644' }
     );
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/etc/mfs/mfstopology.cfg',
         "dlllciasrouter/mfs/etc/mfstopology.cfg.mas",
         \@params,
@@ -123,7 +123,7 @@ sub initMooseFS
 
     if (! -e '/etc/mfs/mfsexports.cfg') {
         my @mfsParams = ();
-        $self->writeConfFileOnce(
+        $self->parentModule()->writeConfFileOnce(
             '/etc/mfs/mfsexports.cfg',
             "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
             \@mfsParams,
@@ -135,7 +135,7 @@ sub initMooseFS
         my @nfsParams = ();
         push(@nfsParams, 'paths' => []);
         
-        $self->writeConfFileOnce(
+        $self->parentModule()->writeConfFileOnce(
             '/etc/exports',
             "dlllciasrouter/nfs-server/exports.mas",
             \@nfsParams,
@@ -148,7 +148,7 @@ sub initMooseFS
         my $mfsMod = $self->loadLibrary("MfsSetting");
         push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
         push(@hddParams, 'paths' => []);
-        $self->writeConfFileOnce(
+        $self->parentModule()->writeConfFileOnce(
             '/etc/mfs/mfshdd.cfg',
             "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
             \@hddParams,
@@ -226,7 +226,7 @@ sub initNFSClient
     if (! -e '/opt/mfschunkservers/nfs-mount.sh') {
         my @mountParams = ();
         push(@mountParams, 'servers' => []);
-        $self->writeConfFileOnce(
+        $self->parentModule()->writeConfFileOnce(
             '/opt/mfschunkservers/nfs-mount.sh',
             "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
             \@mountParams,
@@ -235,14 +235,14 @@ sub initNFSClient
     }
 
     my @params = ();
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/opt/mfschunkservers/nfs-umount.sh',
         "dlllciasrouter/nfs-client/nfs-umount.sh.mas",
         \@params,
         { uid => '0', gid => '0', mode => '755' }
     );
 
-    $self->writeConfFileOnce(
+    $self->parentModule()->writeConfFileOnce(
         '/opt/mfschunkservers/mfs-clear-metaid.sh',
         "dlllciasrouter/nfs-client/mfs-clear-metaid.sh.mas",
         \@params,
