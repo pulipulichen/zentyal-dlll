@@ -252,7 +252,7 @@ sub _setConf
 
     my $mountChanged = $libStorage->updateMountServers();
 
-    if (0) {
+    if (1) {
       # 先完全不使用moosefs
       if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
           # 20150528 測試使用，先關閉
