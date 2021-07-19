@@ -153,6 +153,8 @@ sub setupSSLCert
 {
   my ($self, $domainNameValue) = @_;
 
+  system("echo 'setupSSLCert'");
+
   # 則建立cert
   
   # certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d test-zentyal-3-2021.pulipuli.info
@@ -207,7 +209,7 @@ sub setupSSLCertSwitchToLighttpd
 {
   my ($self) = @_;
 
-  system("setupSSLCertSwitchToLighttpd");
+  system("echo 'setupSSLCertSwitchToLighttpd'");
 
   # 1. 停止pound
   EBox::Sudo::root("/etc/init.d/pound stop");
@@ -232,7 +234,7 @@ sub setupSSLCertSwitchToPound
 {
   my ($self) = @_;
 
-  system("setupSSLCertSwitchToPound");
+  system("echo 'setupSSLCertSwitchToPound'");
 
   # 1. 修改設定
   my @params = ();
