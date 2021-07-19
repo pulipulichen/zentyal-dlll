@@ -183,6 +183,8 @@ End
 
 % print "# -----------------------------------------\n";
 % print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
+% if (length($domainHTTPSHash)) {
+
 ListenHTTPS
 	Address 0.0.0.0
 	Port	<% $portHTTPS %>
@@ -330,3 +332,4 @@ ListenHTTPS
 % print "# -----------------------------------------\n";
 
 End
+% } # if (length($domainHTTPSHash)) {
