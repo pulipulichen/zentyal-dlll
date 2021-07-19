@@ -73,7 +73,9 @@ sub checkSSLCert
 
         if ($modified == 0) {
           $modified = 1;
-          $self->setupSSLCertSwitchToLighttpd($domainNameValue);
+          if ($self->setupSSLCertSwitchToLighttpd($domainNameValue) == 0) {
+            $self->getLibrary()->show_exceptions($_ . ' ( setupSSLCertSwitchToLighttpd failed )');
+          }
         }
         #next;
 
