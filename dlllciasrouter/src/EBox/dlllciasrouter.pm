@@ -408,6 +408,34 @@ sub updatePoundCfg
     my $vmHash = ();
     my $i = 0;
 
+    ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
+    ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
+
+    #($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
+
+    #my $check1 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://testb.dlll.nccu.edu.tw");
+    #my $check2 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
+    #my $check3 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://blog.pulipuli.info");
+
+    # ----------------------------
+    # 轉址
+    # ----------------------------
+
+    # Iterate over table
+    my @redirArray = $self->getURLRedirectParam();
+
+    # ----------------------------
+    # 準備把值傳送到設定檔去
+    # ----------------------------
+
+    my @servicesParams = ();
+
+    #push(@servicesParams, 'check1' => $check1);
+    #push(@servicesParams, 'check2' => $check2);
+    #push(@servicesParams, 'check3' => $check3);
+
 
 }   # sub updatePoundCfg
 
