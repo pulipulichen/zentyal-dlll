@@ -225,7 +225,7 @@ sub setupSSLCertSwitchToLighttpd
   );
 
   system("echo '============================'");
-  system("cat /etc/pound/pound.conf");
+  system("cat /etc/pound/pound.cfg");
   system("echo '============================'");
   
   sleep(3);
