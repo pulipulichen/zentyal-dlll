@@ -1,0 +1,46 @@
+<%args>
+</%args>
+% print "## Minimal sample pound.cfg\n";
+% print "##\n";
+% print "## see pound(8) for details\n";
+
+% print "######################################################################\n";
+% print "## global options:\n";
+
+User		"www-data"
+Group		"www-data"
+% print "#RootJail	\"/chroot/pound\"\n";
+
+% print "## Logging: (goes to syslog by default)\n";
+% print "##	0	no logging\n";
+% print "##	1	normal\n";
+% print "##	2	extended\n";
+% print "##	3	Apache-style (common log format)\n";
+LogLevel	1
+
+% print "## check backend every X secs:\n";
+Alive		30
+
+% print "## use hardware-accelleration card supported by openssl(1):\n";
+% print "#SSLEngine	\"<hw>\"\n";
+
+% print "# poundctl control socket\n";
+Control "/var/run/pound/poundctl.socket"
+
+
+% print "######################################################################\n";
+% print "## listen, redirect and ... to:\n";
+
+ListenHTTP
+	Address 0.0.0.0
+	Port	889
+
+	xHTTP		4
+
+        Err414 "/etc/pound/error.html"
+        Err500 "/etc/pound/error.html"
+        Err501 "/etc/pound/error.html"
+        Err503 "/etc/pound/error.html"
+
+End
+

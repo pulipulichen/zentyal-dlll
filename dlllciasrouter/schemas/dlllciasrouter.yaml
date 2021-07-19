@@ -30,6 +30,12 @@ models:
     - LibraryNetwork
     - LibraryRedirect
     - LibraryContact
+    - LibrarySSLCert
+    - LibraryStorage
+    - LibraryCrontab
+    - LibraryHTML
+    - LibraryPoundBackend
+    - LibraryPoundErrorMessage
 #    - StorageServerSetting
 #    - StorageServerHeader
     - MfsSetting
@@ -57,7 +63,7 @@ models:
 composites:
     SettingComposite: [RouterLinks, RouterSettings, RouterDocumentation]
     #StorageServerComposite: [StorageServerHeader, StorageServer]
-    StorageServerComposite: [NfsSetting, StorageServer]
+    StorageServerComposite: [StorageServer]
     VEServerComposite: [VEServerHeader, VEServer]
     VMServerComposite: [VMServerHeader, VMServer]
     OtherRoutingSettingComposite: [DNS, URLRedirect]

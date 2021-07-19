@@ -51,25 +51,28 @@ sub dlllciasrouter_init
     try {
         $self->initLighttpd();
         $self->initApache();
-        $self->initRootCrontab();
-        $self->initNFSClient();
-        $self->initMooseFS();
-        $self->startMooseFS();
-        $self->initNFSServer();
-        $self->startNFSServer();
-        $self->setPublicCSS();
+        $self->model("LibraryCrontab")->initRootCrontab();
 
-        $self->initTemplateMas();
-        $self->chmodJS();
-        $self->copyPackageIcons();
-        $self->copyTextSetter();
+        my $libStorage = $self->model("LibraryStorage");
+        $libStorage->initNFSClient();
+        $libStorage->initMooseFS();
+        $libStorage->startMooseFS();
+        $libStorage->initNFSServer();
+        $libStorage->startNFSServer();
+
+        my $libHTML = $self->model("LibraryHTML");
+        $libHTML->setPublicCSS();
+        $libHTML->initTemplateMas();
+        $libHTML->chmodJS();
+        $libHTML->copyPackageIcons();
+        $libHTML->copyTextSetter();
         
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
     };
 
     try {
-        $self->initDefaultPound();
+        $self->model("LibraryPoundBackend")->initDefaultPound();
 
         $self->model("LibraryLogs")->enableLogs();
         $self->model("LibraryDomainName")->initDefaultDomainName();
@@ -238,29 +241,37 @@ sub _daemons
 #
 sub _setConf
 {
+
     my ($self) = @_;
 
     #  更新錯誤訊息
-    $self->updatePoundErrorMessage();
-    $self->updatePoundCfg();
+    $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
+    $self->model("LibraryPoundBackend")->updatePoundCfg();
     $self->updateXRDPCfg();
-    my $mountChanged = $self->updateMountServers();
-    if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
-        # 20150528 測試使用，先關閉
-        if ($mountChanged == 1) {
-            $self->restartMooseFS();
-            $self->remountChunkserver();
-        }
-
-        my $exportChanged =  $self->updateNFSExports();
-        if ($exportChanged == 1) {
-            $self->restartNFSServer();
-        }
-    }
-    else {
-        $self->stopMount();
-    }
     
+    if (0) {
+      
+      my $libStorage = $self->model("LibraryStorage");
+      my $mountChanged = $libStorage->updateMountServers();
+
+      # 先完全不使用moosefs
+      if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
+          # 20150528 測試使用，先關閉
+          if ($mountChanged == 1) {
+              $libStorage->restartMooseFS();
+              $libStorage->remountChunkserver();
+          }
+
+          my $exportChanged =  $libStorage->updateNFSExports();
+          if ($exportChanged == 1) {
+              $libStorage->restartNFSServer();
+          }
+      }
+      else {
+          $libStorage->stopMount();
+      }
+    }
+
     # 20181028 試著加入儲存設定看看？
     #EBox::CGI::SaveChanges->saveAllModulesAction();
     #$self->saveModuleChange();
@@ -503,270 +514,6 @@ sub updateXRDPCfg
     EBox::Sudo::root("/etc/init.d/xrdp restart");
 }   # sub updateXRDPCfg
 
-sub getServiceParam
-{
-    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
-
-    my $libRedir = $self->model('LibraryRedirect');
-    my $lib = $self->getLibrary();
-
-    my $services = $self->model($modName);
-    for my $id (@{$services->ids()}) {
-        my $row = $services->row($id);
-        
-        #if ($row->valueByName('enabled') == 0)
-        if ($lib->isEnable($row) == 0)
-        {
-            next;
-        }
-
-        my $domainNameValue = $row->valueByName('domainName');
-        my $ipaddrValue = $row->valueByName('ipaddr');
-        my $descriptionValue = $row->valueByName('description');
-
-        # -----------------------------
-        my $portValue = $row->valueByName('port');
-        #my $httpToHttpsValue = $row->valueByName('httpToHttps');
-        my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
-        my $httpToHttpsValue = 0;
-        if ($redirPound_scheme eq 'http') {
-            $httpToHttpsValue = 0;
-        }
-        elsif ($redirPound_scheme eq 'https') {
-            #$httpToHttpsValue = 1;
-        }
-        else {
-            next;
-        }
-        my $httpsPortValue = $libRedir->getServerMainPort($ipaddrValue);
-        my $httpSecurityValue = $row->valueByName('redirPOUND_secure');
-        my $httpPortValue = $httpsPortValue;
-
-        # -----------------------------
-        
-        my $emergencyValue = $row->valueByName('emergencyEnable');
-        my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
-
-        #push (@paramsArray, {
-        #    domainNameValue => $domainNameValue,
-        #    ipaddrValue => $ipaddrValue,
-        #    portValue => $portValue,
-        #    descriptionValue => $descriptionValue,
-        #    
-        #    httpToHttpsValue => $httpToHttpsValue,
-        #    httpsPortValue => $httpsPortValue,
-
-        #    httpSecurityValue => $httpSecurityValue,
-        #    httpPortValue => $httpPortValue,
-
-        #    emergencyValue => $emergencyValue,
-        #    redirHTTP_enable => $redirHTTP_enable,
-        #});
-
-        # ---------
-        # 開始Hash
-
-        my @backEndArray;
-        my $vmidConfig = $self->ipaddrToVMID($ipaddrValue);
-        if ( exists $domainHash->{$domainNameValue}  ) {
-            # 如果Hash已經有了這個Domain Name
-            @backEndArray = @{$domainHash->{$domainNameValue}};
-            $vmidConfig = $vmidConfig.",".$vmHash->{$domainNameValue};
-        }
-
-        my $backEnd = ();
-        $backEnd->{ipaddrValue} = $ipaddrValue;
-        $backEnd->{portValue} = $portValue;
-        $backEnd->{descriptionValue} = $descriptionValue;
-        $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
-        $backEnd->{httpsPortValue} = $httpsPortValue;
-
-        $backEnd->{httpSecurityValue} = $httpSecurityValue;
-        $backEnd->{httpPortValue} = $httpPortValue;
-
-        $backEnd->{emergencyValue} = $emergencyValue;
-        $backEnd->{redirHTTP_enable} = $redirHTTP_enable;
-
-        $backEndArray[$#backEndArray+1] = $backEnd;
-
-        $domainHash->{$domainNameValue} = \@backEndArray;
-        $vmHash->{$domainNameValue} = $vmidConfig;
-
-        # ----------
-        $i++;
-
-
-        # -------------------------------
-        # 取得otherDomainNames
-        if ($row->elementExists('otherDomainName')) {
-            my $otherDN = $row->subModel('otherDomainName');
-            for my $dnId (@{$otherDN->ids()}) {
-                my $dnRow = $otherDN->row($dnId);
-                my $enable = $lib->isEnable($dnRow);
-                if ($enable == 0) {
-                    next;
-                }
-                my $domainNameValue = $dnRow->valueByName("domainName");
-                
-                $redirPound_scheme = $dnRow->valueByName('redirPOUND_scheme');
-                if ($redirPound_scheme eq 'http') {
-                    $httpToHttpsValue = 0;
-                }
-                elsif ($redirPound_scheme eq 'https') {
-                    #$httpToHttpsValue = 1;
-                    $httpToHttpsValue = 0;
-                }
-                else {
-                    next;
-                }
-                $httpsPortValue = $libRedir->getServerMainPort($ipaddrValue);
-                $httpSecurityValue = $dnRow->valueByName('redirPOUND_secure');
-                $httpPortValue = $httpsPortValue;
-                #$httpPortValue = $dnRow->valueByName('port');
-                #$httpsPortValue = $httpPortValue;
-                $portValue = $dnRow->valueByName('port');
-
-                # -----------------
-
-                my @backEndArray;
-                my $vmidConfig = $self->ipaddrToVMID($ipaddrValue);
-                if ( exists $domainHash->{$domainNameValue}  ) {
-                    # 如果Hash已經有了這個Domain Name
-                    @backEndArray = @{$domainHash->{$domainNameValue}};
-                    $vmidConfig = $vmidConfig.",".$vmHash->{$domainNameValue};
-                }
-
-                my $backEnd = ();
-                $backEnd->{ipaddrValue} = $ipaddrValue;
-                $backEnd->{portValue} = $portValue;
-                $backEnd->{descriptionValue} = $descriptionValue;
-                $backEnd->{httpToHttpsValue} = $httpToHttpsValue;
-                $backEnd->{httpsPortValue} = $httpsPortValue;
-
-                $backEnd->{httpSecurityValue} = $httpSecurityValue;
-                $backEnd->{httpPortValue} = $httpPortValue;
-
-                $backEnd->{emergencyValue} = $emergencyValue;
-                $backEnd->{redirHTTP_enable} = $redirHTTP_enable;
-
-                $backEndArray[$#backEndArray+1] = $backEnd;
-
-                $domainHash->{$domainNameValue} = \@backEndArray;
-                $vmHash->{$domainNameValue} = $vmidConfig;
-
-                # ----------
-                $i++;
-
-            }   # for my $dnId (@{$otherDN->ids()}) {
-        }   # if ($row->elementExists('otherDomainName')) {
-    }   # for my $id (@{$services->ids()}) {}
-
-    return ($domainHash, $vmHash, $i);
-}
-
-# 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
-sub getTestServiceParam
-{
-    my ($self, $domainHash, $i) = @_;
-
-      my $settings = $self->model('RouterSettings');
-
-      my $domainNameValue = $settings->value('testDomainName');
-      #printf("test domain name: " . $domainNameValue);
-      if ($domainNameValue ne '') {
-        my $backEnd = ();
-        my @backEndArray;
-        $backEnd->{ipaddrValue} = '0.0.0.0';
-        $backEnd->{portValue} = 888;
-        $backEnd->{descriptionValue} = 'test';
-        $backEnd->{httpToHttpsValue} = 0;
-        $backEnd->{httpsPortValue} = 0;
-
-        $backEnd->{httpSecurityValue} = 0;
-        $backEnd->{httpPortValue} = 888;
-
-        $backEnd->{emergencyValue} = 0;
-        $backEnd->{redirHTTP_enable} = 0;
-
-        $backEndArray[$#backEndArray+1] = $backEnd;
-
-        $domainHash->{$domainNameValue} = \@backEndArray;
-
-        $i++;
-      }
-
-    return ($domainHash, $i);
-}
-
-# 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
-sub checkSSLCert
-{
-  my ($self, $domainHash, $domainHTTPSHash) = @_;
-
-  # 跑迴圈，看每個資料
-
-  # 測試有沒有已經存在的cert
-
-    # 測試能不能連線
-
-      # 如果可以連線，則建立cert
-
-      #($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
-      
-  # 檢查看看有沒有過期 (必須是距離上次2個月內)
-  
-  # 
-
-  return ($domainHTTPSHash);
-}
-
-# 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
-sub setupSSLCert
-{
-  my ($self, $domainHTTPSHash, $domainNameValue) = @_;
-
-  # 則建立cert
-
-  # 記錄上次更新的時間
-  
-  # 加入 $domainHTTPSHash
-
-  return ($domainHTTPSHash);
-}
-
-# 20150519 Pulipuli Chen
-sub getURLRedirectParam
-{
-    my ($self) = @_;
-
-    my $redirect = $self->model('URLRedirect');
-    my $lib = $self->getLibrary();
-
-    # Iterate over table
-    my @redirArray = ();
-    for my $id (@{$redirect->ids()}) {
-        my $row = $redirect->row($id);
-
-        #if ($row->valueByName('enabled') == 0)
-        if ($lib->isEnable($row) == 0)
-        {
-            next;
-        }
-
-        my $domainNameValue = $row->valueByName('domainName');
-        my $urlValue = $row->valueByName('url');
-
-        push (@redirArray, {
-            domainNameValue => $domainNameValue,
-            urlValue => $urlValue,
-        });
-    }
-
-    return @redirArray;
-}
 
 # 20150517 Pulipuli Chen
 sub initInstall
@@ -795,6 +542,9 @@ sub initLighttpd
 
     # 變更 /usr/share/zentyal/www/dlllciasrouter 權限 
     system('chmod 744  /usr/share/zentyal/www/dlllciasrouter');
+    system('chmod 755  /usr/share/zentyal/www/dlllciasrouter/certbot');
+    
+
 }
 
 # 20150519 Pulipuli Chen
@@ -834,322 +584,12 @@ sub initApache
     }
 }
 
-##
-# 初始化排程工作
-# 20170815 Pulipuli Chen
-##
-sub initRootCrontab
-{
-     my ($self) = @_;
-
-    #if (-e '/etc/crontab') {
-
-        # ------------------------
-
-        my $dirPath = "/root/dlllciasrouter";
-
-        if (! -d $dirPath) {
-            system('sudo mkdir -p ' . $dirPath);
-        }
-
-        # ------------------------
-
-        my $settings = $self->model('RouterSettings');
-        my @backupParams = ();
-
-        my $extIP = $self->model('LibraryNetwork')->getExternalIpaddr();
-        my $port = $self->model('RouterSettings')->value('webadminPort');
-        my $date = POSIX::strftime( "%A, %B %d, %Y", localtime());
-        # my $date = strftime "%a %b %e %H:%M:%S %Y", gmtime;
-        # printf("date and time - $date\n");
-        # DateTime->now->ymd;
-
-        my $backupMailAddress = $settings->value('backupMailAddress');
-        push(@backupParams, 'backupMailAddress' => $backupMailAddress);
-
-        my $backupMailSubject = $settings->value('backupMailSubject');
-        $backupMailSubject =~ s/\{IP\}/$extIP/g;
-        $backupMailSubject =~ s/\{PORT\}/$port/g;
-        push(@backupParams, 'backupMailSubject' => $backupMailSubject);
-
-        my $backupMailBody = $settings->value('backupMailBody');
-        # my $backupMailBody = "Zentyal backup (DLLL-CIAS Router) from {IP}";
-        # my $IP = "192.168.11.101";
-        
-        # print $backupMailBody;
-        $backupMailBody =~ s/\{DATE\}/$date/g;
-        $backupMailBody =~ s/\{IP\}/$extIP/g;
-        $backupMailBody =~ s/\{PORT\}/$port/g;
-        push(@backupParams, 'backupMailBody' => $backupMailBody);
-        
-        push(@backupParams, 'backupLimit' => $settings->value('backupLimit'));
-        $self->writeConfFile(
-            '/root/dlllciasrouter/backup-zentyal.sh',
-            "dlllciasrouter/backup-zentyal.sh.mas",
-            \@backupParams,
-            { uid => '0', gid => '0', mode => '777' }   #這邊權限必須是7才能執行
-        );
-
-        # -------------------------------------
-
-        my @startupParams = ();
-
-        push(@startupParams, 'mailAddress' => $backupMailAddress);
-
-        my $startupMailSubject = $settings->value('startupMailSubject');
-        $startupMailSubject =~ s/\{IP\}/$extIP/g;
-        $startupMailSubject =~ s/\{PORT\}/$port/g;
-        push(@startupParams, 'mailSubject' => $startupMailSubject);
-
-        my $startupMailBody = $settings->value('startupMailBody');
-        $startupMailBody =~ s/\{DATE\}/$date/g;
-        $startupMailBody =~ s/\{IP\}/$extIP/g;
-        $startupMailBody =~ s/\{PORT\}/$port/g;
-        my $veDomainName = $self->model('VEServerSetting')->value("domainName");
-        if( length $veDomainName ) {
-          $startupMailBody =~ s/\{VEDomainName\}/$veDomainName/g;
-        }
-
-        push(@startupParams, 'mailBody' => $startupMailBody);
-
-        $self->writeConfFile(
-            '/root/dlllciasrouter/startup-message.sh',
-            "dlllciasrouter/startup-message.sh.mas",
-            \@startupParams,
-            { uid => '0', gid => '0', mode => '777' }   #這邊權限必須是7才能執行
-        );
-    #}  # if (-e '/etc/crontab') {
-}
-
-# 20150519 Pulipuli Chen
-sub initDefaultPound
-{
-     my ($self) = @_;
-
-    if ( !(-e '/etc/default/pound') ) {
-        throw EBox::Exceptions::Internal("You have not install pound! Cannot found /etc/default/pound ");
-    }
-
-    my @nullParams = ();
-    $self->writeConfFile(
-        '/etc/default/pound',
-        "dlllciasrouter/default-pound.mas",
-        \@nullParams,
-        { uid => '0', gid => '0', mode => '740' }
-    );
-}
-
 # 20150519 Pulipuli Chen
 # 讀取指定的Model
 sub loadLibrary
 {
     my ($self, $library) = @_;
     return $self->model($library);
-}
-
-# 20150527 Pulipuli Chen
-sub initMooseFS
-{
-    my ($self) = @_;
-
-    my @params = ();
-    $self->writeConfFileOnce(
-        '/var/lib/mfs/metadata.mfs',
-        "dlllciasrouter/mfs/lib/metadata.mfs.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    # 變更權限 
-    system('chown mfs:mfs  /var/lib/mfs/metadata.mfs');
-
-    # ---------------------------------------------------------
-
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-cgiserv',
-    #    "dlllciasrouter/mfs/default/moosefs-cgiserv.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-chunkserver',
-    #    "dlllciasrouter/mfs/default/moosefs-chunkserver.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-master',
-    #    "dlllciasrouter/mfs/default/moosefs-master.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-    #$self->writeConfFile(
-    #    '/etc/default/moosefs-metalogger',
-    #    "dlllciasrouter/mfs/default/moosefs-metalogger.mas",
-    #    \@params,
-    #    { uid => '0', gid => '0', mode => '644' }
-    #);
-
-    # --------------------------------------------
-
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfschunkserver.cfg',
-        "dlllciasrouter/mfs/etc/mfschunkserver.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfsmaster.cfg',
-        "dlllciasrouter/mfs/etc/mfsmaster.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfsmetalogger.cfg',
-        "dlllciasrouter/mfs/etc/mfsmetalogger.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfsmount.cfg',
-        "dlllciasrouter/mfs/etc/mfsmount.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-    $self->writeConfFileOnce(
-        '/etc/mfs/mfstopology.cfg',
-        "dlllciasrouter/mfs/etc/mfstopology.cfg.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    if (! -e '/etc/mfs/mfsexports.cfg') {
-        my @mfsParams = ();
-        $self->writeConfFileOnce(
-            '/etc/mfs/mfsexports.cfg',
-            "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
-            \@mfsParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
-    }
-
-    if (! -e '/etc/exports') {
-        my @nfsParams = ();
-        push(@nfsParams, 'paths' => []);
-        
-        $self->writeConfFileOnce(
-            '/etc/exports',
-            "dlllciasrouter/nfs-server/exports.mas",
-            \@nfsParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
-    }
-
-    if (! -e '/etc/mfs/mfshdd.cfg') {
-        my @hddParams = ();
-        my $mfsMod = $self->model("MfsSetting");
-        push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
-        push(@hddParams, 'paths' => []);
-        $self->writeConfFileOnce(
-            '/etc/mfs/mfshdd.cfg',
-            "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
-            \@hddParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
-    }
-}
-
-# 20150529 Pulipuli Chen
-sub startMooseFS
-{    
-    my ($self) = @_;
-
-    # mfsEnable
-    my $mfsMod = $self->model("MfsSetting");
-    if ($mfsMod->value("mfsEnable") == 0) {
-      return 0;
-    }
-
-    try {
-        if (readpipe("sudo netstat -plnt | grep '/mfsmaster'") eq "") {
-            system('sudo service moosefs-master start');
-            system('sudo service moosefs-metalogger start');
-        }
-        if (readpipe("sudo netstat -plnt | grep '/mfschunkserve'") eq "") {
-            system('sudo service moosefs-chunkserver start');
-            #system("echo 'chunkserver start a'");
-        }
-        if (readpipe("sudo netstat -plnt | grep ':9425'") eq "") {
-            system('sudo service moosefs-cgiserv start');
-        }
-        if (readpipe("sudo netstat -plnt | grep '/mfsmount'") eq "") {
-            system('sudo mfsmount');
-        }
-    } catch {
-        $self->model("LibraryToolkit")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
-    };
-}
-
-# 20150528 Pulipuli Chen
-sub initNFSServer
-{
-    my ($self) = @_;
-
-    my @params = ();
-
-    $self->writeConfFile(
-        '/etc/default/nfs-kernel-server',
-        "dlllciasrouter/nfs-server/nfs-kernel-server.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    $self->writeConfFile(
-        '/etc/default/nfs-common',
-        "dlllciasrouter/nfs-server/nfs-common.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-}
-
-# 20150529 Pulipuli Chen
-sub startNFSServer
-{
-    if (readpipe("sudo netstat -plnt | grep '/rpc.mountd'") eq "") {
-        system('sudo service nfs-kernel-server start');
-    }
-}
-
-# 20150528 Pulipuli Chen
-sub initNFSClient
-{
-    my ($self) = @_;
-
-    if (! -e '/opt/mfschunkservers/nfs-mount.sh') {
-        my @mountParams = ();
-        push(@mountParams, 'servers' => []);
-        $self->writeConfFileOnce(
-            '/opt/mfschunkservers/nfs-mount.sh',
-            "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
-            \@mountParams,
-            { uid => '0', gid => '0', mode => '755' }
-        );
-    }
-
-    my @params = ();
-    $self->writeConfFileOnce(
-        '/opt/mfschunkservers/nfs-umount.sh',
-        "dlllciasrouter/nfs-client/nfs-umount.sh.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '755' }
-    );
-
-    $self->writeConfFileOnce(
-        '/opt/mfschunkservers/mfs-clear-metaid.sh',
-        "dlllciasrouter/nfs-client/mfs-clear-metaid.sh.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '755' }
-    );
 }
 
 sub writeConfFileOnce
@@ -1163,196 +603,6 @@ sub writeConfFileOnce
             $defaults
         );
     }
-}
-
-##
-# 20150528 Pulipuli Chen
-# 把NFS掛載到本機伺服器上
-##
-sub updateNFSExports
-{
-    # 從這邊取得資料出來
-    #my $expMod = $self->model("ExportSettings");
-    my ($self) = @_;
-
-    my $mod = $self->model("ExportsSetting");
-
-    my $dirs = ();
-    # 第一次迴圈，先取出資料出來
-    for my $id (@{$mod->ids()}) {
-        my $row = $mod->row($id);
-
-        # /mnt/mfs/pve 10.6.0.0/24(rw,fsid=0,async,no_root_squash,subtree_check)
-        my $host = $row->valueByName("host");
-        my $ro = $row->valueByName("readOnly");
-        if ($ro == 1) {
-            $ro = "ro";
-        }
-        else {
-            $ro = "rw";
-        }
-        my $async = $row->valueByName("async");
-        if ($async == 1) {
-            $async = "async";
-        }
-        else {
-            $async = "sync";
-        }
-        my $squash = $row->valueByName("squash");
-        
-        my $hostConfig = $host."(".$ro.",fsid=0,".$async.",".$squash.",subtree_check".")\t";
-
-        # ---------------------
-
-        my $dir = $row->valueByName("dir");
-        my $dirPath = "/mnt/mfs/".$dir;
-
-        if (! -d $dirPath) {
-            system('sudo mkdir -p ' . $dirPath);
-        }
-
-        if ( ! exists $dirs->{$dir} ) {
-            $dirs->{$dir} = $dirPath."\t";
-        }
-        $dirs->{$dir} = $dirs->{$dir} . $hostConfig;
-    }
-
-    my @paths = [];    # 稍後要從StorageServer取出細節
-    my $i = 0;
-    # 第二次迴圈
-    while (my ($dir, $path) = each(%$dirs)) {
-        $paths[$i] = $path;
-        $i++;
-    }
-    
-    my $pveDirPath = "/mnt/mfs/pve";
-    if (! -d $pveDirPath) {
-        system('sudo mkdir -p ' . $pveDirPath);
-    }
-
-    my @nfsParams = ();
-    # 從這邊取得資料出來
-    #my $expMod = $self->model("ExportSettings");
-    push(@nfsParams, 'paths' => @paths);
-    #push(@nfsParams, 'paths' => []);
-    
-    my $nfsChanged = $self->checkConfigChange(
-        '/etc/exports',
-        "dlllciasrouter/nfs-server/exports.mas",
-        \@nfsParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    # 20150529 本來是要修改的……後來還是算了吧
-    my @mfsParams = ();
-    my $mfsChanged = $self->checkConfigChange(
-        '/etc/mfs/mfsexports.cfg',
-        "dlllciasrouter/mfs/etc/mfsexports.cfg.mas",
-        \@mfsParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    return ($nfsChanged == 1 || $mfsChanged == 1 );
-}
-
-##
-# 20150528 Pulipuli Chen
-##
-sub updateMountServers
-{
-    my ($self) = @_;
-
-    #system('sudo /opt/mfschunkservers/nfs-umount.sh');
-
-    my @servers = [];    # 稍後要從StorageServer取出細節
-    my @paths = [];    # 稍後要從StorageServer取出細節
-    my $i = 0;
-    my $mod = $self->model('StorageServer');
-    for my $id (@{$mod->ids()}) {
-        my $row = $mod->row($id);
-
-        if ($row->valueByName("mountEnable") == 0 || !defined($row->valueByName("mountPath")) ) {
-            next;
-        }
-
-        my $ipaddr = $row->valueByName("ipaddr");
-        my $type = $row->valueByName("mountType");
-        my $option = $row->valueByName("mountPath");
-        if ($type eq "cifs") {
-            my $username = $row->valueByName("cifsUsername");
-            my $password = $row->valueByName("cifsPassword");
-            $option = 'username="'.$username.'",password="'.$password.'" //' . $ipaddr . $option;
-        }
-        elsif ($type eq "nfs") {
-            $option = $ipaddr . ":" . $option;
-        }
-        
-        # 如果沒有目錄，則新增目錄
-        my $path = "/opt/mfschunkservers/" . $ipaddr;
-        if (!-d $path) {
-            system('sudo mkdir -p ' . $path);
-            system('sudo chown mfs:mfs ' . $path);
-        }
-        my $mfsPath = $path . "/mfs";
-
-        # mount -t cifs -o username="Username",password="Password" //10.6.1.1/mnt/smb /opt/mfschunkservers/10.6.1.1
-        my $conf = "mount -t " . $type . " " . $option . " " . $path;
-        $servers[$i] = $conf;
-        $paths[$i] = $mfsPath;
-
-        # 此處進行掛載
-        system('sudo ' + $conf + " &");
-        
-        my $isMounted = readpipe("mountpoint " . $path); #10.6.1.1 is not a mountpoint
-        # 建立掛載後的路徑 
-        if ($isMounted eq $path . " is a mountpoint" && !-d $mfsPath) {
-            system('sudo mkdir -p ' . $mfsPath);
-            system('sudo chown mfs:mfs ' . $mfsPath);
-        }
-
-        $i++;
-    }   # for my $id (@{$mod->ids()}) {}
-
-    # -----------------------------------
-
-    my $mountChanged = 0;
-
-    my @mountParams = ();
-    push(@mountParams, 'servers' => @servers);
-
-    
-    #$self->writeConfFile(
-    my $nfsmountChanged = $self->checkConfigChange(
-        '/opt/mfschunkservers/nfs-mount.sh',
-        "dlllciasrouter/nfs-client/nfs-mount.sh.mas",
-        \@mountParams,
-        { uid => '0', gid => '0', mode => '755' }
-    );
-
-    system('sudo /opt/mfschunkservers/nfs-mount.sh');
-
-    # -------------------------------------
-
-    my @hddParams = ();
-    my $mfsMod = $self->model("MfsSetting");
-    push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
-    push(@hddParams, 'paths' => @paths);
-
-    
-    #$self->writeConfFile(
-    my $mfshddChanged = $self->checkConfigChange(
-        '/etc/mfs/mfshdd.cfg',
-        "dlllciasrouter/mfs/etc/mfshdd.cfg.mas",
-        \@hddParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    if ($nfsmountChanged == 1 || $mfshddChanged == 1) {
-        $mountChanged = 1;
-    }
-
-    return $mountChanged;
-    #system('sudo mfsmount');
 }
 
 # 20150529 Pulipuli Chen
@@ -1383,101 +633,6 @@ sub checkConfigChange
     return $changed;
 }
 
-# 20150528 Pulipuli Chen
-sub restartMooseFS
-{
-    system('sudo service moosefs-master restart');
-    system('sudo service moosefs-metalogger restart');
-    system('sudo service moosefs-cgiserv restart');
-}
-
-# 20150528 Pulipuli Chen
-sub remountChunkserver
-{
-    system('sudo service moosefs-chunkserver stop');
-    system('sudo /opt/mfschunkservers/nfs-umount.sh');
-    #system('sudo /opt/mfschunkservers/nfs-mount.sh');
-    system('sudo service moosefs-chunkserver start');
-    #system("echo 'chunkserver start b'");
-    if (readpipe("sudo netstat -plnt | grep '/mfschunkserve'") eq "") {
-        # 修復後重新掛載
-        system('sudo /opt/mfschunkservers/mfs-clear-metaid.sh');
-        
-        system('sudo service moosefs-chunkserver start');
-        #system("echo 'chunkserver start c'");
-    }
-    system('sudo mfsmount');
-}
-
-# 20150528 Pulipuli Chen
-sub restartNFSServer
-{
-    #system('sudo service nfs-kernel-server restart');
-    system('sudo exportfs -ar');
-}
-
-# 20150528 Pulipuli Chen
-sub stopMount
-{
-    system('sudo service nfs-kernel-server stop');
-
-    system('sudo service moosefs-cgiserv stop');
-    system('sudo service moosefs-chunkserver stop');
-    system('sudo service moosefs-master stop');
-    system('sudo service moosefs-metalogger stop');
-    system('sudo umount /mnt/mfs');
-
-    system('sudo service moosefs-chunkserver stop');
-    system('sudo /opt/mfschunkservers/nfs-umount.sh');
-}
-
-##
-# 設定templates的MAS檔案
-# 20170816 Pulipuli Chen
-## 
-sub initTemplateMas
-{
-    # dlllciasrouter/templates/ajax/setter/textareaSetter.mas
-    system('sudo cp -f /usr/share/zentyal/www/dlllciasrouter/templates/ajax/setter/*.mas /usr/share/zentyal/templates/ajax/setter/');
-}
-
-##
-# 設定js的權限
-# 20170817 Pulipuli Chen
-## 
-sub chmodJS
-{
-    # dlllciasrouter/templates/ajax/setter/textareaSetter.mas
-    system('sudo chmod 777 /usr/share/zentyal/www/dlllciasrouter/js/*.js');
-}
-
-# 20181027 Pulipuli Chen
-sub setPublicCSS
-{
-    my ($self, $port) = @_;
-    my @params = (
-    );
-    $self->writeConfFile(
-        '/var/lib/zentyal/dynamicwww/css/public.css',
-        "dlllciasrouter/public.css.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    EBox::Sudo::root("service ssh restart");
-}
-
-# 20181027 Pulipuli Chen
-sub copyPackageIcons
-{
-  system('sudo cp /usr/share/zentyal/www/dlllciasrouter/images/package-icons/*.png /usr/share/zentyal/www/images/package-icons/');
-}
-
-# 20181028 Pulipuli Chen
-sub copyTextSetter
-{
-  system('sudo cp -f /usr/share/zentyal/www/dlllciasrouter/local_scripts/textSetter.mas /usr/share/zentyal/templates/ajax/setter/');
-}
 
 # 20181027 Pulipuli Chen
 sub saveModuleChange
