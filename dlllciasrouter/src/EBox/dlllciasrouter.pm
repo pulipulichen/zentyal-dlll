@@ -18,6 +18,8 @@ use File::Slurp;
 
 use POSIX;
 
+#use LWP::Simple;
+
 # Method: _create
 #
 # Overrides:
@@ -406,67 +408,6 @@ sub updatePoundCfg
     my $vmHash = ();
     my $i = 0;
 
-    ($domainHash, $domainHTTPSHash, $i) = $self->getTestServiceParam($domainHash, $domainHTTPSHash, $i);
-    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
-    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
-    ($domainHash, $domainHTTPSHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $domainHTTPSHash, $vmHash, $i);
-
-    # ----------------------------
-    # 轉址
-    # ----------------------------
-
-    # Iterate over table
-    my @redirArray = $self->getURLRedirectParam();
-
-    # ----------------------------
-    # 準備把值傳送到設定檔去
-    # ----------------------------
-
-    my @servicesParams = ();
-    push(@servicesParams, 'address' => $address);
-    push(@servicesParams, 'port' => $port);
-    push(@servicesParams, 'testDomainName' => $testDomainName);
-    push(@servicesParams, 'alive' => $alive);
-    push(@servicesParams, 'timeout' => $timeout);
-    #push(@servicesParams, 'enableError' => $enableError);
-    #push(@servicesParams, 'errorURL' => $errorURL);
-    #push(@servicesParams, 'file' => $file);
-
-    push(@servicesParams, 'restarterIP' => $restarterIP);
-    push(@servicesParams, 'restarterPort' => $restarterPort);
-
-    #push(@servicesParams, 'services' => \@paramsArray);
-    push(@servicesParams, 'domainHash' => $domainHash);
-    push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
-
-    push(@servicesParams, 'redir' => \@redirArray);
-    
-    $self->writeConfFile(
-        '/etc/pound/pound.cfg',
-        "dlllciasrouter/pound.cfg.mas",
-        \@servicesParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    # --------------------
-
-    my @vmParams = ();
-    push(@vmParams, 'vmHash' => $vmHash);
-    push(@vmParams, 'notifyEmail' => $notifyEmail);
-    push(@vmParams, 'senderEmail' => $senderEmail);
-    $self->writeConfFile(
-        '/etc/pound/vmid-config.php',
-        #'/var/www/vmid-config.php',
-        "dlllciasrouter/vmid-config.php.mas",
-        \@vmParams,
-        { uid => '0', gid => '0', mode => '770' }
-    );
-
-    # --------------------
-
-    # 20170731 Pulipuli Chen
-    # 一併更新PoundSettings
-    $self->model("PoundSettings")->updateCfg();
 
 }   # sub updatePoundCfg
 
@@ -493,7 +434,7 @@ sub updateXRDPCfg
 
 sub getServiceParam
 {
-    my ($self, $modName, $domainHash, $domainHTTPSHash, $vmHash, $i) = @_;
+    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
 
     my $libRedir = $self->model('LibraryRedirect');
     my $lib = $self->getLibrary();
@@ -516,12 +457,12 @@ sub getServiceParam
         my $portValue = $row->valueByName('port');
         #my $httpToHttpsValue = $row->valueByName('httpToHttps');
         my $redirPound_scheme = $row->valueByName('redirPOUND_scheme');
-        my $httpToHttpsValue;
+        my $httpToHttpsValue = 0;
         if ($redirPound_scheme eq 'http') {
             $httpToHttpsValue = 0;
         }
         elsif ($redirPound_scheme eq 'https') {
-            $httpToHttpsValue = 1;
+            #$httpToHttpsValue = 1;
         }
         else {
             next;
@@ -601,7 +542,8 @@ sub getServiceParam
                     $httpToHttpsValue = 0;
                 }
                 elsif ($redirPound_scheme eq 'https') {
-                    $httpToHttpsValue = 1;
+                    #$httpToHttpsValue = 1;
+                    $httpToHttpsValue = 0;
                 }
                 else {
                     next;
@@ -648,14 +590,14 @@ sub getServiceParam
         }   # if ($row->elementExists('otherDomainName')) {
     }   # for my $id (@{$services->ids()}) {}
 
-    return ($domainHash, $domainHTTPSHash, $vmHash, $i);
+    return ($domainHash, $vmHash, $i);
 }
 
 # 20210718 Pulipuli Chen
 # 取得測試伺服器的資料
 sub getTestServiceParam
 {
-    my ($self, $domainHash, $domainHTTPSHash, $i) = @_;
+    my ($self, $domainHash, $i) = @_;
 
       my $settings = $self->model('RouterSettings');
 
@@ -683,9 +625,46 @@ sub getTestServiceParam
         $i++;
       }
 
-    return ($domainHash, $domainHTTPSHash, $i);
+    return ($domainHash, $i);
 }
 
+# 20210718 Pulipuli Chen
+# 取得測試伺服器的資料
+sub checkSSLCert
+{
+  my ($self, $domainHash, $domainHTTPSHash) = @_;
+
+  # 跑迴圈，看每個資料
+
+  # 測試有沒有已經存在的cert
+
+    # 測試能不能連線
+
+      # 如果可以連線，則建立cert
+
+      #($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
+      
+  # 檢查看看有沒有過期 (必須是距離上次2個月內)
+  
+  # 
+
+  return ($domainHTTPSHash);
+}
+
+# 20210718 Pulipuli Chen
+# 取得測試伺服器的資料
+sub setupSSLCert
+{
+  my ($self, $domainHTTPSHash, $domainNameValue) = @_;
+
+  # 則建立cert
+
+  # 記錄上次更新的時間
+  
+  # 加入 $domainHTTPSHash
+
+  return ($domainHTTPSHash);
+}
 
 # 20150519 Pulipuli Chen
 sub getURLRedirectParam
