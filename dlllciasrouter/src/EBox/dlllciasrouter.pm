@@ -72,7 +72,7 @@ sub dlllciasrouter_init
     };
 
     try {
-        $self->initDefaultPound();
+        $self->model("LibraryPoundBackend")->initDefaultPound();
 
         $self->model("LibraryLogs")->enableLogs();
         $self->model("LibraryDomainName")->initDefaultDomainName();
@@ -244,8 +244,8 @@ sub _setConf
     my ($self) = @_;
 
     #  更新錯誤訊息
-    $self->updatePoundErrorMessage();
-    $self->updatePoundCfg();
+    $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
+    $self->model("LibraryPoundBackend")->updatePoundCfg();
     $self->updateXRDPCfg();
     
     if (0) {

@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::LibraryPound;
+package EBox::dlllciasrouter::Model::LibraryPoundErrorMessage;
 
 use base 'EBox::Model::DataTable';
 
@@ -51,11 +51,11 @@ sub updatePoundErrorMessage
 {
     my ($self) = @_;
 
-    my $mod = $self->model('ErrorMessage');
+    my $mod = $self->loadLibrary('ErrorMessage');
 
     my @params = ();
 
-    my $address = $self->model('LibraryNetwork')->getExternalIpaddr();
+    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
     push(@params, 'baseURL' => "http://" . $address . ":888");
 
     push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
@@ -67,18 +67,18 @@ sub updatePoundErrorMessage
     push(@params, 'contactEMAIL' => $mod->value('contactEMAIL'));
 
     my $errorMessage = $mod->value('errorMessage');
-    my $libEnc = $self->model("LibraryEncoding");
+    my $libEnc = $self->loadLibrary("LibraryEncoding");
     $errorMessage = $libEnc->unescapeFromUtf16($errorMessage);
     push(@params, 'errorMessage' => $errorMessage);
 
-    $self->writeConfFile(
+    $self->parentModule()->writeConfFile(
         '/etc/pound/error.html',
         "dlllciasrouter/error.html.mas",
         \@params,
         { uid => '0', gid => '0', mode => '777' }
     );
 
-    $self->writeConfFile(
+    $self->parentModule()->writeConfFile(
         '/usr/share/zentyal/www/dlllciasrouter/css/styles.css',
         "dlllciasrouter/styles.css.mas",
         \@params,
