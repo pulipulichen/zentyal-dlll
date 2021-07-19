@@ -411,13 +411,7 @@ sub updatePoundCfg
     ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
     ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
 
-    #($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
-
-    #my $check1 = get "https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://testb.dlll.nccu.edu.tw";
-    #my $check2 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
-    #my $check3 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://blog.pulipuli.info");
-    #my $check1 = system("wget -qO- https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
-    my $check1 = `wget -qO- https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://ttttttblog.pulipuli.info`;
+    ($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
 
     # ----------------------------
     # 轉址
@@ -431,10 +425,6 @@ sub updatePoundCfg
     # ----------------------------
 
     my @servicesParams = ();
-
-    push(@servicesParams, 'check1' => $check1);
-    push(@servicesParams, 'check2' => 200);
-    push(@servicesParams, 'check3' => 200);
 
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
@@ -704,6 +694,12 @@ sub getTestServiceParam
 sub checkSSLCert
 {
   my ($self, $domainHash, $domainHTTPSHash) = @_;
+
+  # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
+
+  foreach my $domain (keys %domainHash) { 
+    system("echo " + $domain);
+  }
 
   # 跑迴圈，看每個資料
 
