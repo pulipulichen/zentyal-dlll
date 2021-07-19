@@ -226,17 +226,17 @@ sub setupSSLCertSwitchToLighttpd
 
   EBox::Sudo::root("service pound restart");
 
-  system("echo '============================'");
-  system("cat /etc/pound/pound.cfg");
-  system("echo '============================'");
+  #system("echo '============================'");
+  #system("cat /etc/pound/pound.cfg");
+  #system("echo '============================'");
   
-  sleep(3);
+  #sleep(3);
 
-  system("echo '============================'");
-  system("sudo lsof -i -P -n | grep :80");
-  system("echo '============================'");
+  #system("echo '============================'");
+  #system("sudo lsof -i -P -n | grep :80");
+  #system("echo '============================'");
   
-  sleep(3);
+  #sleep(3);
 
   #if ($self->checkSSLCertAvailable($domainName) == 1) {
   #  system("echo 'setupSSLCertSwitchToLighttpd FAILED!!!'");
@@ -262,11 +262,11 @@ sub setupSSLCertSwitchToLighttpd
       { uid => '0', gid => '0', mode => '744' }
   );
 
-  sleep(3);
+  #sleep(3);
 
-  system("echo '============================'");
-  system("cat /etc/lighttpd/lighttpd.conf");
-  system("echo '============================'");
+  #system("echo '============================'");
+  #system("cat /etc/lighttpd/lighttpd.conf");
+  #system("echo '============================'");
 
 
   #system("echo 'setupSSLCertSwitchToLighttpd 2'");
