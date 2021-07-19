@@ -53,7 +53,7 @@ sub checkSSLCert
 
   # 測試用
   if (1) {
-    return ($domainHTTPSHash);
+    #return ($domainHTTPSHash);
   }
 
   try {
