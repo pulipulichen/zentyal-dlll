@@ -100,7 +100,7 @@ sub checkSSLCertExists
   my ($self, $domainNameValue) = @_;
   
   # 測試有沒有已經存在的cert
-  my $certfile = "/etc/pound/ssl/" . $domainNameValue . ".pem";
+  my $certfile = "/etc/pound/cert/" . $domainNameValue . ".pem";
   if (-e $certfile) {
 
     # 檢查看看有沒有過期 (必須是距離上次2個月內)
