@@ -6,10 +6,8 @@
     $restarterIP
     $restarterPort
     $domainHash
+    $domainHTTPSHash
     $redir
-    $check1
-    $check2
-    $check3
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
