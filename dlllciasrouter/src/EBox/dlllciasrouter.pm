@@ -178,14 +178,14 @@ sub _daemons
     }
     
     $daemons[$i] = {
-        'name' => 'pound',
+        'name' => 'dlllciasrouter.pound',
         'type' => 'init.d',
         'pidfiles' => ['/var/run/pound.pid']
     };
     $i++;
 
     $daemons[$i] = {
-        'name' => 'lighttpd',
+        'name' => 'dlllciasrouter.lighttpd',
         'type' => 'init.d',
         'pidfiles' => ['/var/run/lighttpd.pid']
     };
