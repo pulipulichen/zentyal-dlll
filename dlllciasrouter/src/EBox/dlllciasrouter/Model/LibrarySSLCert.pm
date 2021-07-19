@@ -267,7 +267,7 @@ sub setupSSLCertSwitchToLighttpd
 
   # 3. 重新啟動lighttpd
   #EBox::Sudo::root("/etc/init.d/lighttpd restart");
-  #EBox::Sudo::root("service lighttpd restart");
+  EBox::Sudo::root("service lighttpd restart");
   #EBox::Service::manage('dlllciasrouter.pound', 'restart');
 
   #sleep(5);
@@ -295,7 +295,7 @@ sub setupSSLCertSwitchToPound
   );
 
   # 2. 重新啟動lighttpd
-  #EBox::Sudo::root("service lighttpd restart");
+  EBox::Sudo::root("service lighttpd restart");
   #EBox::Service::manage('dlllciasrouter.lighttpd', 'restart');
 
   # 3. 啟動pound
