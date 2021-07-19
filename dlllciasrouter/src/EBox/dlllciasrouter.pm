@@ -436,7 +436,23 @@ sub updatePoundCfg
     #push(@servicesParams, 'check2' => $check2);
     #push(@servicesParams, 'check3' => $check3);
 
+    push(@servicesParams, 'address' => $address);
+    push(@servicesParams, 'port' => $port);
+    push(@servicesParams, 'alive' => $alive);
+    push(@servicesParams, 'timeout' => $timeout);
+    #push(@servicesParams, 'enableError' => $enableError);
+    #push(@servicesParams, 'errorURL' => $errorURL);
+    #push(@servicesParams, 'file' => $file);
 
+    push(@servicesParams, 'restarterIP' => $restarterIP);
+    push(@servicesParams, 'restarterPort' => $restarterPort);
+
+    #push(@servicesParams, 'services' => \@paramsArray);
+    push(@servicesParams, 'domainHash' => $domainHash);
+    push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
+
+    push(@servicesParams, 'redir' => \@redirArray);
+    
 }   # sub updatePoundCfg
 
 # 20170303 Pulipuli Chen
