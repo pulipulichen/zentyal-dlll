@@ -413,7 +413,7 @@ sub updatePoundCfg
     ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
     ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
 
-    ($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
+    #($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
 
     #my $check1 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://testb.dlll.nccu.edu.tw");
     #my $check2 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
