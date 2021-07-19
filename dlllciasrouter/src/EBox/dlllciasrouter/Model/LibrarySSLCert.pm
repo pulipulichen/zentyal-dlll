@@ -116,15 +116,15 @@ sub checkSSLCertExists
     my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
     #my $timestamp       = localtime($epoch_timestamp);
     if ($intervalDays > 60) {
-      system("echo 'out date'");
+      #system("echo 'out date'");
       return 0;
     }
     else {
-      system("echo 'existed'");
+      #system("echo 'existed'");
       return 1;
     }
   }
-  system("echo 'not existed'");
+  #system("echo 'not existed'");
   return 0;
 }
 
@@ -140,7 +140,7 @@ sub checkSSLCertAvailable
   #my $result = `wget -qO- ${testURL}?q=http://${domainNameValue}/`;
   #my $result = "pass. Could you only check on start?";
 
-  system("echo '[!] " . $domainNameValue . " " . $result . "'");
+  #system("echo '[!] " . $domainNameValue . " " . $result . "'");
 
   # /etc/ssl/test-zentyal-2.2021.pulipuli.info.pem
   #my $certfile = "/etc/ssl/test-zentyal-2.2021.pulipuli.info.pem";
@@ -190,13 +190,13 @@ sub setupSSLCert
   my $targetPem = $poundCertFolder . "/" . $domainNameValue . ".pem";
   
   my $build = "cat /etc/letsencrypt/live/" . $domainNameValue . "/privkey.pem /etc/letsencrypt/live/" . $domainNameValue . "/fullchain.pem > " . $targetPem;
-  system("echo '" . $build . "'");
+  #system("echo '" . $build . "'");
   
   EBox::Sudo::root($build);
   #system("echo 'manual wait 120 sec'");
   #sleep(120);
 
-  system("echo 'setupSSLCert finish'");
+  #system("echo 'setupSSLCert finish'");
   
   return 1;
 }
@@ -223,7 +223,7 @@ sub setupSSLCertSwitchToLighttpd
 
   my @params = ();
 
-  system("echo 'setupSSLCertSwitchToLighttpd'");
+  #system("echo 'setupSSLCertSwitchToLighttpd'");
 
   $self->parentModule()->writeConfFile(
       '/etc/pound/pound.cfg',
@@ -251,7 +251,7 @@ sub setupSSLCertSwitchToLighttpd
   #  return 0;
   #}
 
-  system("echo 'setupSSLCertSwitchToLighttpd 0'");
+  #system("echo 'setupSSLCertSwitchToLighttpd 0'");
   
   # 1. 停止pound
   #EBox::Sudo::root("service pound restart");
@@ -261,7 +261,7 @@ sub setupSSLCertSwitchToLighttpd
   #EBox::Sudo::root("pkill pound");
   #EBox::Service::manage('dlllciasrouter.pound', 'stop');
 
-  system("echo 'setupSSLCertSwitchToLighttpd 1'");
+  #system("echo 'setupSSLCertSwitchToLighttpd 1'");
 
   $self->parentModule()->writeConfFile(
       '/etc/lighttpd/lighttpd.conf',
@@ -286,7 +286,7 @@ sub setupSSLCertSwitchToLighttpd
 
   #sleep(5);
 
-  system("echo 'setupSSLCertSwitchToLighttpd finished'");
+  #system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
   return 1;
 }
@@ -297,7 +297,7 @@ sub setupSSLCertSwitchToPound
 {
   my ($self) = @_;
 
-  system("echo 'setupSSLCertSwitchToPound'");
+  #system("echo 'setupSSLCertSwitchToPound'");
 
   # 1. 修改設定
   my @params = ();
