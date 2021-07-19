@@ -193,8 +193,8 @@ sub setupSSLCert
   system("echo '" . $build . "'");
   
   #EBox::Sudo::root($build);
-  system("echo 'manual wait 30 sec'");
-  sleep(30);
+  system("echo 'manual wait 120 sec'");
+  sleep(120);
 
   system("echo 'setupSSLCert finish'");
   
