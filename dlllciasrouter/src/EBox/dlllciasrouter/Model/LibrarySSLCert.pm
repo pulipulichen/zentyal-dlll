@@ -232,6 +232,12 @@ sub setupSSLCertSwitchToLighttpd
   
   sleep(3);
 
+  system("echo '============================'");
+  system("sudo lsof -i -P -n | grep LISTEN");
+  system("echo '============================'");
+  
+  sleep(3);
+
   if ($self->checkSSLCertAvailable($domainName) == 1) {
     system("echo 'setupSSLCertSwitchToLighttpd FAILED!!!'");
     return 0;
