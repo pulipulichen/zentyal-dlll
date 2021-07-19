@@ -50,14 +50,14 @@ sub getExternalIpaddr
     my ($self) = @_;
 
     my $libSettings = $self->loadLibrary('RouterSettings');
-    my $ipaddr = $libSettings->value("anotherDNSIP");
+    #my $ipaddr = $libSettings->value("anotherDNSIP");
     #if (!defined($ipaddr)) {
         #$self->loadLibrary('LibraryToolkit')->show_exceptions(__('Another DNS IP') 
         #    . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
         
     #}
 
-    system("echo '[!] ip addr: " . $ipaddr . "'");
+    #system("echo '[!] ip addr: " . $ipaddr . "'");
 
     my $network = EBox::Global->modInstance('network');
     my $address;
