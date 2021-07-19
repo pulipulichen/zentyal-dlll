@@ -54,8 +54,8 @@ sub addDomainName
 {
     my ($self, $domainName) = @_;
 
-    #my $libSettings = $self->loadLibrary('RouterSettings');
-    #my $ipaddr = $libSettings->value("anotherDNSIP");
+    my $libSettings = $self->loadLibrary('RouterSettings');
+    my $ipaddr2 = $libSettings->value("anotherDNSIP");
 
     #if ($ipaddr eq "") {
       my $libNetwork = $self->loadLibrary('LibraryNetwork');
