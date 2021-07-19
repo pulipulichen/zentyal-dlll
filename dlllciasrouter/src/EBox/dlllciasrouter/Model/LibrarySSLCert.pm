@@ -158,7 +158,7 @@ sub setupSSLCert
   # 則建立cert
   
   # certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d test-zentyal-3-2021.pulipuli.info
-  my $certbotScript = "certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d " . $domainNameValue;
+  my $certbotScript = "certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d " . $domainNameValue . " -n";
   system("echo '" . $certbotScript . "'");
   EBox::Sudo::root($certbotScript);
 
