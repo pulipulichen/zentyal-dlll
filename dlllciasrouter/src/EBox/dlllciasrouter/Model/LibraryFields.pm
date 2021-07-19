@@ -233,8 +233,7 @@ sub createFieldInternalVirtualMachineIdentify
                     'printableName' => __('Internal IP Address'),
                     'editable' => 1,
                     'unique' => $unique,
-                    
-                ),
+                )
             ],
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
@@ -765,6 +764,23 @@ sub createFieldBoundLocalDNS
         'optional' => 0,
         'defaultValue' => 1,
         'help' => __('If you want to bound this service with local DNS, this domain name will be created when service creates. Otherwise, this domain name will be removed when service deletes.'),
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
+
+    return $field;
+}
+
+
+
+sub createFieldUseTestLocalhost
+{
+    my $field = new EBox::Types::Boolean(
+        'fieldName' => 'useTestLocalhost',
+        'printableName' => __('Use test localhost'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => 0,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
     );

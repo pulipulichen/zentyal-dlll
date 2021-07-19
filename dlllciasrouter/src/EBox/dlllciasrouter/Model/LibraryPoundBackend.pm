@@ -235,6 +235,7 @@ sub getServiceParam
         my $domainNameValue = $row->valueByName('domainName');
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
+        my $useTestLocalhost = $row->valueByName('useTestLocalhost');
 
         # -----------------------------
         my $portValue = $row->valueByName('port');
@@ -258,6 +259,15 @@ sub getServiceParam
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
+
+        if ($useTestLocalhost == 1) {
+          $ipaddrValue = "0.0.0.0";
+          $portValue = 888;
+          $httpToHttpsValue = 0;
+          $httpPortValue = 888;
+        }
+
+        # -------------------------
 
         #push (@paramsArray, {
         #    domainNameValue => $domainNameValue,

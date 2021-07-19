@@ -56,8 +56,9 @@ sub getDataTable
         push(@fields, $fieldsFactory->createFieldInternalVirtualMachineIdentify(1, $options->{IPHelp}));
         push(@fields, $fieldsFactory->createFieldInternalIPAddressHide(1, $options->{IPHelp}));
     }
-    
 
+    push(@fields, $fieldsFactory->createFieldUseTestLocalhost();
+    
     push(@fields, $fieldsFactory->createFieldNetworkDisplay());
     
     push(@fields, $fieldsFactory->createFieldDomainNameLink());
