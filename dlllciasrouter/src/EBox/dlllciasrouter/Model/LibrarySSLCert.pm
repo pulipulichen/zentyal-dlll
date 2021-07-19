@@ -61,7 +61,8 @@ sub checkSSLCert
       #system("echo '[!] " . $domainNameValue . "'");
       
       if ($self->checkSSLCertExists($domainNameValue) == 1) {
-        #next;
+        ($domainHTTPSHash) = $self->cloneBackendHTTPtoHTTPS($domainHash, $domainHTTPSHash, $domainNameValue);
+        next;
       }
       
       if ($self->checkSSLCertAvailable($domainNameValue) == 0) {
@@ -73,7 +74,10 @@ sub checkSSLCert
         $self->setupSSLCertSwitchToLighttpd();
       }
       
-      ($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue);
+      my $result = $self->setupSSLCert($domainNameValue);
+      if ($result == 1) {
+        ($domainHTTPSHash) = $self->cloneBackendHTTPtoHTTPS($domainHash, $domainHTTPSHash, $domainNameValue);
+      }
     }
   }
   
@@ -100,11 +104,11 @@ sub checkSSLCertAvailable
 
   # /etc/ssl/test-zentyal-2.2021.pulipuli.info.pem
   #my $certfile = "/etc/ssl/test-zentyal-2.2021.pulipuli.info.pem";
-  my $certfile = "/home/dlll/git-init.sh";
-  my $epoch_timestamp = (stat($certfile))[9];
-  my $epoc = time();
-  my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
-  system("echo '[!] " . $domainNameValue . " " . $result . " " . $intervalDays . "'");
+  #my $certfile = "/home/dlll/git-init.sh";
+  #my $epoch_timestamp = (stat($certfile))[9];
+  #my $epoc = time();
+  #my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
+  #system("echo '[!] " . $domainNameValue . " " . $result . " " . $intervalDays . "'");
 
   if ($result eq "1") {
     return 1;
@@ -126,7 +130,15 @@ sub checkSSLCertExists
 
     # 檢查看看有沒有過期 (必須是距離上次2個月內)
     my $epoch_timestamp = (stat($certfile))[9];
-    my $timestamp       = localtime($epoch_timestamp);
+    my $epoc = time();
+    my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
+    #my $timestamp       = localtime($epoch_timestamp);
+    if ($intervalDays > 60) {
+      return 0;
+    }
+    else {
+      return 1;
+    }
   }
   return 0;
 }
@@ -135,13 +147,52 @@ sub checkSSLCertExists
 # 取得測試伺服器的資料
 sub setupSSLCert
 {
-  my ($self, $domainHTTPSHash, $domainNameValue) = @_;
+  my ($self, $domainNameValue) = @_;
 
   # 則建立cert
-
-  # 記錄上次更新的時間
   
+  # certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d test-zentyal-3-2021.pulipuli.info
+  my $certbotScript = "certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d " . $domainNameValue;
+  #EBox::Sudo::root($certbotScript);
+
+  my $folder = "/etc/letsencrypt/live/" . $domainNameValue;
+  if (-d $folder) {
+    # ok. moving on.
+  }
+  else {
+    return 0;
+  }
+
+  # ------------------
+  # 確認是否存在
+  my $poundCertFolder = "/etc/pound/cert";
+  if (-d $poundCertFolder) {
+    # ok. moving on.
+  }
+  else {
+    EBox::Sudo::root("mkdir -p " . $poundCertFolder);
+  }
+  
+  # -------------------
+  # 組合檔案
+  my $targetPem = $poundCertFolder . "/" . $domainNameValue . ".pem";
+  
+  my $build = "cat /etc/letsencrypt/live/" . $domainNameValue . "/privkey.pem /etc/letsencrypt/live/" . $domainNameValue . "/fullchain.pem > " . $targetPem;
+  EBox::Sudo::root($build);
+  
+  return 1;
+}
+
+# 20210718 Pulipuli Chen
+# 取得測試伺服器的資料
+sub cloneBackendHTTPtoHTTPS
+{
+  my ($self, $domainHash, $domainHTTPSHash, $domainNameValue) = @_;
+
+  # -----------------------
   # 加入 $domainHTTPSHash
+  my @backEndArray = @{$domainHash->{$domainNameValue}};
+  $domainHTTPSHash->{$domainNameValue} = \@backEndArray;
 
   return ($domainHTTPSHash);
 }
