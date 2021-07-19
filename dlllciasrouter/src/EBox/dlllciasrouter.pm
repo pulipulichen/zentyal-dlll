@@ -239,9 +239,43 @@ sub _daemons
 #
 #       <EBox::Module::Base::_setConf>
 #
-sub _postSetConfHook
+sub _setConf
 {
 
+    my ($self) = @_;
+
+    #  更新錯誤訊息
+    $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
+    $self->model("LibraryPoundBackend")->updatePoundCfg();
+    $self->updateXRDPCfg();
+    
+    if (0) {
+      
+      my $libStorage = $self->model("LibraryStorage");
+      my $mountChanged = $libStorage->updateMountServers();
+
+      # 先完全不使用moosefs
+      if ($self->model("MfsSetting")->value("mfsEnable") == 1) {
+          # 20150528 測試使用，先關閉
+          if ($mountChanged == 1) {
+              $libStorage->restartMooseFS();
+              $libStorage->remountChunkserver();
+          }
+
+          my $exportChanged =  $libStorage->updateNFSExports();
+          if ($exportChanged == 1) {
+              $libStorage->restartNFSServer();
+          }
+      }
+      else {
+          $libStorage->stopMount();
+      }
+    }
+
+    # 20181028 試著加入儲存設定看看？
+    #EBox::CGI::SaveChanges->saveAllModulesAction();
+    #$self->saveModuleChange();
+    # 20181028 還是不行，放棄
 }
 
 sub getLibrary

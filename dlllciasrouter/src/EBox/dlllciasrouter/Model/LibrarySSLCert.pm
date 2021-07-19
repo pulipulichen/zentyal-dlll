@@ -98,6 +98,12 @@ sub checkSSLCertAvailable
 
   system("echo '[!] " . $domainNameValue . " " . $result . "'");
 
+  # /etc/ssl/test-zentyal-2.2021.pulipuli.info.pem
+  my $certfile = "/etc/ssl/test-zentyal-2.2021.pulipuli.info.pem";
+  my $epoch_timestamp = (stat($certfile))[9];
+  my $timestamp       = localtime($epoch_timestamp);
+  system("echo '[!] " . $domainNameValue . " " . $result . " " . $timestamp . "'");
+
   if ($result eq "1") {
     return 1;
   }
@@ -113,15 +119,14 @@ sub checkSSLCertExists
   my ($self, $domainNameValue) = @_;
   
   # 測試有沒有已經存在的cert
+  my $certfile = "/etc/pound/ssl/" . $domainNameValue . ".pem";
+  if (-e $certfile) {
 
-    # 測試能不能連線
-
-      # 如果可以連線，則建立cert
-
-      #($domainHTTPSHash) = $self->setupSSLCert($domainHTTPSHash, $domainNameValue)
-      
-  # 檢查看看有沒有過期 (必須是距離上次2個月內)
-  return 1;
+    # 檢查看看有沒有過期 (必須是距離上次2個月內)
+    my $epoch_timestamp = (stat($certfile))[9];
+    my $timestamp       = localtime($epoch_timestamp);
+  }
+  return 0;
 }
 
 # 20210718 Pulipuli Chen
@@ -140,31 +145,48 @@ sub setupSSLCert
 }
 
 # 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
+# 將設定改為適合certbot的伺服器
 sub setupSSLCertSwitchToLighttpd
 {
   my ($self) = @_;
 
-  # 則建立cert
+  # 1. 停止pound
+  EBox::Sudo::root("/etc/init.d/pound stop");
 
-  # 記錄上次更新的時間
-  
-  # 加入 $domainHTTPSHash
+  my @params = ();
+  $self->parentModule()->writeConfFile(
+      '/etc/lighttpd/lighttpd.conf',
+      "dlllciasrouter/lighttped.conf.certbot.mas",
+      \@params,
+      { uid => '0', gid => '0', mode => '744' }
+  );
+
+  # 3. 重新啟動lighttpd
+  EBox::Sudo::root("/etc/init.d/lighttpd restart");
 
   return;
 }
 
 # 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
+# 將設定從適合certbot的伺服器還原為pound
 sub setupSSLCertSwitchToPound
 {
   my ($self) = @_;
 
-  # 則建立cert
+  # 1. 修改設定
+  my @params = ();
+  $self->parentModule()->writeConfFile(
+      '/etc/lighttpd/lighttpd.conf',
+      "dlllciasrouter/lighttped.conf.mas",
+      \@params,
+      { uid => '0', gid => '0', mode => '744' }
+  );
 
-  # 記錄上次更新的時間
-  
-  # 加入 $domainHTTPSHash
+  # 2. 重新啟動lighttpd
+  EBox::Sudo::root("/etc/init.d/lighttpd restart");
+
+  # 3. 啟動pound
+  EBox::Sudo::root("/etc/init.d/pound start");
 
   return;
 }
