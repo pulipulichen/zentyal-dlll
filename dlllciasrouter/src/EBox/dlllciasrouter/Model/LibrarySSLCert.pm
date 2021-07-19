@@ -224,6 +224,8 @@ sub setupSSLCertSwitchToLighttpd
       { uid => '0', gid => '0', mode => '744' }
   );
 
+  EBox::Sudo::root("service pound restart");
+
   system("echo '============================'");
   system("cat /etc/pound/pound.cfg");
   system("echo '============================'");
