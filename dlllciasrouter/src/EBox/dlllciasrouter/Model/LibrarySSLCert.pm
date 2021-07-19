@@ -110,7 +110,8 @@ sub checkSSLCertAvailable
   #my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
   #system("echo '[!] " . $domainNameValue . " " . $result . " " . $intervalDays . "'");
 
-  if ($result eq "1") {
+  if ($result eq 1) {
+    system("echo 'OK go'");
     return 1;
   }
   else {
@@ -134,12 +135,15 @@ sub checkSSLCertExists
     my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
     #my $timestamp       = localtime($epoch_timestamp);
     if ($intervalDays > 60) {
+      system("echo 'out date'");
       return 0;
     }
     else {
+      system("echo 'existed'");
       return 1;
     }
   }
+  system("echo 'not existed'");
   return 0;
 }
 
@@ -203,6 +207,8 @@ sub setupSSLCertSwitchToLighttpd
 {
   my ($self) = @_;
 
+  system("setupSSLCertSwitchToLighttpd");
+
   # 1. 停止pound
   EBox::Sudo::root("/etc/init.d/pound stop");
 
@@ -225,6 +231,8 @@ sub setupSSLCertSwitchToLighttpd
 sub setupSSLCertSwitchToPound
 {
   my ($self) = @_;
+
+  system("setupSSLCertSwitchToPound");
 
   # 1. 修改設定
   my @params = ();
