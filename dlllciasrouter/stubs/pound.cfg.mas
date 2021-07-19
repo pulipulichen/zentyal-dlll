@@ -1,6 +1,7 @@
 <%args>
     $address
     $port
+    $portHTTPS
     $alive
     $timeout
     $restarterIP
@@ -176,5 +177,153 @@ ListenHTTP
                 redirect "<% $urlValue %>"
 	End
 % } #foreach my $r (@{$redir}) {
+
+% ======================================================================================
+% print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
+ListenHTTPS
+	Address 0.0.0.0
+	Port	<% $portHTTPS %>
+
+% print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
+	xHTTP		4
+
+        Err414 "/etc/pound/error.html"
+        Err500 "/etc/pound/error.html"
+        Err501 "/etc/pound/error.html"
+        Err503 "/etc/pound/error.html"
+
+% print "\n# -----------------------------------------\n";
+% print "# Back End\n";
+% print "# -----------------------------------------\n";
+
+% if (length($domainHTTPSHash)) {
+%   while (my ($domainNameValue, $backEndArray) = each ($domainHTTPSHash)) {  	
+      Cert    "/etc/pound/cert/<% $domainNameValue %>.pem"
+%   } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
+% } # if (length($domainHash)) {
+
+% print "\n# -----------------------------------------\n";
+% print "# Back End\n";
+% print "# -----------------------------------------\n";
+
+% print "#        Service\n";
+% print "#                HeadRequire \"Host: dlll.nccu.edu.tw.*\"\n";
+% print "#                BackEnd\n";
+% print "#                        Address 192.168.1.31\n";
+% print "#                        Port    80\n";
+% print "#                End\n";
+% print "#        End\n\n";
+
+
+% if (length($domainHTTPSHash)) {
+%   while (my ($domainNameValue, $backEndArray) = each ($domainHTTPSHash)) {  	
+%
+        Service
+                HeadRequire "Host: <% $domainNameValue %>.*"
+
+% my @backEndArray = @{$backEndArray};
+% my $backEndCount = $#backEndArray+1;
+%
+% #-----------------------------------------------
+%
+% if ( $backEndCount == 1 ) {
+%   # 照以前的處理方法
+%
+%   for(my $i=0; $i<=$#backEndArray; $i++) {
+%       my $service = $backEndArray[$i];
+%       my $ipaddrValue = $service->{'ipaddrValue'};
+%       my $portValue = $service->{'portValue'};
+%
+%       my $httpToHttpsValue = $service->{'httpToHttpsValue'};
+%       my $httpsPortValue = $service->{'httpsPortValue'};
+%
+%       my $httpSecurityValue = $service->{'httpSecurityValue'};
+%       my $httpPortValue = $service->{'httpPortValue'};
+%
+%   if ($httpToHttpsValue) {
+%
+                redirect "https://<% $domainNameValue %>:<% $httpsPortValue %>/"
+%
+%   }   #if ($httpToHttpsValue) {
+%   elsif ($httpSecurityValue) {
+%
+                redirect "http://<% $domainNameValue %>:<% $httpPortValue %>/"
+%
+%   }   #if ($httpToHttpsValue) {
+%   else {
+%
+		BackEnd
+			Address	<% $ipaddrValue %>
+			Port	<% $portValue %>
+		End
+%   
+%   my $emergencyEnable = $service->{'emergencyValue'};
+%   my $redirHTTP_enable = $service->{'redirHTTP_enable'};
+%   if ( $emergencyEnable == 1 && $redirHTTP_enable == 1 && defined($restarterIP) && defined($restarterPort) )  {
+                Emergency
+			Address	<% $restarterIP %>
+			Port	<% $restarterPort %>
+		End
+%   }
+%
+%   }   #else {
+%
+%   } # for(my $i=0; $i<=$#backEndArray; $i++) {
+%
+%
+% #-----------------------------------------------
+%
+% } # if ( $backEndCount == 1 ) {
+% else {
+%   # 新的處理方式，只有BackEnd
+%   my $emergencyEnable = 0;
+%   for(my $i=0; $i<=$#backEndArray; $i++) {
+%       my $service = $backEndArray[$i];
+%       my $ipaddrValue = $service->{'ipaddrValue'};
+%       my $portValue = $service->{'portValue'};
+%       if ($service->{'emergencyValue'} == 1) {
+%           $emergencyEnable = 1;
+%       }
+		BackEnd
+			Address	<% $ipaddrValue %>
+			Port	<% $portValue %>
+		End
+%   } # for(my $i=0; $i<=$#backEndArray; $i++) {
+%   
+%   if ($emergencyEnable == 1 && defined($restarterIP) && defined($restarterPort) ) {
+                Emergency
+			Address	<% $restarterIP %>
+			Port	<% $restarterPort %>
+		End
+%   }
+%
+           Session
+  	   	Type IP
+		TTL 300
+  	   End
+% } # else {
+%
+        End
+%   } # while (my ($domainNameValue, $value) = each ($domainHash)) {  
+% } # if (length($domainHash)) {
+
+% print "# -----------------------------------------\n";
+% print "# Redirect\n";
+% print "# -----------------------------------------\n";
+
+% print "#        Service\n";
+% print "#                HeadRequire \"Host: test-redir.dlll.nccu.edu.tw.*\"\n";
+% print "#                Redirect \"http://dlll.nccu.edu.tw\"\n";
+% print "#        End\n";
+
+% foreach my $r (@{$redir}) {
+%   my $domainNameValue = $r->{'domainNameValue'};
+%   my $urlValue = $r->{'urlValue'};
+	Service
+                HeadRequire "Host: <% $domainNameValue %>.*"
+                redirect "<% $urlValue %>"
+	End
+% } #foreach my $r (@{$redir}) {
+% ======================================================================================
 
 End

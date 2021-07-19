@@ -80,6 +80,7 @@ sub updatePoundCfg
       $self->parentModule()->setConfSSH($settings->value('adminPort'));
 
       my $port = $settings->value('port');
+      my $portHTTPS = $settings->value('portHTTPS');
       my $alive = $settings->value('alive');
 
       my $timeout = $settings->value('timeout');
@@ -155,6 +156,7 @@ sub updatePoundCfg
 
       push(@servicesParams, 'address' => $address);
       push(@servicesParams, 'port' => $port);
+      push(@servicesParams, 'portHTTPS' => $portHTTPS);
       push(@servicesParams, 'alive' => $alive);
       push(@servicesParams, 'timeout' => $timeout);
       #push(@servicesParams, 'enableError' => $enableError);
