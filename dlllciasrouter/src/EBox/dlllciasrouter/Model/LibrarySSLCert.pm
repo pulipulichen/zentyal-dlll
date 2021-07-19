@@ -238,10 +238,10 @@ sub setupSSLCertSwitchToLighttpd
   
   sleep(3);
 
-  if ($self->checkSSLCertAvailable($domainName) == 1) {
-    system("echo 'setupSSLCertSwitchToLighttpd FAILED!!!'");
-    return 0;
-  }
+  #if ($self->checkSSLCertAvailable($domainName) == 1) {
+  #  system("echo 'setupSSLCertSwitchToLighttpd FAILED!!!'");
+  #  return 0;
+  #}
 
   system("echo 'setupSSLCertSwitchToLighttpd 0'");
   
