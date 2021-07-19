@@ -239,7 +239,7 @@ sub _daemons
 #
 #       <EBox::Module::Base::_setConf>
 #
-sub _setConf
+sub _postSetConfHook
 {
     my ($self) = @_;
 
