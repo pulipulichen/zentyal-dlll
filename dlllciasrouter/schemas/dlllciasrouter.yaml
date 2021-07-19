@@ -32,6 +32,10 @@ models:
     - LibraryContact
     - LibrarySSLCert
     - LibraryStorage
+    - LibraryCrontab
+    - LibraryHTML
+    - LibraryPoundBackend
+    - LibraryPoundErrorMessage
 #    - StorageServerSetting
 #    - StorageServerHeader
     - MfsSetting
