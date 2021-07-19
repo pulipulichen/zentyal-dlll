@@ -353,133 +353,136 @@ sub updatePoundCfg
 {
     my ($self) = @_;
 
-    # ----------------------------
-    # 設定
-    # ----------------------------
+    try {
+      # ----------------------------
+      # 設定
+      # ----------------------------
 
-    my $settings = $self->model('RouterSettings');
+      my $settings = $self->model('RouterSettings');
 
-    # 設定SSH
-    $self->setConfSSH($settings->value('adminPort'));
+      # 設定SSH
+      $self->setConfSSH($settings->value('adminPort'));
 
-    my $port = $settings->value('port');
-    my $alive = $settings->value('alive');
+      my $port = $settings->value('port');
+      my $alive = $settings->value('alive');
 
-    my $timeout = $settings->value('timeout');
-    #my $timeout = 1;    # 20150517 測試用，記得要移除
+      my $timeout = $settings->value('timeout');
+      #my $timeout = 1;    # 20150517 測試用，記得要移除
 
-    #my $enableError = $settings->value('enableError');
-    #my $enableError = 1;
-    #my $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
-    #my $errorURL = '/usr/share/zentyal/www/dlllciasrouter';
-    #if ($settings->row()->elementExists('error') 
-    #        && defined($settings->value('error')) 
-    #        && $settings->value('error') ne '') {
-    #    $errorURL = $settings->value('error');
-    #}
-    #my $file = "/etc/pound/error.html";
-    #my $fileTemp = "/tmp/error.html";
-    #my $file = "/tmp/error.html";
+      #my $enableError = $settings->value('enableError');
+      #my $enableError = 1;
+      #my $errorURL = "https://github.com/pulipulichen/zentyal-dlll/raw/master/dlllciasrouter/error_page/error_example.html";
+      #my $errorURL = '/usr/share/zentyal/www/dlllciasrouter';
+      #if ($settings->row()->elementExists('error') 
+      #        && defined($settings->value('error')) 
+      #        && $settings->value('error') ne '') {
+      #    $errorURL = $settings->value('error');
+      #}
+      #my $file = "/etc/pound/error.html";
+      #my $fileTemp = "/tmp/error.html";
+      #my $file = "/tmp/error.html";
 
-    my $address = $settings->getExtIPAddress();
+      my $address = $settings->getExtIPAddress();
 
-    my $restarterIP;
-    if ($settings->row->elementExists('restarterIP')) {
-        $restarterIP = $settings->value('restarterIP');
-    }
-    my $restarterPort;
-    if ($settings->row->elementExists('restarterPort')) {
-        $restarterPort = $settings->value('restarterPort');
-    }
-    my $notifyEmail;
-    if ($settings->row->elementExists('notifyEmail')) {
-        $notifyEmail = $settings->value('notifyEmail');
-    }
-    my $senderEmail;
-    if ($settings->row->elementExists('senderEmail')) {
-        $senderEmail = $settings->value('senderEmail');
-    }
+      my $restarterIP;
+      if ($settings->row->elementExists('restarterIP')) {
+          $restarterIP = $settings->value('restarterIP');
+      }
+      my $restarterPort;
+      if ($settings->row->elementExists('restarterPort')) {
+          $restarterPort = $settings->value('restarterPort');
+      }
+      my $notifyEmail;
+      if ($settings->row->elementExists('notifyEmail')) {
+          $notifyEmail = $settings->value('notifyEmail');
+      }
+      my $senderEmail;
+      if ($settings->row->elementExists('senderEmail')) {
+          $senderEmail = $settings->value('senderEmail');
+      }
 
-    my $testDomainName;
-    if ($settings->row->elementExists('testDomainName')) {
-        $testDomainName = $settings->value('testDomainName');
-    }
+      my $testDomainName;
+      if ($settings->row->elementExists('testDomainName')) {
+          $testDomainName = $settings->value('testDomainName');
+      }
 
-    # ----------------------------
-    # Back End
-    # ----------------------------
+      # ----------------------------
+      # Back End
+      # ----------------------------
 
-    # Iterate over table
-    #my @paramsArray = ();
-    my $domainHash = (); 
-    my $domainHTTPSHash = (); 
-    my $vmHash = ();
-    my $i = 0;
+      # Iterate over table
+      #my @paramsArray = ();
+      my $domainHash = (); 
+      my $domainHTTPSHash = (); 
+      my $vmHash = ();
+      my $i = 0;
 
-    ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
-    ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
+      ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
+      ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
+      ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
+      ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
 
-    ($domainHTTPSHash) = $self->model('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
+      ($domainHTTPSHash) = $self->model('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
 
-    # ----------------------------
-    # 轉址
-    # ----------------------------
+      # ----------------------------
+      # 轉址
+      # ----------------------------
 
-    # Iterate over table
-    my @redirArray = $self->getURLRedirectParam();
+      # Iterate over table
+      my @redirArray = $self->getURLRedirectParam();
 
-    # ----------------------------
-    # 準備把值傳送到設定檔去
-    # ----------------------------
+      # ----------------------------
+      # 準備把值傳送到設定檔去
+      # ----------------------------
 
-    my @servicesParams = ();
+      my @servicesParams = ();
 
-    push(@servicesParams, 'address' => $address);
-    push(@servicesParams, 'port' => $port);
-    push(@servicesParams, 'alive' => $alive);
-    push(@servicesParams, 'timeout' => $timeout);
-    #push(@servicesParams, 'enableError' => $enableError);
-    #push(@servicesParams, 'errorURL' => $errorURL);
-    #push(@servicesParams, 'file' => $file);
+      push(@servicesParams, 'address' => $address);
+      push(@servicesParams, 'port' => $port);
+      push(@servicesParams, 'alive' => $alive);
+      push(@servicesParams, 'timeout' => $timeout);
+      #push(@servicesParams, 'enableError' => $enableError);
+      #push(@servicesParams, 'errorURL' => $errorURL);
+      #push(@servicesParams, 'file' => $file);
 
-    push(@servicesParams, 'restarterIP' => $restarterIP);
-    push(@servicesParams, 'restarterPort' => $restarterPort);
+      push(@servicesParams, 'restarterIP' => $restarterIP);
+      push(@servicesParams, 'restarterPort' => $restarterPort);
 
-    #push(@servicesParams, 'services' => \@paramsArray);
-    push(@servicesParams, 'domainHash' => $domainHash);
-    push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
+      #push(@servicesParams, 'services' => \@paramsArray);
+      push(@servicesParams, 'domainHash' => $domainHash);
+      push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
 
-    push(@servicesParams, 'redir' => \@redirArray);
-    
-    $self->writeConfFile(
-        '/etc/pound/pound.cfg',
-        "dlllciasrouter/pound.cfg.mas",
-        \@servicesParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
+      push(@servicesParams, 'redir' => \@redirArray);
 
-    # --------------------
+      $self->writeConfFile(
+          '/etc/pound/pound.cfg',
+          "dlllciasrouter/pound.cfg.mas",
+          \@servicesParams,
+          { uid => '0', gid => '0', mode => '644' }
+      );
 
-    my @vmParams = ();
-    push(@vmParams, 'vmHash' => $vmHash);
-    push(@vmParams, 'notifyEmail' => $notifyEmail);
-    push(@vmParams, 'senderEmail' => $senderEmail);
-    $self->writeConfFile(
-        '/etc/pound/vmid-config.php',
-        #'/var/www/vmid-config.php',
-        "dlllciasrouter/vmid-config.php.mas",
-        \@vmParams,
-        { uid => '0', gid => '0', mode => '770' }
-    );
+      # --------------------
 
-    # --------------------
+      my @vmParams = ();
+      push(@vmParams, 'vmHash' => $vmHash);
+      push(@vmParams, 'notifyEmail' => $notifyEmail);
+      push(@vmParams, 'senderEmail' => $senderEmail);
+      $self->writeConfFile(
+          '/etc/pound/vmid-config.php',
+          #'/var/www/vmid-config.php',
+          "dlllciasrouter/vmid-config.php.mas",
+          \@vmParams,
+          { uid => '0', gid => '0', mode => '770' }
+      );
 
-    # 20170731 Pulipuli Chen
-    # 一併更新PoundSettings
-    $self->model("PoundSettings")->updateCfg();
+      # --------------------
 
+      # 20170731 Pulipuli Chen
+      # 一併更新PoundSettings
+      $self->model("PoundSettings")->updateCfg();
+    } catch {
+        $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
+    };
 }   # sub updatePoundCfg
 
 # 20170303 Pulipuli Chen
