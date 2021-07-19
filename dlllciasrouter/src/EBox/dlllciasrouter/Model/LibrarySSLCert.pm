@@ -92,7 +92,7 @@ sub checkSSLCertAvailable
   
   $domainNameValue = "blog.pulipuli.info";
   # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
-  my $testURL = "https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec";
+  my $testURL = "https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec";
   #my $result = `wget -qO- ${testURL}?q=http://${domainNameValue}:888/certbot/`;
   my $result = `wget -qO- ${testURL}?q=http://${domainNameValue}/`;
   system("echo '[!] " . $domainNameValue . " " . $result . "'");
