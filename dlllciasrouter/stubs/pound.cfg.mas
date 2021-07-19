@@ -8,9 +8,9 @@
     $domainHash
     $domainHTTPSHash
     $redir
-    $check1
-    $check2
-    $check3
+    $checka
+    $checkb
+    $checkc
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
