@@ -52,9 +52,9 @@ sub dlllciasrouter_init
         $self->initLighttpd();
         $self->initApache();
         $self->initRootCrontab();
-        $self->initNFSClient();
 
         my $libStorage = $self->model("LibraryStorage");
+        $libStorage->initNFSClient();
         $libStorage->initMooseFS();
         $libStorage->startMooseFS();
         $libStorage->initNFSServer();

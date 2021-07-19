@@ -91,10 +91,11 @@ sub checkSSLCertAvailable
   my ($self, $domainNameValue) = @_;
   
   #$domainNameValue = "blog.pulipuli.info";
-  # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
-  my $testURL = "https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec";
-  my $result = `wget -qO- ${testURL}?q=http://${domainNameValue}:888/certbot/`;
+  #my $testURL = "https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec";
+  #my $result = `wget -qO- ${testURL}?q=http://${domainNameValue}:888/certbot/`;
   #my $result = `wget -qO- ${testURL}?q=http://${domainNameValue}/`;
+  my $result = "pass. Could you only check on start?";
+
   system("echo '[!] " . $domainNameValue . " " . $result . "'");
 
   if ($result eq "1") {
