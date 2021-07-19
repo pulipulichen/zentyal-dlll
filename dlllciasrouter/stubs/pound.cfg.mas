@@ -14,7 +14,6 @@
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
 % print "## see pound(8) for details\n";
-% print "## check: " . $check1 . ", " . $check3 . ", " . $check3;
 
 
 % print "######################################################################\n";
