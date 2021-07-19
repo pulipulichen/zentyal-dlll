@@ -51,6 +51,7 @@ sub checkSSLCert
 {
   my ($self, $domainHash, $domainHTTPSHash) = @_;
 
+  # 測試用
   if (1) {
     return ($domainHTTPSHash);
   }
