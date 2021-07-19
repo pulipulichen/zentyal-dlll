@@ -230,12 +230,16 @@ sub setupSSLCertSwitchToLighttpd
       { uid => '0', gid => '0', mode => '744' }
   );
 
+  system("echo '============================'");
+  system("cat /etc/pound/pound.conf");
+  system("echo '============================'");
+
   system("echo 'setupSSLCertSwitchToLighttpd 0'");
   
   # 1. 停止pound
-  EBox::Sudo::root("service pound restart");
+  #EBox::Sudo::root("service pound restart");
   
-  sleep(10);
+  #sleep(10);
 
   #EBox::Sudo::root("pkill pound");
   #EBox::Service::manage('dlllciasrouter.pound', 'stop');
@@ -249,14 +253,20 @@ sub setupSSLCertSwitchToLighttpd
       { uid => '0', gid => '0', mode => '744' }
   );
 
-  system("echo 'setupSSLCertSwitchToLighttpd 2'");
+  
+  system("echo '============================'");
+  system("cat /etc/lighttpd/lighttpd.conf");
+  system("echo '============================'");
+
+
+  #system("echo 'setupSSLCertSwitchToLighttpd 2'");
 
   # 3. 重新啟動lighttpd
   #EBox::Sudo::root("/etc/init.d/lighttpd restart");
-  EBox::Sudo::root("service lighttpd restart");
+  #EBox::Sudo::root("service lighttpd restart");
   #EBox::Service::manage('dlllciasrouter.pound', 'restart');
 
-  sleep(5);
+  #sleep(5);
 
   system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
