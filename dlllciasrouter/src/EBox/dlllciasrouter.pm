@@ -453,6 +453,33 @@ sub updatePoundCfg
 
     push(@servicesParams, 'redir' => \@redirArray);
     
+    $self->writeConfFile(
+        '/etc/pound/pound.cfg',
+        "dlllciasrouter/pound.cfg.mas",
+        \@servicesParams,
+        { uid => '0', gid => '0', mode => '644' }
+    );
+
+    # --------------------
+
+    my @vmParams = ();
+    push(@vmParams, 'vmHash' => $vmHash);
+    push(@vmParams, 'notifyEmail' => $notifyEmail);
+    push(@vmParams, 'senderEmail' => $senderEmail);
+    $self->writeConfFile(
+        '/etc/pound/vmid-config.php',
+        #'/var/www/vmid-config.php',
+        "dlllciasrouter/vmid-config.php.mas",
+        \@vmParams,
+        { uid => '0', gid => '0', mode => '770' }
+    );
+
+    # --------------------
+
+    # 20170731 Pulipuli Chen
+    # 一併更新PoundSettings
+    $self->model("PoundSettings")->updateCfg();
+
 }   # sub updatePoundCfg
 
 # 20170303 Pulipuli Chen
