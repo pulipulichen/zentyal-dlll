@@ -353,7 +353,6 @@ sub updatePoundCfg
 {
     my ($self) = @_;
 
-    try {
       # ----------------------------
       # 設定
       # ----------------------------
@@ -480,10 +479,7 @@ sub updatePoundCfg
       # 20170731 Pulipuli Chen
       # 一併更新PoundSettings
       $self->model("PoundSettings")->updateCfg();
-    } catch {
-      system('echo "[ERROR]"');
-      $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
-    };
+    
 }   # sub updatePoundCfg
 
 # 20170303 Pulipuli Chen
