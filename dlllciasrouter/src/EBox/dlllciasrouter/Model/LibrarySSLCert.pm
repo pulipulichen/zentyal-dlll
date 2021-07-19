@@ -239,7 +239,7 @@ sub setupSSLCertSwitchToLighttpd
 
   # 3. 重新啟動lighttpd
   #EBox::Sudo::root("/etc/init.d/lighttpd restart");
-  #EBox::Sudo::root("service lighttpd restart");
+  EBox::Sudo::root("service lighttpd restart");
 
   system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
