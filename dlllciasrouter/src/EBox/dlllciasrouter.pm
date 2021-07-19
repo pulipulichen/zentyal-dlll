@@ -417,7 +417,7 @@ sub updatePoundCfg
     #my $check2 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
     #my $check3 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://blog.pulipuli.info");
     #my $check1 = system("wget -qO- https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
-    open(my $check1, "wget -qO- https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info")
+    open(my $check1, "wget -qO- https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
 
     # ----------------------------
     # 轉址
