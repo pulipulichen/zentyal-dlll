@@ -31,6 +31,7 @@ models:
     - LibraryRedirect
     - LibraryContact
     - LibrarySSLCert
+    - LibraryStorage
 #    - StorageServerSetting
 #    - StorageServerHeader
     - MfsSetting
