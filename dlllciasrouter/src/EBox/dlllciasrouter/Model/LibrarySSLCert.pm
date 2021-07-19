@@ -102,7 +102,7 @@ sub checkSSLCertAvailable
   my $certfile = "/etc/ssl/test-zentyal-2.2021.pulipuli.info.pem";
   my $epoch_timestamp = (stat($certfile))[9];
   my $timestamp       = localtime($epoch_timestamp);
-  system("echo '[!] " . $domainNameValue . " " . $result . " " . $timestamp . "'");
+  system("echo '[!] " . $domainNameValue . " " . $result . " " . $epoch_timestamp . "'");
 
   if ($result eq "1") {
     return 1;
