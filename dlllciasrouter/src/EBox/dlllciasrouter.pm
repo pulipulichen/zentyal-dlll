@@ -699,7 +699,7 @@ sub checkSSLCert
 
   if (length($domainHash)) {
     while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
-      system("echo " . $domain);
+      system("echo " . $domainNameValue);
     }
   }
 
