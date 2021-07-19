@@ -218,13 +218,11 @@ sub setupSSLCertSwitchToLighttpd
   system("echo 'setupSSLCertSwitchToLighttpd'");
 
   $self->parentModule()->writeConfFile(
-      '/etc/pound/pound.conf',
+      '/etc/pound/pound.cfg',
       "dlllciasrouter/pound.cfg.disable.mas",
       \@params,
       { uid => '0', gid => '0', mode => '744' }
   );
-
-  EBox::Sudo::root("service pound restart");
 
   system("echo '============================'");
   system("cat /etc/pound/pound.conf");
