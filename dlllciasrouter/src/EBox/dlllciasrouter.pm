@@ -433,9 +433,9 @@ sub updatePoundCfg
 
     my @servicesParams = ();
 
-    push(@servicesParams, 'checka' => 0);
-    push(@servicesParams, 'checkb' => 200);
-    push(@servicesParams, 'checkc' => 200);
+    push(@servicesParams, 'check1' => 0);
+    push(@servicesParams, 'check2' => 200);
+    push(@servicesParams, 'check3' => 200);
 
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
