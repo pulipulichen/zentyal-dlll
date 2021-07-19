@@ -51,40 +51,44 @@ sub checkSSLCert
 {
   my ($self, $domainHash, $domainHTTPSHash) = @_;
 
-  # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
+  try {
 
-  my $modified = 0;
-  
-  # 跑迴圈，看每個資料
-  if (length($domainHash)) {
-    while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
-      #system("echo '[!] " . $domainNameValue . "'");
-      
-      if ($self->checkSSLCertExists($domainNameValue) == 1) {
-        ($domainHTTPSHash) = $self->cloneBackendHTTPtoHTTPS($domainHash, $domainHTTPSHash, $domainNameValue);
-        next;
-      }
-      
-      if ($self->checkSSLCertAvailable($domainNameValue) == 0) {
-        next;
-      }
-      
-      if ($modified == 0) {
-        $modified = 1;
-        $self->setupSSLCertSwitchToLighttpd();
-      }
-      
-      my $result = $self->setupSSLCert($domainNameValue);
-      if ($result == 1) {
-        ($domainHTTPSHash) = $self->cloneBackendHTTPtoHTTPS($domainHash, $domainHTTPSHash, $domainNameValue);
+    # https://script.google.com/macros/s/AKfycbzn1vBi_yGBZwxiNUMqZEwXjc3qmwaiRCAstfrRw26R2_3HVzmT00RlHF5Po039hWNBHA/exec?q=https://blog.pulipuli.info
+
+    my $modified = 0;
+
+    # 跑迴圈，看每個資料
+    if (length($domainHash)) {
+      while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
+        #system("echo '[!] " . $domainNameValue . "'");
+
+        if ($self->checkSSLCertExists($domainNameValue) == 1) {
+          ($domainHTTPSHash) = $self->cloneBackendHTTPtoHTTPS($domainHash, $domainHTTPSHash, $domainNameValue);
+          next;
+        }
+
+        if ($self->checkSSLCertAvailable($domainNameValue) == 0) {
+          next;
+        }
+
+        if ($modified == 0) {
+          $modified = 1;
+          $self->setupSSLCertSwitchToLighttpd();
+        }
+
+        my $result = $self->setupSSLCert($domainNameValue);
+        if ($result == 1) {
+          ($domainHTTPSHash) = $self->cloneBackendHTTPtoHTTPS($domainHash, $domainHTTPSHash, $domainNameValue);
+        }
       }
     }
-  }
-  
-  if ($modified == 1) {
-    $self->setupSSLCertSwitchToPound();
-  }
 
+    if ($modified == 1) {
+      $self->setupSSLCertSwitchToPound();
+    }
+  } catch {
+      $self->getLibrary()->show_exceptions($_ . ' ( checkSSLCert )');
+  };
   return ($domainHTTPSHash);
 }
 
@@ -234,7 +238,6 @@ sub setupSSLCertSwitchToLighttpd
   # 3. 重新啟動lighttpd
   #EBox::Sudo::root("/etc/init.d/lighttpd restart");
   EBox::Sudo::root("service lighttpd restart");
-
 
   system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
