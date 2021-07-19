@@ -145,7 +145,7 @@ sub initMooseFS
 
     if (! -e '/etc/mfs/mfshdd.cfg') {
         my @hddParams = ();
-        my $mfsMod = $self->getLibrary("MfsSetting");
+        my $mfsMod = $self->loadLibrary("MfsSetting");
         push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
         push(@hddParams, 'paths' => []);
         $self->writeConfFileOnce(
@@ -163,7 +163,7 @@ sub startMooseFS
     my ($self) = @_;
 
     # mfsEnable
-    my $mfsMod = $self->getLibrary("MfsSetting");
+    my $mfsMod = $self->loadLibrary("MfsSetting");
     if ($mfsMod->value("mfsEnable") == 0) {
       return 0;
     }
@@ -184,7 +184,7 @@ sub startMooseFS
             system('sudo mfsmount');
         }
     } catch {
-        $self->getLibrary("LibraryToolkit")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
+        $self->loadLibrary("LibraryToolkit")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
     };
 }
 
@@ -258,10 +258,10 @@ sub initNFSClient
 sub updateNFSExports
 {
     # 從這邊取得資料出來
-    #my $expMod = $self->getLibrary("ExportSettings");
+    #my $expMod = $self->loadLibrary("ExportSettings");
     my ($self) = @_;
 
-    my $mod = $self->getLibrary("ExportsSetting");
+    my $mod = $self->loadLibrary("ExportsSetting");
 
     my $dirs = ();
     # 第一次迴圈，先取出資料出來
@@ -318,7 +318,7 @@ sub updateNFSExports
 
     my @nfsParams = ();
     # 從這邊取得資料出來
-    #my $expMod = $self->getLibrary("ExportSettings");
+    #my $expMod = $self->loadLibrary("ExportSettings");
     push(@nfsParams, 'paths' => @paths);
     #push(@nfsParams, 'paths' => []);
     
@@ -420,7 +420,7 @@ sub updateMountServers
     # -------------------------------------
 
     my @hddParams = ();
-    my $mfsMod = $self->getLibrary("MfsSetting");
+    my $mfsMod = $self->loadLibrary("MfsSetting");
     push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
     push(@hddParams, 'paths' => @paths);
 
