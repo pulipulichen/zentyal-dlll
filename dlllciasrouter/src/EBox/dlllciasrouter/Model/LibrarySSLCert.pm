@@ -235,6 +235,8 @@ sub setupSSLCertSwitchToLighttpd
   # 1. 停止pound
   EBox::Sudo::root("service pound restart");
   
+  sleep(10);
+
   #EBox::Sudo::root("pkill pound");
   #EBox::Service::manage('dlllciasrouter.pound', 'stop');
 
@@ -253,6 +255,8 @@ sub setupSSLCertSwitchToLighttpd
   #EBox::Sudo::root("/etc/init.d/lighttpd restart");
   EBox::Sudo::root("service lighttpd restart");
   #EBox::Service::manage('dlllciasrouter.pound', 'restart');
+
+  sleep(5);
 
   system("echo 'setupSSLCertSwitchToLighttpd finished'");
 
