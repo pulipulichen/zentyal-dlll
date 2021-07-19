@@ -99,7 +99,8 @@ sub checkSSLCertAvailable
   system("echo '[!] " . $domainNameValue . " " . $result . "'");
 
   # /etc/ssl/test-zentyal-2.2021.pulipuli.info.pem
-  my $certfile = "/etc/ssl/test-zentyal-2.2021.pulipuli.info.pem";
+  #my $certfile = "/etc/ssl/test-zentyal-2.2021.pulipuli.info.pem";
+  my $certfile = "/home/dlll/git-init.sh";
   my $epoch_timestamp = (stat($certfile))[9];
   my $epoc = time();
   my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
