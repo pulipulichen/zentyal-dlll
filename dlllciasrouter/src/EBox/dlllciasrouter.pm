@@ -18,6 +18,8 @@ use File::Slurp;
 
 use POSIX;
 
+use LWP::Simple;
+
 # Method: _create
 #
 # Overrides:
@@ -413,6 +415,13 @@ sub updatePoundCfg
 
     ($domainHTTPSHash) = $self->checkSSLCert($domainHash, $domainHTTPSHash);
 
+    my $check1 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://testb.dlll.nccu.edu.tw");
+    my $check2 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=https://blog.pulipuli.info");
+    my $check3 = get("https://script.google.com/macros/s/AKfycbw1gAhCzBvcQ08K-B8r7Ed4SyW0iUBltws8tmC0qrNWG71ARClI0hthNoaEuV6VRmyZUg/exec?q=http://blog.pulipuli.info");
+    push(@servicesParams, 'check1' => $check1);
+    push(@servicesParams, 'check2' => $check2);
+    push(@servicesParams, 'check3' => $check3);
+
     # ----------------------------
     # 轉址
     # ----------------------------
@@ -427,7 +436,6 @@ sub updatePoundCfg
     my @servicesParams = ();
     push(@servicesParams, 'address' => $address);
     push(@servicesParams, 'port' => $port);
-    push(@servicesParams, 'testDomainName' => $testDomainName);
     push(@servicesParams, 'alive' => $alive);
     push(@servicesParams, 'timeout' => $timeout);
     #push(@servicesParams, 'enableError' => $enableError);

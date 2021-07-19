@@ -68,7 +68,7 @@ if ! ( [ `which pound` ] && [ `which lighttpd` ] && [ -f /etc/init.d/moosefs-mas
 PACKAGE="zentyal-network zentyal-objects \
 zentyal-firewall zentyal-dns zentyal-services zentyal-dhcp \
 pound snapd \
-lighttpd php5-cgi \
+lighttpd \
 moosefs-master moosefs-cli moosefs-chunkserver  moosefs-metalogger moosefs-client moosefs-cgiserv \
 nfs-kernel-server nfs-common \
 vim locate libdistro-info-perl  build-essential gcc zbuildtools fakeroot git pound \
@@ -83,8 +83,8 @@ xrdp xfce4 xfce4-goodies tightvncserver"
     sudo updatedb
 
     # lighttpd enable php
-    sudo lighttpd-enable-mod fastcgi fastcgi-php
-    sudo service lighttpd force-reload
+    #sudo lighttpd-enable-mod fastcgi fastcgi-php
+    #sudo service lighttpd force-reload
 
     # install certbot with snap
     sudo snap install --classic certbot

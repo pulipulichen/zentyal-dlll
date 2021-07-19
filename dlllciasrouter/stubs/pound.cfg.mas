@@ -7,11 +7,14 @@
     $restarterPort
     $domainHash
     $redir
-    $testDomainName
+    $check1
+    $check2
+    $check3
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
 % print "## see pound(8) for details\n";
+## check: <% $check1 %>, <% $check3 %>, <% $check3 %>
 
 
 % print "######################################################################\n";
