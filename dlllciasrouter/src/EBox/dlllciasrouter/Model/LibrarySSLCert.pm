@@ -179,6 +179,7 @@ sub setupSSLCert
   
   # -------------------
   # 組合檔案
+  my $poundCertFolder = "/etc/pound/cert";
   my $targetPem = $poundCertFolder . "/" . $domainNameValue . ".pem";
   
   my $build = "cat /etc/letsencrypt/live/" . $domainNameValue . "/privkey.pem /etc/letsencrypt/live/" . $domainNameValue . "/fullchain.pem > " . $targetPem;
