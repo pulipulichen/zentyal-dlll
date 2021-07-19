@@ -90,6 +90,34 @@ sub checkSSLCert
 
 # 20210718 Pulipuli Chen
 # 取得測試伺服器的資料
+sub checkSSLCertExists
+{
+  my ($self, $domainNameValue) = @_;
+  
+  # 測試有沒有已經存在的cert
+  my $certfile = "/etc/pound/ssl/" . $domainNameValue . ".pem";
+  if (-e $certfile) {
+
+    # 檢查看看有沒有過期 (必須是距離上次2個月內)
+    my $epoch_timestamp = (stat($certfile))[9];
+    my $epoc = time();
+    my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
+    #my $timestamp       = localtime($epoch_timestamp);
+    if ($intervalDays > 60) {
+      system("echo 'out date'");
+      return 0;
+    }
+    else {
+      system("echo 'existed'");
+      return 1;
+    }
+  }
+  system("echo 'not existed'");
+  return 0;
+}
+
+# 20210718 Pulipuli Chen
+# 取得測試伺服器的資料
 sub checkSSLCertAvailable
 {
   my ($self, $domainNameValue) = @_;
@@ -121,34 +149,6 @@ sub checkSSLCertAvailable
 
 # 20210718 Pulipuli Chen
 # 取得測試伺服器的資料
-sub checkSSLCertExists
-{
-  my ($self, $domainNameValue) = @_;
-  
-  # 測試有沒有已經存在的cert
-  my $certfile = "/etc/pound/ssl/" . $domainNameValue . ".pem";
-  if (-e $certfile) {
-
-    # 檢查看看有沒有過期 (必須是距離上次2個月內)
-    my $epoch_timestamp = (stat($certfile))[9];
-    my $epoc = time();
-    my $intervalDays = ($epoc - $epoch_timestamp) / 60 / 60 / 24;
-    #my $timestamp       = localtime($epoch_timestamp);
-    if ($intervalDays > 60) {
-      system("echo 'out date'");
-      return 0;
-    }
-    else {
-      system("echo 'existed'");
-      return 1;
-    }
-  }
-  system("echo 'not existed'");
-  return 0;
-}
-
-# 20210718 Pulipuli Chen
-# 取得測試伺服器的資料
 sub setupSSLCert
 {
   my ($self, $domainNameValue) = @_;
@@ -159,13 +159,14 @@ sub setupSSLCert
   
   # certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d test-zentyal-3-2021.pulipuli.info
   my $certbotScript = "certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d " . $domainNameValue;
-  #EBox::Sudo::root($certbotScript);
+  EBox::Sudo::root($certbotScript);
 
   my $folder = "/etc/letsencrypt/live/" . $domainNameValue;
   if (-d $folder) {
     # ok. moving on.
   }
   else {
+    system("echo 'setupSSLCert no folder" . $folder . "'");
     return 0;
   }
 
