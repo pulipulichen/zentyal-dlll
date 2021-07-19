@@ -233,7 +233,7 @@ sub setupSSLCertSwitchToLighttpd
   sleep(3);
 
   system("echo '============================'");
-  system("sudo lsof -i -P -n | grep LISTEN");
+  system("sudo lsof -i -P -n | grep :80");
   system("echo '============================'");
   
   sleep(3);
