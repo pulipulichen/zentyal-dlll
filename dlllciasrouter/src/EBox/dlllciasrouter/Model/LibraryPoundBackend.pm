@@ -91,7 +91,7 @@ sub updatePoundCfg
       my $settings = $self->loadLibrary('RouterSettings');
 
       # 設定SSH
-      $self->parentModule()->setConfSSH($settings->value('adminPort'));
+      $self->loadLibaray("LibraryServiceSSH")->setConfSSH($settings->value('adminPort'));
 
       my $port = $settings->value('port');
       my $portHTTPS = $settings->value('portHTTPS');
@@ -149,9 +149,9 @@ sub updatePoundCfg
       my $i = 0;
 
       ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
-      ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
-      ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
-      ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
+      ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i, 0);
+      ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i, 0);
+      ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i, 0);
 
       ($domainHTTPSHash) = $self->loadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
 
@@ -217,7 +217,7 @@ sub updatePoundCfg
 
 sub getServiceParam
 {
-    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
+    my ($self, $modName, $domainHash, $vmHash, $i, $certbotMode) = @_;
 
     my $libRedir = $self->loadLibrary('LibraryRedirect');
     my $lib = $self->getLibrary();
@@ -260,7 +260,7 @@ sub getServiceParam
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
 
-        if ($useTestLocalhost == 1) {
+        if ($useTestLocalhost == 1 || $certbotMode == 1) {
           $ipaddrValue = "0.0.0.0";
           $portValue = 888;
           $httpToHttpsValue = 0;
