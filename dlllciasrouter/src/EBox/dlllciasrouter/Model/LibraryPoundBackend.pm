@@ -84,20 +84,9 @@ sub updatePoundCfg
 {
     my ($self) = @_;
 
-      # ----------------------------
-      # 設定
-      # ----------------------------
+      
 
-      my $settings = $self->loadLibrary('RouterSettings');
-
-      # 設定SSH
-      $self->parentModule()->setConfSSH($settings->value('adminPort'));
-
-      my $port = $settings->value('port');
-      my $portHTTPS = $settings->value('portHTTPS');
-      my $alive = $settings->value('alive');
-
-      my $timeout = $settings->value('timeout');
+      
       #my $timeout = 1;    # 20150517 測試用，記得要移除
 
       #my $enableError = $settings->value('enableError');
@@ -113,99 +102,16 @@ sub updatePoundCfg
       #my $fileTemp = "/tmp/error.html";
       #my $file = "/tmp/error.html";
 
-      my $address = $settings->getExtIPAddress();
-
-      my $restarterIP;
-      if ($settings->row->elementExists('restarterIP')) {
-          $restarterIP = $settings->value('restarterIP');
-      }
-      my $restarterPort;
-      if ($settings->row->elementExists('restarterPort')) {
-          $restarterPort = $settings->value('restarterPort');
-      }
-      my $notifyEmail;
-      if ($settings->row->elementExists('notifyEmail')) {
-          $notifyEmail = $settings->value('notifyEmail');
-      }
-      my $senderEmail;
-      if ($settings->row->elementExists('senderEmail')) {
-          $senderEmail = $settings->value('senderEmail');
-      }
-
-      my $testDomainName;
-      if ($settings->row->elementExists('testDomainName')) {
-          $testDomainName = $settings->value('testDomainName');
-      }
-
       # ----------------------------
       # Back End
       # ----------------------------
 
-      # Iterate over table
-      #my @paramsArray = ();
-      my $domainHash = (); 
-      my $domainHTTPSHash = (); 
-      my $vmHash = ();
-      my $i = 0;
-
-      ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
-      ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i);
-      ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i);
-      ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i);
-
-      ($domainHTTPSHash) = $self->loadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
-
-      # ----------------------------
-      # 轉址
-      # ----------------------------
-
-      # Iterate over table
-      my @redirArray = $self->getURLRedirectParam();
-
-      # ----------------------------
-      # 準備把值傳送到設定檔去
-      # ----------------------------
-
-      my @servicesParams = ();
-
-      push(@servicesParams, 'address' => $address);
-      push(@servicesParams, 'port' => $port);
-      push(@servicesParams, 'portHTTPS' => $portHTTPS);
-      push(@servicesParams, 'alive' => $alive);
-      push(@servicesParams, 'timeout' => $timeout);
-      #push(@servicesParams, 'enableError' => $enableError);
-      #push(@servicesParams, 'errorURL' => $errorURL);
-      #push(@servicesParams, 'file' => $file);
-
-      push(@servicesParams, 'restarterIP' => $restarterIP);
-      push(@servicesParams, 'restarterPort' => $restarterPort);
-
-      #push(@servicesParams, 'services' => \@paramsArray);
-      push(@servicesParams, 'domainHash' => $domainHash);
-      push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
-
-      push(@servicesParams, 'redir' => \@redirArray);
-
-      $self->parentModule()->writeConfFile(
-          '/etc/pound/pound.cfg',
-          "dlllciasrouter/pound.cfg.mas",
-          \@servicesParams,
-          { uid => '0', gid => '0', mode => '644' }
-      );
+      my ($domainHash, $domainHTTPSHash, $vmHash) = $self->buildDomainHash();
 
       # --------------------
 
-      my @vmParams = ();
-      push(@vmParams, 'vmHash' => $vmHash);
-      push(@vmParams, 'notifyEmail' => $notifyEmail);
-      push(@vmParams, 'senderEmail' => $senderEmail);
-      $self->parentModule()->writeConfFile(
-          '/etc/pound/vmid-config.php',
-          #'/var/www/vmid-config.php',
-          "dlllciasrouter/vmid-config.php.mas",
-          \@vmParams,
-          { uid => '0', gid => '0', mode => '770' }
-      );
+      $self->writePoundConfig($domainHash, $domainHTTPSHash);
+      $self->updateVMIDConfig($vmHash);
 
       # --------------------
 
@@ -215,9 +121,127 @@ sub updatePoundCfg
     
 }   # sub updatePoundCfg
 
+sub buildDomainHash
+{
+  # Iterate over table
+  #my @paramsArray = ();
+  my $domainHash = (); 
+  my $domainHTTPSHash = (); 
+  my $vmHash = ();
+  my $i = 0;
+
+  ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
+  ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i, 0);
+  ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i, 0);
+  ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i, 0);
+
+  ($domainHTTPSHash) = $self->loadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
+
+  return ($domainHash, $domainHTTPSHash, $vmHash);
+}
+
+sub writePoundConfig
+{
+  my ($self, $domainHash, $domainHTTPSHash) = @_;
+
+  # ----------------------------
+  # 設定
+  # ----------------------------
+
+  my $settings = $self->loadLibrary('RouterSettings');
+
+  my $port = $settings->value('port');
+  my $portHTTPS = $settings->value('portHTTPS');
+  my $alive = $settings->value('alive');
+
+  my $timeout = $settings->value('timeout');
+  
+  my $address = $settings->getExtIPAddress();
+
+  my $restarterIP;
+  if ($settings->row->elementExists('restarterIP')) {
+      $restarterIP = $settings->value('restarterIP');
+  }
+  my $restarterPort;
+  if ($settings->row->elementExists('restarterPort')) {
+      $restarterPort = $settings->value('restarterPort');
+  }
+  my $testDomainName;
+  if ($settings->row->elementExists('testDomainName')) {
+      $testDomainName = $settings->value('testDomainName');
+  }
+
+  # ----------------------------
+  # 準備把值傳送到設定檔去
+  # ----------------------------
+
+  my @servicesParams = ();
+
+  push(@servicesParams, 'address' => $address);
+  push(@servicesParams, 'port' => $port);
+  push(@servicesParams, 'portHTTPS' => $portHTTPS);
+  push(@servicesParams, 'alive' => $alive);
+  push(@servicesParams, 'timeout' => $timeout);
+  #push(@servicesParams, 'enableError' => $enableError);
+  #push(@servicesParams, 'errorURL' => $errorURL);
+  #push(@servicesParams, 'file' => $file);
+
+  push(@servicesParams, 'restarterIP' => $restarterIP);
+  push(@servicesParams, 'restarterPort' => $restarterPort);
+
+  #push(@servicesParams, 'services' => \@paramsArray);
+  push(@servicesParams, 'domainHash' => $domainHash);
+  push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
+
+  
+  # ----------------------------
+  # 轉址
+  # ----------------------------
+
+  # Iterate over table
+  my @redirArray = $self->getURLRedirectParam();
+
+  push(@servicesParams, 'redir' => \@redirArray);
+
+  $self->parentModule()->writeConfFile(
+      '/etc/pound/pound.cfg',
+      "dlllciasrouter/pound.cfg.mas",
+      \@servicesParams,
+      { uid => '0', gid => '0', mode => '644' }
+  );
+}
+
+sub updateVMIDConfig
+{
+  my ($self, $vmHash) = @_;
+
+  my $settings = $self->loadLibrary('RouterSettings');
+
+  my $notifyEmail;
+  if ($settings->row->elementExists('notifyEmail')) {
+      $notifyEmail = $settings->value('notifyEmail');
+  }
+  my $senderEmail;
+  if ($settings->row->elementExists('senderEmail')) {
+      $senderEmail = $settings->value('senderEmail');
+  }
+
+  my @vmParams = ();
+  push(@vmParams, 'vmHash' => $vmHash);
+  push(@vmParams, 'notifyEmail' => $notifyEmail);
+  push(@vmParams, 'senderEmail' => $senderEmail);
+  $self->parentModule()->writeConfFile(
+      '/etc/pound/vmid-config.php',
+      #'/var/www/vmid-config.php',
+      "dlllciasrouter/vmid-config.php.mas",
+      \@vmParams,
+      { uid => '0', gid => '0', mode => '770' }
+  );
+}
+
 sub getServiceParam
 {
-    my ($self, $modName, $domainHash, $vmHash, $i) = @_;
+    my ($self, $modName, $domainHash, $vmHash, $i, $certbotMode) = @_;
 
     my $libRedir = $self->loadLibrary('LibraryRedirect');
     my $lib = $self->getLibrary();
@@ -235,6 +259,7 @@ sub getServiceParam
         my $domainNameValue = $row->valueByName('domainName');
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
+        my $useTestLocalhost = $row->valueByName('useTestLocalhost');
 
         # -----------------------------
         my $portValue = $row->valueByName('port');
@@ -258,6 +283,15 @@ sub getServiceParam
         
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
+
+        if ($useTestLocalhost == 1 || $certbotMode == 1) {
+          $ipaddrValue = "0.0.0.0";
+          $portValue = 888;
+          $httpToHttpsValue = 0;
+          $httpPortValue = 888;
+        }
+
+        # -------------------------
 
         #push (@paramsArray, {
         #    domainNameValue => $domainNameValue,

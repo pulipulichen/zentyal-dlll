@@ -49,8 +49,8 @@ sub dlllciasrouter_init
 
     # 初始化安裝
     try {
-        $self->initLighttpd();
-        $self->initApache();
+        $self->model("LibraryServiceLigttpd")->initLighttpd();
+        $self->model("LibraryServiceApache")->initApache();
         $self->model("LibraryCrontab")->initRootCrontab();
 
         my $libStorage = $self->model("LibraryStorage");
@@ -247,8 +247,11 @@ sub _setConf
     #  更新錯誤訊息
     $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
     $self->model("LibraryPoundBackend")->updatePoundCfg();
-    $self->updateXRDPCfg();
+    $self->model("LibraryServiceXRDP")->updateXRDPCfg();
     
+    # 設定SSH
+    $self->model("LibraryServiceSSH")->setConfSSHAdminPort();
+
     if (0) {
       
       my $libStorage = $self->model("LibraryStorage");
@@ -284,27 +287,6 @@ sub getLibrary
     return $self->model("LibraryToolkit");
 }
 
-# 20170303 Pulipuli Chen
-sub updateXRDPCfg
-{
-    my ($self) = @_;
-    my @servicesParams = ();
-
-    my $settings = $self->model('RouterSettings');
-
-    my $xrdpPort = $settings->value('xrdpPort');
-    push(@servicesParams, 'xrdpPort' => $xrdpPort);
-
-    $self->writeConfFile(
-        '/etc/xrdp/xrdp.ini',
-        "dlllciasrouter/xrdp.ini.mas",
-        \@servicesParams,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    EBox::Sudo::root("/etc/init.d/xrdp restart");
-}   # sub updateXRDPCfg
-
 
 # 20150517 Pulipuli Chen
 sub initInstall
@@ -316,62 +298,6 @@ sub initInstall
     #throw EBox::Exceptions::External('poundInstalled: ['.$poundInstalled . ']');
     if (!defined($poundInstalled) || $poundInstalled eq '') {
         system('sudo apt-get -y --force-yes install ' . $packageName);
-    }
-}
-
-sub initLighttpd
-{
-    my ($self, $packageName) = @_;
-
-    my @params = ();
-    $self->writeConfFile(
-        '/etc/lighttpd/lighttpd.conf',
-        "dlllciasrouter/lighttped.conf.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '744' }
-    );
-
-    # 變更 /usr/share/zentyal/www/dlllciasrouter 權限 
-    system('chmod 744  /usr/share/zentyal/www/dlllciasrouter');
-    system('chmod 755  /usr/share/zentyal/www/dlllciasrouter/certbot');
-    
-
-}
-
-# 20150519 Pulipuli Chen
-sub setConfSSH
-{
-    my ($self, $port) = @_;
-    #return;
-    #my $port = $self->model("RouterSettings")->value("sshPort");
-
-    my @params = (
-        "port" => $port
-    );
-    $self->writeConfFile(
-        '/etc/ssh/sshd_config',
-        "dlllciasrouter/sshd_config.mas",
-        \@params,
-        { uid => '0', gid => '0', mode => '644' }
-    );
-
-    EBox::Sudo::root("service ssh restart");
-}
-
-# 20150519 Pulipuli Chen
-sub initApache
-{
-     my ($self) = @_;
-
-    if (-e '/etc/apache2/ports.conf') {
-
-        my @nullParams = ();
-        $self->writeConfFile(
-            '/etc/apache2/ports.conf',
-            "dlllciasrouter/ports.conf.mas",
-            \@nullParams,
-            { uid => '0', gid => '0', mode => '644' }
-        );
     }
 }
 
