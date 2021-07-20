@@ -165,7 +165,7 @@ sub setupSSLCert
 {
   my ($self, $domainNameValue) = @_;
 
-  system("echo 'setupSSLCert start'");
+  #system("echo 'setupSSLCert start'");
 
   # 則建立cert
   
@@ -179,7 +179,7 @@ sub setupSSLCert
     # ok. moving on.
   }
   else {
-    system("echo 'setupSSLCert no folder " . $folder . "'");
+    #system("echo 'setupSSLCert no folder " . $folder . "'");
     return 0;
   }
 
