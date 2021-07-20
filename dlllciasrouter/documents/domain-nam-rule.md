@@ -1,1 +1,0 @@
-Changed to https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/5-1-domain-name-rule.md
