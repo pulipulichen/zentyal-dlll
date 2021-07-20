@@ -249,6 +249,9 @@ sub _setConf
     $self->model("LibraryPoundBackend")->updatePoundCfg();
     $self->model("LibraryServiceXRDP")->updateXRDPCfg();
     
+    # 設定SSH
+    $self->model("LibraryServiceSSH")->setConfSSHAdminPort();
+
     if (0) {
       
       my $libStorage = $self->model("LibraryStorage");

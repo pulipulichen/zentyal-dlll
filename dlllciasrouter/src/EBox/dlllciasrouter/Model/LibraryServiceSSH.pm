@@ -64,6 +64,14 @@ sub setConfSSH
     EBox::Sudo::root("service ssh restart");
 }
 
+# 20150519 Pulipuli Chen
+sub setConfSSHAdminPort
+{
+  my ($self) = @_;
+
+  my $settings = $self->loadLibrary('RouterSettings');
+  $self->setConfSSH($settings->value('adminPort'));
+}
 # -----------------------------------------------
 
 1;
