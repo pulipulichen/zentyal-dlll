@@ -6,6 +6,9 @@ zentyal-dlll
 * https://github.com/pulipulichen/zentyal-dlll
 * http://pulipulichen.github.io/zentyal-dlll/
 
+Zentyal 4.1 is based on Ubuntu 14.04.2 LTS (Linux kernel 3.16)
+https://wiki.zentyal.org/wiki/Zentyal_4.1_Announcement
+
 ----
 
 # Part 1. Zentyal Installation
