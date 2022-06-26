@@ -1,6 +1,6 @@
 Zentyal Installation
 ===============
-1. Download Zenetyal Server ISO: Current version is 5.0 on July 24, 2017 [http://www.zentyal.org/server/](http://www.zentyal.org/server/)
+1. Download Zenetyal Server ISO: Current version is 4.1 on July 24, 2017 [http://www.zentyal.org/server/](http://www.zentyal.org/server/)
 2. Install on bare-metal machine with TWO network card. For example: VirtualBox [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads) <br />
 ![enter image description here](https://lh3.googleusercontent.com/-b5IdY1z3Ur0/W9RVXcHwwSI/AAAAAAAD5fg/l7FQVllglXYZJUWPggZ2QKGKvIPGwlrDgCHMYCw/s0/2018-10-27_20-07-45.png)
  - **Network 1 (eth0): External network**
