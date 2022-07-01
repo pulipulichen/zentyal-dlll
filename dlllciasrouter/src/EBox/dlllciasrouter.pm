@@ -49,7 +49,7 @@ sub dlllciasrouter_init
 
     # 初始化安裝
     try {
-        $self->model("LibraryServiceLigttpd")->initLighttpd();
+        $self->model("LibraryServiceLighttpd")->initLighttpd();
         $self->model("LibraryServiceApache")->initApache();
         $self->model("LibraryCrontab")->initRootCrontab();
 
