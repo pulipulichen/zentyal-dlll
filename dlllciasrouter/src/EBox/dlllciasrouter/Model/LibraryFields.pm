@@ -462,7 +462,7 @@ sub createFieldContactName
 
     my $field = new EBox::Types::Text(
         'fieldName' => 'contactName',
-        'printableName' => __('Contact Name'),
+        'printableName' => __('Contact Name AAA'),
         'editable' => 1,
         'optional' => 0,
         'hiddenOnSetter' => 0,
