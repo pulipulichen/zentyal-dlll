@@ -462,7 +462,7 @@ sub createFieldContactName
 
     my $field = new EBox::Types::Text(
         'fieldName' => 'contactName',
-        'printableName' => __('Contact Name AAA'),
+        'printableName' => __('Contact Name'),
         'editable' => 1,
         'optional' => 0,
         'hiddenOnSetter' => 0,
@@ -771,6 +771,20 @@ sub createFieldBoundLocalDNS
     return $field;
 }
 
+sub createFieldEnableWildcardDNS
+{
+    my $field = new EBox::Types::Boolean(
+        'fieldName' => 'enableWildcardDNS',
+        'printableName' => __('Enable wildcard DNS'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+    );
+
+    return $field;
+}
 
 
 sub createFieldUseTestLocalhost

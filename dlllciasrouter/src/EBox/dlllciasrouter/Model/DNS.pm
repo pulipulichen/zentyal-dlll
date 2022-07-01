@@ -44,6 +44,7 @@ sub _table
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainNameUnique(),
         $fieldsFactory->createFieldBoundLocalDNS(),
+        $fieldsFactory->createFieldEnableWildcardDNS(),
         $fieldsFactory->createFieldDomainNameLink(),
         new EBox::Types::HostIP(
             fieldName => 'ipaddr',
