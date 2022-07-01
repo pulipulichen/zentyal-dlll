@@ -125,6 +125,8 @@ sub buildDomainHash
 {
   # Iterate over table
   #my @paramsArray = ();
+  my ($self) = @_;
+
   my $domainHash = (); 
   my $domainHTTPSHash = (); 
   my $vmHash = ();
