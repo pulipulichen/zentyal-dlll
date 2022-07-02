@@ -46,12 +46,12 @@ sub loadLibrary
 # 20170303 Pulipuli Chen
 sub updateXRDPCfg
 {
-    my ($self) = @_;
-    my @servicesParams = ();
+    # my ($self) = @_;
+    # my @servicesParams = ();
 
-    my $settings = $self->loadLibarary('RouterSettings');
+    # my $settings = $self->loadLibarary('RouterSettings');
 
-    my $xrdpPort = $settings->value('xrdpPort');
+    # my $xrdpPort = $settings->value('xrdpPort');
     # push(@servicesParams, 'xrdpPort' => $xrdpPort);
 
     # $self->parentModule()->writeConfFile(
