@@ -54,7 +54,7 @@ sub setConfSSH
     my @params = (
         "port" => $port
     );
-    $self->writeConfFile(
+    $self->parentModule()->writeConfFile(
         '/etc/ssh/sshd_config',
         "dlllciasrouter/sshd_config.mas",
         \@params,
