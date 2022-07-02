@@ -44,7 +44,8 @@ sub loadLibrary
 # ------------------------------------------------
 
 # 20170303 Pulipuli Chen
-sub updateXRDPCfg
+# sub updateXRDPCfg
+sub setXRDPCfg
 {
     my ($self) = @_;
     my @servicesParams = ();

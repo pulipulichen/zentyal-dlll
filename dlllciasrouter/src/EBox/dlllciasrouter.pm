@@ -247,7 +247,7 @@ sub _setConf
     #  更新錯誤訊息
     $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
     $self->model("LibraryPoundBackend")->updatePoundCfg();
-    $self->model("LibraryServiceXRDP")->updateXRDPCfg();
+    $self->model("LibraryServiceXRDP")->setXRDPCfg();
     
     # 設定SSH
     $self->model("LibraryServiceSSH")->setConfSSHAdminPort();
