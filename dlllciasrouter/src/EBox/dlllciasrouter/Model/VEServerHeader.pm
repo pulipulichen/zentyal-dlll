@@ -39,14 +39,14 @@ sub _table
 
     my $options = $self->getOptions();
 
-    return $self->loadLibrary('LibraryHeader')->getDataTable($options);
+    return $self->getLoadLibrary('LibraryHeader')->getDataTable($options);
 }
 
 # -------------------------------------------------------------
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);

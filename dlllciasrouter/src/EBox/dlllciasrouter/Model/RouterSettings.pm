@@ -67,13 +67,13 @@ sub _table
     my $manualDomainNameView = '/dlllciasrouter/View/ManualDomainName';
     my $manualNetworkIPRangeView = '/dlllciasrouter/View/ManualNetworkIPRange';
 
-    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
-    #my $submask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+    my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
+    #my $submask = $self->getLoadLibrary('LibraryNetwork')->getExternalMask();
     my $submask = 24;
-    my $external_iface = $self->loadLibrary('LibraryNetwork')->getExternalIface();
+    my $external_iface = $self->getLoadLibrary('LibraryNetwork')->getExternalIface();
 
     my $lib = $self->getLibrary();
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $fieldsFactory = $self->getLoadLibrary('LibraryFields');
 
     
 
@@ -211,17 +211,17 @@ sub _table
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_admin', __('Zentyal Administrator')));
 
     # 管理者清單的連結
-    my $objectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+    my $objectID = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
     my $editAdminNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$objectID.'/members&backview=/Objects/View/MemberTable';
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_adminNet", __('EDIT ADMINISTRATOR LIST'), $editAdminNet, 1));
 
     # 管理者清單的連結
-    my $workplaceObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id();
+    my $workplaceObjectID = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id();
     my $editWorkPlaceNet = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$workplaceObjectID.'/members&backview=/Objects/View/MemberTable';
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_workplaceNet", __('EDIT WORKPLACE LIST'), $editWorkPlaceNet, 1));
 
     # 黑名單的連結
-    my $blObjectID = $self->loadLibrary('LibraryMAC')->getObjectRow('Blacklist')->id();
+    my $blObjectID = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Blacklist')->id();
     my $editBL = '/Objects/View/MemberTable?directory=ObjectTable/keys/'.$blObjectID.'/members&backview=/Objects/View/MemberTable';
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_bl", __('EDIT BLACKLIST'), $editBL, 1));
 
@@ -434,7 +434,7 @@ sub getLibrary
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -451,7 +451,7 @@ sub updatedRowNotify
 
       $self->setWebadminPort($row->valueByName("webadminPort"));
 
-      my $libServ = $self->loadLibrary("LibraryService");
+      my $libServ = $self->getLoadLibrary("LibraryService");
 
       $libServ->updateServicePort("dlllciasrouter-admin"
           , $oldRow->valueByName("webadminPort")
@@ -468,7 +468,7 @@ sub updatedRowNotify
       $self->{pound_port} = $row->valueByName("port");
 
       if ($row->valueByName('testDomainName') ne $oldRow->valueByName('testDomainName')) {
-        my $libDN = $self->loadLibrary('LibraryDomainName');
+        my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteDomainName($oldRow->valueByName('testDomainName'));
         $libDN->addDomainName($row->valueByName('testDomainName'));
       }
@@ -506,7 +506,7 @@ sub initServicePort
     {
         $self->setWebadminPort($self->value("webadminPort"));
 
-        my $libServ = $self->loadLibrary("LibraryService");
+        my $libServ = $self->getLoadLibrary("LibraryService");
         $libServ->addServicePort("dlllciasrouter-pound", $self->value('port'), 0);
         $libServ->addServicePort("dlllciasrouter-pound", $self->value('portHTTPS'), 0);
         $libServ->addServicePort("dlllciasrouter-pound", 888, 0); # lighttpd
@@ -530,7 +530,7 @@ sub getExtIPAddress
 
     my $address = "127.0.0.1";
     if ($self->value("address") eq "address_extIface") {
-        $address = $self->loadLibrary("LibraryNetwork")->getExternalIpaddr();
+        $address = $self->getLoadLibrary("LibraryNetwork")->getExternalIpaddr();
     }
     else {
         $address = $self->value("address");

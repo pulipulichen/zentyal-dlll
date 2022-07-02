@@ -52,14 +52,14 @@ sub _table
 {
     my ($self) = @_;
 
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $fieldsFactory = $self->getLoadLibrary('LibraryFields');
     my $options = $self->getOptions();
     my $tableName = $options->{tableName};
 
     my @fields = ();
     #push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ZentyalAdmi', __('Zentyal Admin Configuration')));
 
-    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
     my $cgiserv = "http://" . $address . ":9425/";
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_mfsInfo", __('MFS INFO'), $cgiserv, 1));
 
@@ -116,7 +116,7 @@ sub getLibrary
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -133,7 +133,7 @@ sub initServicePort
     try
     {
 
-        my $libServ = $self->loadLibrary("LibraryService");
+        my $libServ = $self->getLoadLibrary("LibraryService");
 
         # MooseFS
         $libServ->addServicePort("dlllciasrouter-admin", 9425, 1);

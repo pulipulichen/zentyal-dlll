@@ -38,7 +38,7 @@ sub _table
     my $options = $self->getOptions();
 
     my $lib = $self->parentModule()->model('LibraryToolkit');
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $fieldsFactory = $self->getLoadLibrary('LibraryFields');
 
     my @fields = ();
 
@@ -101,7 +101,7 @@ sub _table
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);

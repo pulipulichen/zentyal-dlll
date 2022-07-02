@@ -35,7 +35,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -69,7 +69,7 @@ sub setConfSSHAdminPort
 {
   my ($self) = @_;
 
-  my $settings = $self->loadLibrary('RouterSettings');
+  my $settings = $self->getLoadLibrary('RouterSettings');
   $self->setConfSSH($settings->value('adminPort'));
 }
 # -----------------------------------------------

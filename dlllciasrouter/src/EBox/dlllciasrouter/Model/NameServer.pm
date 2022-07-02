@@ -32,12 +32,12 @@ sub _table
 
     # @TODO
 
-    return $self->loadLibrary("LibraryServers")->getDataTable($options);
+    return $self->getLoadLibrary("LibraryServers")->getDataTable($options);
 }
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);

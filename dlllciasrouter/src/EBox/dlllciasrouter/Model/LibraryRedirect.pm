@@ -567,7 +567,7 @@ sub getRedirectParameterSecure
     my ($self, $row, $extPort, $intPort, $desc, $log, $secure) = @_;
 
     my $lib = $self->getLibrary();
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $libNET = $self->getLoadLibrary('LibraryNetwork');
 
     my $domainName = $row->valueByName("domainName");
     my $iface = $libNET->getExternalIface();
@@ -576,11 +576,11 @@ sub getRedirectParameterSecure
     #my $source = $self->getSecureIpSource();
     my $objectRowId;
     if ($secure == 1) {
-        $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+        $objectRowId = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
     }
     elsif ($secure == 2) {
         # 20170731 加入Workplace的設定
-        $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id();
+        $objectRowId = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id();
     }
 
     return (
@@ -608,8 +608,8 @@ sub getSecureIpSource
 
     my $sourceIp = '192.168.11.0';
 
-    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
-    my $sourceMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+    my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $sourceMask = $self->getLoadLibrary('LibraryNetwork')->getExternalMask();
     
     #把address轉換成source
     
@@ -723,7 +723,7 @@ sub updateRedirectPorts
     try {
 
         my $lib = $self->getLibrary();
-        my $libNET = $self->loadLibrary('LibraryNetwork');
+        my $libNET = $self->getLoadLibrary('LibraryNetwork');
 
         my $hint = '';
         my $protocol = '';
@@ -925,7 +925,7 @@ sub getProtocolHint
 {
     my ($self, $row, $protocol) = @_;
     my $lib = $self->getLibrary();
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $libNET = $self->getLoadLibrary('LibraryNetwork');
 
     my $hint = "";
 
@@ -1017,12 +1017,12 @@ sub getServerRedirectParamDMZ
     my $destIpaddr = $row->valueByName("extIpaddr");
     my $localIpaddr = $row->valueByName("ipaddr");
 
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $libNET = $self->getLoadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
     my $source = $self->getSecureIpSource();
 
     #my $intPort = $row->valueByName("port");
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+    my $objectRowId = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %param = (
         interface => $iface,
@@ -1058,12 +1058,12 @@ sub getServerRedirectParamOrigin
     my $destIpaddr = $row->valueByName("extIpaddr");
     my $localIpaddr = $row->valueByName("ipaddr");
 
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $libNET = $self->getLoadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
     my $source = $self->getSecureIpSource();
 
     #my $intPort = $row->valueByName("port");
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+    my $objectRowId = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     my %param = (
         'interface' => $iface,
@@ -1103,10 +1103,10 @@ sub getServerRedirectParamZentyal
     my $destIpaddr = $row->valueByName("extIpaddr");
     my $localIpaddr = $row->valueByName("ipaddr");
 
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $libNET = $self->getLoadLibrary('LibraryNetwork');
     my $iface = $libNET->getExternalIface();
     #my $source = $self->getSecureIpSource();
-    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+    my $objectRowId = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
     #my $intPort = $row->valueByName("port");
 
@@ -1144,9 +1144,9 @@ sub getServerRedirectParamZentyal
 #{
 #    my ($self) = @_;
 #    return;
-#    my $libNET = $self->loadLibrary('LibraryNetwork');
+#    my $libNET = $self->getLoadLibrary('LibraryNetwork');
 #    my $iface = $libNET->getExternalIface();
-#    my $objectRowId = $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
+#    my $objectRowId = $self->getLoadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id();
 
 #    my %paramAdmin = (
 #        interface => $iface,

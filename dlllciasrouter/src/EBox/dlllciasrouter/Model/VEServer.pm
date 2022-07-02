@@ -64,7 +64,7 @@ sub checkInternalIP
         || !($partC == 0) 
         || !($partD > 0 && $partD < 100) ) {
         my $message = __('Internal IP ' . $ipaddr .  ' format error.' ) . '<br />' . $options->{IPHelp};
-        $self->loadLibrary('LibraryToolkit')->show_exceptions($message);
+        $self->getLoadLibrary('LibraryToolkit')->show_exceptions($message);
     }
 }
 
@@ -76,12 +76,12 @@ sub _table
 
     my $options = $self->getOptions();
 
-    return $self->loadLibrary("LibraryServers")->getDataTable($options);
+    return $self->getLoadLibrary("LibraryServers")->getDataTable($options);
 }
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -99,7 +99,7 @@ sub addedRowNotify
     my ($self, $row) = @_;
     $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
-    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row, $self->getOptions());
+    $self->getLoadLibrary("LibraryServers")->serverAddedRowNotify($row, $self->getOptions());
     $ROW_NEED_UPDATE = 0;
 }
 
@@ -108,7 +108,7 @@ sub addedRowNotify
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
-    $self->loadLibrary("LibraryServers")->serverDeletedRowNotify($row, $self->getOptions());
+    $self->getLoadLibrary("LibraryServers")->serverDeletedRowNotify($row, $self->getOptions());
 }
 
 # -------------------------------------------
@@ -120,7 +120,7 @@ sub updatedRowNotify
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
-        $self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow, $self->getOptions());
+        $self->getLoadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow, $self->getOptions());
         $ROW_NEED_UPDATE = 0;
     }
 }

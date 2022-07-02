@@ -31,7 +31,7 @@ sub _table
 
     my $options = $self->getOptions();
 
-    return $self->loadLibrary('LibrarySetting')->getDataTable($options);
+    return $self->getLoadLibrary('LibrarySetting')->getDataTable($options);
 }
 
 sub getOptions
@@ -62,7 +62,7 @@ sub getOptions
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -83,7 +83,7 @@ sub updatedRowNotify
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
         
-        $self->loadLibrary('LibrarySetting')->updatedRowNotify($self, $row, $oldRow, $options);
+        $self->getLoadLibrary('LibrarySetting')->updatedRowNotify($self, $row, $oldRow, $options);
 
         $ROW_NEED_UPDATE = 0;
     }

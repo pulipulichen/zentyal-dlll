@@ -52,7 +52,7 @@ sub _table
 {
     my ($self) = @_;
 
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $fieldsFactory = $self->getLoadLibrary('LibraryFields');
     my $options = $self->getOptions();
     my $tableName = $options->{tableName};
 
@@ -99,7 +99,7 @@ sub getLibrary
 }
 
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -119,7 +119,7 @@ sub setUpdateCfg
     
     my $file = '/etc/pound/pound.cfg';
     my $pound_cfg = read_file( $file );
-    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    my $libEnc = $self->getLoadLibrary("LibraryEncoding");
     my $pound_cfg_contents = $libEnc->encodeEntities($pound_cfg);
 
     $pound_cfg = '<pre>' . $pound_cfg_contents . '</pre>';

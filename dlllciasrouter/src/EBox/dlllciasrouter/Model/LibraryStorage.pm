@@ -35,7 +35,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -145,7 +145,7 @@ sub initMooseFS
 
     if (! -e '/etc/mfs/mfshdd.cfg') {
         my @hddParams = ();
-        my $mfsMod = $self->loadLibrary("MfsSetting");
+        my $mfsMod = $self->getLoadLibrary("MfsSetting");
         push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
         push(@hddParams, 'paths' => []);
         $self->parentModule()->writeConfFileOnce(
@@ -163,7 +163,7 @@ sub startMooseFS
     my ($self) = @_;
 
     # mfsEnable
-    my $mfsMod = $self->loadLibrary("MfsSetting");
+    my $mfsMod = $self->getLoadLibrary("MfsSetting");
     if ($mfsMod->value("mfsEnable") == 0) {
       return 0;
     }
@@ -184,7 +184,7 @@ sub startMooseFS
             system('sudo mfsmount');
         }
     } catch {
-        $self->loadLibrary("LibraryToolkit")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
+        $self->getLoadLibrary("LibraryToolkit")->show_exceptions($_ . '( dlllciasrouter->startMooseFS() )');
     };
 }
 
@@ -258,10 +258,10 @@ sub initNFSClient
 sub updateNFSExports
 {
     # 從這邊取得資料出來
-    #my $expMod = $self->loadLibrary("ExportSettings");
+    #my $expMod = $self->getLoadLibrary("ExportSettings");
     my ($self) = @_;
 
-    my $mod = $self->loadLibrary("ExportsSetting");
+    my $mod = $self->getLoadLibrary("ExportsSetting");
 
     my $dirs = ();
     # 第一次迴圈，先取出資料出來
@@ -318,7 +318,7 @@ sub updateNFSExports
 
     my @nfsParams = ();
     # 從這邊取得資料出來
-    #my $expMod = $self->loadLibrary("ExportSettings");
+    #my $expMod = $self->getLoadLibrary("ExportSettings");
     push(@nfsParams, 'paths' => @paths);
     #push(@nfsParams, 'paths' => []);
     
@@ -420,7 +420,7 @@ sub updateMountServers
     # -------------------------------------
 
     my @hddParams = ();
-    my $mfsMod = $self->loadLibrary("MfsSetting");
+    my $mfsMod = $self->getLoadLibrary("MfsSetting");
     push(@hddParams, 'size' => $mfsMod->value("localhostSize"));
     push(@hddParams, 'paths' => @paths);
 

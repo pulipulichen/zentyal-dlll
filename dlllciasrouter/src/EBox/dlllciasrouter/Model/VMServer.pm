@@ -68,7 +68,7 @@ sub checkInternalIP
         || !($partC > -1 && $partC < 10) 
         || !($partD > 0 && $partD < 100) ) {
         my $message = __('Internal IP ' . $ipaddr . '  format error.') . '<br />' . $options->{IPHelp};
-        $self->loadLibrary('LibraryToolkit')->show_exceptions($message);
+        $self->getLoadLibrary('LibraryToolkit')->show_exceptions($message);
     }
 }
 
@@ -81,14 +81,14 @@ sub _table
     my $options = $self->getOptions();
 
     #$self->param('id');
-    my $table = $self->loadLibrary("LibraryServers")->getDataTable($options);
+    my $table = $self->getLoadLibrary("LibraryServers")->getDataTable($options);
 
     return $table;
 }
 
 ##
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -104,10 +104,10 @@ my $ROW_NEED_UPDATE = 0;
 sub addedRowNotify
 {
     my ($self, $row) = @_;
-    $self->loadLibrary("LibraryServers")->updateVMIDIPAddr($row);
+    $self->getLoadLibrary("LibraryServers")->updateVMIDIPAddr($row);
     $self->checkInternalIP($row);
     $ROW_NEED_UPDATE = 1;
-    $self->loadLibrary("LibraryServers")->serverAddedRowNotify($row, $self->getOptions());
+    $self->getLoadLibrary("LibraryServers")->serverAddedRowNotify($row, $self->getOptions());
     $ROW_NEED_UPDATE = 0;
 }
 
@@ -116,9 +116,9 @@ sub addedRowNotify
 sub deletedRowNotify
 {
     my ($self, $row) = @_;
-    $self->loadLibrary("LibraryServers")->serverDeletedRowNotify($row, $self->getOptions());
+    $self->getLoadLibrary("LibraryServers")->serverDeletedRowNotify($row, $self->getOptions());
 
-    $self->loadLibrary("AttachedFiles")->deleteAllAttachedFiles($row);
+    $self->getLoadLibrary("AttachedFiles")->deleteAllAttachedFiles($row);
 }
 
 # -------------------------------------------
@@ -127,12 +127,12 @@ sub updatedRowNotify
 {
     my ($self, $row, $oldRow) = @_;
 
-    $self->loadLibrary("LibraryServers")->updateVMIDIPAddr($row);
+    $self->getLoadLibrary("LibraryServers")->updateVMIDIPAddr($row);
     $self->checkInternalIP($row);
 
     if ($ROW_NEED_UPDATE == 0) {
         $ROW_NEED_UPDATE = 1;
-        $self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow, $self->getOptions());
+        $self->getLoadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow, $self->getOptions());
         $ROW_NEED_UPDATE = 0;
     }
 }

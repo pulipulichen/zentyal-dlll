@@ -120,7 +120,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -137,7 +137,7 @@ sub addedRowNotify
 
     $ROW_NEED_UPDATE = 1;
     
-    my $libDomainName = $self->loadLibrary('LibraryDomainName');
+    my $libDomainName = $self->getLoadLibrary('LibraryDomainName');
     $libDomainName->updatePortDescription($row, $redirRow);
 
     $self->checkExternalPort($redirRow);
@@ -185,7 +185,7 @@ sub updatedRowNotify
         if ($ROW_NEED_UPDATE == 0) {
             $ROW_NEED_UPDATE = 1;
 
-            my $libDomainName = $self->loadLibrary('LibraryDomainName');
+            my $libDomainName = $self->getLoadLibrary('LibraryDomainName');
             $libDomainName->updatePortDescription($row, $redirRow);
 
             $self->updateExtPortHTML($row, $redirRow);

@@ -28,7 +28,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -40,10 +40,10 @@ sub getDataTable
 {
     my ($self, $options) = @_;
 
-    my $external_iface = $self->loadLibrary('LibraryNetwork')->getExternalIface();
+    my $external_iface = $self->getLoadLibrary('LibraryNetwork')->getExternalIface();
 
     my $lib = $self->getLibrary();
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $fieldsFactory = $self->getLoadLibrary('LibraryFields');
 
     my @fields = ();
 
@@ -117,23 +117,23 @@ sub updatedRowNotify
         #my $extIp = $row->elementByName('extIpaddr')->ip();
         #my $extMask = $row->elementByName('extIpaddr')->mask();
         my $extIp = $row->valueByName('extIpaddr');
-        my $extMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+        my $extMask = $self->getLoadLibrary('LibraryNetwork')->getExternalMask();
 
-        $self->loadLibrary($options->{moduleName})->checkInternalIP($row);
+        $self->getLoadLibrary($options->{moduleName})->checkInternalIP($row);
 
-        #$self->loadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
+        #$self->getLoadLibrary("LibraryServers")->serverUpdatedRowNotify($row, $oldRow);
 
         # 新增 Domain Name
-        my $libDN = $self->loadLibrary('LibraryDomainName');
+        my $libDN = $self->getLoadLibrary('LibraryDomainName');
         #$libDN->deleteDomainName($oldRow->valueByName('domainName'), 'PoundServices');
         $libDN->deleteDomainName($oldRow->valueByName('domainName'), 'dlllciasrouter-pound');
 
-        if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+        if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
             $libDN->addDomainNameWithIP($row->valueByName('domainName'), $extIp);
         }
 
         # 新增 Redirect
-        my $libREDIR = $self->loadLibrary('LibraryRedirect');
+        my $libREDIR = $self->getLoadLibrary('LibraryRedirect');
         my $tableName = $options->{moduleName} . "Setting";
         my $extPort = $row->valueByName('redirMain_extPort');
         my $intPort = $row->valueByName("port");
@@ -168,7 +168,7 @@ sub updatedRowNotify
             $sshLink =  '<br /><a href="ssh://' . $domainName . ":" . $options->{externalSSHPortDefaultValue} . '" target="_blank">' . "ssh://" . $domainName . ":" . $options->{externalSSHPortDefaultValue} . "</a>";
         }
 
-        my $libEnc = $self->loadLibrary("LibraryEncoding");
+        my $libEnc = $self->getLoadLibrary("LibraryEncoding");
 
         my $button = '<span></span>';
         if ($scheme ne "none") {
@@ -216,8 +216,8 @@ sub updatedRowNotify
         #$header->setValue("description_display", $desc);
 
         # 設定Virtual Interface
-        #$extMask = $self->loadLibrary('LibraryNetwork')->bitwiseShiftMask($extMask);
-        $self->loadLibrary('LibraryNetwork')->setVirtualInterface(
+        #$extMask = $self->getLoadLibrary('LibraryNetwork')->bitwiseShiftMask($extMask);
+        $self->getLoadLibrary('LibraryNetwork')->setVirtualInterface(
             $options->{moduleName}, $extIp, $extMask
         );
 
