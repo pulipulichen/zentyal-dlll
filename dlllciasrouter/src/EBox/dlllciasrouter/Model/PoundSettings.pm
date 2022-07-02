@@ -109,7 +109,7 @@ sub loadLibrary
 # 20170731 Pulipuli Chen
 # 重新從檔案讀取
 ##
-sub updateCfg
+sub setUpdateCfg
 {
     my ($self) = @_;
 

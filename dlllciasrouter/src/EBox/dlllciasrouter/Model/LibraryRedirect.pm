@@ -40,7 +40,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -540,7 +540,7 @@ sub getRedirectParameter
     my ($self, $row, $extPort, $intPort, $desc, $log) = @_;
 
     my $lib = $self->getLibrary();
-    my $libNET = $self->loadLibrary('LibraryNetwork');
+    my $libNET = $self->getLoadLibrary('LibraryNetwork');
 
     my $domainName = $row->valueByName("domainName");
     my $iface = $libNET->getExternalIface();

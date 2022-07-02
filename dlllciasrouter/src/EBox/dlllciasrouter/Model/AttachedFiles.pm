@@ -63,7 +63,7 @@ sub new
 #    #my $id = $parts[2];
 #
 #    #my $lib = $self->getLibrary();
-#    #my $mod = $lib->loadLibrary($modelName);
+#    #my $mod = $lib->getLoadLibrary($modelName);
 #
 #    return $modelName;
 #    #my $row = $mod->findId(id => $id);
@@ -149,7 +149,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -171,7 +171,7 @@ sub addedRowNotify
     try {
 
         # 更新Description HTML + File Link
-        my $libCT = $self->loadLibrary('LibraryContact');
+        my $libCT = $self->getLoadLibrary('LibraryContact');
         $libCT->setDescriptionHTML($subRow);
 
         #  更新ContactLink

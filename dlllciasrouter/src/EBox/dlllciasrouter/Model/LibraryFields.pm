@@ -35,7 +35,7 @@ use LWP::Simple;
 use POSIX qw(strftime);
 use Try::Tiny;
 
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -1943,7 +1943,7 @@ sub createFieldAttachedFilesButton
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 0,
         'help' => __('You have to add this row before setting up other redirection at following table.'),
-        #'parent' =>  $self->loadLibrary('RouterSettings'),
+        #'parent' =>  $self->getLoadLibrary('RouterSettings'),
    );
     return $field;
 }
@@ -1976,7 +1976,7 @@ sub createFieldAttachedFilesButtonShow
 sub createFieldFile
 {
     my ($self, $fieldName, $label) = @_;
-    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    my $libEnc = $self->getLoadLibrary("LibraryEncoding");
     my $field = new EBox::Types::File(
             'fieldName' => $fieldName,
             'printableName' => $label,

@@ -35,7 +35,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -63,11 +63,11 @@ sub initRootCrontab
 
         # ------------------------
 
-        my $settings = $self->loadLibrary('RouterSettings');
+        my $settings = $self->getLoadLibrary('RouterSettings');
         my @backupParams = ();
 
-        my $extIP = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
-        my $port = $self->loadLibrary('RouterSettings')->value('webadminPort');
+        my $extIP = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
+        my $port = $self->getLoadLibrary('RouterSettings')->value('webadminPort');
         my $date = POSIX::strftime( "%A, %B %d, %Y", localtime());
         # my $date = strftime "%a %b %e %H:%M:%S %Y", gmtime;
         # printf("date and time - $date\n");
@@ -114,7 +114,7 @@ sub initRootCrontab
         $startupMailBody =~ s/\{DATE\}/$date/g;
         $startupMailBody =~ s/\{IP\}/$extIP/g;
         $startupMailBody =~ s/\{PORT\}/$port/g;
-        my $veDomainName = $self->loadLibrary('VEServerSetting')->value("domainName");
+        my $veDomainName = $self->getLoadLibrary('VEServerSetting')->value("domainName");
         if( length $veDomainName ) {
           $startupMailBody =~ s/\{VEDomainName\}/$veDomainName/g;
         }

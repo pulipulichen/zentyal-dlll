@@ -35,7 +35,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -80,7 +80,7 @@ sub initDefaultPound
 # ----------------------------------------------------
 
 # 20150517 Pulipuli Chen
-sub updatePoundCfg
+sub setUpdatePoundCfg
 {
     my ($self) = @_;
 
@@ -117,9 +117,9 @@ sub updatePoundCfg
 
       # 20170731 Pulipuli Chen
       # 一併更新PoundSettings
-      $self->loadLibrary("PoundSettings")->updateCfg();
+      $self->getLoadLibrary("PoundSettings")->setUpdateCfg();
     
-}   # sub updatePoundCfg
+}   # sub setUpdatePoundCfg
 
 sub buildDomainHash
 {
@@ -137,7 +137,7 @@ sub buildDomainHash
   ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i, 0);
   ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i, 0);
 
-  ($domainHTTPSHash) = $self->loadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
+  ($domainHTTPSHash) = $self->getLoadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
 
   return ($domainHash, $domainHTTPSHash, $vmHash);
 }
@@ -150,7 +150,7 @@ sub writePoundConfig
   # 設定
   # ----------------------------
 
-  my $settings = $self->loadLibrary('RouterSettings');
+  my $settings = $self->getLoadLibrary('RouterSettings');
 
   my $port = $settings->value('port');
   my $portHTTPS = $settings->value('portHTTPS');
@@ -217,7 +217,7 @@ sub updateVMIDConfig
 {
   my ($self, $vmHash) = @_;
 
-  my $settings = $self->loadLibrary('RouterSettings');
+  my $settings = $self->getLoadLibrary('RouterSettings');
 
   my $notifyEmail;
   if ($settings->row->elementExists('notifyEmail')) {
@@ -245,10 +245,10 @@ sub getServiceParam
 {
     my ($self, $modName, $domainHash, $vmHash, $i, $certbotMode) = @_;
 
-    my $libRedir = $self->loadLibrary('LibraryRedirect');
+    my $libRedir = $self->getLoadLibrary('LibraryRedirect');
     my $lib = $self->getLibrary();
 
-    my $services = $self->loadLibrary($modName);
+    my $services = $self->getLoadLibrary($modName);
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
@@ -418,7 +418,7 @@ sub getTestServiceParam
 {
     my ($self, $domainHash, $i) = @_;
 
-      my $settings = $self->loadLibrary('RouterSettings');
+      my $settings = $self->getLoadLibrary('RouterSettings');
 
       my $domainNameValue = $settings->value('testDomainName');
       #printf("test domain name: " . $domainNameValue);
@@ -477,7 +477,7 @@ sub getURLRedirectParam
 {
     my ($self) = @_;
 
-    my $redirect = $self->loadLibrary('URLRedirect');
+    my $redirect = $self->getLoadLibrary('URLRedirect');
     my $lib = $self->getLibrary();
 
     # Iterate over table

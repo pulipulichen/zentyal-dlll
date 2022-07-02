@@ -42,7 +42,7 @@ sub getLibrary
     return $self->parentModule()->model("LibraryToolkit");
 }
 
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -54,11 +54,11 @@ sub addDomainName
 {
     my ($self, $domainName) = @_;
 
-    my $libSettings = $self->loadLibrary('RouterSettings');
+    my $libSettings = $self->getLoadLibrary('RouterSettings');
     my $ipaddr = $libSettings->value("anotherDNSIP");
 
     if (!defined($ipaddr)) {
-      my $libNetwork = $self->loadLibrary('LibraryNetwork');
+      my $libNetwork = $self->getLoadLibrary('LibraryNetwork');
       $ipaddr = $libNetwork->getExternalIpaddr();
     }
 
@@ -327,7 +327,7 @@ sub setServerMainLink
     my $lib = $self->getLibrary();
 
     my $ipaddr = $row->valueByName('ipaddr');
-    my $extPort = $self->loadLibrary('LibraryRedirect')->getServerMainPort($ipaddr);
+    my $extPort = $self->getLoadLibrary('LibraryRedirect')->getServerMainPort($ipaddr);
 
     my $url = $ipaddr . ':' . $extPort;
 
@@ -525,7 +525,7 @@ sub updatePortDescription
             }
 
             my $extPort = $redirRow->valueByName("extPort");
-            $extPort = $self->loadLibrary('LibraryRedirect')->getOtherExtPort($row, $redirRow);
+            $extPort = $self->getLoadLibrary('LibraryRedirect')->getOtherExtPort($row, $redirRow);
 
             my $domainName = $row->valueByName("domainName");
 

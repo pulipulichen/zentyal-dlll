@@ -38,7 +38,7 @@ use Try::Tiny;
 sub _table
 {
     my ($self) = @_;
-    my $fieldsFactory = $self->loadLibrary('LibraryFields');
+    my $fieldsFactory = $self->getLoadLibrary('LibraryFields');
 
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
@@ -105,7 +105,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -123,8 +123,8 @@ sub addedRowNotify
     $ROW_NEED_UPDATE = 1;
 
     my $lib = $self->getLibrary();
-    my $libDN = $self->loadLibrary('LibraryDomainName');
-    my $libCT = $self->loadLibrary('LibraryContact');
+    my $libDN = $self->getLoadLibrary('LibraryDomainName');
+    my $libCT = $self->getLoadLibrary('LibraryContact');
     
     $libDN->updateDomainNameLink($row, 1);
 
@@ -134,7 +134,7 @@ sub addedRowNotify
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
 
-    if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+    if ($self->getLloadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
         #$libDN->addDomainName($row->valueByName('domainName'));
         $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
     }
@@ -147,7 +147,7 @@ sub deletedRowNotify
 {
     my ($self, $row) = @_;
 
-    my $libDN = $self->loadLibrary('LibraryDomainName');
+    my $libDN = $self->getLoadLibrary('LibraryDomainName');
 
     $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
 }
@@ -160,8 +160,8 @@ sub updatedRowNotify
         $ROW_NEED_UPDATE = 1;
 
         my $lib = $self->getLibrary();
-        my $libDN = $self->loadLibrary('LibraryDomainName');
-        my $libCT = $self->loadLibrary('LibraryContact');
+        my $libDN = $self->getLoadLibrary('LibraryDomainName');
+        my $libCT = $self->getLoadLibrary('LibraryContact');
 
         $self->deletedRowNotify($oldRow);
         
@@ -175,7 +175,7 @@ sub updatedRowNotify
         try 
         {
             if ($row->valueByName("configEnable")) {
-                if ($self->loadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+                if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
                     $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
                 }
             }

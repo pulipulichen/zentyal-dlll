@@ -36,7 +36,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -59,7 +59,7 @@ sub getExternalIpaddr
     }
     
     if (!defined($address)) {
-        $self->loadLibrary('LibraryToolkit')->show_exceptions(__('External Interface should be static.') 
+        $self->getLoadLibrary('LibraryToolkit')->show_exceptions(__('External Interface should be static.') 
             . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
     }
 
@@ -81,7 +81,7 @@ sub getInternalIface
     }
 
     #if (!defined($iface)) {
-    #    $self->loadLibrary('LibraryToolkit')->show_exceptions(__('You should set an Internal Interface.') 
+    #    $self->getLoadLibrary('LibraryToolkit')->show_exceptions(__('You should set an Internal Interface.') 
     #        . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
     #}
 
@@ -100,7 +100,7 @@ sub initInternalIface
     my $network = EBox::Global->modInstance('network');
     foreach my $if (@{$network->allIfaces()}) {
         if (!$network->ifaceIsExternal($if)) {
-            #$self->loadLibrary('LibraryToolkit')->show_exceptions($if);
+            #$self->getLoadLibrary('LibraryToolkit')->show_exceptions($if);
             if ($network->ifaceAddress($if) ne "10.0.0.253") {
                 my $name = $if;
                 my $address = "10.0.0.254";
@@ -109,7 +109,7 @@ sub initInternalIface
                 my $force = 1;
                 $network->setIfaceStatic($name, $address, $netmask, $ext, $force);
                 $network->saveConfig();
-                #$self->loadLibrary('LibraryToolkit')->show_exceptions("OK: ". $if);
+                #$self->getLoadLibrary('LibraryToolkit')->show_exceptions("OK: ". $if);
             }
             #last;
             return;
@@ -120,7 +120,7 @@ sub initInternalIface
         $self->getLibrary()->show_exceptions($_ . ' ( LibraryNetwork->initInternalIface() )');
     };
     #if (!defined($iface)) {
-    #    $self->loadLibrary('LibraryToolkit')->show_exceptions('(LibraryNetwork->initInternalIface())))');
+    #    $self->getLoadLibrary('LibraryToolkit')->show_exceptions('(LibraryNetwork->initInternalIface())))');
     #}
 
     return $iface;
@@ -141,7 +141,7 @@ sub getExternalIface
     }
 
     if (!defined($iface)) {
-        $self->loadLibrary('LibraryToolkit')->show_exceptions(__('You should set an External Interface.') 
+        $self->getLoadLibrary('LibraryToolkit')->show_exceptions(__('You should set an External Interface.') 
             . '<a href="/Network/Ifaces">'.__('Setup Network Interfaces').'</a>');
     }
 

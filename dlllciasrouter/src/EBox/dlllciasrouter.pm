@@ -246,7 +246,7 @@ sub _setConf
 
     #  更新錯誤訊息
     $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
-    $self->model("LibraryPoundBackend")->updatePoundCfg();
+    $self->model("LibraryPoundBackend")->setUpdatePoundCfg();
     $self->model("LibraryServiceXRDP")->setXRDPCfg();
     
     # 設定SSH
@@ -303,7 +303,7 @@ sub initInstall
 
 # 20150519 Pulipuli Chen
 # 讀取指定的Model
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->model($library);

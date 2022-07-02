@@ -35,7 +35,7 @@ sub getLibrary
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -51,11 +51,11 @@ sub updatePoundErrorMessage
 {
     my ($self) = @_;
 
-    my $mod = $self->loadLibrary('ErrorMessage');
+    my $mod = $self->getLoadLibrary('ErrorMessage');
 
     my @params = ();
 
-    my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+    my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
     push(@params, 'baseURL' => "http://" . $address . ":888");
 
     push(@params, 'websiteTitle' => $mod->value('websiteTitle'));
@@ -67,7 +67,7 @@ sub updatePoundErrorMessage
     push(@params, 'contactEMAIL' => $mod->value('contactEMAIL'));
 
     my $errorMessage = $mod->value('errorMessage');
-    my $libEnc = $self->loadLibrary("LibraryEncoding");
+    my $libEnc = $self->getLoadLibrary("LibraryEncoding");
     $errorMessage = $libEnc->unescapeFromUtf16($errorMessage);
     push(@params, 'errorMessage' => $errorMessage);
 

@@ -20,7 +20,7 @@ use Try::Tiny;
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -123,10 +123,10 @@ sub initAdministorNetworkMember
     my ($self) = @_;
 
     try {
-        my $libNET = $self->loadLibrary('LibraryNetwork');
+        my $libNET = $self->getLoadLibrary('LibraryNetwork');
 
-        my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
-        my $sourceMask = $self->loadLibrary('LibraryNetwork')->getExternalMask();
+        my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
+        my $sourceMask = $self->getLoadLibrary('LibraryNetwork')->getExternalMask();
 
         #$self->getLibrary()->show_exceptions("sourceMask: " . $sourceMask .  '( LibraryMAC->initAdministorNetworkMember() )');
 
@@ -163,9 +163,9 @@ sub initWorkplaceNetworkMember
     my ($self) = @_;
 
     try {
-        my $libNET = $self->loadLibrary('LibraryNetwork');
+        my $libNET = $self->getLoadLibrary('LibraryNetwork');
 
-        my $address = $self->loadLibrary('LibraryNetwork')->getExternalIpaddr();
+        my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
         my $sourceMask = '255.255.0.0';
 
         my $ip_network = EBox::NetWrappers::ip_network($address, $sourceMask);
@@ -263,7 +263,7 @@ sub initDHCPfixedIP
         my $name = 'DHCP-fixed-IP';
         my $objectRowID = $self->getObjectRow($name)->id();
 
-        my $iface = $self->loadLibrary('LibraryNetwork')->getInternalIface();
+        my $iface = $self->getLoadLibrary('LibraryNetwork')->getInternalIface();
         if (!defined($iface)) {
             return;
         }

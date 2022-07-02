@@ -19,7 +19,7 @@ use EBox::NetWrappers qw(:all);
 #
 # 我這邊稱之為Library，因為這些Model是作為Library使用，而不是作為Model顯示資料使用
 # @author 20140312 Pulipuli Chen
-sub loadLibrary
+sub getLoadLibrary
 {
     my ($self, $library) = @_;
     return $self->parentModule()->model($library);
@@ -47,10 +47,10 @@ sub initZentyalAdminFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_object',
-        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id(),
+        'source_object' => $self->getLoadLibrary('LibraryMAC')->getObjectRow('Administrator-List')->id(),
         #'source_inverseMatch' => 1, 
-        #'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
+        #'service' => $self->getLoadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
+        'service' => $self->getLoadLibrary("LibraryService")->getServiceId('dlllciasrouter-admin'),
         'description' => __("Zentyal Administrator"),
     );
 
@@ -66,8 +66,8 @@ sub initZentyalAdminFilter
 #     my %param = (
 #         'decision' => 'accept',
 #         'source_selected' => 'source_object',
-#         'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id(),
-#         'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-workplace'),
+#         'source_object' => $self->getLoadLibrary('LibraryMAC')->getObjectRow('Workplace-List')->id(),
+#         'service' => $self->getLoadLibrary("LibraryService")->getServiceId('dlllciasrouter-workplace'),
 #         'description' => __("Zentyal Administrator"),
 #     );
 
@@ -83,7 +83,7 @@ sub initDNSServerFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_any',
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-dns'),
+        'service' => $self->getLoadLibrary("LibraryService")->getServiceId('dlllciasrouter-dns'),
         'description' => __("DNS Server"),
     );
 
@@ -98,8 +98,8 @@ sub initBlackListFilter
     my %param = (
         'decision' => 'deny',
         'source_selected' => 'source_object',
-        'source_object' => $self->loadLibrary('LibraryMAC')->getObjectRow('Blacklist')->id(),
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('any'),
+        'source_object' => $self->getLoadLibrary('LibraryMAC')->getObjectRow('Blacklist')->id(),
+        'service' => $self->getLoadLibrary("LibraryService")->getServiceId('any'),
         'description' => __("Blacklist"),
     );
 
@@ -115,7 +115,7 @@ sub initPoundFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_any',
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-pound'),
+        'service' => $self->getLoadLibrary("LibraryService")->getServiceId('dlllciasrouter-pound'),
         'description' => __("Reverse Proxy & Lighttpd."),
     );
 
@@ -130,7 +130,7 @@ sub initPoundLogFilter
     my %param = (
         'decision' => 'log',
         'source_selected' => 'source_any',
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('dlllciasrouter-pound'),
+        'service' => $self->getLoadLibrary("LibraryService")->getServiceId('dlllciasrouter-pound'),
         'description' => __("Reverse Proxy & Lighttpd Log."),
     );
 
@@ -159,7 +159,7 @@ sub initNFSFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_any',
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('NFS'),
+        'service' => $self->getLoadLibrary("LibraryService")->getServiceId('NFS'),
         'description' => __("Network File System"),
     );
 
@@ -174,7 +174,7 @@ sub initMFSFilter
     my %param = (
         'decision' => 'accept',
         'source_selected' => 'source_any',
-        'service' => $self->loadLibrary("LibraryService")->getServiceId('MFS'),
+        'service' => $self->getLoadLibrary("LibraryService")->getServiceId('MFS'),
         'description' => __("MooseFS"),
     );
 
@@ -229,7 +229,7 @@ sub moveRuleToTop
     }
     
 
-    #$self->loadLibrary('LibraryToolkit')->show_exceptions("[] " . $param{description} . "-----" . $ruleTable->_rowOrder($id) . "[]");
+    #$self->getLoadLibrary('LibraryToolkit')->show_exceptions("[] " . $param{description} . "-----" . $ruleTable->_rowOrder($id) . "[]");
 }
 
 1;
