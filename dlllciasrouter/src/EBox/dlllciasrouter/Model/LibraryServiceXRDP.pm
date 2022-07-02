@@ -50,7 +50,7 @@ sub setXRDPCfg
     my ($self) = @_;
     my @servicesParams = ();
 
-    my $settings = $self->loadLibarary('RouterSettings');
+    my $settings = $self->getLoadLibrary('RouterSettings');
 
     my $xrdpPort = $settings->value('xrdpPort');
     push(@servicesParams, 'xrdpPort' => $xrdpPort);
