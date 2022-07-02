@@ -51,7 +51,7 @@ sub initApache
     if (-e '/etc/apache2/ports.conf') {
 
         my @nullParams = ();
-        $self->writeConfFile(
+        $self->parentModule()->writeConfFile(
             '/etc/apache2/ports.conf',
             "dlllciasrouter/ports.conf.mas",
             \@nullParams,
