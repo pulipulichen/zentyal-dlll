@@ -20,6 +20,16 @@ use LWP::Simple;
 use POSIX qw(strftime);
 use Try::Tiny;
 
+##
+# 讀取LibraryToolkit
+# @author Pulipuli Chen
+##
+sub getLibrary
+{
+    my ($self) = @_;
+    return $self->parentModule()->model("LibraryToolkit");
+}
+
 # -----------------------------------------------
 
 1;
