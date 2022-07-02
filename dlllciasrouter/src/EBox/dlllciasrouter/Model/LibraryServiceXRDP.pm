@@ -52,6 +52,16 @@ sub updateXRDPCfg
     my $settings = $self->loadLibarary('RouterSettings');
 
     my $xrdpPort = $settings->value('xrdpPort');
+    # push(@servicesParams, 'xrdpPort' => $xrdpPort);
+
+    # $self->parentModule()->writeConfFile(
+    #     '/etc/xrdp/xrdp.ini',
+    #     "dlllciasrouter/xrdp.ini.mas",
+    #     \@servicesParams,
+    #     { uid => '0', gid => '0', mode => '644' }
+    # );
+
+    # EBox::Sudo::root("/etc/init.d/xrdp restart");
 }   # sub updateXRDPCfg
 
 # -----------------------------------------------
