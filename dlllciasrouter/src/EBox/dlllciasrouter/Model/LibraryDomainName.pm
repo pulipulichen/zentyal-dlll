@@ -119,10 +119,10 @@ sub addDomainNameWithIP
                 last;
             }
         }
-        # $hostnameTable->addRow({
-        #     "name" => "*",
-        #     "ip" => $ipaddr
-        # });
+        $hostnameTable->addRow({
+            "name" => "*",
+            "ip" => $ipaddr
+        });
 
         #if (!defined($zentyalRow)) {
         #    $zentyalRow = $hostnameTable->row();
