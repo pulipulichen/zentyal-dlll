@@ -36,11 +36,11 @@ Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal
 # Enable SSH
 
 1. (Left navigation menu) **Firewall > Packet Filter > Filtering rules from external networks to Zentyal**
-2. Configure Rules: ADD NEW 
+2. Configure Rules: ADD NEW <br/>
 ![enter image description here](https://lh3.googleusercontent.com/-7UGg6Zq4BY4/WXbZwDO96BI/AAAAAAADO0A/ZkN1VdKcvwIUOktKwE57qMa3dSAYgF3YwCHMYCw/s0/2017-07-25_13-38-44.png)
-3. Adding a new rule: Service SSH 
+3. Adding a new rule: Service SSH <br/>
 ![enter image description here](https://lh3.googleusercontent.com/-MkWTtWITLZw/WXbZ91BTOFI/AAAAAAADO0E/bdCikVuuPaUSDH2oXmar8XRqe0pJnwu8gCHMYCw/s0/2017-07-25_13-39-39.png)
-4. Save changes 
+4. Save changes <br/>
 ![enter image description here](https://lh3.googleusercontent.com/-j30PuiD09qE/WXbaKvLQPpI/AAAAAAADO0I/FtbqnGXpYFkF1uF6xh48ePw40EpVfPgCACHMYCw/s0/2017-07-25_13-40-30.png)
 5. SSH is work.  <br/>
 ![enter image description here](https://lh3.googleusercontent.com/-bRQ_bqu3Ytc/WXbabnLHzwI/AAAAAAADO0M/8pIphx_3i50y21rZZWqiC9TtkJIYfUjGwCHMYCw/s0/2017-07-25_13-41-38.png)
@@ -53,12 +53,15 @@ Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal
 1. Use terminal. Type following command: 
 
 	* Stable release version: <br />
+	
 ```` 
-wget https://goo.gl/Z8t8tp -O d.sh; bash d.sh  
+wget https://goo.gl/Z8t8tp -O d.sh && bash d.sh  
 ````
+
 	* Debug version: <br />
+
 ````
-wget https://ppt.cc/fPv3Bx -O d.sh; bash d.sh  
+wget https://ppt.cc/fPv3Bx -O d.sh && bash d.sh  
 ````
 
 

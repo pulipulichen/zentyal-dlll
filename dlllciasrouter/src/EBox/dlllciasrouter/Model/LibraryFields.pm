@@ -85,7 +85,7 @@ sub createFieldDomainName
         'hiddenOnViewer' => 1,
         'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
           . __('Domain name rule') 
-          . '</a>: exp-example-2018.dlll.nccu.edu.tw'
+          . '</a>: exp-example-2022.dlll.nccu.edu.tw'
           . $self->setFieldCacheScript('domainName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
@@ -106,7 +106,7 @@ sub createFieldDomainNameUnique
         'hiddenOnViewer' => 1,
         'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
             . __(' Domain name rule') 
-          . '</a>: exp-example-2018.dlll.nccu.edu.tw'
+          . '</a>: exp-example-2021.dlll.nccu.edu.tw'
            . $self->setFieldCacheScript('domainName'),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     );
