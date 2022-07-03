@@ -123,7 +123,11 @@ sub addDomainNameWithIP
         #     "name" => "*",
         #     "ip" => $ipaddr
         # });
-        $domainRow->addHost($domainName, "*");
+        $domModel->addHost($domainName, {
+            "name" => "*",
+            #"readOnly" => 0,
+            "ipAddresses" => $ipaddr
+        });
 
         #if (!defined($zentyalRow)) {
         #    $zentyalRow = $hostnameTable->row();
