@@ -118,7 +118,7 @@ sub addDomainNameWithIP
                 last;
             }
         }
-        $hostnameTable.addRow({
+        $hostnameTable->addRow({
             "name" => "*",
             "ip" => $ipaddr
         });
