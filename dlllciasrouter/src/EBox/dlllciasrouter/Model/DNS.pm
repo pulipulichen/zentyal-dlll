@@ -42,9 +42,10 @@ sub _table
 
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
-        $fieldsFactory->createFieldDomainNameUnique(),
+        #$fieldsFactory->createFieldDomainNameUnique(),
+        $fieldsFactory->createFieldWildcardDomainNameUnique(),
         $fieldsFactory->createFieldBoundLocalDNS(),
-        $fieldsFactory->createFieldEnableWildcardDNS(),
+        #$fieldsFactory->createFieldEnableWildcardDNS(),
         $fieldsFactory->createFieldDomainNameLink(),
         new EBox::Types::HostIP(
             fieldName => 'ipaddr',
