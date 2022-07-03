@@ -69,7 +69,8 @@ sub addDomainName
 # 指定IP
 sub addDomainNameWithIP
 {
-    my ($self, $domainName, $ipaddr, $enableWildcardDNS) = @_;
+    # my ($self, $domainName, $ipaddr, $enableWildcardDNS) = @_;
+    my ($self, $domainName, $ipaddr) = @_;
 
     if ($domainName eq '') {
         #return;
@@ -118,10 +119,10 @@ sub addDomainNameWithIP
                 last;
             }
         }
-        $hostnameTable->addRow({
-            "name" => "*",
-            "ip" => $ipaddr
-        });
+        # $hostnameTable->addRow({
+        #     "name" => "*",
+        #     "ip" => $ipaddr
+        # });
 
         #if (!defined($zentyalRow)) {
         #    $zentyalRow = $hostnameTable->row();
