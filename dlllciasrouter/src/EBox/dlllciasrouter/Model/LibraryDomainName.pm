@@ -123,7 +123,7 @@ sub addDomainNameWithIP
         #     "name" => "*",
         #     "ip" => $ipaddr
         # });
-        @ipaddrArray = ( $ipaddr );
+        my @ipaddrArray = ( $ipaddr );
         $domModel->addHost($domainName, {
             "name" => "*",
             #"readOnly" => 0,
