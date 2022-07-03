@@ -125,9 +125,9 @@ sub getWildcardDomainName
     if ($row->elementExists('enableWildcardDNS')) {
     my $enableWildcardDNS = $row->valueByName("enableWildcardDNS");
     if ($enableWildcardDNS == 1) {
-        $domainName = "*." .$domainName
+        $domainName = "*." .$domainName;
     }
-    return $domainName
+    return $domainName;
 }
 
 sub addedRowNotify
