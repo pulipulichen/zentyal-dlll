@@ -117,11 +117,11 @@ sub addDomainNameWithIP
             $zentyalRow = $hostnameTable->row($zentyalHostnameID);
             
             if (defined($zentyalRow)) {
-                my $aliasModel = $zentyalRow->subModel('alias');
-                my $row = $aliasModel->find(alias => "*." . $domainName);
-                unless (defined $row) {
-                    $aliasModel->addRow(alias => "*." . $domainName);
-                }
+                # my $aliasModel = $zentyalRow->subModel('alias');
+                # my $row = $aliasModel->find(alias => "*." . $domainName);
+                # unless (defined $row) {
+                #     $aliasModel->addRow(alias => "*." . $domainName);
+                # }
                 last;
             }
         }
