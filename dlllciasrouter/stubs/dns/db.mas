@@ -49,7 +49,7 @@ $TTL 3D
 @       IN      SOA     <% $domain->{primaryNameServer} %> hostmaster (
                         <% $date %>	;serial number
                         8H		;refresh
-                        2H		;retry
+                        2H		;retry aaa
                         4W		;expiration
                         1D )    ;minimum
 ;
