@@ -378,12 +378,12 @@ sub updateDomainNameLink
         $doBreakUrl = 0;
     }
 
-    if ($row->elementExists('boundLocalDns')) {
-        my $enableWildcardDNS = $row->valueByName("enableWildcardDNS");
-        if ($enableWildcardDNS == 1) {
-            $domainName = "*." .$domainName
-        }
-    }
+    # if ($row->elementExists('enableWildcardDNS')) {
+    #     my $enableWildcardDNS = $row->valueByName("enableWildcardDNS");
+    #     if ($enableWildcardDNS == 1) {
+    #         $domainName = "*." .$domainName
+    #     }
+    # }
 
     my $enable = $self->getLibrary()->isEnable($row);
     my $secure = 0;

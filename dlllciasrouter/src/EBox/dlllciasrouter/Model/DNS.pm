@@ -117,6 +117,19 @@ sub getLoadLibrary
 
 my $ROW_NEED_UPDATE = 0;
 
+sub getWildcardDomainName 
+{
+    my ($self, $row) = @_;
+
+    my $domainName = $row->valueByName('domainName');
+    if ($row->elementExists('enableWildcardDNS')) {
+    my $enableWildcardDNS = $row->valueByName("enableWildcardDNS");
+    if ($enableWildcardDNS == 1) {
+        $domainName = "*." .$domainName
+    }
+    return $domainName
+}
+
 sub addedRowNotify
 {
     my ($self, $row) = @_;
@@ -137,7 +150,8 @@ sub addedRowNotify
 
     if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
         #$libDN->addDomainName($row->valueByName('domainName'));
-        $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
+        my $domainName = $self->getWildcardDomainName();
+        $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
     }
 
     $row->store();
@@ -150,7 +164,8 @@ sub deletedRowNotify
 
     my $libDN = $self->getLoadLibrary('LibraryDomainName');
 
-    $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
+    my $domainName = $self->getWildcardDomainName();
+    $libDN->deleteDomainName($domainName, 'DNS');
 }
 
 sub updatedRowNotify
@@ -175,13 +190,14 @@ sub updatedRowNotify
         
         try 
         {
+            my $domainName = $self->getWildcardDomainName();
             if ($row->valueByName("configEnable")) {
                 if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-                    $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
+                    $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
                 }
             }
             else {
-                $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
+                $libDN->deleteDomainName($domainName, 'DNS');
             }
         } catch {
             my $lib = $self->getLibrary();
