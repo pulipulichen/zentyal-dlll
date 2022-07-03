@@ -152,7 +152,7 @@ sub addedRowNotify
     if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
         #$libDN->addDomainName($row->valueByName('domainName'));
         my $domainName = $self->getWildcardDomainName($row);
-        $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
+        $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'), $row->valueByName("enableWildcardDNS"));
     }
 
     $row->store();
