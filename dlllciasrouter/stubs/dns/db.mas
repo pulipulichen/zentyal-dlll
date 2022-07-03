@@ -49,7 +49,7 @@ $TTL 3D
 @       IN      SOA     <% $domain->{primaryNameServer} %> hostmaster (
                         <% $date %>	;serial number
                         8H		;refresh
-                        2H		;retry aaa
+                        2H		;retry bbb
                         4W		;expiration
                         1D )    ;minimum
 ;
@@ -64,6 +64,7 @@ $TTL 3D
 % foreach my $host (@hostRRs) {
 %   foreach my $ip (@{$host->{ip}}) {
 <% $host->{name} %>     IN      A       <% $ip %>
+*.<% $domain->{name} %>.     IN      A       <% $ip %>
 %   }
 %   foreach my $alias (@{$host->{aliases}}) {
 <% $alias %>    IN      CNAME   <% $host->{name} %>

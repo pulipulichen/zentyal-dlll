@@ -92,7 +92,6 @@ xrdp xfce4 xfce4-goodies tightvncserver"
 fi
 echo "All modules are installed."
 
-
 # -----------------------------------
 # 檢查模組的啟用狀態
 # -----------------------------------
@@ -197,6 +196,15 @@ if echo "$LIST" | grep -q "$SOURCE"; then
 else
   sudo crontab -l | { cat; echo "@reboot $SOURCE"; } | sudo crontab -
 fi
+
+# -----------------------------------
+# Wildcard DNS
+# 20220703-1551 
+
+echo "Wildcard DNS"
+sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
+
+# ----------------------
 
 # 20181109 設定locate的索引，一定要擺到最後執行
 sudo updatedb
