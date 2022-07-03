@@ -114,26 +114,26 @@ sub createFieldDomainNameUnique
     return $field;
 }
 
-sub createFieldWildcardDomainNameUnique
-{
-  my ($self) = @_;
+# sub createFieldWildcardDomainNameUnique
+# {
+#   my ($self) = @_;
 
-    my $field = new EBox::Types::Text(
-        'fieldName' => 'domainName',
-        'printableName' => __('Domain Name'),
-        'editable' => 1,
-        'unique' => 1,
-        'hiddenOnSetter' => 0,
-        'hiddenOnViewer' => 1,
-        'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
-            . __(' Domain name rule') 
-          . '</a>: exp-example-2020.dlll.nccu.edu.tw'
-           . $self->setFieldCacheScript('domainName'),
-        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-    );
+#     my $field = new EBox::Types::Text(
+#         'fieldName' => 'domainName',
+#         'printableName' => __('Domain Name'),
+#         'editable' => 1,
+#         'unique' => 1,
+#         'hiddenOnSetter' => 0,
+#         'hiddenOnViewer' => 1,
+#         'help' => '<a href="/dlllciasrouter/View/ManualDomainName" target="_blank">' 
+#             . __(' Domain name rule') 
+#           . '</a>: exp-example-2020.dlll.nccu.edu.tw'
+#            . $self->setFieldCacheScript('domainName'),
+#         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+#     );
 
-    return $field;
-}
+#     return $field;
+# }
 
 # 20140208 Pulipuli
 # 顯示時使用
