@@ -87,7 +87,10 @@ xrdp xfce4 xfce4-goodies tightvncserver"
     #sudo service lighttpd force-reload
 
     # install certbot with snap
+    sudo snap install core
     sudo snap install --classic certbot
+    sudo snap set certbot trust-plugin-with-root=ok
+    sudo snap install certbot-dns-rfc2136
     sudo ln -s /snap/bin/certbot /usr/bin/certbot
 fi
 echo "All modules are installed."
@@ -203,6 +206,11 @@ fi
 
 echo "Wildcard DNS"
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
+sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/named.conf.mas /usr/share/zentyal/stubs/dns/named.conf.mas
+
+cd /etc/bind
+sudo dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
+grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key
 
 # ----------------------
 
