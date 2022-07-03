@@ -43,7 +43,7 @@ sub _table
     my @fields = (
         $fieldsFactory->createFieldConfigEnable(),
         $fieldsFactory->createFieldDomainNameUnique(),
-        $fieldsFactory->createFieldWildcardDomainNameUnique(),
+        # $fieldsFactory->createFieldWildcardDomainNameUnique(),
         $fieldsFactory->createFieldBoundLocalDNS(),
         $fieldsFactory->createFieldEnableWildcardDNS(),
         $fieldsFactory->createFieldDomainNameLink(),
