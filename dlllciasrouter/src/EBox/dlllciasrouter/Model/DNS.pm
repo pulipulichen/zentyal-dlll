@@ -150,7 +150,7 @@ sub addedRowNotify
 
     if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
         #$libDN->addDomainName($row->valueByName('domainName'));
-        my $domainName = $self->getWildcardDomainName();
+        my $domainName = $self->getWildcardDomainName($row);
         $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
     }
 
@@ -164,8 +164,10 @@ sub deletedRowNotify
 
     my $libDN = $self->getLoadLibrary('LibraryDomainName');
 
-    my $domainName = $self->getWildcardDomainName();
-    $libDN->deleteDomainName($domainName, 'DNS');
+    # my $domainName = $self->getWildcardDomainName($row);
+    # $libDN->deleteDomainName($domainName, 'DNS');
+    
+    $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
 }
 
 sub updatedRowNotify
@@ -190,14 +192,24 @@ sub updatedRowNotify
         
         try 
         {
-            my $domainName = $self->getWildcardDomainName();
+            # my $domainName = $self->getWildcardDomainName($row);
+            # if ($row->valueByName("configEnable")) {
+            #     if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+            #         $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
+            #     }
+            # }
+            # else {
+            #     $libDN->deleteDomainName($domainName, 'DNS');
+            # }
+
+            # my $domainName = $self->getWildcardDomainName($row);
             if ($row->valueByName("configEnable")) {
                 if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-                    $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
+                    $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
                 }
             }
             else {
-                $libDN->deleteDomainName($domainName, 'DNS');
+                $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
             }
         } catch {
             my $lib = $self->getLibrary();
