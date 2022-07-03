@@ -380,7 +380,7 @@ sub updateDomainNameLink
 
     if ($row->elementExists('boundLocalDns')) {
         my $enableWildcardDNS = $row->valueByName("enableWildcardDNS");
-        if ($enableWildcardDNS === 1) {
+        if ($enableWildcardDNS == 1) {
             $domainName = "*." .$domainName
         }
     }
