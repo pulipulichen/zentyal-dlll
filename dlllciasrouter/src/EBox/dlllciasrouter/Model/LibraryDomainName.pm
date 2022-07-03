@@ -115,7 +115,13 @@ sub addDomainNameWithIP
         my $zentyalRow;
         for $zentyalHostnameID (@{$hostnameTable->ids()}) {
             $zentyalRow = $hostnameTable->row($zentyalHostnameID);
+            
             if (defined($zentyalRow)) {
+                my $aliasModel = $zentyalRow->subModel('alias');
+                my $row = $aliasModel->find(alias => "*");
+                unless (defined $row) {
+                    $aliasModel->addRow(alias => "*");
+                }
                 last;
             }
         }
@@ -126,11 +132,11 @@ sub addDomainNameWithIP
         #my @ipaddrArray = @{( $ipaddr )};
         # my @ipaddrArray = ($ipaddr);
         # my @ipaddrArray = [$ipaddr];
-        $domModel->addHost($domainName, {
-            "name" => "*",
-            #"readOnly" => 0,
-            #"ipAddresses" => @ipaddrArray
-        });
+        # $domModel->addHost($domainName, {
+        #     "name" => "*",
+        #     #"readOnly" => 0,
+        #     #"ipAddresses" => @ipaddrArray
+        # });
 
         #if (!defined($zentyalRow)) {
         #    $zentyalRow = $hostnameTable->row();
