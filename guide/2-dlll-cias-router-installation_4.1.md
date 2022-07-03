@@ -54,13 +54,13 @@ Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal
 
 	* Stable release version: <br />
 	
-```` 
+````bash 
 wget https://goo.gl/Z8t8tp -O d.sh && bash d.sh  
 ````
 
-	* Debug version: <br />
+	* Debug version: 
 
-````
+````bash
 wget https://ppt.cc/fPv3Bx -O d.sh && bash d.sh  
 ````
 
