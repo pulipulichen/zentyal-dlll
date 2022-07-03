@@ -2,7 +2,7 @@ package EBox::dlllciasrouter::Model::LibraryDomainName;
 
 use base 'EBox::Model::DataTable';
 
-use strict;
+#use strict;
 use warnings;
 
 use EBox::Gettext;
