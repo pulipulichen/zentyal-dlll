@@ -165,10 +165,10 @@ sub deletedRowNotify
 
     my $libDN = $self->getLoadLibrary('LibraryDomainName');
 
-    # my $domainName = $self->getWildcardDomainName($row);
-    # $libDN->deleteDomainName($domainName, 'DNS');
+    my $domainName = $self->getWildcardDomainName($row);
+    $libDN->deleteDomainName($domainName, 'DNS');
     
-    $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
+    # $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
 }
 
 sub updatedRowNotify
@@ -193,25 +193,24 @@ sub updatedRowNotify
         
         try 
         {
-            # my $domainName = $self->getWildcardDomainName($row);
-            # if ($row->valueByName("configEnable")) {
-            #     if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-            #         $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
-            #     }
-            # }
-            # else {
-            #     $libDN->deleteDomainName($domainName, 'DNS');
-            # }
-
-            # my $domainName = $self->getWildcardDomainName($row);
+            my $domainName = $self->getWildcardDomainName($row);
             if ($row->valueByName("configEnable")) {
                 if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
-                    $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
+                    $libDN->addDomainNameWithIP($domainName, $row->valueByName('ipaddr'));
                 }
             }
             else {
-                $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
+                $libDN->deleteDomainName($domainName, 'DNS');
             }
+
+            # if ($row->valueByName("configEnable")) {
+            #     if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+            #         $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
+            #     }
+            # }
+            # else {
+            #     $libDN->deleteDomainName($row->valueByName('domainName'), 'DNS');
+            # }
         } catch {
             my $lib = $self->getLibrary();
             $lib->show_exceptions($_ . " ( DNS->updatedRowNotify() )");
