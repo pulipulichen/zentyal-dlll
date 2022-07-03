@@ -122,12 +122,12 @@ sub getWildcardDomainName
     my ($self, $row) = @_;
 
     my $domainName = $row->valueByName('domainName');
-    if ($row->elementExists('enableWildcardDNS')) {
-        my $enableWildcardDNS = $row->valueByName("enableWildcardDNS");
-        if ($enableWildcardDNS == 1) {
-            $domainName = "*." .$domainName;
-        }
-    }
+    # if ($row->elementExists('enableWildcardDNS')) {
+    #     my $enableWildcardDNS = $row->valueByName("enableWildcardDNS");
+    #     if ($enableWildcardDNS == 1) {
+    #         $domainName = "*." .$domainName;
+    #     }
+    # }
     return $domainName;
 }
 
