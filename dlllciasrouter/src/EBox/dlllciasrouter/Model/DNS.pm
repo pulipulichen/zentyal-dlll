@@ -135,7 +135,7 @@ sub addedRowNotify
     $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
 
-    if ($self->getLloadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
+    if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
         #$libDN->addDomainName($row->valueByName('domainName'));
         $libDN->addDomainNameWithIP($row->valueByName('domainName'), $row->valueByName('ipaddr'));
     }
