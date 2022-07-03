@@ -212,6 +212,11 @@ cd /etc/bind
 sudo dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
 grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key
 
+mkdir -p /etc/pound/cert/
+mkdir -p /etc/letsencrypt/renewal-hooks/deploy/
+sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot-pound.sh /etc/letsencrypt/renewal-hooks/deploy/
+chmod +x /etc/letsencrypt/renewal-hooks/deploy/*.sh
+
 # ----------------------
 
 # 20181109 設定locate的索引，一定要擺到最後執行
