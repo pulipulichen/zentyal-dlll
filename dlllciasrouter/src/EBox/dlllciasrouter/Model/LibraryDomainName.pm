@@ -118,9 +118,9 @@ sub addDomainNameWithIP
             
             if (defined($zentyalRow)) {
                 my $aliasModel = $zentyalRow->subModel('alias');
-                my $row = $aliasModel->find(alias => "*");
+                my $row = $aliasModel->find(alias => "*." . $domainName);
                 unless (defined $row) {
-                    $aliasModel->addRow(alias => "*");
+                    $aliasModel->addRow(alias => "*." . $domainName);
                 }
                 last;
             }
