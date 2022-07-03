@@ -1,3 +1,5 @@
+
+clear
 sudo rm -r /var/log/zentyal/zentyal.log
 ./git_update_compile.sh
 echo "======================"
