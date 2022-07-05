@@ -1166,7 +1166,7 @@ sub createFieldProtocolNote
     my $help = $self->createFieldDescriptionEditor($protocol.'_Note');
     if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
-        $help = '';
+        # $help = '';
     }
 
     my $field = new EBox::Types::Text(
@@ -1193,7 +1193,7 @@ sub createFieldProtocolNoteWithHr
     my $HTMLSetter = '/ajax/setter/textareaSetter.mas';
     if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
-        $HTMLSetter = '';
+        # $HTMLSetter = '';
     }
 
     my $field = new EBox::Types::Text(
