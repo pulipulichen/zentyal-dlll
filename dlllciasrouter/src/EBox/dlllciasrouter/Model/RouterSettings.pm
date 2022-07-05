@@ -165,8 +165,8 @@ sub _table
         'printableName' => __('Check Certificates'),
         'editable' => 0,
         'optional' => 1,
-        'hiddenOnSetter' => 1,
-        'hiddenOnViewer' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 0,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     ));
 
