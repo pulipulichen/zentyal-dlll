@@ -1163,7 +1163,7 @@ sub createFieldProtocolNote
     my ($self, $protocol) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
@@ -1188,7 +1188,7 @@ sub createFieldProtocolNoteWithHr
     my ($self, $protocol) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
