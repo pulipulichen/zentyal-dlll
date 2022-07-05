@@ -166,7 +166,7 @@ sub _table
         'editable' => 0,
         'optional' => 1,
         'hiddenOnSetter' => 0,
-        'hiddenOnViewer' => 0,
+        'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     ));
 
