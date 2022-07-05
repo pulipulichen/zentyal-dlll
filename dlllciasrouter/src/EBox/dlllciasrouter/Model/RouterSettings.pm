@@ -128,7 +128,7 @@ sub _table
         'defaultValue' => 'pulipuli.chen@gmail.com',
     ));
 
-    push(@fields, new EBox::Types::HTML(
+    push(@fields, new EBox::Types::Text(
         'fieldName' => 'certbotCommand',
         'printableName' => __('Certbot Command (Production)'),
         'editable' => 0,
@@ -139,7 +139,7 @@ sub _table
         "help" => __("Becare of Rate Limits: 25 / pre week. <a href='https://letsencrypt.org/zh-tw/docs/rate-limits/' target='letsencrypt'>Read this article for more information.</a>"),
     ));
 
-    push(@fields, new EBox::Types::HTML(
+    push(@fields, new EBox::Types::Text(
         'fieldName' => 'certbotCommandDryRun',
         'printableName' => __('Certbot Command (for test)'),
         'editable' => 0,
