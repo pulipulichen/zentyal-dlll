@@ -163,7 +163,7 @@ sub _table
     push(@fields, new EBox::Types::Text(
         'fieldName' => 'certbotCredentialsKey',
         'printableName' => __('Certbot Certificates Key'),
-        'editable' => 1,
+        'editable' => 0,
         'optional' => 0,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
