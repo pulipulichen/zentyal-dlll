@@ -1165,7 +1165,7 @@ sub createFieldProtocolNote
     my $hidden = 0;
     my $help = $self->createFieldDescriptionEditor($protocol.'_Note');
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
+        # $hidden = 1;
         # $help = '';
     }
 
@@ -1192,7 +1192,7 @@ sub createFieldProtocolNoteWithHr
     my $hidden = 0;
     my $HTMLSetter = '/ajax/setter/textareaSetter.mas';
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
+        # $hidden = 1;
         # $HTMLSetter = '';
     }
 
