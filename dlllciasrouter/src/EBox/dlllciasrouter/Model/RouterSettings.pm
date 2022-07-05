@@ -610,18 +610,23 @@ sub setCertbotCommand
         my $command = 'certonly --non-interactive --agree-tos -m mailto:' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d "' . $domainName . '" -d "*.' . $domainName . '" -v';
         my $commandDryRun = $command . ' --dry-run';
 
-        # $row->elementByName('certbotCommand')->setValue($command);
-        # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
-        # $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
+        $row->elementByName('certbotCommand')->setValue($command);
+        $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
+        $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
 
-        $row->setValue('certbotCommand', $command);
-        $row->setValue('certbotCommandDryRun', $commandDryRun);
-        $row->setValue('certSearch', '<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
+        # $row->setValue('certbotCommand', $command);
+        # $row->setValue('certbotCommandDryRun', $commandDryRun);
+        # $row->setValue('certSearch', '<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
     }
     else {
         $row->setValue('certbotCommand', "");
         $row->setValue('certbotCommandDryRun', "");
         $row->setValue('certSearch', '<a href="https://crt.sh/" target="_blank">crt.sh</a>');
+
+        $row->elementByName('certbotCommand')->setValue("");
+        $row->elementByName('certbotCommandDryRun')->setValue("");
+        $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/" target="crt.sh.' . $domainName . '">crt.sh</a>');
+
     }
 }
 
