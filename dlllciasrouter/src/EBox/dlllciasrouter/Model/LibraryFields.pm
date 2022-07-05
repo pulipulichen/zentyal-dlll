@@ -867,7 +867,7 @@ sub createFieldProtocolRedirect
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
+        $hidden = 1;
     }
 
     my $field = new EBox::Types::Boolean(
@@ -915,7 +915,7 @@ sub createFieldProtocolSecureSelection
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
+        $hidden = 1;
     }
 
     my $field = new EBox::Types::Select(
@@ -960,7 +960,7 @@ sub createFieldProtocolLog
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
+        $hidden = 1;
     }
 
     my $field = new EBox::Types::Boolean(
@@ -983,7 +983,7 @@ sub createFieldProtocolExternalPort
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
+        $hidden = 1;
     }
 
     my $field = new EBox::Types::Union(
@@ -1031,7 +1031,7 @@ sub createFieldProtocolInternalPort
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
+        $hidden = 1;
     }
 
     my $field = new EBox::Types::Union(
@@ -1067,7 +1067,7 @@ sub createFieldProtocolScheme
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
+        $hidden = 1;
     }
 
     my $field = new EBox::Types::Select(
@@ -1165,8 +1165,8 @@ sub createFieldProtocolNote
     my $hidden = 0;
     my $help = $self->createFieldDescriptionEditor($protocol.'_Note');
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
-        # $help = '';
+        $hidden = 1;
+        $help = '';
     }
 
     my $field = new EBox::Types::Text(
@@ -1192,8 +1192,8 @@ sub createFieldProtocolNoteWithHr
     my $hidden = 0;
     my $HTMLSetter = '/ajax/setter/textareaSetter.mas';
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
-        # $HTMLSetter = '';
+        $hidden = 1;
+        $HTMLSetter = '';
     }
 
     my $field = new EBox::Types::Text(
