@@ -642,7 +642,12 @@ sub setCertbotDNSCredentials
 
     #my $key;
     #io('/etc/bind/Kcertbot.key') > $key;
-    $self->elementByName('certbotCredentialsKey')->setValue($key);
+    try
+    {
+        $self->elementByName('certbotCredentialsKey')->setValue($key);
+    } catch {
+        # do nothing
+    }
 }
 
 # 20150518 Pulipuli Chen
