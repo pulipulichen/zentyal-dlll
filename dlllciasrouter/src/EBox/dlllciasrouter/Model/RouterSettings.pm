@@ -160,7 +160,7 @@ sub _table
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
     ));
 
-    push(@fields, new EBox::Types::HTML(
+    push(@fields, new EBox::Types::Text(
         'fieldName' => 'certbotCredentialsKey',
         'printableName' => __('Check Certificates'),
         'editable' => 0,
