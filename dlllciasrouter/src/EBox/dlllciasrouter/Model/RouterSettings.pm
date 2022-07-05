@@ -118,6 +118,7 @@ sub _table
         "optional" => 0,
         "help" => __("The primary domain name will be used to request certificates from Let's Encrypt and to reverse proxy Pound."),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
     ));
 
     push(@fields, new EBox::Types::MailAddress(
@@ -126,6 +127,7 @@ sub _table
         'editable' => 1,
         'optional' => 0,
         'defaultValue' => 'pulipuli.chen@gmail.com',
+        'allowUnsafeChars' => 1,
     ));
 
     push(@fields, new EBox::Types::Text(
@@ -137,6 +139,7 @@ sub _table
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
         "help" => __("Becare of Rate Limits: 25 / pre week. <a href='https://letsencrypt.org/zh-tw/docs/rate-limits/' target='letsencrypt'>Read this article for more information.</a>"),
+        'allowUnsafeChars' => 1,
     ));
 
     push(@fields, new EBox::Types::Text(
@@ -148,6 +151,7 @@ sub _table
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
         "help" => __("Becare of Rate Limits: 60 / pre hour. <a href='https://letsencrypt.org/zh-tw/docs/staging-environment/' target='letsencrypt_dryrun'>Read this article for more information.</a>"),
+        'allowUnsafeChars' => 1,
     ));
 
     push(@fields, new EBox::Types::HTML(
@@ -158,6 +162,7 @@ sub _table
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
     ));
 
     push(@fields, new EBox::Types::Text(
@@ -168,6 +173,7 @@ sub _table
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
     ));
 
     # ----------------------------------
