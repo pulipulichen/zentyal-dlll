@@ -258,6 +258,10 @@ sub deleteWildcardDomainName
 
     $self->deleteDomainName($domainName);
 
+    if ($domainName eq '') {
+        return 1;
+    }
+
     my $dbPath = '/var/lib/bind/db._acme-challenge.' . $domainName;
     
     unlink($dbPath, $dbPath . ".jnl");
