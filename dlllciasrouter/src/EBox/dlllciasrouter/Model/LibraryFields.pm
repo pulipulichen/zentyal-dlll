@@ -866,7 +866,7 @@ sub createFieldProtocolRedirect
     my ($self, $protocol, $enable) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
@@ -914,7 +914,7 @@ sub createFieldProtocolSecureSelection
     my ($self, $protocol, $secureLevel) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
@@ -959,7 +959,7 @@ sub createFieldProtocolLog
     my ($self, $protocol, $enable) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
@@ -982,7 +982,7 @@ sub createFieldProtocolExternalPort
     my ($self, $protocol, $unique, $extPort) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
@@ -1030,7 +1030,7 @@ sub createFieldProtocolInternalPort
     my ($self, $protocol, $port) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
@@ -1066,7 +1066,7 @@ sub createFieldProtocolScheme
     my ($self, $protocol, $unique, $defaultValue) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https") {
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
     }
 
