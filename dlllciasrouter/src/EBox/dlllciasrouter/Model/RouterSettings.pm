@@ -646,7 +646,7 @@ sub setCertbotDNSCredentials
     {
         $self->elementByName('certbotCredentialsKey')->setValue($key);
     } catch {
-        # do nothing
+        $self->getLibrary()->show_exceptions($_ . ' (RouterSettings->setCertbotDNSCredentials())');
     }
 }
 
