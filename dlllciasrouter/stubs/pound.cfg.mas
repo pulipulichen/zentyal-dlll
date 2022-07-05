@@ -9,6 +9,7 @@
     $domainHash
     $domainHTTPSHash
     $redir
+		$primaryDomainName
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
@@ -182,12 +183,15 @@ End
 
 
 % print "# -----------------------------------------\n";
-% print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
-% if (length($domainHTTPSHash)) {
 
+% if ($primaryDomainName ne "") {
+
+% print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
 ListenHTTPS
 	Address 0.0.0.0
-	Port	<% $portHTTPS %>
+	Port	<% $port %>
+  Port    portHTTPS
+  Cert    "/etc/pound/cert/dlllciasrouter.pem"
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		4
@@ -196,16 +200,6 @@ ListenHTTPS
         Err500 "/etc/pound/error.html"
         Err501 "/etc/pound/error.html"
         Err503 "/etc/pound/error.html"
-
-% print "\n# -----------------------------------------\n";
-% print "# Cert\n";
-% print "# -----------------------------------------\n";
-
-% if (length($domainHTTPSHash)) {
-%   while (my ($domainNameValue, $backEndArray) = each ($domainHTTPSHash)) {  	
-      Cert    "/etc/pound/cert/<% $domainNameValue %>.pem"
-%   } # while (my ($domainNameValue, $value) = each ($domainHTTPSHash)) {  
-% } # if (length($domainHTTPSHash)) {
 
 % print "\n# -----------------------------------------\n";
 % print "# Back End\n";
@@ -220,8 +214,8 @@ ListenHTTPS
 % print "#        End\n\n";
 
 
-% if (length($domainHTTPSHash)) {
-%   while (my ($domainNameValue, $backEndArray) = each ($domainHTTPSHash)) {  	
+% if (length($domainHash)) {
+%   while (my ($domainNameValue, $backEndArray) = each ($domainHash)) {  	
 %
         Service
                 HeadRequire "Host: <% $domainNameValue %>.*"
@@ -329,7 +323,7 @@ ListenHTTPS
                 redirect "<% $urlValue %>"
 	End
 % } #foreach my $r (@{$redir}) {
-% print "# -----------------------------------------\n";
 
 End
-% } # if (length($domainHTTPSHash)) {
+
+% }	# if ($primaryDomainName ne "") {

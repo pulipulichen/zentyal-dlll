@@ -27,6 +27,8 @@ use Try::Tiny;
 
 use EBox::Types::Text;
 
+use IO::All;
+
 # Group: Public methods
 
 # Constructor: new
@@ -102,6 +104,71 @@ sub _table
     #         ));
 
     #push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Cloud/Backup", 1));
+
+    # ----------------------------------
+
+    push(@fields, $fieldsFactory->createFieldHeading('hr_ Zentyal_primary_domain_name', __('Zentyal Primary Domain Name')));
+
+    push(@fields, new EBox::Types::DomainName(
+        "fieldName"     => 'primaryDomainName',
+        "printableName" => __('Primary Domain Name'),
+        "editable"      => 1,
+        "unique"        => 1,
+        "defaultValue" => "",
+        "optional" => 0,
+        "help" => __("The primary domain name will be used to request certificates from Let's Encrypt and to reverse proxy Pound."),
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+    ));
+
+    push(@fields, new EBox::Types::MailAddress(
+        'fieldName' => 'certbotContactEMAIL',
+        'printableName' => __('Certbot notfiy Email'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => 'pulipuli.chen@gmail.com',
+    ));
+
+    push(@fields, new EBox::Types::HTML(
+        'fieldName' => 'certbotCommand',
+        'printableName' => __('Certbot Command (Production)'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        "help" => __("Becare of Rate Limits: 25 / pre week. <a href='https://letsencrypt.org/zh-tw/docs/rate-limits/' target='letsencrypt'>Read this article for more information.</a>"),
+    ));
+
+    push(@fields, new EBox::Types::HTML(
+        'fieldName' => 'certbotCommandDryRun',
+        'printableName' => __('Certbot Command (for test)'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        "help" => __("Becare of Rate Limits: 60 / pre hour. <a href='https://letsencrypt.org/zh-tw/docs/staging-environment/' target='letsencrypt_dryrun'>Read this article for more information.</a>"),
+    ));
+
+    push(@fields, new EBox::Types::HTML(
+        'fieldName' => 'certSearch',
+        'printableName' => __('Check Certificates'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+    ));
+
+    push(@fields, new EBox::Types::HTML(
+        'fieldName' => 'certbotCredentialsKey',
+        'printableName' => __('Check Certificates'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+    ));
 
     # ----------------------------------
 
@@ -467,12 +534,19 @@ sub updatedRowNotify
           , 1);
       $self->{pound_port} = $row->valueByName("port");
 
+      if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
+        my $libDN = $self->getLoadLibrary('LibraryDomainName');
+        $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
+        $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'));
+        $self->setNamedConfCertbot($row->valueByName('primaryDomainName'));
+        $self->setCertbotCommand($row);
+      }
+
       if ($row->valueByName('testDomainName') ne $oldRow->valueByName('testDomainName')) {
         my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteDomainName($oldRow->valueByName('testDomainName'));
         $libDN->addDomainName($row->valueByName('testDomainName'));
       }
-
     } catch {
         $self->getLibrary()->show_exceptions($_ . '( RouterSettings->updatedRowNotify() )');
     };
@@ -496,6 +570,76 @@ sub setWebadminPort
     };
 }
 
+##
+# 20220705 Pulipuli Chen
+##
+sub setNamedConfCertbot
+{
+    # 要在設定防火牆之前修改
+    my ($self, $domainName) = @_;
+
+    my @params = ();
+    push(@params, 'domainName' => $domainName);
+
+    $self->parentModule()->writeConfFile(
+        "/etc/bind/named.conf.certbot",
+        "dlllciasrouter/dns/named.conf.certbot.mas",
+        \@params,
+        { uid => '0', gid => '118', mode => '644' } # gid 118 bind
+    );
+}
+
+##
+# 20220705 Pulipuli Chen
+##
+sub setCertbotCommand
+{
+    # 要在設定防火牆之前修改
+    my ($self, $row) = @_;
+
+    # certbot test
+    # certbot certonly --force-renew --non-interactive --agree-tos -m mailto:pulipuli.chen@gmail.com --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d "test-zentyal-2022.pulipuli.info" -d "*.test-zentyal-2022.pulipuli.info" -v
+    # certbot certonly --non-interactive --agree-tos -m mailto:pulipuli.chen@gmail.com --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d "test-zentyal-2022.pulipuli.info" -d "*.test-zentyal-2022.pulipuli.info" -v
+
+    my $domainName = $row->valueByName("primaryDomainName");
+    my $email = $row->valueByName("certbotContactEMAIL");
+
+    if ($domainName ne "") {
+        my $command = 'certonly --non-interactive --agree-tos -m mailto:' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d "' . $domainName . '" -d "*.' . $domainName . '" -v';
+        my $commandDryRun = $command . ' --dry-run';
+
+        $row->elementByName('certbotCommand')->setValue($command);
+        $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
+        $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
+    }
+    else {
+        $row->elementByName('certbotCommand')->setValue("");
+        $row->elementByName('certbotCommandDryRun')->setValue("");
+        $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/" target="_blank">crt.sh</a>');
+    }
+}
+
+##
+# 20220705 Pulipuli Chen
+##
+sub setCertbotDNSCredentials
+{
+    # 要在設定防火牆之前修改
+    my ($self, $domainName) = @_;
+
+    my @params = ();
+    $self->parentModule()->writeConfFile(
+        "/etc/letsencrypt/dns_rfc2136_credentials.txt",
+        "dlllciasrouter/dns/dns_rfc2136_credentials.txt.mas",
+        \@params,
+        { uid => '0', gid => '0', mode => '600' }
+    );
+
+    my $key;
+    io('/etc/bind/Kcertbot.key') > $key;
+    $self->elementByName('certbotCredentialsKey')->setValue($key);
+}
+
 # 20150518 Pulipuli Chen
 # 只有第一次執行會用到
 sub initServicePort
@@ -517,6 +661,8 @@ sub initServicePort
 
         #dns server
         $libServ->addServicePort("dlllciasrouter-dns", 53, 0);
+
+        $self->setCertbotDNSCredentials();
 
     } catch {
         $self->getLibrary()->show_exceptions($_ . ' (RouterSettings->initServicePort())');

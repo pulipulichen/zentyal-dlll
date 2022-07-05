@@ -223,6 +223,52 @@ sub deleteDomainName
     };
 }
 
+# 20220705 Pulipuli Chen
+# 新增Wildcard Domain Name
+sub addWildcardDomainName
+{
+    my ($self, $domainName) = @_;
+
+    $self->addDomainName($domainName);
+
+    # 加上檔案
+    # /var/lib/bind/db._acme-challenge.test-zentyal-2022a.pulipuli.info
+    my $dbPath = '/var/lib/bind/db._acme-challenge.' . $domainName;
+
+    my @params = ();
+    push(@params, 'domainName' => $domainName);
+
+    $self->parentModule()->writeConfFile(
+        $dbPath,
+        "dlllciasrouter/dns/rfc2136-db._acme-challenge.mas",
+        \@params,
+
+        # uid 111 bind
+        # gid 118 bind
+        { uid => '111', gid => '118', mode => '644' }
+    );
+}
+
+##
+# 20220705 Pulipuli Chen
+##
+sub deleteWildcardDomainName
+{
+    my ($self, $domainName) = @_;
+
+    $self->deleteDomainName($domainName);
+
+    my $dbPath = '/var/lib/bind/db._acme-challenge.' . $domainName;
+    
+    if(-e $dbPath) {
+        unlink($dbPath);
+    }
+
+    if(-e $dbPath . ".jnl") {
+        unlink($dbPath);
+    }
+}
+
 ##
 # 20150515 Pulipuli Chen
 # 考慮到OtherDomainName，刪除他們

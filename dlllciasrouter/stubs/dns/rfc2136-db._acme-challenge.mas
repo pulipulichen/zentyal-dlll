@@ -1,0 +1,15 @@
+<%args>
+    $domainName
+</%args>
+$ORIGIN .
+$TTL 300	; 5 minutes
+_acme-challenge.<% $domainName %> IN SOA	<% $domainName %>. zentyal.<% $domainName %>. (
+				2021010258 ; serial
+				28800      ; refresh (8 hours)
+				7200       ; retry (2 hours)
+				604800     ; expire (1 week)
+				86400      ; minimum (1 day)
+				)
+			NS	<% $domainName %>.
+$TTL 120	; 2 minutes
+			TXT	"127.0.0.1"

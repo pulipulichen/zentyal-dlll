@@ -1,0 +1,24 @@
+<%args>
+    $domainName
+</%args>
+<%init>
+
+use IO::All;
+my $key;
+io('/etc/bind/Kcertbot.key') > $key;
+</%init>
+key "certbot." {
+        algorithm hmac-sha512;
+        secret "<% $key %>";
+};
+
+% if ( $domainName ne "" ) {
+zone "_acme-challenge.<% $domainName %>" {
+        type master;
+        file "/var/lib/bind/db._acme-challenge.<% $domainName %>";
+        check-names warn;
+        update-policy {
+                grant certbot. name _acme-challenge.<% $domainName %>. txt;
+        };
+};
+% }

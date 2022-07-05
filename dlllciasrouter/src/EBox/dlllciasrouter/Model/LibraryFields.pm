@@ -864,13 +864,19 @@ sub createFieldBoundLocalDNSwithHR
 sub createFieldProtocolRedirect
 {
     my ($self, $protocol, $enable) = @_;
+
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Boolean(
         'fieldName' => 'redir'.$protocol.'_enable',
         'printableName' => __('Enable '.$protocol.' Redirect'),
         'editable' => 1,
         'optional' => 0,
         'defaultValue' => $enable,
-        'hiddenOnSetter' => 0,
+        'hiddenOnSetter' => $hidden,
         'hiddenOnViewer' => 1,
     );
 
@@ -907,13 +913,18 @@ sub createFieldProtocolSecureSelection
 {
     my ($self, $protocol, $secureLevel) = @_;
 
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Select(
         'fieldName' => 'redir'.$protocol.'_secure',
         'printableName' => __('Secure level'),
         'populate' => \&_populateProtocolSecureSelection,
         'editable' => 1,
         'defaultValue' => $secureLevel,
-        'hiddenOnSetter' => 0,
+        'hiddenOnSetter' => $hidden,
         'hiddenOnViewer' => 1,
         'help' => '<a href="/dlllciasrouter/Composite/SettingComposite#RouterSettings_hr_ Zentyal_admin_hr_row" target="_blank">' . __('Set up Administrator List & Workplace List') . '</a>',
     );
@@ -946,6 +957,12 @@ sub _populateProtocolSecureSelection
 sub createFieldProtocolLog
 {
     my ($self, $protocol, $enable) = @_;
+
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Boolean(
         'fieldName' => 'redir'.$protocol.'_log',
         'printableName' => __('Enable Zentyal Log'),
@@ -953,7 +970,7 @@ sub createFieldProtocolLog
         'editable' => 1,
         'optional' => 0,
         'defaultValue' => $enable,
-        'hiddenOnSetter' => 0,
+        'hiddenOnSetter' => $hidden,
         'hiddenOnViewer' => 1,
     );
 
@@ -963,6 +980,12 @@ sub createFieldProtocolLog
 sub createFieldProtocolExternalPort
 {
     my ($self, $protocol, $unique, $extPort) = @_;
+
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Union(
         'fieldName' => 'redir'.$protocol.'_extPort',
         'printableName' => __($protocol.' External Port'),
@@ -977,7 +1000,7 @@ sub createFieldProtocolExternalPort
                 'printableName' => __('Other'),
                 'editable' => 1,),
             ],
-            hiddenOnSetter => 0,
+            hiddenOnSetter => $hidden,
             hiddenOnViewer => 1,
     );
 
@@ -1005,6 +1028,12 @@ sub createFieldProtocolExternalPortFixed
 sub createFieldProtocolInternalPort
 {
     my ($self, $protocol, $port) = @_;
+
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Union(
             'fieldName' => 'redir'.$protocol.'_intPort',
             'printableName' => __($protocol.' Internal Port'),
@@ -1021,7 +1050,7 @@ sub createFieldProtocolInternalPort
                 'printableName' => __('Other'),
                 'editable' => 1,),
             ],
-                hiddenOnSetter => 0,
+                hiddenOnSetter => $hidden,
                 hiddenOnViewer => 1,
         );
 
@@ -1036,12 +1065,17 @@ sub createFieldProtocolScheme
 {
     my ($self, $protocol, $unique, $defaultValue) = @_;
 
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Select(
             'fieldName' => 'redir'.$protocol.'_scheme',
             'printableName' => __($protocol.' Protocol Scheme'),
             'unique' => $unique,
             'populate' => \&_populateFieldProtocolScheme,
-            'hiddenOnSetter' => 0,
+            'hiddenOnSetter' => $hidden,
             'hiddenOnViewer' => 1,
             'defaultValue' => $defaultValue,
             'editable' => 1
@@ -1127,12 +1161,18 @@ sub createFieldPoundOnlyForLAN
 sub createFieldProtocolNote
 {
     my ($self, $protocol) = @_;
+
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Text(
         'fieldName' => 'redir'.$protocol.'_note',
         'printableName' => __($protocol.' Note'),
         'editable' => 0,
         'optional' =>1,
-        'hiddenOnSetter' => 0,
+        'hiddenOnSetter' => $hidden,
         'hiddenOnViewer' => 1,
         #'help' => __( 'Login account / password, or using this port for other usage'),
         'help' => $self->createFieldDescriptionEditor($protocol.'_Note'),
@@ -1146,12 +1186,18 @@ sub createFieldProtocolNote
 sub createFieldProtocolNoteWithHr
 {
     my ($self, $protocol) = @_;
+
+    my $hidden = 0;
+    if ($protocol eq "https") {
+        $hidden = 1;
+    }
+
     my $field = new EBox::Types::Text(
         'fieldName' => 'redir'.$protocol.'_note',
         'printableName' => __($protocol.' Note'),
         'editable' => 1,
         'optional' => 1,
-        'hiddenOnSetter' => 0,
+        'hiddenOnSetter' => $hidden,
         'hiddenOnViewer' => 1,
         'help' => ( 'Login account / password, or using this port for other usage <br /> <hr />'),
         'allowUnsafeChars' => 1,
@@ -1221,6 +1267,7 @@ sub createFieldHTTPNote
 sub createFieldHTTPSRedirect
 {
     my ($self, $enable) = @_;
+    # my $field = $self->createFieldProtocolRedirect("HTTPS", $enable);
     my $field = $self->createFieldProtocolRedirect("HTTPS", $enable);
     return $field;
 }

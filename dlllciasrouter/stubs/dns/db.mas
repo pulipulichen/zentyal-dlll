@@ -65,6 +65,7 @@ $TTL 3D
 %   foreach my $ip (@{$host->{ip}}) {
 <% $host->{name} %>     IN      A       <% $ip %>
 *.<% $domain->{name} %>.     IN      A       <% $ip %>
+_acme-challenge IN A        <% $ip %>
 %   }
 %   foreach my $alias (@{$host->{aliases}}) {
 <% $alias %>    IN      CNAME   <% $host->{name} %>

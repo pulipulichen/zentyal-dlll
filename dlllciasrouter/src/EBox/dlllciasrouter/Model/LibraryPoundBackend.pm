@@ -144,7 +144,8 @@ sub buildDomainHash
 
 sub writePoundConfig
 {
-  my ($self, $domainHash, $domainHTTPSHash) = @_;
+  # my ($self, $domainHash, $domainHTTPSHash) = @_;
+  my ($self, $domainHash) = @_;
 
   # ----------------------------
   # 設定
@@ -157,6 +158,7 @@ sub writePoundConfig
   my $alive = $settings->value('alive');
 
   my $timeout = $settings->value('timeout');
+  my $primaryDomainName = $settings->value('primaryDomainName');
   
   my $address = $settings->getExtIPAddress();
 
@@ -193,7 +195,8 @@ sub writePoundConfig
 
   #push(@servicesParams, 'services' => \@paramsArray);
   push(@servicesParams, 'domainHash' => $domainHash);
-  push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
+  #push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
+  push(@servicesParams, 'primaryDomainName' => $primaryDomainName);
 
   
   # ----------------------------
