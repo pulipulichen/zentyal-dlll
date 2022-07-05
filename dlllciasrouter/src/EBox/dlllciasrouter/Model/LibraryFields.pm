@@ -1163,8 +1163,10 @@ sub createFieldProtocolNote
     my ($self, $protocol) = @_;
 
     my $hidden = 0;
+    my $help = $self->createFieldDescriptionEditor($protocol.'_Note');
     if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
+        $help = '';
     }
 
     my $field = new EBox::Types::Text(
@@ -1175,7 +1177,7 @@ sub createFieldProtocolNote
         'hiddenOnSetter' => $hidden,
         'hiddenOnViewer' => 1,
         #'help' => __( 'Login account / password, or using this port for other usage'),
-        'help' => $self->createFieldDescriptionEditor($protocol.'_Note'),
+        'help' => $help,
         'allowUnsafeChars' => 1,
         #'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
     );
@@ -1188,8 +1190,10 @@ sub createFieldProtocolNoteWithHr
     my ($self, $protocol) = @_;
 
     my $hidden = 0;
+    my $HTMLSetter = '/ajax/setter/textareaSetter.mas';
     if ($protocol eq "https" || $protocol eq "HTTPS") {
         $hidden = 1;
+        $HTMLSetter = '';
     }
 
     my $field = new EBox::Types::Text(
@@ -1201,7 +1205,7 @@ sub createFieldProtocolNoteWithHr
         'hiddenOnViewer' => 1,
         'help' => ( 'Login account / password, or using this port for other usage <br /> <hr />'),
         'allowUnsafeChars' => 1,
-        'HTMLSetter' => '/ajax/setter/textareaSetter.mas',
+        'HTMLSetter' => $HTMLSetter,
     );
 
     return $field;
