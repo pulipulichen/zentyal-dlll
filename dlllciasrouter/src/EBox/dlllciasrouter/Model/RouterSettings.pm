@@ -109,7 +109,7 @@ sub _table
 
     push(@fields, $fieldsFactory->createFieldHeading('hr_ Zentyal_primary_domain_name', __('Zentyal Primary Domain Name')));
 
-    push(@fields, new EBox::Types::DomainName(
+    push(@fields, new EBox::Types::Text(
         "fieldName"     => 'primaryDomainName',
         "printableName" => __('Primary Domain Name'),
         "editable"      => 1,
