@@ -5,6 +5,7 @@ chmod +x ~/d.sh
 
 if [ -f ~/git-init.sh ] ; then
     # 已經下載的狀態下，我們只做程式碼的更新
+    clear
     bash ~/zentyal-dlll/dlllciasrouter/git_update_compile.sh
     echo "===================================";
     echo "DLLL-CIAS Router is updated"
