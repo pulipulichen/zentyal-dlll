@@ -11,7 +11,7 @@ use EBox::Sudo;
 use EBox::CGI::SaveChanges;
 
 use EBox::Exceptions::Internal;
-use EBox::Sudo;
+# use EBox::Sudo;
 
 use Try::Tiny;
 use File::Slurp;

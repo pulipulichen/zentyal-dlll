@@ -31,6 +31,7 @@ use EBox::Exceptions::DataExists;
 use LWP::Simple;
 use POSIX qw(strftime);
 use Try::Tiny;
+use EBox::Sudo;
 
 ##
 # 讀取LibraryToolkit
@@ -264,7 +265,8 @@ sub deleteWildcardDomainName
 
     my $dbPath = '/var/lib/bind/db._acme-challenge.' . $domainName;
     
-    unlink($dbPath, $dbPath . ".jnl");
+    # unlink($dbPath, $dbPath . ".jnl");
+    system('sudo rm -f ' . $dbPath . '*' );
 }
 
 ##
