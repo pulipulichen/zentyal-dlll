@@ -27,7 +27,7 @@ use Try::Tiny;
 
 use EBox::Types::Text;
 
-use IO::All;
+use File::Slurp;
 
 # Group: Public methods
 
@@ -635,8 +635,9 @@ sub setCertbotDNSCredentials
         { uid => '0', gid => '0', mode => '600' }
     );
 
-    my $key;
-    io('/etc/bind/Kcertbot.key') > $key;
+    #my $key;
+    #io('/etc/bind/Kcertbot.key') > $key;
+    my $key = read_file('/etc/bind/Kcertbot.key');
     $self->elementByName('certbotCredentialsKey')->setValue($key);
 }
 
