@@ -580,6 +580,8 @@ sub setNamedConfCertbot
 
     my @params = ();
     push(@params, 'domainName' => $domainName);
+    my $key = read_file('/etc/bind/Kcertbot.key');
+    push(@params, "key" => $key);
 
     $self->parentModule()->writeConfFile(
         "/etc/bind/named.conf.certbot",
@@ -628,6 +630,9 @@ sub setCertbotDNSCredentials
     my ($self, $domainName) = @_;
 
     my @params = ();
+    my $key = read_file('/etc/bind/Kcertbot.key');
+    push(@params, "key" => $key);
+
     $self->parentModule()->writeConfFile(
         "/etc/letsencrypt/dns_rfc2136_credentials.txt",
         "dlllciasrouter/dns/dns_rfc2136_credentials.txt.mas",
@@ -637,7 +642,6 @@ sub setCertbotDNSCredentials
 
     #my $key;
     #io('/etc/bind/Kcertbot.key') > $key;
-    my $key = read_file('/etc/bind/Kcertbot.key');
     $self->elementByName('certbotCredentialsKey')->setValue($key);
 }
 

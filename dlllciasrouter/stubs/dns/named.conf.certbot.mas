@@ -1,10 +1,7 @@
 <%args>
     $domainName
+    $key
 </%args>
-<%init>
-use File::Slurp;
-my $key = read_file('/etc/bind/Kcertbot.key');
-</%init>
 key "certbot." {
         algorithm hmac-sha512;
         secret "<% $key %>";
