@@ -162,9 +162,9 @@ sub _table
 
     push(@fields, new EBox::Types::Text(
         'fieldName' => 'certbotCredentialsKey',
-        'printableName' => __('Check Certificates'),
+        'printableName' => __('Certbot Certificates Key'),
         'editable' => 0,
-        'optional' => 1,
+        'optional' => 0,
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
