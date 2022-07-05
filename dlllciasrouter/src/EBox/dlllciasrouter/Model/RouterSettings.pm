@@ -138,7 +138,7 @@ sub _table
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-        "help" => __("Becare of Rate Limits: 25 / pre week. <a href='https://letsencrypt.org/zh-tw/docs/rate-limits/' target='letsencrypt'>Read this article for more information.</a>"),
+        "help" => "Becare of Rate Limits: 25 / pre week. <a href='https://letsencrypt.org/zh-tw/docs/rate-limits/' target='letsencrypt'>Read this article for more information.</a>",
         'allowUnsafeChars' => 1,
     ));
 
@@ -150,7 +150,7 @@ sub _table
         'hiddenOnSetter' => 0,
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-        "help" => __("Becare of Rate Limits: 60 / pre hour. <a href='https://letsencrypt.org/zh-tw/docs/staging-environment/' target='letsencrypt_dryrun'>Read this article for more information.</a>"),
+        "help" => "Becare of Rate Limits: 60 / pre hour. <a href='https://letsencrypt.org/zh-tw/docs/staging-environment/' target='letsencrypt_dryrun'>Read this article for more information.</a>",
         'allowUnsafeChars' => 1,
     ));
 
@@ -174,7 +174,7 @@ sub _table
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
         'allowUnsafeChars' => 1,
-        'help' => __('<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/kubernetes_cert-manager_rfc2136.md" target="_blank">Usage</a>')
+        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/kubernetes_cert-manager_rfc2136.md" target="_blank">Usage</a>'
     ));
 
     # ----------------------------------
