@@ -1,3 +1,8 @@
+if [ "$EUID" -eq 0 ]
+  then echo "Please don't run as root"
+  exit
+fi
+
 # 啟用Sudo
 sudo ls >> /dev/null
 
