@@ -174,6 +174,7 @@ sub _table
         'hiddenOnViewer' => 1,
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
         'allowUnsafeChars' => 1,
+        'help' => __('<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/kubernetes_cert-manager_rfc2136.md" target="_blank">Usage</a>')
     ));
 
     # ----------------------------------
