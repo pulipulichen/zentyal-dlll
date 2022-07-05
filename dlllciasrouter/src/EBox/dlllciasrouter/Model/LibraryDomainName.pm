@@ -260,11 +260,13 @@ sub deleteWildcardDomainName
 
     my $dbPath = '/var/lib/bind/db._acme-challenge.' . $domainName;
     
-    try {
+    try 
+    {
         unlink($dbPath);
     } catch {}
 
-    try {
+    try 
+    {
         unlink($dbPath . ".jnl");
     } catch {}
 }
