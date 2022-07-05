@@ -110,7 +110,7 @@ sub setUpdatePoundCfg
 
       # --------------------
 
-      $self->writePoundConfig($domainHash, $domainHTTPSHash);
+      $self->writePoundConfig($domainHash, $domainHTTPSHash, $domainHTTPSHash);
       $self->updateVMIDConfig($vmHash);
 
       # --------------------
@@ -144,8 +144,7 @@ sub buildDomainHash
 
 sub writePoundConfig
 {
-  # my ($self, $domainHash, $domainHTTPSHash) = @_;
-  my ($self, $domainHash) = @_;
+  my ($self, $domainHash, $domainHTTPSHash) = @_;
 
   # ----------------------------
   # 設定
@@ -195,7 +194,7 @@ sub writePoundConfig
 
   #push(@servicesParams, 'services' => \@paramsArray);
   push(@servicesParams, 'domainHash' => $domainHash);
-  #push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
+  push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
   push(@servicesParams, 'primaryDomainName' => $primaryDomainName);
 
   
