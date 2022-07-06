@@ -189,8 +189,7 @@ End
 % print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
 ListenHTTPS
 	Address 0.0.0.0
-	Port	<% $port %>
-  Port    portHTTPS
+	Port	<% $portHTTPS %>
   Cert    "/etc/pound/cert/dlllciasrouter.pem"
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
