@@ -628,11 +628,11 @@ sub setCertbotCommand
         my $commandHeader = 'certbot certonly --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
         my $commandHeaderDryRun = $commandHeader . ' --dry-run';
 
-        my $command = "<pre>" . $commandHeader . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>\n' 
-            . "<pre>" . $commandHeader . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"</pre>\n'
+        my $command = "<pre>" . $commandHeader . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>' 
+            . "<pre>" . $commandHeader . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"</pre>'
             . "<pre>" . $commandHeader . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"</pre>' ;
-        my $commandDryRun = "<pre>" . $commandHeaderDryRun . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>\n' 
-            . "<pre>" . $commandHeaderDryRun . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"</pre>\n'
+        my $commandDryRun = "<pre>" . $commandHeaderDryRun . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>' 
+            . "<pre>" . $commandHeaderDryRun . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"</pre>'
             . "<pre>" . $commandHeaderDryRun . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"</pre>' ;
 
         # $row->elementByName('certbotCommand')->setValue($command);
