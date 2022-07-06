@@ -631,12 +631,12 @@ sub setCertbotCommand
         my $commandHeader2 = ' --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-pound.sh --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
         my $commandHeader2DryRun = $commandHeader2 . ' --dry-run';
 
-        my $command = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . $commandHeader2 .  '"</pre>' 
-            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . $commandHeader2 .  '"</pre>'
-            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . $commandHeader2 .  '"</pre>' ;
-        my $commandDryRun = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . $commandHeader2 .  '"</pre>' 
-            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . $commandHeader2 .  '"</pre>'
-            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . $commandHeader2 .  '"</pre>' ;
+        my $command = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . '"' . $commandHeader2 .  '</pre>' 
+            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"' $commandHeader2 .  '</pre>'
+            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"' $commandHeader2 .  '</pre>' ;
+        my $commandDryRun = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . '"' $commandHeader2DryRun . '</pre>' 
+            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"' $commandHeader2DryRun . '</pre>'
+            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"' $commandHeader2DryRun . '</pre>' ;
 
         # $row->elementByName('certbotCommand')->setValue($command);
         # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
