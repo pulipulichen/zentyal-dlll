@@ -190,7 +190,7 @@ End
 ListenHTTPS
 	Address 0.0.0.0
 	Port	<% $portHTTPS %>
-  Cert    "/etc/pound/cert/dlllciasrouter.pem"
+  Cert    "/etc/pound/cert/<% $primaryDomainName %>.pem"
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		4
