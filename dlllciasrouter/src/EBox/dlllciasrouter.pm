@@ -60,6 +60,9 @@ sub dlllciasrouter_init
         $libStorage->initNFSServer();
         $libStorage->startNFSServer();
 
+        my $LibraryTestLocalhost = $self->model("LibraryTestLocalhost");
+        $LibraryTestLocalhost->startupTestServer();
+
         my $libHTML = $self->model("LibraryHTML");
         $libHTML->setPublicCSS();
         $libHTML->initTemplateMas();
