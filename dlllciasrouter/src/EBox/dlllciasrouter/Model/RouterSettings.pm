@@ -121,7 +121,7 @@ sub _table
         'allowUnsafeChars' => 1,
     ));
 
-    push(@fields, new EBox::Types::IPAddr(
+    push(@fields, new EBox::Types::Text(
         "fieldName"     => 'primaryDomainNameIP',
         "printableName" => __('Public IP'),
         "editable"      => 1,
