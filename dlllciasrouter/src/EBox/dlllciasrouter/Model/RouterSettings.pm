@@ -28,7 +28,7 @@ use Try::Tiny;
 use EBox::Types::Text;
 
 use File::Slurp;
-use String::Util qw(trim);
+use Text::Trim qw(trim);
 
 # Group: Public methods
 
