@@ -121,13 +121,13 @@ sub _table
         'allowUnsafeChars' => 1,
     ));
 
-    push(@fields, new EBox::Types::Text(
+    push(@fields, new EBox::Types::IPAddr(
         "fieldName"     => 'primaryDomainNameIP',
         "printableName" => __('Public IP'),
         "editable"      => 1,
         "unique"        => 1,
         "defaultValue" => "",
-        "optional" => 1,
+        "optional" => 0,
     ));
 
     push(@fields, new EBox::Types::MailAddress(
