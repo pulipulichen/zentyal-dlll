@@ -85,6 +85,10 @@ spec:
   dnsNames:
     - <PRIMARY_DOMAIN_NAME>
     - "*.<PRIMARY_DOMAIN_NAME>"
+    - "paas.<PRIMARY_DOMAIN_NAME>"
+    - "*.paas.<PRIMARY_DOMAIN_NAME>"
+    - "paas-vpn.<PRIMARY_DOMAIN_NAME>"
+    - "*.paas-vpn.<PRIMARY_DOMAIN_NAME>"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer

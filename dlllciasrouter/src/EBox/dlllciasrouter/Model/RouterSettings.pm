@@ -138,7 +138,7 @@ sub _table
         'allowUnsafeChars' => 1,
     ));
 
-    push(@fields, new EBox::Types::Text(
+    push(@fields, new EBox::Types::HTML(
         'fieldName' => 'certbotCommand',
         'printableName' => __('Certbot Command (Production)'),
         'editable' => 0,
@@ -150,7 +150,7 @@ sub _table
         'allowUnsafeChars' => 1,
     ));
 
-    push(@fields, new EBox::Types::Text(
+    push(@fields, new EBox::Types::HTML(
         'fieldName' => 'certbotCommandDryRun',
         'printableName' => __('Certbot Command (for test)'),
         'editable' => 0,
@@ -639,8 +639,8 @@ sub setCertbotCommand
         # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
         # $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
 
-        $self->setValue('certbotCommand', $command);
-        $self->setValue('certbotCommandDryRun', $commandDryRun);
+        $self->setValue('certbotCommand', '<pre>' . $command . '</pre>');
+        $self->setValue('certbotCommandDryRun', '<pre>' . $commandDryRun . '</pre>');
         $self->setValue('certSearch', '<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
     }
     else {
