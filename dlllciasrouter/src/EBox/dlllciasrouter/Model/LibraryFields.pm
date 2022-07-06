@@ -258,6 +258,7 @@ sub createFieldInternalVirtualMachineIdentify
             ],
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
+            optional => 1
         );
 
     return $field;
