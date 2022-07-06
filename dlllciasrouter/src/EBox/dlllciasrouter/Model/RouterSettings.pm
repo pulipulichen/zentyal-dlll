@@ -614,7 +614,7 @@ sub setCertbotCommand
     my $email = $row->valueByName("certbotContactEMAIL");
 
     if ($domainName ne "") {
-        my $command = 'certonly --non-interactive --agree-tos -m mailto:' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d "' . $domainName . '" -d "*.' . $domainName . '" -v';
+        my $command = 'certonly --non-interactive --agree-tos -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d "' . $domainName . '" -d "*.' . $domainName . '" -v';
         my $commandDryRun = $command . ' --dry-run';
 
         # $row->elementByName('certbotCommand')->setValue($command);
