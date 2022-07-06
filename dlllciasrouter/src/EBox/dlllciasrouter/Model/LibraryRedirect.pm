@@ -232,7 +232,7 @@ sub getPortHeader
     if ($ipaddr eq "127.0.0.1") {
         return "6432";
     }
-    
+
     my @parts = split('\.', $ipaddr);
     my $partA = $parts[0];
     my $partB = $parts[1];
@@ -441,6 +441,10 @@ sub getProtocolIntPort
         $fieldName = 'port';
     }
     my $intPort = $row->valueByName($fieldName);
+
+    if ($row->valueByName('vmIdentify') eq "127.0.0.1" && ($protocol eq 'HTTP' || $protocol eq 'POUND')) {
+        return 888;
+    }
 
     return $intPort;
 }
