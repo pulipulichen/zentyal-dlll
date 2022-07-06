@@ -54,6 +54,10 @@ sub checkInternalIP
     my $options = $self->getOptions();
 
     my $ipaddr = $row->valueByName('ipaddr');
+    if ($ipaddr eq "127.0.0.01") {
+        return 1;
+    }
+
     my @parts = split('\.', $ipaddr);
     my $partA = $parts[0];
     my $partB = $parts[1];
