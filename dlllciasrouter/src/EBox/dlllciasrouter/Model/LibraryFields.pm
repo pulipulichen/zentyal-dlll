@@ -1025,13 +1025,22 @@ sub createFieldProtocolExternalPortFixed
 {
     my ($self, $protocol, $extPort) = @_;
 
+    if ($protocol eq "https" || $protocol eq "HTTPS") {
+        return new EBox::Types::Port(
+            'fieldName' => 'redir'.$protocol.'_extPort',
+            'printableName' => __($protocol.' External Port'),
+            'unique' => 1,
+            'editable' => 0,
+            'optional' => 1
+        );
+    }
+
     my $field = new EBox::Types::Port(
             'fieldName' => 'redir'.$protocol.'_extPort',
             'printableName' => __($protocol.' External Port'),
             'unique' => 1,
             'defaultValue' => $extPort,
             'editable' => 0,
-            'optional' => 1
         );
 
     return $field;
