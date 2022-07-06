@@ -289,7 +289,7 @@ sub getServiceParam
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
 
-        if ($useTestLocalhost == 1 || $certbotMode == 1) {
+        if ($row->valueByName("vmIdentify") eq '127.0.0.1') {
           $ipaddrValue = "127.0.0.1";
           $portValue = 888;
           $httpToHttpsValue = 0;
