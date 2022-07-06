@@ -632,11 +632,11 @@ sub setCertbotCommand
         my $commandHeader2DryRun = $commandHeader2 . ' --dry-run';
 
         my $command = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . '"' . $commandHeader2 .  '</pre>' 
-            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"' $commandHeader2 .  '</pre>'
-            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"' $commandHeader2 .  '</pre>' ;
-        my $commandDryRun = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . '"' $commandHeader2DryRun . '</pre>' 
-            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"' $commandHeader2DryRun . '</pre>'
-            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"' $commandHeader2DryRun . '</pre>' ;
+            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"' . $commandHeader2 .  '</pre>'
+            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"' . $commandHeader2 .  '</pre>' ;
+        my $commandDryRun = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . '"' . $commandHeader2DryRun . '</pre>' 
+            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"' . $commandHeader2DryRun . '</pre>'
+            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"' . $commandHeader2DryRun . '</pre>' ;
 
         # $row->elementByName('certbotCommand')->setValue($command);
         # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
