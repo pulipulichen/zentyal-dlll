@@ -56,7 +56,7 @@ sub checkInternalIP
     my $options = $self->getOptions();
 
     my $ipaddr = $row->valueByName('ipaddr');
-    if ($ipaddr eq "127.0.0.01") {
+    if ($ipaddr eq "127.0.0.1") {
         return 1;
     }
 
