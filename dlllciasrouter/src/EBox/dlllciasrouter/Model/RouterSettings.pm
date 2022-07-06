@@ -639,7 +639,7 @@ sub setCertbotCommand
         # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
         # $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
 
-        $self->setValue('certbotCommand',  $command ;
+        $self->setValue('certbotCommand',  $command );
         $self->setValue('certbotCommandDryRun', $commandDryRun );
         $self->setValue('certSearch', '<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
     }
