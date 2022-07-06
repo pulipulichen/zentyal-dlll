@@ -373,9 +373,16 @@ sub getServiceParam
                 $httpsPortValue = $libRedir->getServerMainPort($ipaddrValue);
                 $httpSecurityValue = $dnRow->valueByName('redirPOUND_secure');
                 $httpPortValue = $httpsPortValue;
+
                 #$httpPortValue = $dnRow->valueByName('port');
                 #$httpsPortValue = $httpPortValue;
                 $portValue = $dnRow->valueByName('port');
+
+                if ($row->valueByName("vmIdentify") eq '127.0.0.1') {
+                  $ipaddrValue = "127.0.0.1";
+                  $portValue = 888;
+                  $httpPortValue = 888;
+                }
 
                 # -----------------
 
