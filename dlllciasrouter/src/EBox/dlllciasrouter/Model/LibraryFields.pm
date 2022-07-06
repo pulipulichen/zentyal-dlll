@@ -254,7 +254,16 @@ sub createFieldInternalVirtualMachineIdentify
                     'printableName' => __('Internal IP Address'),
                     'editable' => 1,
                     'unique' => $unique,
-                )
+                ),
+                new EBox::Types::Text(
+                    #'fieldName' => 'ipaddr',
+                    'fieldName' => 'vmIdentify_test',
+                    'printableName' => __('Test'),
+                    # 'defaultValue' => '',
+                    "defaultValue" => "0.0.0.0",
+                    'editable' => 0,
+                    'unique' => $unique,
+                ),
             ],
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,

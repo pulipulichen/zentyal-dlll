@@ -49,7 +49,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldDomainName());
     push(@fields, $fieldsFactory->createFieldBoundLocalDNS());
 
-    push(@fields, $fieldsFactory->createFieldUseTestLocalhost());
+    # push(@fields, $fieldsFactory->createFieldUseTestLocalhost());
 
     if ($options->{enableVMID} == 0) {
         push(@fields, $fieldsFactory->createFieldInternalIPAddressHideView(1, $options->{IPHelp}, $options->{IPTemplate}));

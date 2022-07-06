@@ -263,8 +263,9 @@ sub getServiceParam
         my $domainNameValue = $row->valueByName('domainName');
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
-        my $useTestLocalhost = $row->valueByName('useTestLocalhost');
-
+        #my $useTestLocalhost = $row->valueByName('useTestLocalhost');
+        my $useTestLocalhost = ($row->valueByName("vmIdentify") eq '0.0.0.0');
+        
         # -----------------------------
         my $portValue = $row->valueByName('port');
         #my $httpToHttpsValue = $row->valueByName('httpToHttps');
