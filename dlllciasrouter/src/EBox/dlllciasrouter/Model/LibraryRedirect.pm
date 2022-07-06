@@ -270,7 +270,7 @@ sub getPortHeaderWithoutCheck
     my ($self, $ipaddr) = @_;
 
     if ($ipaddr eq "127.0.0.1") {
-        return "6000";
+        return "6432";
     }
 
     # 變成ID前幾碼
