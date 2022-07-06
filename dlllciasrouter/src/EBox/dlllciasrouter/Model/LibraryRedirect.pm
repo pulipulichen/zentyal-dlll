@@ -228,6 +228,11 @@ sub getPortHeader
 
     # 變成ID前幾碼
     my $ipaddr = $row->valueByName('ipaddr');
+
+    if ($ipaddr eq "127.0.0.1") {
+        return "6432";
+    }
+    
     my @parts = split('\.', $ipaddr);
     my $partA = $parts[0];
     my $partB = $parts[1];

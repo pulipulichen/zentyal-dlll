@@ -425,6 +425,10 @@ sub isDomainNameEnable
 sub getVMID
 {
     my ($self, $ipaddr) = @_;
+
+    if ($ipaddr eq "127.0.0.1") {
+        return "6432";
+    }
     
     my $vmid;
 
