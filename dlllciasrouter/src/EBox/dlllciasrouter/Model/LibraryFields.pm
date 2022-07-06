@@ -1031,6 +1031,7 @@ sub createFieldProtocolExternalPortFixed
             'unique' => 1,
             'defaultValue' => $extPort,
             'editable' => 0,
+            'optional' => 1
         );
 
     return $field;
