@@ -138,7 +138,7 @@ sub _table
         'allowUnsafeChars' => 1,
     ));
 
-    push(@fields, new EBox::Types::HTML(
+    push(@fields, new EBox::Types::Text(
         'fieldName' => 'certbotCommand',
         'printableName' => __('Certbot Command (Production)'),
         'editable' => 0,
@@ -150,7 +150,7 @@ sub _table
         'allowUnsafeChars' => 1,
     ));
 
-    push(@fields, new EBox::Types::HTML(
+    push(@fields, new EBox::Types::Text(
         'fieldName' => 'certbotCommandDryRun',
         'printableName' => __('Certbot Command (for test)'),
         'editable' => 0,
