@@ -119,12 +119,12 @@ sub _table
 
     push(@fields, new EBox::Types::Text(
         "fieldName"     => 'primaryDomainName',
-        "printableName" => __('Primary Domain Name'),
+        "printableName" => __('Primary Domain Name (Name Server)'),
         "editable"      => 1,
         "unique"        => 1,
         "defaultValue" => "",
         "optional" => 0,
-        "help" => __("The primary domain name will be used to request certificates from Let's Encrypt and to reverse proxy Pound."),
+        "help" => __("The primary domain name will be used to request certificates from Let's Encrypt and to reverse proxy Pound. Make sure the primary domain name has NS and A record on the parent DNS."),
         'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
         'allowUnsafeChars' => 1,
     ));
@@ -187,7 +187,7 @@ sub _table
 
     # ----------------------------------
 
-    push(@fields, $fieldsFactory->createFieldHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
 
     # @TODO 20170727 這邊應該改成按下去就立刻備份的HTML
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Backup?selected=local#backup_description", 1));
