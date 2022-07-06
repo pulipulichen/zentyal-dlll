@@ -115,79 +115,7 @@ sub _table
 
     # ----------------------------------
 
-    push(@fields, $fieldsFactory->createFieldHeading('hr_ Zentyal_primary_domain_name', __('Zentyal Primary Domain Name')));
-
-    push(@fields, new EBox::Types::Text(
-        "fieldName"     => 'primaryDomainName',
-        "printableName" => __('Primary Domain Name (Name Server)'),
-        "editable"      => 1,
-        "unique"        => 1,
-        "defaultValue" => "",
-        "optional" => 0,
-        "help" => __("The primary domain name will be used to request certificates from Let's Encrypt and to reverse proxy Pound. Make sure the primary domain name has NS and A record on the parent DNS."),
-        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-        'allowUnsafeChars' => 1,
-    ));
-
-    push(@fields, new EBox::Types::MailAddress(
-        'fieldName' => 'certbotContactEMAIL',
-        'printableName' => __('Certbot notfiy Email'),
-        'editable' => 1,
-        'optional' => 0,
-        'defaultValue' => 'pulipuli.chen@gmail.com',
-        'allowUnsafeChars' => 1,
-    ));
-
-    push(@fields, new EBox::Types::Text(
-        'fieldName' => 'certbotCommand',
-        'printableName' => __('Certbot Command (Production)'),
-        'editable' => 0,
-        'optional' => 1,
-        'hiddenOnSetter' => 0,
-        'hiddenOnViewer' => 1,
-        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-        "help" => "Becare of Rate Limits: 25 / pre week. <a href='https://letsencrypt.org/zh-tw/docs/rate-limits/' target='letsencrypt'>Read this article for more information.</a>",
-        'allowUnsafeChars' => 1,
-    ));
-
-    push(@fields, new EBox::Types::Text(
-        'fieldName' => 'certbotCommandDryRun',
-        'printableName' => __('Certbot Command (for test)'),
-        'editable' => 0,
-        'optional' => 1,
-        'hiddenOnSetter' => 0,
-        'hiddenOnViewer' => 1,
-        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-        "help" => "Becare of Rate Limits: 60 / pre hour. <a href='https://letsencrypt.org/zh-tw/docs/staging-environment/' target='letsencrypt_dryrun'>Read this article for more information.</a>",
-        'allowUnsafeChars' => 1,
-    ));
-
-    push(@fields, new EBox::Types::HTML(
-        'fieldName' => 'certSearch',
-        'printableName' => __('Check Certificates'),
-        'editable' => 0,
-        'optional' => 1,
-        'hiddenOnSetter' => 0,
-        'hiddenOnViewer' => 1,
-        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-        'allowUnsafeChars' => 1,
-    ));
-
-    push(@fields, new EBox::Types::Text(
-        'fieldName' => 'certbotCredentialsKey',
-        'printableName' => __('Certbot Certificates Key'),
-        'editable' => 0,
-        'optional' => 0,
-        'hiddenOnSetter' => 0,
-        'hiddenOnViewer' => 1,
-        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
-        'allowUnsafeChars' => 1,
-        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/kubernetes_cert-manager_rfc2136.md" target="_blank">Usage</a>'
-    ));
-
-    # ----------------------------------
-
-    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
+    push(@fields, $fieldsFactory->createFieldHeading('hr_ Zentyal_backup', __('Zentyal Backup ')));
 
     # @TODO 20170727 這邊應該改成按下去就立刻備份的HTML
     push(@fields, $fieldsFactory->createFieldConfigLinkButton($tableName."_cloudBackup", __('Configuration Backup'), "/SysInfo/Backup?selected=local#backup_description", 1));
@@ -346,15 +274,88 @@ sub _table
             optional => 0,
         ));
 
+    
+    push(@fields, new EBox::Types::Text(
+        "fieldName"     => 'primaryDomainName',
+        "printableName" => __('Primary Domain Name (Name Server)'),
+        "editable"      => 1,
+        "unique"        => 1,
+        "defaultValue" => "",
+        "optional" => 0,
+        "help" => __("The primary domain name will be used to request certificates from Let's Encrypt and to reverse proxy Pound. Make sure the primary domain name has NS and A record on the parent DNS."),
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
+    ));
+
+    
     push(@fields, new EBox::Types::HostIP(
             fieldName     => 'anotherDNSIP',
-            printableName => __('Another DNS IP'),
+            printableName => __('Primary IP Address (Name Server IP)'),
             help => __('If you want to use another IP which is different from the external network interface, you can custom the DNS IP in this field.'),
             editable      => 1,
             unique        => 1,
             #defaultValue => 64489,
             optional => 1,
         ));
+
+
+    push(@fields, new EBox::Types::MailAddress(
+        'fieldName' => 'certbotContactEMAIL',
+        'printableName' => __('Certbot notfiy Email'),
+        'editable' => 1,
+        'optional' => 0,
+        'defaultValue' => 'pulipuli.chen@gmail.com',
+        'allowUnsafeChars' => 1,
+    ));
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName' => 'certbotCommand',
+        'printableName' => __('Certbot Command (Production)'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        "help" => "Becare of Rate Limits: 25 / pre week. <a href='https://letsencrypt.org/zh-tw/docs/rate-limits/' target='letsencrypt'>Read this article for more information.</a>",
+        'allowUnsafeChars' => 1,
+    ));
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName' => 'certbotCommandDryRun',
+        'printableName' => __('Certbot Command (for test)'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        "help" => "Becare of Rate Limits: 60 / pre hour. <a href='https://letsencrypt.org/zh-tw/docs/staging-environment/' target='letsencrypt_dryrun'>Read this article for more information.</a>",
+        'allowUnsafeChars' => 1,
+    ));
+
+    push(@fields, new EBox::Types::HTML(
+        'fieldName' => 'certSearch',
+        'printableName' => __('Check Certificates'),
+        'editable' => 0,
+        'optional' => 1,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
+    ));
+
+    push(@fields, new EBox::Types::Text(
+        'fieldName' => 'certbotCredentialsKey',
+        'printableName' => __('Certbot Certificates Key'),
+        'editable' => 0,
+        'optional' => 0,
+        'hiddenOnSetter' => 0,
+        'hiddenOnViewer' => 1,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
+        'help' => '<a href="https://github.com/pulipulichen/zentyal-dlll/blob/master/guide/kubernetes_cert-manager_rfc2136.md" target="_blank">Usage</a>'
+    ));
+
+
     # ----------------------------------------------------------
 
     push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_PoundConfig', __('Pound Configuration')));
