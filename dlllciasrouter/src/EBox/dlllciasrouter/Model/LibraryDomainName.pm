@@ -263,10 +263,11 @@ sub deleteWildcardDomainName
         return 1;
     }
 
-    my $dbPath = '/var/lib/bind/db._acme-challenge.' . $domainName;
+    # my $dbPath = '/var/lib/bind/db._acme-challenge.' . $domainName;
     
     # unlink($dbPath, $dbPath . ".jnl");
-    system('sudo rm -f ' . $dbPath . '*' );
+    # system('sudo rm -f ' . $dbPath . '*' );
+    system( 'sudo rm -f /var/lib/bind/db._acme-challenge.*' );
 }
 
 ##

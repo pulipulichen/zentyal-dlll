@@ -1,3 +1,38 @@
+# Variables
+
+* <SECRET_KEY>: The content of `/etc/bind/Kcertbot.key`.
+* <EMAIL>: Your email.
+* <ZENTYAL_IP>: Zentyal IP.
+* <PRIMARY_DOMAIN_NAME>: For example: `dlll.nccu.edu.tw`.
+* <KCERTBOT_FILENAME>: In `/etc/bind/Kcertbot.+165+***`, without `.key` or `.private`.
+* <TXT_TEST>: For example: `9.9.9.9`
+
+# Test dns-rfc2136 on localhost
+
+## Add TXT record to DNS
+
+````bash
+nsupdate -k /etc/bind/<KCERTBOT_FILENAME>
+server 127.0.0.1
+update add _acme-challenge.<PRIMARY_DOMAIN_NAME> 86400 TXT <TXT_TEST>
+send
+quit
+````
+
+## Check if the TXT record is added successfully
+
+````bash
+dig @127.0.0.1 _acme-challenge.<PRIMARY_DOMAIN_NAME> txt
+````
+
+If you see the following message, it means success:
+
+````
+;; ANSWER SECTION
+_acme-challenge.<PRIMARY_DOMAIN_NAME>. 21600 IN TXT "<TXT_TEST>"
+````
+
+# Install Cert-Manager on Kubernetes
 
 Reference:
 https://rkevin.dev/blog/automating-wildcard-certificate-issuing-in-k8s/
@@ -10,7 +45,7 @@ metadata:
   namespace: https-cert
 type: Opaque
 stringData:
-  TSIG_SECRET: <REDACTED>
+  TSIG_SECRET: <SECRET_KEY>
 ````
 
 ````yaml
@@ -30,7 +65,7 @@ spec:
           ingress: {}
       - dns01:
           rfc2136:
-            nameserver: <ZENTYAL-IP>
+            nameserver: <ZENTYAL_IP>
             tsigKeyName: cert-manager
             tsigAlgorithm: HMACSHA256
             tsigSecretSecretRef:
@@ -48,8 +83,8 @@ spec:
   commonName: rkevin.dev
   secretName: primary-cert-secret
   dnsNames:
-    - dlll.nccu.edu.tw
-    - "*.dlll.nccu.edu.tw"
+    - <PRIMARY_DOMAIN_NAME>
+    - "*.<PRIMARY_DOMAIN_NAME>"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
