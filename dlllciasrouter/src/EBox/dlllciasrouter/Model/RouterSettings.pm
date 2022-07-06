@@ -628,19 +628,19 @@ sub setCertbotCommand
         my $commandHeader = 'certbot certonly --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
         my $commandHeaderDryRun = $commandHeader . ' --dry-run';
 
-        my $command = $commandHeader . ' -d "' . $domainName . '" -d "*.' . $domainName . '"\n' 
-            . $commandHeader . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"\n'
-            . $commandHeader . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"' ;
-        my $commandDryRun = $commandHeaderDryRun . ' -d "' . $domainName . '" -d "*.' . $domainName . '"\n' 
-            . $commandHeaderDryRun . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"\n'
-            . $commandHeaderDryRun . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"' ;
+        my $command = "<pre>" . $commandHeader . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>\n' 
+            . "<pre>" . $commandHeader . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"</pre>\n'
+            . "<pre>" . $commandHeader . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"</pre>' ;
+        my $commandDryRun = "<pre>" . $commandHeaderDryRun . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>\n' 
+            . "<pre>" . $commandHeaderDryRun . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"</pre>\n'
+            . "<pre>" . $commandHeaderDryRun . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"</pre>' ;
 
         # $row->elementByName('certbotCommand')->setValue($command);
         # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
         # $row->elementByName('certSearch')->setValue('<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
 
-        $self->setValue('certbotCommand', '<pre>' . $command . '</pre>');
-        $self->setValue('certbotCommandDryRun', '<pre>' . $commandDryRun . '</pre>');
+        $self->setValue('certbotCommand',  $command ;
+        $self->setValue('certbotCommandDryRun', $commandDryRun );
         $self->setValue('certSearch', '<a href="https://crt.sh/?q=' . $domainName . '" target="crt.sh.' . $domainName . '">crt.sh</a>');
     }
     else {
