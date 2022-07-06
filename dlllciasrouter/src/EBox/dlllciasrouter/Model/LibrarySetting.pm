@@ -164,7 +164,7 @@ sub updatedRowNotify
         my $logButton = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$intIpaddr.'">LOGS</a>';
 
         my $sshLink = "";
-        if ($row->valueByName('redirSSH_enable') == 1) {
+        if ($row->valueByName('vmIdentify') ne '127.0.0.1' && $row->valueByName('redirSSH_enable') == 1) {
             $sshLink =  '<br /><a href="ssh://' . $domainName . ":" . $options->{externalSSHPortDefaultValue} . '" target="_blank">' . "ssh://" . $domainName . ":" . $options->{externalSSHPortDefaultValue} . "</a>";
         }
 

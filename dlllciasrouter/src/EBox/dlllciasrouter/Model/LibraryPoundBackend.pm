@@ -294,6 +294,7 @@ sub getServiceParam
           $portValue = 888;
           $httpToHttpsValue = 0;
           $httpPortValue = 888;
+          
         }
 
         # -------------------------
