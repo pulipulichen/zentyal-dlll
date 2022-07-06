@@ -228,9 +228,14 @@ sub deleteDomainName
 # 新增Wildcard Domain Name
 sub addWildcardDomainName
 {
-    my ($self, $domainName) = @_;
+    my ($self, $domainName, $ipaddr) = @_;
 
-    $self->addDomainName($domainName);
+    if ($ipaddr eq '') {
+        $self->addDomainName($domainName);
+    }
+    else {
+        $self->addDomainNameWithIP($domainName, $ipaddr);
+    }
 
     # 加上檔案
     # /var/lib/bind/db._acme-challenge.test-zentyal-2022a.pulipuli.info

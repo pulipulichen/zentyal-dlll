@@ -121,6 +121,15 @@ sub _table
         'allowUnsafeChars' => 1,
     ));
 
+    push(@fields, new EBox::Types::IPAddr(
+        "fieldName"     => 'primaryDomainNameIP',
+        "printableName" => __('Public IP'),
+        "editable"      => 1,
+        "unique"        => 1,
+        "defaultValue" => "",
+        "optional" => 1,
+    ));
+
     push(@fields, new EBox::Types::MailAddress(
         'fieldName' => 'certbotContactEMAIL',
         'printableName' => __('Certbot notfiy Email'),
@@ -544,7 +553,7 @@ sub updatedRowNotify
       if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
         my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
-        $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'));
+        $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $row->valueByName('primaryDomainNameIP'));
         $self->setNamedConfCertbot($row->valueByName('primaryDomainName'));
         $self->setCertbotCommand($row);
       }
