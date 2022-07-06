@@ -11,5 +11,5 @@ _acme-challenge.<% $domainName %> IN SOA	<% $domainName %>. zentyal.<% $domainNa
 				86400      ; minimum (1 day)
 				)
 			NS	<% $domainName %>.
-$TTL 120	; 2 minutes
+
 			TXT	"127.0.0.1"
