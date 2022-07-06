@@ -169,6 +169,8 @@ chmod +x ~/Desktop/start-Firefox.sh
 cd /etc/bind
 sudo dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
 sudo bash -c 'grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key'
+sudo bash -c 'cp /etc/bind/Kcertbot.+165+*.private /etc/bind/Kcertbot.+165.private'
+sudo bash -c 'cp /etc/bind/Kcertbot.+165+*.key /etc/bind/Kcertbot.+165.key'
 
 sudo mkdir -p /etc/pound/cert/
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy/

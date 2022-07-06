@@ -4,7 +4,6 @@
 * <EMAIL>: Your email.
 * <ZENTYAL_IP>: Zentyal IP.
 * <PRIMARY_DOMAIN_NAME>: For example: `dlll.nccu.edu.tw`.
-* <KCERTBOT_FILENAME>: In `/etc/bind/Kcertbot.+165+***`, without `.key` or `.private`.
 * <TXT_TEST>: For example: `9.9.9.9`
 
 # Test dns-rfc2136 on localhost
@@ -12,7 +11,7 @@
 ## Add TXT record to DNS
 
 ````bash
-nsupdate -k /etc/bind/<KCERTBOT_FILENAME>
+sudo nsupdate -k /etc/bind/Kcertbot.+165
 server 127.0.0.1
 update add _acme-challenge.<PRIMARY_DOMAIN_NAME> 86400 TXT <TXT_TEST>
 send
