@@ -260,7 +260,7 @@ sub createFieldInternalVirtualMachineIdentify
                     'fieldName' => 'vmIdentify_test',
                     'printableName' => __('Test'),
                     # 'defaultValue' => '',
-                    "defaultValue" => "0.0.0.0",
+                    "defaultValue" => "127.0.0.1",
                     'editable' => 0,
                     'unique' => $unique,
                 ),
