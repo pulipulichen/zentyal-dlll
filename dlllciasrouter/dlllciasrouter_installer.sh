@@ -215,7 +215,7 @@ echo "Wildcard DNS"
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/named.conf.mas /usr/share/zentyal/stubs/dns/named.conf.mas
 
-cd /etc/bind
+sudo cd /etc/bind
 sudo dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
 sudo grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key
 
