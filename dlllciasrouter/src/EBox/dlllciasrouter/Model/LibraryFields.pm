@@ -1057,7 +1057,14 @@ sub createFieldProtocolInternalPort
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
+        # $hidden = 1;
+        return new EBox::Types::Port(
+            'fieldName' => 'redir'.$protocol.'_intPort',
+            'printableName' => __($protocol.' Internal Port'),
+            'unique' => 1,
+            'editable' => 0,
+            'optional' => 1
+        );
     }
 
     my $field = new EBox::Types::Union(
