@@ -552,6 +552,8 @@ sub updatedRowNotify
       if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
         my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
+        $libDN->deleteWildcardDomainName('paas.' . $oldRow->valueByName('primaryDomainName'));
+        $libDN->deleteWildcardDomainName('paas-vpn.' . $oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
         $libDN->addWildcardDomainName('paas.' . $row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
         $libDN->addWildcardDomainName('paas-vpn.' . $row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
