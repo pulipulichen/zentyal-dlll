@@ -269,6 +269,10 @@ sub getPortHeaderWithoutCheck
 {
     my ($self, $ipaddr) = @_;
 
+    if ($ipaddr eq "127.0.0.1") {
+        return "6000"
+    }
+
     # 變成ID前幾碼
     #my $ipaddr = $row->valueByName('ipaddr');
     my @parts = split('\.', $ipaddr);
