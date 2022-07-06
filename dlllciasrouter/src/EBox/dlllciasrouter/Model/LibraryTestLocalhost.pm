@@ -1,4 +1,4 @@
-package EBox::dlllciasrouter::Model::LibrarySSLCert;
+package EBox::dlllciasrouter::Model::LibraryTestLocalhost;
 
 use base 'EBox::Model::DataTable';
 
@@ -63,7 +63,7 @@ sub startupTestServer
   );
 
   # 2. 重新啟動lighttpd
-  EBox::Sudo::root("service lighttpd start");
+  EBox::Sudo::root("service lighttpd restart");
   #EBox::Service::manage('dlllciasrouter.lighttpd', 'restart');
 
   # 3. 啟動pound
