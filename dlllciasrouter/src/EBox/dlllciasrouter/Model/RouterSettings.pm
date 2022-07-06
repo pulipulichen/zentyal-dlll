@@ -627,15 +627,16 @@ sub setCertbotCommand
     my $email = $row->valueByName("certbotContactEMAIL");
 
     if ($domainName ne "") {
-        my $commandHeader = 'certbot certonly --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
-        my $commandHeaderDryRun = $commandHeader . ' --dry-run';
+        my $commandHeader1 = 'certbot certonly ';
+        my $commandHeader2 = ' --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-pound.sh --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
+        my $commandHeader2DryRun = $commandHeader2 . ' --dry-run';
 
-        my $command = "<pre>" . $commandHeader . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>' 
-            . "<pre>" . $commandHeader . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"</pre>'
-            . "<pre>" . $commandHeader . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"</pre>' ;
-        my $commandDryRun = "<pre>" . $commandHeaderDryRun . ' -d "' . $domainName . '" -d "*.' . $domainName . '"</pre>' 
-            . "<pre>" . $commandHeaderDryRun . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . '"</pre>'
-            . "<pre>" . $commandHeaderDryRun . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . '"</pre>' ;
+        my $command = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . $commandHeader2 .  '"</pre>' 
+            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . $commandHeader2 .  '"</pre>'
+            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . $commandHeader2 .  '"</pre>' ;
+        my $commandDryRun = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . $commandHeader2 .  '"</pre>' 
+            . "<pre>" . $commandHeader1 . ' -d "paas.' . $domainName . '" -d "*.paas.' . $domainName . $commandHeader2 .  '"</pre>'
+            . "<pre>" . $commandHeader1 . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn.' . $domainName . $commandHeader2 .  '"</pre>' ;
 
         # $row->elementByName('certbotCommand')->setValue($command);
         # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
