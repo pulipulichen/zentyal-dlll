@@ -16,4 +16,22 @@ zone "_acme-challenge.<% $domainName %>" {
                 grant certbot. name _acme-challenge.<% $domainName %>. txt;
         };
 };
+
+zone "_acme-challenge.paas.<% $domainName %>" {
+        type master;
+        file "/var/lib/bind/db._acme-challenge.paas.<% $domainName %>";
+        check-names warn;
+        update-policy {
+                grant certbot. name _acme-challenge.paas.<% $domainName %>. txt;
+        };
+};
+
+zone "_acme-challenge.paas-vpn.<% $domainName %>" {
+        type master;
+        file "/var/lib/bind/db._acme-challenge.paas-vpn.<% $domainName %>";
+        check-names warn;
+        update-policy {
+                grant certbot. name _acme-challenge.paas-vpn.<% $domainName %>. txt;
+        };
+};
 % }

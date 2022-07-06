@@ -553,6 +553,8 @@ sub updatedRowNotify
         my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
+        $libDN->addWildcardDomainName('paas.' . $row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
+        $libDN->addWildcardDomainName('paas-vpn.' . $row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
         $self->setNamedConfCertbot($row->valueByName('primaryDomainName'));
         $self->setCertbotCommand($row);
       }
@@ -623,8 +625,15 @@ sub setCertbotCommand
     my $email = $row->valueByName("certbotContactEMAIL");
 
     if ($domainName ne "") {
-        my $command = 'certbot certonly --non-interactive --agree-tos -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt -d "' . $domainName . '" -d "*.' . $domainName . '" -v';
-        my $commandDryRun = $command . ' --dry-run';
+        my $commandHeader = 'certbot certonly --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
+        my $commandHeaderDryRun = $commandHeader . ' --dry-run';
+
+        my $command = $commandHeader . ' -d "' . $domainName . '" -d "*.' . $domainName . '"\n' 
+            . $commandHeader . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"\n'
+            . $commandHeader . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"' ;
+        my $commandDryRun = $commandHeaderDryRun . ' -d "' . $domainName . '" -d "*.' . $domainName . '"\n' 
+            . $commandHeaderDryRun . ' -d "paas.' . $domainName . '" -d "*.paas' . $domainName . '"\n'
+            . $commandHeaderDryRun . ' -d "paas-vpn.' . $domainName . '" -d "*.paas-vpn' . $domainName . '"' ;
 
         # $row->elementByName('certbotCommand')->setValue($command);
         # $row->elementByName('certbotCommandDryRun')->setValue($commandDryRun);
