@@ -28,6 +28,7 @@ use Try::Tiny;
 use EBox::Types::Text;
 
 use File::Slurp;
+use String::Util qw(trim);
 
 # Group: Public methods
 
@@ -597,7 +598,8 @@ sub setNamedConfCertbot
     my @params = ();
     push(@params, 'domainName' => $domainName);
     my $key = read_file('/etc/bind/Kcertbot.key');
-    push(@params, "key" => $key);
+    
+    push(@params, "key" => trim($key));
 
     $self->parentModule()->writeConfFile(
         "/etc/bind/named.conf.certbot",
@@ -656,6 +658,7 @@ sub setCertbotDNSCredentials
 
     my @params = ();
     my $key = read_file('/etc/bind/Kcertbot.key');
+    $key = trim($key);
     push(@params, "key" => $key);
 
     $self->parentModule()->writeConfFile(
