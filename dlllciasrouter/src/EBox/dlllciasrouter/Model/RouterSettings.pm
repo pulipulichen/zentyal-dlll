@@ -28,7 +28,14 @@ use Try::Tiny;
 use EBox::Types::Text;
 
 use File::Slurp;
-use Text::Trim qw(trim);
+
+sub trim($)  
+{  
+    my $string = shift;  
+    $string =~ s/^\s+//;  
+    $string =~ s/\s+$//;  
+    return $string;  
+}  
 
 # Group: Public methods
 
