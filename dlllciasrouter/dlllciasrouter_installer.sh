@@ -163,14 +163,22 @@ else
   sudo crontab -l | { cat; echo "@reboot $SOURCE"; } | sudo crontab -
 fi
 
-# 20180303 增加遠端桌面連線的功能
-vncserver
-# 這裡要設定vncserver帳號密碼
-sudo /etc/init.d/xrdp restart
-
 # 20181109 增加firefox的啟動指令
 echo 'pkill -f firefox;/usr/share/zenbuntu-desktop/firefox-launcher' >> ~/Desktop/start-Firefox.sh
 chmod +x ~/Desktop/start-Firefox.sh
+
+# -----------------------------------
+# Wildcard DNS
+# 20220703-1551 
+#echo "Wildcard DNS"
+
+cd /etc/bind
+sudo dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
+sudo bash -c 'grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key'
+
+sudo mkdir -p /etc/pound/cert/
+sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy/
+sudo mkdir -p /var/lib/bind/
 
 # -----------------------------------
 # Setup GIT
@@ -180,6 +188,19 @@ mkdir -p ~/zentyal-dlll
 cd ~
 wget https://pulipulichen.github.io/zentyal-dlll/dlllciasrouter/git-init.sh -O git-init.sh
 bash git-init.sh
+
+# -----------------------------------
+# Wildcard DNS
+# 20220703-1551 
+
+sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
+sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/named.conf.mas /usr/share/zentyal/stubs/dns/named.conf.mas
+sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot-pound.sh /etc/letsencrypt/renewal-hooks/deploy/
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/*.sh
+
+# -----------------------------------
+
+bash ~/zentyal-dlll/dlllciasrouter/compile.sh
 
 sudo /etc/init.d/zentyal dlllciasrouter restart
 
@@ -198,6 +219,9 @@ if ! [ -f /etc/init.d/vnc ] ; then
     sudo sed -i -e "s/ZENTYAL_USER/$USER/" /etc/init.d/vnc
 fi
 
+# ----------------------------------------------
+
+
 # 20181109 增加vncserver啟動任務
 LIST=`sudo crontab -l`
 SOURCE="service vnc start"
@@ -207,30 +231,20 @@ else
   sudo crontab -l | { cat; echo "@reboot $SOURCE"; } | sudo crontab -
 fi
 
-# -----------------------------------
-# Wildcard DNS
-# 20220703-1551 
-
-echo "Wildcard DNS"
-sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
-sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/named.conf.mas /usr/share/zentyal/stubs/dns/named.conf.mas
-
-cd /etc/bind
-sudo dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
-sudo bash -c 'grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key'
-
-sudo mkdir -p /etc/pound/cert/
-sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy/
-sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot-pound.sh /etc/letsencrypt/renewal-hooks/deploy/
-sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/*.sh
-sudo mkdir -p /var/lib/bind/
-
 # ----------------------
 
 # 20181109 設定locate的索引，一定要擺到最後執行
 sudo updatedb
 
 sudo /etc/init.d/zentyal dlllciasrouter restart
+
+# ----------------------
+# 需要詢問的位置
+
+# 20180303 增加遠端桌面連線的功能
+vncserver
+# 這裡要設定vncserver帳號密碼
+sudo /etc/init.d/xrdp restart
 
 echo "===================================";
 echo "DLLL-CIAS Router is ready"
