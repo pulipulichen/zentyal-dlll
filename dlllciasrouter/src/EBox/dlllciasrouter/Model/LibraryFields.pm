@@ -1002,6 +1002,7 @@ sub createFieldProtocolExternalPort
             ],
             hiddenOnSetter => $hidden,
             hiddenOnViewer => 1,
+        'optional' => "1"
     );
 
     return $field;
