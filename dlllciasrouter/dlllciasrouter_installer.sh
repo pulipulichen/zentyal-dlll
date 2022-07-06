@@ -217,7 +217,7 @@ sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/named.conf.mas /usr/share/zen
 
 cd /etc/bind
 sudo dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST certbot.
-grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key
+sudo grep "^Key: " /etc/bind/Kcertbot.+165+*.private | cut -d" " -f 2 > /etc/bind/Kcertbot.key
 
 sudo mkdir -p /etc/pound/cert/
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy/
