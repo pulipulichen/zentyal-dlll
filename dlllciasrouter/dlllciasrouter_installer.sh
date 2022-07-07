@@ -183,6 +183,7 @@ sudo bash -c 'cp /etc/bind/Kcertbot.+165+*.key /etc/bind/Kcertbot.+165.key'
 sudo mkdir -p /etc/pound/cert/
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy/
 sudo mkdir -p /var/lib/bind/
+sudo touch /etc/bind/named.conf.certbot
 
 # -----------------------------------
 # Setup GIT

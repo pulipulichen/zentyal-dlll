@@ -289,9 +289,50 @@ sub _table
 
     
     push(@fields, new EBox::Types::HostIP(
-            fieldName     => 'anotherDNSIP',
+            #fieldName     => 'anotherDNSIP',
+            fieldName     => 'primaryDomainNameIP',
             printableName => __('Primary IP Address (Name Server IP)'),
             help => __('If you want to use another IP which is different from the external network interface, you can custom the DNS IP in this field.'),
+            editable      => 1,
+            unique        => 1,
+            #defaultValue => 64489,
+            optional => 1,
+        ));
+
+    push(@fields, new EBox::Types::Text(
+        "fieldName"     => 'subDomainNamePublic',
+        "printableName" => __('Public Subdomain Name'),
+        "editable"      => 1,
+        "unique"        => 1,
+        "defaultValue" => "paas",
+        "optional" => 0,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
+    ));
+
+    push(@fields, new EBox::Types::HostIP(
+            fieldName     => 'subDomainNamePublicIP',
+            printableName => __('Public Subdomain Name IP'),
+            editable      => 1,
+            unique        => 1,
+            #defaultValue => 64489,
+            optional => 1,
+        ));
+
+    push(@fields, new EBox::Types::Text(
+        "fieldName"     => 'subDomainNamePrivate',
+        "printableName" => __('Private Subdomain Name'),
+        "editable"      => 1,
+        "unique"        => 1,
+        "defaultValue" => "paas-vpn",
+        "optional" => 0,
+        'HTMLSetter' => '/ajax/setter/textFullWidthSetter.mas',
+        'allowUnsafeChars' => 1,
+    ));
+
+    push(@fields, new EBox::Types::HostIP(
+            fieldName     => 'subDomainNamePrivateIP',
+            printableName => __('Private Subdomain Name IP'),
             editable      => 1,
             unique        => 1,
             #defaultValue => 64489,
@@ -553,11 +594,11 @@ sub updatedRowNotify
       if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
         my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
-        $libDN->deleteWildcardDomainName('paas.' . $oldRow->valueByName('primaryDomainName'));
-        $libDN->deleteWildcardDomainName('paas-vpn.' . $oldRow->valueByName('primaryDomainName'));
-        $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
-        $libDN->addWildcardDomainName('paas.' . $row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
-        $libDN->addWildcardDomainName('paas-vpn.' . $row->valueByName('primaryDomainName'), $row->valueByName('anotherDNSIP'));
+        $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePublic') . '.' . $oldRow->valueByName('primaryDomainName'));
+        $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePrivate') . '.' . $oldRow->valueByName('primaryDomainName'));
+        $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $row->valueByName('primaryDomainNameIP'));
+        $libDN->addWildcardDomainName($row->valueByName('subDomainNamePublic') . '.' . $row->valueByName('primaryDomainName'), $row->valueByName('subDomainNamePublicIP'));
+        $libDN->addWildcardDomainName($row->valueByName('subDomainNamePrivate') . '.' . $row->valueByName('primaryDomainName'), $row->valueByName('subDomainNamePrivateIP'));
         $self->setNamedConfCertbot($row->valueByName('primaryDomainName'));
         $self->setCertbotCommand($row);
       }
