@@ -9,7 +9,7 @@
 my @time    = localtime();
 my $date    = sprintf("%04d%02d%02d%02d",$time[5]+1900,$time[4]+1,$time[3],$time[2]);
 </%init>
-$ORIGIN <% $domain->{name} %>.
+$ORIGIN <% $domainName %>.
 $TTL 3D
 @       IN      SOA     <% $primaryNameServer %> hostmaster (
                         <% $date %>      ;serial number
