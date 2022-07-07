@@ -198,7 +198,7 @@ bash git-init.sh
 # Wildcard DNS
 # 20220703-1551 
 
-sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
+#sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/named.conf.mas /usr/share/zentyal/stubs/dns/named.conf.mas
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot-pound.sh /etc/letsencrypt/renewal-hooks/deploy/
 sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/*.sh

@@ -58,7 +58,7 @@ sub addDomainName
     my $libSettings = $self->getLoadLibrary('RouterSettings');
     my $ipaddr = $libSettings->value("primaryDomainNameIP");
 
-    if (!defined($ipaddr)) {
+    if (!defined($ipaddr) || $ipaddr eq '') {
       my $libNetwork = $self->getLoadLibrary('LibraryNetwork');
       $ipaddr = $libNetwork->getExternalIpaddr();
     }
@@ -230,12 +230,32 @@ sub addWildcardDomainName
 {
     my ($self, $domainName, $ipaddr) = @_;
 
-    if ($ipaddr eq '') {
-        $self->addDomainName($domainName);
+    my $libNetwork = $self->getLoadLibrary('LibraryNetwork');
+    my $mainIpaddr = $libNetwork->getExternalIpaddr();
+
+    if (!defined($ipaddr) || $ipaddr eq '') {
+      $ipaddr = $mainIpaddr
     }
-    else {
-        $self->addDomainNameWithIP($domainName, $ipaddr);
-    }
+
+    my @dbparams = ();
+    my $sysinfo = EBox::Global->modInstance('sysinfo');
+    push(@dbparams, 'primaryNameServer' => $sysinfo->hostName());
+    push(@dbparams, 'ns' => $sysinfo->hostName());
+
+    push(@dbparams, 'domainName' => $domainName);
+    push(@dbparams, 'ip' => $mainIpaddr);
+    push(@dbparams, 'subip' => $ipaddr);
+    
+
+    $self->parentModule()->writeConfFile(
+        '/etc/bind/db.' . $domainName,
+        "dlllciasrouter/dns/db.wildcard.mas",
+        \@dbparams,
+
+        # uid 111 bind
+        # gid 118 bind
+        { uid => '111', gid => '118', mode => '644' }
+    );
 
     # 加上檔案
     # /var/lib/bind/db._acme-challenge.test-zentyal-2022a.pulipuli.info
@@ -262,7 +282,9 @@ sub deleteWildcardDomainName
 {
     my ($self, $domainName) = @_;
 
-    $self->deleteDomainName($domainName);
+    # $self->deleteDomainName($domainName);
+    # '/etc/bind/db.' . $domainName
+    system( 'sudo rm -f /etc/bind/db.' . $domainName );
 
     if ($domainName eq '') {
         return 1;
