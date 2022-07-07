@@ -293,13 +293,15 @@ sub getServiceParam
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
 
-        if ($row->valueByName("vmIdentify") eq '127.0.0.1') {
-          $ipaddrValue = "127.0.0.1";
-          $portValue = 888;
-          $httpToHttpsValue = 0;
-          $httpPortValue = 888;
-          
-        }
+        try {
+            if ($row->valueByName("vmIdentify") eq '127.0.0.1') {
+              $ipaddrValue = "127.0.0.1";
+              $portValue = 888;
+              $httpToHttpsValue = 0;
+              $httpPortValue = 888;
+            }
+        } catch {
+        };
 
         # -------------------------
 
