@@ -27,7 +27,7 @@ Ensure your server can link to Internet. Both eth0 (external) and eth1 (internal
 	* Network is work:
 	* ![enter image description here](https://lh3.googleusercontent.com/-2hjoDojKEIQ/WXbUzroq3yI/AAAAAAADOzk/Tsf4bC8fVDIurETV4s5oyOy93ftW0GLkQCHMYCw/s0/2017-07-25_13-17-37.png) 
 * If network is unreachable. Your DNS configuration is wrong.
-	* Ping: 8.8.8.8: If network is unreachable. Your Gateway configuration is wrong.
+	* Ping: blog.pulipuli.info: If network is unreachable. Your Gateway or DNS configuration is wrong.
 	* Try to remove and add new gateway configuration. Sometimes work but reason is unknown.
 
 ----------

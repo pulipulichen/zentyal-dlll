@@ -93,6 +93,14 @@ xrdp xfce4 xfce4-goodies tightvncserver"
     #sudo lighttpd-enable-mod fastcgi fastcgi-php
     #sudo service lighttpd force-reload
 
+    # install certbot with snap
+    sudo snap install core
+    sudo snap install --classic certbot
+    sudo snap set certbot trust-plugin-with-root=ok
+    sudo snap install certbot-dns-rfc2136
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+
 fi
 echo "All modules are installed."
 
@@ -241,13 +249,6 @@ sudo /etc/init.d/zentyal dlllciasrouter restart
 vncserver
 # 這裡要設定vncserver帳號密碼
 sudo /etc/init.d/xrdp restart
-
-# install certbot with snap
-sudo snap install core
-sudo snap install --classic certbot
-sudo snap set certbot trust-plugin-with-root=ok
-sudo snap install certbot-dns-rfc2136
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 echo "===================================";
 echo "DLLL-CIAS Router is ready"
