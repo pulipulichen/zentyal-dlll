@@ -591,18 +591,18 @@ sub updatedRowNotify
           , 1);
       $self->{pound_port} = $row->valueByName("port");
 
-      $mainIpaddr = $row->valueByName('primaryDomainNameIP');
+      my $mainIpaddr = $row->valueByName('primaryDomainNameIP');
       if (!defined($mainIpaddr) || $mainIpaddr eq '') {
         my $libNetwork = $self->getLoadLibrary('LibraryNetwork');
         $mainIpaddr = $libNetwork->getExternalIpaddr();
       }
 
-      $subDomainNamePublicIP = $row->valueByName('subDomainNamePublicIP');
+      my $subDomainNamePublicIP = $row->valueByName('subDomainNamePublicIP');
       if (!defined($subDomainNamePublicIP) || $subDomainNamePublicIP eq '') {
         $subDomainNamePublicIP = $mainIpaddr;
       }
 
-      $subDomainNamePrivateIP = $row->valueByName('subDomainNamePrivateIP');
+      my $subDomainNamePrivateIP = $row->valueByName('subDomainNamePrivateIP');
       if (!defined($subDomainNamePrivateIP) || $subDomainNamePrivateIP eq '') {
         $subDomainNamePrivateIP = $mainIpaddr;
       }
