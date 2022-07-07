@@ -591,14 +591,30 @@ sub updatedRowNotify
           , 1);
       $self->{pound_port} = $row->valueByName("port");
 
+      $mainIpaddr = $row->valueByName('primaryDomainNameIP');
+      if (!defined($mainIpaddr) || $mainIpaddr eq '') {
+        my $libNetwork = $self->getLoadLibrary('LibraryNetwork');
+        $mainIpaddr = $libNetwork->getExternalIpaddr();
+      }
+
+      $subDomainNamePublicIP = $row->valueByName('subDomainNamePublicIP');
+      if (!defined($subDomainNamePublicIP) || $subDomainNamePublicIP eq '') {
+        $subDomainNamePublicIP = $mainIpaddr;
+      }
+
+      $subDomainNamePrivateIP = $row->valueByName('subDomainNamePrivateIP');
+      if (!defined($subDomainNamePrivateIP) || $subDomainNamePrivateIP eq '') {
+        $subDomainNamePrivateIP = $mainIpaddr;
+      }
+
       if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
         my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
         $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePublic') . '.' . $oldRow->valueByName('primaryDomainName'));
         $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePrivate') . '.' . $oldRow->valueByName('primaryDomainName'));
-        $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $row->valueByName('primaryDomainNameIP'));
-        $libDN->addWildcardDomainName($row->valueByName('subDomainNamePublic') . '.' . $row->valueByName('primaryDomainName'), $row->valueByName('subDomainNamePublicIP'));
-        $libDN->addWildcardDomainName($row->valueByName('subDomainNamePrivate') . '.' . $row->valueByName('primaryDomainName'), $row->valueByName('subDomainNamePrivateIP'));
+        $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $mainIpaddr, $mainIpaddr);
+        $libDN->addWildcardDomainName($row->valueByName('subDomainNamePublic') . '.' . $row->valueByName('primaryDomainName'), $mainIpaddr, $subDomainNamePublicIP);
+        $libDN->addWildcardDomainName($row->valueByName('subDomainNamePrivate') . '.' . $row->valueByName('primaryDomainName'), $mainIpaddr, $subDomainNamePrivateIP);
         $self->setNamedConfCertbot($row->valueByName('primaryDomainName'));
         $self->setCertbotCommand($row);
       }

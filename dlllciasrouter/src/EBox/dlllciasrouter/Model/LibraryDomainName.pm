@@ -228,10 +228,7 @@ sub deleteDomainName
 # 新增Wildcard Domain Name
 sub addWildcardDomainName
 {
-    my ($self, $domainName, $ipaddr) = @_;
-
-    my $libNetwork = $self->getLoadLibrary('LibraryNetwork');
-    my $mainIpaddr = $libNetwork->getExternalIpaddr();
+    my ($self, $domainName, $mainIpaddr, $ipaddr) = @_;
 
     if (!defined($ipaddr) || $ipaddr eq '') {
       $ipaddr = $mainIpaddr
