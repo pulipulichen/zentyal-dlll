@@ -622,7 +622,8 @@ sub isDomainNameLinkToZentyal
 
     #throw EBox::Exceptions::External("test [" . $domainName . ' - ' . $domainNameIp . ' - '  . $address .  ']');
 
-    return ($domainNameIp eq $address);
+    #return ($domainNameIp eq $address);
+    return (index($domainNameIp, $address));
 }
 
 sub setRunCertbot
