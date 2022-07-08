@@ -447,7 +447,7 @@ sub createFieldHTTPSInternalPortDefaultValue
         'printableName' => __('HTTPS Internal Port'),
         'defaultValue' => 443,
         'editable' => 1,
-        'hiddenOnSetter' => 0,
+        'hiddenOnSetter' => 1,
         'hiddenOnViewer' => 1,
         #'help' => __('If HTTP to HTTPS enabled, Internal Port will be not worked.'),
     );
@@ -1063,7 +1063,9 @@ sub createFieldProtocolInternalPort
             'printableName' => __($protocol.' Internal Port'),
             'unique' => 1,
             'editable' => 0,
-            'optional' => 1
+            'optional' => 1,
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 1,
         );
     }
 
