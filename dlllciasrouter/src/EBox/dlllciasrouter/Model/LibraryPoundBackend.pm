@@ -385,6 +385,10 @@ sub getServiceParam
                     next;
                 }
                 my $domainNameValue = $dnRow->valueByName("domainName");
+
+                if ($self->isCustomizedDomainName($domainNameValue)) {
+                    push(@customizedDomainName, (' -d ' . $domainNameValue));
+                }
                 
                 $redirPound_scheme = $dnRow->valueByName('redirPOUND_scheme');
                 if ($redirPound_scheme eq 'http') {
