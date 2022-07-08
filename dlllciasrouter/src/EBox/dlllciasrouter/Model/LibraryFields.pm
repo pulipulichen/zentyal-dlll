@@ -998,7 +998,9 @@ sub createFieldProtocolExternalPort
             'printableName' => __($protocol.' External Port'),
             'unique' => 1,
             'editable' => 0,
-            'optional' => 1
+            'optional' => 1,
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 1,
         );
     }
 
@@ -1036,7 +1038,9 @@ sub createFieldProtocolExternalPortFixed
             'printableName' => __($protocol.' External Port'),
             'unique' => 1,
             'editable' => 0,
-            'optional' => 1
+            'optional' => 1,
+            'hiddenOnSetter' => 1,
+            'hiddenOnViewer' => 1,
         );
     }
 
