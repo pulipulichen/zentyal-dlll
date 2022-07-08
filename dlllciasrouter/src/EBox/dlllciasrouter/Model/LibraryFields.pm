@@ -1133,12 +1133,12 @@ sub _populateFieldProtocolScheme
     return  [
         {
             'value' => 'http',
-            'printableValue' => __('HTTP (http://)'),
+            'printableValue' => __('HTTP (http://) & HTTPS (https://)'),
         },
-        {
-            'value' => 'https',
-            'printableValue' => __('HTTPS (https://)'),
-        },
+        #{
+        #    'value' => 'https',
+        #    'printableValue' => __('HTTPS (https://)'),
+        #},
         {
             'value' => 'none',
             'printableValue' => __('Not a link'),
