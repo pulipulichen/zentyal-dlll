@@ -275,6 +275,7 @@ sub getServiceParam
         }
 
         my $domainNameValue = $row->valueByName('domainName');
+        throw EBox::Exceptions::External("test " . $domainNameValue);
         if ($self->isCustomizedDomainName($domainNameValue)) {
             push(@customizedDomainName, (' -d ' . $domainNameValue));
         }
@@ -596,7 +597,7 @@ sub isDomainNameLinkToZentyal
 
     my $domainNameIp = $self->resolveip($domainName);
 
-    EBox::Sudo::root('echo "' . $domainName . '-' . $domainNameIp . '"');
+    #EBox::Sudo::root('echo "' . $domainName . '-' . $domainNameIp . '"');
     my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
 
     return ($domainNameIp eq $address);
