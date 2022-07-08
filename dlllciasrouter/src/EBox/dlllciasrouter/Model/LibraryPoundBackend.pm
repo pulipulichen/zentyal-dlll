@@ -275,7 +275,7 @@ sub getServiceParam
         }
 
         my $domainNameValue = $row->valueByName('domainName');
-        throw EBox::Exceptions::External("test " . $domainNameValue);
+        # throw EBox::Exceptions::External("test " . $domainNameValue);
         if ($self->isCustomizedDomainName($domainNameValue)) {
             push(@customizedDomainName, (' -d ' . $domainNameValue));
         }
@@ -571,6 +571,7 @@ sub isCustomizedDomainName
     my $settings = $self->getLoadLibrary('RouterSettings');
     my $primaryDomainName = $settings->value('primaryDomainName');
 
+    throw EBox::Exceptions::External("test [" . $domainNameValue . '-' . $primaryDomainName .  ']');
     if ($primaryDomainName eq '') {
         return ($self->isDomainNameLinkToZentyal($domainName));
     }
