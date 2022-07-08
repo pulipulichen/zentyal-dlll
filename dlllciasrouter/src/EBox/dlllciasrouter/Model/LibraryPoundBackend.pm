@@ -277,7 +277,7 @@ sub getServiceParam
         my $domainNameValue = $row->valueByName('domainName');
         # throw EBox::Exceptions::External("test " . $domainNameValue);
         if ($self->isCustomizedDomainName($domainNameValue)) {
-            push(@customizedDomainName, (' -d ' . $domainNameValue));
+            push(@customizedDomainName, ($domainNameValue));
         }
 
 
@@ -387,7 +387,7 @@ sub getServiceParam
                 my $domainNameValue = $dnRow->valueByName("domainName");
 
                 if ($self->isCustomizedDomainName($domainNameValue)) {
-                    push(@customizedDomainName, (' -d ' . $domainNameValue));
+                    push(@customizedDomainName, ($domainNameValue));
                 }
                 
                 $redirPound_scheme = $dnRow->valueByName('redirPOUND_scheme');
@@ -628,7 +628,7 @@ sub setRunCertbot
         return 1;
     }
 
-    my $customizedDomainNameString = join '', @customizedDomainName;
+    my $customizedDomainNameString = join ',', @customizedDomainName;
 
     my @params = ();
     push(@params, 'domainNamesList' => $customizedDomainNameString);

@@ -2,5 +2,5 @@
   $domainNamesList
 </%args>
 #!/bin/sh
-certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot <% $domainNamesList %> -n -v --pre-hook /etc/letsencrypt/renewal-hooks/pre/certbot-pre.sh  --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-deploy.sh
-# certbot certonly --dry-run --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot <% $domainNamesList %> -n -v --pre-hook /etc/letsencrypt/renewal-hooks/pre/certbot-pre.sh  --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-deploy.sh
+certbot certonly --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d <% $domainNamesList %> -n -v --pre-hook /etc/letsencrypt/renewal-hooks/pre/certbot-pre.sh  --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-deploy.sh
+# certbot certonly --dry-run --webroot -w /usr/share/zentyal/www/dlllciasrouter/certbot -d <% $domainNamesList %> -n -v --pre-hook /etc/letsencrypt/renewal-hooks/pre/certbot-pre.sh  --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-deploy.sh
