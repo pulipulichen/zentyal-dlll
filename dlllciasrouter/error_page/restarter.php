@@ -3,8 +3,8 @@
     <head>
         <title>系統發生錯誤</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/reset.css" rel="stylesheet" type="text/css">	
-	<link href="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/css/styles.css" rel="stylesheet" type="text/css">
+        <link href="//pulipulichen.github.io/zentyal-dlll/dlllciasrouter/error_page/css/reset.css" rel="stylesheet" type="text/css">	
+	    <link href="//pulipulichen.github.io/zentyal-dlll/dlllciasrouter/error_page/css/styles.css" rel="stylesheet" type="text/css">
 	<!--[if LTE IE 8]>
 		<link href="css/ie.css" rel="stylesheet" type="text/css">
 	<![endif]-->
@@ -14,8 +14,8 @@
 			DD_belatedPNG.fix('#bg-top, #bg-bottom, #logo, #nav ul, #contentWrap, #content, #leftColumn');
 		</script>
 	<![endif]-->
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://dl.dropboxusercontent.com/u/717137/20130914-error_page/js/jquery.pietimer.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script type="text/javascript" src="//pulipulichen.github.io/zentyal-dlll/dlllciasrouter/error_page/js/jquery.pietimer.js"></script>
         <style type="text/css">
 #timer {
     margin: 10px;

@@ -112,7 +112,7 @@ if (_ZENTYAL_UTIL === undefined) {
             _str = this.unescapeFromUtf16(_str);
             return _str;
         },
-        jquery_url: 'https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/jquery.min.js',
+        jquery_url: '//pulipulichen.github.io/zentyal-dlll/zentyal-field/jquery.min.js',
         //jquery_url: 'http://pc-pudding-2013.dlll.nccu.edu.tw/zentyal-dlll/zentyal-field/jquery.min.js',
         load_jquery: function(_callback) {
             //alert(typeof (jQuery));
@@ -145,7 +145,7 @@ if (_ZENTYAL_UTIL === undefined) {
                 _head.appendChild(_script);
             }
         },
-        tinymce_url: 'https://dl.dropboxusercontent.com/u/717137/20140615-dlll-cias/tinymce/js/tinymce/tinymce.min.js',
+        tinymce_url: '//pulipulichen.github.io/zentyal-dlll/zentyal-field/tinymce/js/tinymce/tinymce.min.js',
         //tinymce_url: 'http://pc-pudding-2013.dlll.nccu.edu.tw/zentyal-dlll/zentyal-field/tinymce/js/tinymce/tinymce.min.js',
         load_tinymce: function(_callback) {
             //console.log(typeof(tinymce));
