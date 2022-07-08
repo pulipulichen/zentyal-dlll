@@ -604,12 +604,18 @@ sub setRunCertbot
 {
     my ($self, @customizedDomainName) = @_;
 
+    my $scriptPath = '/etc/cron.weekly/run-certbot.sh';
+
+    my $length = @customizedDomainName;
+    if ($length == 0) {
+        EBox::Sudo::root('rm -f ' . $scriptPath);
+        return 1;
+    }
+
     my $customizedDomainNameString = join '', @customizedDomainName;
 
     my @params = ();
     push(@params, 'domainNamesList' => $customizedDomainNameString);
-
-    my $scriptPath = '/etc/cron.weekly/run-certbot.sh';
 
     $self->parentModule()->writeConfFile(
       $scriptPath,
