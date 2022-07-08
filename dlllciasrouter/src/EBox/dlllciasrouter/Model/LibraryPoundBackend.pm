@@ -592,7 +592,7 @@ sub resolveip
     my ($self, $domainName) = @_;
 
     my $ip = qx{resolveip -s ${domainName}};
-    $ip =~ s/^\s+|\s+$//g
+    $ip =~ s/^\s+|\s+$//g;
 
     return $ip;
 }
