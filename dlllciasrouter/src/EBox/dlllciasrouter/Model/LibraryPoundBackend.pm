@@ -591,7 +591,10 @@ sub resolveip
 {
     my ($self, $domainName) = @_;
 
-    return qx{resolveip -s ${domainName}};
+    my $ip = qx{resolveip -s ${domainName}};
+    $ip =~ s/^\s+|\s+$//g
+
+    return $ip;
 }
 
 sub isDomainNameLinkToZentyal
@@ -600,9 +603,11 @@ sub isDomainNameLinkToZentyal
 
     my $domainNameIp = $self->resolveip($domainName);
 
-    throw EBox::Exceptions::External("test [" . $domainName . ' - ' . $domainNameIp .  ']');
+    
     #EBox::Sudo::root('echo "' . $domainName . '-' . $domainNameIp . '"');
     my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
+
+    throw EBox::Exceptions::External("test [" . $domainName . ' - ' . $domainNameIp . ' - '  . $address .  ']');
 
     return ($domainNameIp eq $address);
 }
