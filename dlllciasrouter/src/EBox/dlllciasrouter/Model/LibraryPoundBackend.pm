@@ -620,7 +620,7 @@ sub setRunCertbot
 {
     my ($self, @customizedDomainName) = @_;
 
-    my $scriptPath = '/etc/cron.weekly/run-certbot.sh';
+    my $scriptPath = '/etc/cron.monthly/run-certbot.sh';
 
     my $length = @customizedDomainName;
     if ($length == 0) {
