@@ -599,7 +599,7 @@ sub resolveip
     
     #my $ip = `dig \@8.8.8.8.8 +short $(domainName)`;
     my $ip = qx{dig +short $domainName};
-    #$ip =~ s/^\s+|\s+$//g;
+    $ip =~ s/^\s+|\s+$//g;
 
     return $ip;
 }
