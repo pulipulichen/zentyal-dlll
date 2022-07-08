@@ -595,6 +595,8 @@ sub isDomainNameLinkToZentyal
     my ($self, $domainName) = @_;
 
     my $domainNameIp = $self->resolveip($domainName);
+
+    EBox::Sudo::root('echo "' . $domainName . '-' . $domainNameIp . '"');
     my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
 
     return ($domainNameIp eq $address);
