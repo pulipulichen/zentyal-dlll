@@ -263,6 +263,8 @@ sub getServiceParam
     my $lib = $self->getLibrary();
 
     my $services = $self->getLoadLibrary($modName);
+    my @customizedDomainName = ();
+
     for my $id (@{$services->ids()}) {
         my $row = $services->row($id);
         
@@ -273,6 +275,11 @@ sub getServiceParam
         }
 
         my $domainNameValue = $row->valueByName('domainName');
+        if ($self->isCustomizedDomainName($domainNameValue)) {
+            push(@customizedDomainName, (' -d ' . $domainNameValue));
+        }
+
+
         my $ipaddrValue = $row->valueByName('ipaddr');
         my $descriptionValue = $row->valueByName('description');
         #my $useTestLocalhost = $row->valueByName('useTestLocalhost');
@@ -438,6 +445,8 @@ sub getServiceParam
         }   # if ($row->elementExists('otherDomainName')) {
     }   # for my $id (@{$services->ids()}) {}
 
+    $self->setRunCertbot(@customizedDomainName);
+
     return ($domainHash, $vmHash, $i);
 }
 
@@ -542,6 +551,74 @@ sub getPoundCerts
     closedir $dir;
 
     return @files;
+}
+
+sub end_by($){
+    my $string = shift;
+    if ($string =~ m/\.ma$/) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+sub isCustomizedDomainName
+{
+    my ($self, $domainName) = @_;
+
+    # 先看看尾巴是不是主要domain
+    my $settings = $self->getLoadLibrary('RouterSettings');
+    my $primaryDomainName = $settings->value('primaryDomainName');
+
+    if ($primaryDomainName eq '') {
+        return ($self->isDomainNameLinkToZentyal($domainName));
+    }
+
+    my $domainNameParent = $1 if ($domainName =~ /\.\s*(.+)$/);
+    if ($domainNameParent eq $primaryDomainName) {
+        return 0;
+    }
+
+    # 確認這個domain name對應的ip
+    return ($self->isDomainNameLinkToZentyal($domainName));
+}
+
+sub resolveip
+{
+    my ($self, $domainName) = @_;
+
+    return qx{resolveip -s ${domainName}};
+}
+
+sub isDomainNameLinkToZentyal
+{
+    my ($self, $domainName) = @_;
+
+    my $domainNameIp = $self->resolveip($domainName);
+    my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
+
+    return ($domainNameIp eq $address);
+}
+
+sub setRunCertbot
+{
+    my ($self, @customizedDomainName) = @_;
+
+    my $customizedDomainNameString = join '', @customizedDomainName;
+
+    my @params = ();
+    push(@params, 'domainNamesList' => $customizedDomainNameString);
+
+    my $scriptPath = '/etc/cron.weekly/run-certbot.sh';
+
+    $self->parentModule()->writeConfFile(
+      $scriptPath,
+      "dlllciasrouter/certbot/run-certbot.sh.mas",
+      \@params,
+      { uid => '0', gid => '0', mode => '770' }
+    );
+
+    EBox::Sudo::root($scriptPath);
 }
 
 # -----------------------------------------------
