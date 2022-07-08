@@ -578,7 +578,7 @@ sub isCustomizedDomainName
 
     my $domainNameParent = $1 if ($domainName =~ /\.\s*(.+)$/);
 
-    throw EBox::Exceptions::External("test [" . $domainNameParent . ' - ' . $primaryDomainName .  ']');
+    # throw EBox::Exceptions::External("test [" . $domainNameParent . ' - ' . $primaryDomainName .  ']');
     if ($domainNameParent eq $primaryDomainName) {
         return 0;
     }
@@ -600,6 +600,7 @@ sub isDomainNameLinkToZentyal
 
     my $domainNameIp = $self->resolveip($domainName);
 
+    throw EBox::Exceptions::External("test [" . $domainName . ' - ' . $domainNameIp .  ']');
     #EBox::Sudo::root('echo "' . $domainName . '-' . $domainNameIp . '"');
     my $address = $self->getLoadLibrary('LibraryNetwork')->getExternalIpaddr();
 
