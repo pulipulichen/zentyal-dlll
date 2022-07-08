@@ -610,7 +610,7 @@ sub isDomainNameLinkToZentyal
 
     my $domainNameIp = $self->resolveip($domainName);
 
-    throw EBox::Exceptions::External("test [" . $domainName . ' - ' . $domainNameIp . ']');
+    #throw EBox::Exceptions::External("test [" . $domainName . ' - ' . $domainNameIp . ']');
 
     if ($domainNameIp eq '') {
         return 0;
