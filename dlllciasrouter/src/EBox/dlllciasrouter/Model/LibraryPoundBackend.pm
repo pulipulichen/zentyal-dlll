@@ -571,7 +571,7 @@ sub isCustomizedDomainName
     my $settings = $self->getLoadLibrary('RouterSettings');
     my $primaryDomainName = $settings->value('primaryDomainName');
 
-    throw EBox::Exceptions::External("test [" . $domainNameValue . '-' . $primaryDomainName .  ']');
+    throw EBox::Exceptions::External("test [" . $domainName . '-' . $primaryDomainName .  ']');
     if ($primaryDomainName eq '') {
         return ($self->isDomainNameLinkToZentyal($domainName));
     }
