@@ -538,7 +538,7 @@ sub getPoundCerts
     my ($self) = @_;
 
     opendir my $dir, "/etc/pound/cert" or die "Cannot open directory: $!";
-    my @files = readdir $dir;
+    my @files = grep { /^\./ } readdir $dir;
     closedir $dir;
 
     return @files;

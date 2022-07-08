@@ -193,7 +193,7 @@ ListenHTTPS
 	Port	<% $portHTTPS %>
 
 % foreach my $cert (@{$certs}) {
-	Cert    "/etc/pound/cert/<% $cert %>.pem"
+	Cert    "/etc/pound/cert/<% $cert %>"
 % } #foreach my $cert (@{$certs}) {
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
