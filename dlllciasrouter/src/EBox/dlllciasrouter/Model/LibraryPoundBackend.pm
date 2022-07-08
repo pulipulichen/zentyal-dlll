@@ -607,6 +607,9 @@ sub isDomainNameLinkToZentyal
     my ($self, $domainName) = @_;
 
     my $domainNameIp = $self->resolveip($domainName);
+    if ($domainNameIp eq '') {
+        return 0;
+    }
 
     
     #EBox::Sudo::root('echo "' . $domainName . '-' . $domainNameIp . '"');
