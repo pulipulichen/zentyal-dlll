@@ -192,6 +192,7 @@ ListenHTTPS
 	Address 0.0.0.0
 	Port	<% $portHTTPS %>
 
+	Cert    "/etc/pound/cert/<% $primaryDomainName %>.pem"
 % foreach my $cert (@{$certs}) {
 	Cert    "/etc/pound/cert/<% $cert %>"
 % } #foreach my $cert (@{$certs}) {
