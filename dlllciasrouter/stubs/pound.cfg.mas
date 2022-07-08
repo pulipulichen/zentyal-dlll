@@ -10,6 +10,7 @@
     $domainHTTPSHash
     $redir
 		$primaryDomainName
+		$certs
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
@@ -190,7 +191,10 @@ End
 ListenHTTPS
 	Address 0.0.0.0
 	Port	<% $portHTTPS %>
-  Cert    "/etc/pound/cert/<% $primaryDomainName %>.pem"
+
+% foreach my $cert (@{$certs}) {
+	Cert    "/etc/pound/cert/<% $cert %>.pem"
+% } #foreach my $cert (@{$certs}) {
 
 % print "	## allow PUT and DELETE also (by default only GET, POST and HEAD)?:\n";
 	xHTTP		4

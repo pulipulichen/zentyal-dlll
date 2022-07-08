@@ -686,7 +686,7 @@ sub setCertbotCommand
 
     if ($domainName ne "") {
         my $commandHeader1 = 'sudo certbot certonly ';
-        my $commandHeader2 = ' --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-pound.sh --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
+        my $commandHeader2 = ' --deploy-hook /etc/letsencrypt/renewal-hooks/deploy/certbot-deploy-wildcard.sh --non-interactive --agree-tos -v -m ' . $email . ' --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/dns_rfc2136_credentials.txt ';
         my $commandHeader2DryRun = $commandHeader2 . ' --dry-run';
 
         my $command = "<pre>" . $commandHeader1 . ' -d "' . $domainName . '" -d "*.' . $domainName . '"' . $commandHeader2 .  '</pre>' 

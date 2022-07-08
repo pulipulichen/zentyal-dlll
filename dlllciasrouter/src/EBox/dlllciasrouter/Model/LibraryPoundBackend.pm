@@ -207,6 +207,18 @@ sub writePoundConfig
 
   push(@servicesParams, 'redir' => \@redirArray);
 
+
+  # ----------------------------
+  # 取得certs
+  # ----------------------------
+  my @certs = $self->getPoundCerts();
+
+  push(@servicesParams, 'certs' => \@certs);
+
+
+  # ----------------------------
+  # 寫入
+  # ----------------------------
   $self->parentModule()->writeConfFile(
       '/etc/pound/pound.cfg',
       "dlllciasrouter/pound.cfg.mas",
@@ -518,6 +530,18 @@ sub getURLRedirectParam
     }
 
     return @redirArray;
+}
+
+# 20150519 Pulipuli Chen
+sub getPoundCerts
+{
+    my ($self) = @_;
+
+    opendir my $dir, "/etc/pound/cert" or die "Cannot open directory: $!";
+    my @files = readdir $dir;
+    closedir $dir;
+
+    return @files;
 }
 
 # -----------------------------------------------
