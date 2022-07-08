@@ -571,12 +571,14 @@ sub isCustomizedDomainName
     my $settings = $self->getLoadLibrary('RouterSettings');
     my $primaryDomainName = $settings->value('primaryDomainName');
 
-    throw EBox::Exceptions::External("test [" . $domainName . '-' . $primaryDomainName .  ']');
+    #throw EBox::Exceptions::External("test [" . $domainName . '-' . $primaryDomainName .  ']');
     if ($primaryDomainName eq '') {
         return ($self->isDomainNameLinkToZentyal($domainName));
     }
 
     my $domainNameParent = $1 if ($domainName =~ /\.\s*(.+)$/);
+
+    throw EBox::Exceptions::External("test [" . $domainNameParent . ' - ' . $primaryDomainName .  ']');
     if ($domainNameParent eq $primaryDomainName) {
         return 0;
     }
