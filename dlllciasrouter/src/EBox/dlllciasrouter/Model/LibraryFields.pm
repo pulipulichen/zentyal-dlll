@@ -1106,7 +1106,15 @@ sub createFieldProtocolScheme
 
     my $hidden = 0;
     if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
+        #$hidden = 1;
+        return new EBox::Types::Text(
+        'fieldName' => 'redir'.$protocol.'_scheme',
+        'printableName' => __($protocol.' Protocol Scheme'),
+        'optional' =>1,
+        'hiddenOnSetter' => 1,
+        'hiddenOnViewer' => 1,
+        'allowUnsafeChars' => 1,
+        );
     }
 
     my $field = new EBox::Types::Select(
