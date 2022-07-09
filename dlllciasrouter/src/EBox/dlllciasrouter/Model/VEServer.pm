@@ -57,22 +57,19 @@ sub checkInternalIP
         return 1;
     }
 
-    # 開放任意伺服器
-    return 1;
+    my @parts = split('\.', $ipaddr);
+    my $partA = $parts[0];
+    my $partB = $parts[1];
+    my $partC = $parts[2];
+    my $partD = $parts[3];
 
-    # my @parts = split('\.', $ipaddr);
-    # my $partA = $parts[0];
-    # my $partB = $parts[1];
-    # my $partC = $parts[2];
-    # my $partD = $parts[3];
-
-    # if (!($partA == 10) 
-    #     || !($partB == 6) 
-    #     || !($partC == 0) 
-    #     || !($partD > 0 && $partD < 100) ) {
-    #     my $message = __('Internal IP ' . $ipaddr .  ' format error.' ) . '<br />' . $options->{IPHelp};
-    #     $self->getLoadLibrary('LibraryToolkit')->show_exceptions($message);
-    # }
+    if (!($partA == 10) 
+        || !($partB == 6) 
+        || !($partC == 0) 
+        || !($partD > 0 && $partD < 100) ) {
+        my $message = __('Internal IP ' . $ipaddr .  ' format error.' ) . '<br />' . $options->{IPHelp};
+        $self->getLoadLibrary('LibraryToolkit')->show_exceptions($message);
+    }
 }
 
 # -------------------------------------------
