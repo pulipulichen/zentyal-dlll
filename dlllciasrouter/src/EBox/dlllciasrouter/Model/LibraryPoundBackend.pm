@@ -641,7 +641,7 @@ sub setRunCertbot
     #my $customizedDomainNameString = join ',', @customizedDomainName;
 
     my @params = ();
-    push(@params, 'domainNames' => @customizedDomainName);
+    push(@params, 'domainNames' => \@customizedDomainName);
 
     $self->parentModule()->writeConfFile(
       $scriptPath,
