@@ -442,9 +442,12 @@ sub getProtocolIntPort
     }
     my $intPort = $row->valueByName($fieldName);
 
-    if ($row->valueByName('vmIdentify') eq "127.0.0.1" && ($protocol eq 'HTTP' || $protocol eq 'POUND')) {
-        return 888;
+    try {
+        if ($row->valueByName('vmIdentify') eq "127.0.0.1" && ($protocol eq 'HTTP' || $protocol eq 'POUND')) {
+            return 888;
+        }
     }
+    catch {};
 
     return $intPort;
 }
