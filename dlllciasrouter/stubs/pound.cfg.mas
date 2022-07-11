@@ -186,7 +186,7 @@ End
 
 % print "# -----------------------------------------\n";
 
-% if ($wildcardPemExists == 1 || @certs > 0) {
+% if ($wildcardPemExists == 1 || $certs > 0) {
 
 % print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
 ListenHTTPS
