@@ -650,7 +650,7 @@ sub setRunCertbot
       { uid => '0', gid => '0', mode => '770' }
     );
 
-    EBox::Sudo::root($scriptPath);
+    #EBox::Sudo::root($scriptPath);
 }
 
 # -----------------------------------------------
