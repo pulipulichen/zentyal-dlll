@@ -223,10 +223,10 @@ sub startNFSServer
 {
     my ($self) = @_;
     my $mod = $self->getLibrary('StorageServer');
-    if ($mod->ids() == 0) {
+    if ($mod->size() == 0) {
         return 0;
     }
-    
+
     if (readpipe("sudo netstat -plnt | grep '/rpc.mountd'") eq "") {
         system('sudo service nfs-kernel-server start');
     }
@@ -489,7 +489,7 @@ sub restartNFSServer
 {
     my ($self) = @_;
     my $mod = $self->getLibrary('StorageServer');
-    if ($mod->ids() == 0) {
+    if ($mod->size() == 0) {
         return 0;
     }
 
