@@ -155,7 +155,7 @@ sub getDataTable
 
     # ----------------------
     # HTTPS Redirect Fields
-    # push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_https', __('HTTPS Network Settings')));
+    push(@fields, $fieldsFactory->createFieldHrWithHeading('hr_https', __('HTTPS Network Settings')));
 
     push(@fields, $fieldsFactory->createFieldHTTPSRedirect($options->{enableHTTPS}));
     push(@fields, $fieldsFactory->createFieldHTTPSOnlyForLAN());
