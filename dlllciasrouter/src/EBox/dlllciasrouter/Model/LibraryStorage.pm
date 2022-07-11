@@ -222,7 +222,7 @@ sub initNFSServer
 sub startNFSServer
 {
     my ($self) = @_;
-    my $mod = $self->getLibrary('StorageServer');
+    my $mod = $self->getLoadLibrary('StorageServer');
     if ($mod->size() == 0) {
         return 0;
     }
@@ -488,7 +488,7 @@ sub remountChunkserver
 sub restartNFSServer
 {
     my ($self) = @_;
-    my $mod = $self->getLibrary('StorageServer');
+    my $mod = $self->getLoadLibrary('StorageServer');
     if ($mod->size() == 0) {
         return 0;
     }

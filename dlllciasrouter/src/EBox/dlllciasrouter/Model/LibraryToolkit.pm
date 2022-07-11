@@ -62,7 +62,7 @@ sub getLoadLibrary
 sub show_exceptions
 {
     my ($self, $message) = @_;
-    throw EBox::Exceptions::External('=================\n\n' .$message . '\n\n=================');
+    throw EBox::Exceptions::External('=================\n\n' .$message . '\n\n=================startNFSServer');
     #throw EBox::Exceptions::InvalidData("ERROR", $message);
 
     #throw EBox::Exceptions::Error($message);
