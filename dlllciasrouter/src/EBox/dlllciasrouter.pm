@@ -180,7 +180,12 @@ sub _daemons
 {
     my ($self) = @_;
 
+    my $log = EBox::logger;
+    $log->info("_daemons 1");
+
     $self->dlllciasrouter_init();
+
+    $log->info("_daemons 2");
 
     my @daemons = [];
     my $i = 0;
@@ -193,6 +198,8 @@ sub _daemons
             };
         $i++;
     }
+
+    $log->info("_daemons 3");
     
     $daemons[$i] = {
         'name' => 'pound',
@@ -201,12 +208,16 @@ sub _daemons
     };
     $i++;
 
+    $log->info("_daemons 4");
+
     $daemons[$i] = {
         'name' => 'lighttpd',
         'type' => 'init.d',
         'pidfiles' => ['/var/run/lighttpd.pid']
     };
     $i++;
+
+    $log->info("_daemons 5");
 
     # 20150528 Pulipuli Chen 加入MooseFS的控制
     
@@ -261,13 +272,20 @@ sub _setConf
 
     my ($self) = @_;
 
+    my $log = EBox::logger;
+    $log->info("_setConf 1");
+
     #  更新錯誤訊息
     $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
     $self->model("LibraryPoundBackend")->setUpdatePoundCfg();
     $self->model("LibraryServiceXRDP")->setXRDPCfg();
+
+    $log->info("_setConf 2");
     
     # 設定SSH
     $self->model("LibraryServiceSSH")->setConfSSHAdminPort();
+
+    $log->info("_setConf 3");
 
     if (0) {
       
@@ -344,12 +362,17 @@ sub checkConfigChange
 {
     my ($self, $file, $compname, $params, $defaults) = @_;
 
+    my $log = EBox::logger;
+    $log->info("checkConfigChange 1");
+
     my $changed = 0;
 
     my $originVersion = "";
     if (-e $file) {
        $originVersion = read_file( $file ) ;
     }
+
+    $log->info("checkConfigChange 2");
 
     $self->writeConfFile(
         $file,
@@ -358,11 +381,15 @@ sub checkConfigChange
         $defaults
     );
 
+    $log->info("checkConfigChange 3");
+
     my $writtenVersion = read_file( $file ) ;
 
     if ($originVersion ne $writtenVersion) {
         $changed = 1;
     }
+
+    $log->info("checkConfigChange 4");
 
     return $changed;
 }
