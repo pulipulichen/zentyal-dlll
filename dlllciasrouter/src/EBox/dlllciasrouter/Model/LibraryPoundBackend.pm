@@ -84,7 +84,8 @@ sub setUpdatePoundCfg
 {
     my ($self) = @_;
 
-      
+    my $log = EBox::logger;
+    $log->info("setUpdatePoundCfg 1");
 
       
       #my $timeout = 1;    # 20150517 測試用，記得要移除
@@ -108,10 +109,17 @@ sub setUpdatePoundCfg
 
       my ($domainHash, $domainHTTPSHash, $vmHash) = $self->buildDomainHash();
 
+      $log->info("setUpdatePoundCfg 2");
       # --------------------
 
       $self->writePoundConfig($domainHash, $domainHTTPSHash, $domainHTTPSHash);
+
+
+      $log->info("setUpdatePoundCfg 3");
+
       $self->updateVMIDConfig($vmHash);
+
+      $log->info("setUpdatePoundCfg 4");
 
       # --------------------
 
@@ -119,6 +127,8 @@ sub setUpdatePoundCfg
       # 一併更新PoundSettings
       $self->getLoadLibrary("PoundSettings")->setUpdateCfg();
     
+      $log->info("setUpdatePoundCfg 5");
+
 }   # sub setUpdatePoundCfg
 
 sub buildDomainHash
