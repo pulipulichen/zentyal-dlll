@@ -47,6 +47,9 @@ sub dlllciasrouter_init
 {
     my ($self) = @_;
 
+    my $log = EBox::logger;
+    $log->info("dlllciasrouter_init 1");
+
     # 初始化安裝
     try {
         $self->model("LibraryServiceLighttpd")->initLighttpd();
@@ -59,6 +62,8 @@ sub dlllciasrouter_init
         $libStorage->startMooseFS();
         $libStorage->initNFSServer();
         $libStorage->startNFSServer();
+
+        $log->info("dlllciasrouter_init 1.5");
 
         my $LibraryTestLocalhost = $self->model("LibraryTestLocalhost");
         $LibraryTestLocalhost->startupTestServer();
@@ -74,6 +79,7 @@ sub dlllciasrouter_init
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.1 )');
     };
 
+    $log->info("dlllciasrouter_init 2");
     try {
         $self->model("LibraryPoundBackend")->initDefaultPound();
 
@@ -82,6 +88,8 @@ sub dlllciasrouter_init
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.2 )');
     };
+
+    $log->info("dlllciasrouter_init 3");
 
     try {
         $self->model("LibraryService")->getPoundService();
@@ -96,6 +104,8 @@ sub dlllciasrouter_init
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.3 )');
     };
 
+    $log->info("dlllciasrouter_init 4");
+
     try {
         $self->model('LibraryMAC')->initAdministorNetworkMember();
         $self->model('LibraryMAC')->initWorkplaceNetworkMember();
@@ -104,6 +114,8 @@ sub dlllciasrouter_init
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.4 )');
     };
+
+    $log->info("dlllciasrouter_init 5");
 
     try {
         $self->model("LibraryFilter")->initZentyalAdminFilter();
@@ -117,6 +129,8 @@ sub dlllciasrouter_init
     } catch {
         $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.5 )');
     };
+
+    $log->info("dlllciasrouter_init 6");
 }
 
 sub menu
