@@ -137,17 +137,33 @@ sub buildDomainHash
   #my @paramsArray = ();
   my ($self) = @_;
 
+  my $log = EBox::logger;
+  $log->info("buildDomainHash 1");
+
   my $domainHash = (); 
   my $domainHTTPSHash = (); 
   my $vmHash = ();
   my $i = 0;
 
   ($domainHash, $i) = $self->getTestServiceParam($domainHash, $i);
+
+  $log->info("buildDomainHash 2");
+
   ($domainHash, $vmHash, $i) = $self->getServiceParam("VEServer", $domainHash, $vmHash, $i, 0);
+
+  $log->info("buildDomainHash 3");
+
   ($domainHash, $vmHash, $i) = $self->getServiceParam("StorageServer", $domainHash, $vmHash, $i, 0);
+
+  $log->info("buildDomainHash 4");
+
   ($domainHash, $vmHash, $i) = $self->getServiceParam("VMServer", $domainHash, $vmHash, $i, 0);
 
+  $log->info("buildDomainHash 5");
+
   ($domainHTTPSHash) = $self->getLoadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
+
+  $log->info("buildDomainHash 6");
 
   return ($domainHash, $domainHTTPSHash, $vmHash);
 }
@@ -590,6 +606,8 @@ sub end_by($){
 
 sub isCustomizedDomainName
 {
+    return 0;
+
     my ($self, $domainName) = @_;
 
     # 先看看尾巴是不是主要domain
