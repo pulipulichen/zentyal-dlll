@@ -48,10 +48,6 @@ sub getLoadLibrary
 # 20150527 Pulipuli Chen
 sub initMooseFS
 {
-    # 暫時不使用了 20220711-2030 
-    return 0;
-
-
     my ($self) = @_;
 
     my @params = ();
@@ -273,6 +269,9 @@ sub initNFSClient
 ##
 sub updateNFSExports
 {
+    # 暫時不使用了 20220711-2030 
+    return 0;
+
     # 從這邊取得資料出來
     #my $expMod = $self->getLoadLibrary("ExportSettings");
     my ($self) = @_;
@@ -362,6 +361,9 @@ sub updateNFSExports
 ##
 sub updateMountServers
 {
+    # 暫時不使用了 20220711-2030 
+    return 0;
+
     my ($self) = @_;
 
     #system('sudo /opt/mfschunkservers/nfs-umount.sh');
@@ -471,6 +473,9 @@ sub restartMooseFS
 # 20150528 Pulipuli Chen
 sub remountChunkserver
 {
+    # 暫時不使用了 20220711-2030 
+    return 0;
+
     system('sudo service moosefs-chunkserver stop');
     system('sudo /opt/mfschunkservers/nfs-umount.sh');
     #system('sudo /opt/mfschunkservers/nfs-mount.sh');
@@ -504,6 +509,9 @@ sub restartNFSServer
 # 20150528 Pulipuli Chen
 sub stopMount
 {
+    # 暫時不使用了 20220711-2030 
+    return 0;
+
     system('sudo service nfs-kernel-server stop');
 
     system('sudo service moosefs-cgiserv stop');
