@@ -50,7 +50,7 @@ sub initLighttpd
     my @params = ();
     $self->parentModule()->writeConfFile(
         '/etc/lighttpd/lighttpd.conf',
-        "dlllciasrouter/lighttped.conf.mas",
+        "dlllciasrouter/lighttpd.conf.mas",
         \@params,
         { uid => '0', gid => '0', mode => '744' }
     );

@@ -233,7 +233,6 @@ fi
 
 # ----------------------------------------------
 
-
 # 20181109 增加vncserver啟動任務
 LIST=`sudo crontab -l`
 SOURCE="service vnc start"

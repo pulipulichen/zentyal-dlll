@@ -11,6 +11,7 @@
     $redir
 		$primaryDomainName
 		$certs
+		$wildcardPemExists
 </%args>
 % print "## Minimal sample pound.cfg\n";
 % print "##\n";
@@ -185,14 +186,17 @@ End
 
 % print "# -----------------------------------------\n";
 
-% if ($primaryDomainName ne "") {
+% if ($wildcardPemExists == 1 || @match > 0) {
 
 % print "## redirect all requests on port 8080 (\"ListenHTTP\") to the local webserver (see \"Service\" below):\n";
 ListenHTTPS
 	Address 0.0.0.0
 	Port	<% $portHTTPS %>
 
+% if ($wildcardPemExists == 1) {
 	Cert    "/etc/pound/cert/<% $primaryDomainName %>.pem"
+% }
+
 % foreach my $cert (@{$certs}) {
 	Cert    "/etc/pound/cert/<% $cert %>"
 % } #foreach my $cert (@{$certs}) {

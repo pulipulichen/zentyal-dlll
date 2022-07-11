@@ -337,7 +337,7 @@ sub setupSSLCertSwitchToLighttpd
 
   $self->parentModule()->writeConfFile(
       '/etc/lighttpd/lighttpd.conf',
-      "dlllciasrouter/lighttped.conf.certbot.mas",
+      "dlllciasrouter/lighttpd.conf.certbot.mas",
       \@params,
       { uid => '0', gid => '0', mode => '744' }
   );
@@ -375,7 +375,7 @@ sub setupSSLCertSwitchToPound
   my @params = ();
   $self->parentModule()->writeConfFile(
       '/etc/lighttpd/lighttpd.conf',
-      "dlllciasrouter/lighttped.conf.mas",
+      "dlllciasrouter/lighttpd.conf.mas",
       \@params,
       { uid => '0', gid => '0', mode => '744' }
   );

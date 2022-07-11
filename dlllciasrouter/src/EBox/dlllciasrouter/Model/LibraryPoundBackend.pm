@@ -195,8 +195,20 @@ sub writePoundConfig
   #push(@servicesParams, 'services' => \@paramsArray);
   push(@servicesParams, 'domainHash' => $domainHash);
   push(@servicesParams, 'domainHTTPSHash' => $domainHTTPSHash);
-  push(@servicesParams, 'primaryDomainName' => $primaryDomainName);
 
+  # ----------------------------
+  # 要不要啟用HTTPS呢？要看有沒有這個值，跟certbot檔案有沒有
+  # ----------------------------
+
+  my $wildcardPemExists = 0;
+  if ($primaryDomainName ne '') {
+    my $pemFilepath = "/etc/pound/cert/" . $primaryDomainName . ".pem";
+    if (-e $filename) {
+        $wildcardPemExists = 1;
+    }
+  }
+  push(@servicesParams, 'primaryDomainName' => $primaryDomainName);
+  push(@servicesParams, 'wildcardPemExists' => $wildcardPemExists);
   
   # ----------------------------
   # 轉址
@@ -214,7 +226,6 @@ sub writePoundConfig
   my @certs = $self->getPoundCerts();
 
   push(@servicesParams, 'certs' => \@certs);
-
 
   # ----------------------------
   # 寫入
