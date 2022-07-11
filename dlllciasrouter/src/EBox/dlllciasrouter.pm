@@ -277,7 +277,13 @@ sub _setConf
 
     #  更新錯誤訊息
     $self->model("LibraryPoundErrorMessage")->updatePoundErrorMessage();
+
+    $log->info("_setConf 1.5");
+
     $self->model("LibraryPoundBackend")->setUpdatePoundCfg();
+
+    $log->info("_setConf 1.7");
+
     $self->model("LibraryServiceXRDP")->setXRDPCfg();
 
     $log->info("_setConf 2");
