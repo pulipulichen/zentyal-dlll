@@ -161,7 +161,7 @@ sub buildDomainHash
 
   $log->info("buildDomainHash 5");
 
-  ($domainHTTPSHash) = $self->getLoadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
+  # ($domainHTTPSHash) = $self->getLoadLibrary('LibrarySSLCert')->checkSSLCert($domainHash, $domainHTTPSHash);
 
   $log->info("buildDomainHash 6");
 
