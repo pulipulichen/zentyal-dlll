@@ -1063,7 +1063,8 @@ sub getServerRedirectParamDMZ
         destination_port_selected => "destination_port_same",
 
         description => $domainName. " (" . $localIpaddr . "): " . $desc . ' (DMZ)',
-        snat => 1,  # 不做Replace source address，必有它的用意吧
+        # snat => 1,  # 不做Replace source address，必有它的用意吧
+        'snat' => 0,  # 先關閉看看 20220711-2204 
         log => 1,
     );
 
@@ -1108,7 +1109,8 @@ sub getServerRedirectParamOrigin
         'destination_port_other' => $intPort,
 
         'description' => $domainName. " (" . $localIpaddr . "): " . $desc . ' ('. $protocol .' Original)',
-        'snat' => 1,  # 不做Replace source address，必有它的用意吧
+        # 'snat' => 1,  # 不做Replace source address，必有它的用意吧
+        'snat' => 0,  # 先關閉看看 20220711-2204 
         'log' => 1,
     );
 
@@ -1151,7 +1153,8 @@ sub getServerRedirectParamZentyal
         'destination_port_other' => $intPort,
 
         'description' => $domainName. " (" . $localIpaddr . "): " . $desc . ' (' . $protocol . ' Zentyal)',
-        'snat' => 1,  # 不做Replace source address，必有它的用意吧
+        # 'snat' => 1,  # 不做Replace source address，必有它的用意吧
+        'snat' => 0,  # 先關閉看看 20220711-2204 
         'log' => 1,
     );
 
