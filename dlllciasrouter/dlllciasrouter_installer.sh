@@ -205,6 +205,7 @@ sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot/certbot-deploy.sh /etc/le
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot/certbot-pre.sh /etc/letsencrypt/renewal-hooks/pre/
 sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/*.sh
 sudo chmod +x /etc/letsencrypt/renewal-hooks/pre/*.sh
+sudo touch -p /etc/bind/Kcertbot.key
 
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/lighttped/* /etc/lighttpd/
 
