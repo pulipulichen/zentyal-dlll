@@ -1100,7 +1100,7 @@ sub createFieldProtocolInternalPort
                 'printableName' => __('Proxmox VE (8006)'),
                 'defaultValue' => 8006,
                 'value' => 8006,
-                'hidden' => 0,
+                'hidden' => 1,
                 'editable' => 1,),
             new EBox::Types::Port(
                 'fieldName' => 'redir'.$protocol.'_other',
