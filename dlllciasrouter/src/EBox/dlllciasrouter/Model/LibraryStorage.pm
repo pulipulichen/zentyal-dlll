@@ -48,6 +48,10 @@ sub getLoadLibrary
 # 20150527 Pulipuli Chen
 sub initMooseFS
 {
+    # 暫時不使用了 20220711-2030 
+    return 0;
+
+
     my ($self) = @_;
 
     my @params = ();
@@ -160,6 +164,9 @@ sub initMooseFS
 # 20150529 Pulipuli Chen
 sub startMooseFS
 {    
+    # 暫時不使用了 20220711-2030 
+    return 0;
+
     my ($self) = @_;
 
     # mfsEnable
@@ -191,6 +198,7 @@ sub startMooseFS
 # 20150528 Pulipuli Chen
 sub initNFSServer
 {
+    
     my ($self) = @_;
 
     my @params = ();
@@ -444,6 +452,9 @@ sub updateMountServers
 # 20150528 Pulipuli Chen
 sub restartMooseFS
 {
+    # 暫時不使用了 20220711-2030 
+    return 0;
+
     system('sudo service moosefs-master restart');
     system('sudo service moosefs-metalogger restart');
     system('sudo service moosefs-cgiserv restart');
@@ -470,6 +481,12 @@ sub remountChunkserver
 # 20150528 Pulipuli Chen
 sub restartNFSServer
 {
+    my ($self) = @_;
+    my $mod = $self->getLibrary('StorageServer');
+    if ($mod->ids() == 0) {
+        return 0;
+    }
+
     #system('sudo service nfs-kernel-server restart');
     system('sudo exportfs -ar');
 }
