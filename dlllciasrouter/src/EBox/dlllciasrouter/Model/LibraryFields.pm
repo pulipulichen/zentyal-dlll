@@ -876,9 +876,9 @@ sub createFieldProtocolRedirect
     my ($self, $protocol, $enable) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     $hidden = 1;
+    # }
 
     my $field = new EBox::Types::Boolean(
         'fieldName' => 'redir'.$protocol.'_enable',
@@ -924,9 +924,9 @@ sub createFieldProtocolSecureSelection
     my ($self, $protocol, $secureLevel) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     $hidden = 1;
+    # }
 
     my $field = new EBox::Types::Select(
         'fieldName' => 'redir'.$protocol.'_secure',
@@ -969,9 +969,9 @@ sub createFieldProtocolLog
     my ($self, $protocol, $enable) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     $hidden = 1;
+    # }
 
     my $field = new EBox::Types::Boolean(
         'fieldName' => 'redir'.$protocol.'_log',
@@ -992,17 +992,17 @@ sub createFieldProtocolExternalPort
     my ($self, $protocol, $unique, $extPort) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        return new EBox::Types::Port(
-            'fieldName' => 'redir'.$protocol.'_extPort',
-            'printableName' => __($protocol.' External Port'),
-            'unique' => 1,
-            'editable' => 0,
-            'optional' => 1,
-            'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 1,
-        );
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     return new EBox::Types::Port(
+    #         'fieldName' => 'redir'.$protocol.'_extPort',
+    #         'printableName' => __($protocol.' External Port'),
+    #         'unique' => 1,
+    #         'editable' => 0,
+    #         'optional' => 1,
+    #         'hiddenOnSetter' => 1,
+    #         'hiddenOnViewer' => 1,
+    #     );
+    # }
 
     my $field = new EBox::Types::Union(
         'fieldName' => 'redir'.$protocol.'_extPort',
@@ -1032,17 +1032,17 @@ sub createFieldProtocolExternalPortFixed
 {
     my ($self, $protocol, $extPort) = @_;
 
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        return new EBox::Types::Port(
-            'fieldName' => 'redir'.$protocol.'_extPort',
-            'printableName' => __($protocol.' External Port'),
-            'unique' => 1,
-            'editable' => 0,
-            'optional' => 1,
-            'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 1,
-        );
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     return new EBox::Types::Port(
+    #         'fieldName' => 'redir'.$protocol.'_extPort',
+    #         'printableName' => __($protocol.' External Port'),
+    #         'unique' => 1,
+    #         'editable' => 0,
+    #         'optional' => 1,
+    #         'hiddenOnSetter' => 1,
+    #         'hiddenOnViewer' => 1,
+    #     );
+    # }
 
     my $field = new EBox::Types::Port(
             'fieldName' => 'redir'.$protocol.'_extPort',
@@ -1060,18 +1060,18 @@ sub createFieldProtocolInternalPort
     my ($self, $protocol, $port) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        # $hidden = 1;
-        return new EBox::Types::Port(
-            'fieldName' => 'redir'.$protocol.'_intPort',
-            'printableName' => __($protocol.' Internal Port'),
-            'unique' => 1,
-            'editable' => 0,
-            'optional' => 1,
-            'hiddenOnSetter' => 1,
-            'hiddenOnViewer' => 1,
-        );
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     # $hidden = 1;
+    #     return new EBox::Types::Port(
+    #         'fieldName' => 'redir'.$protocol.'_intPort',
+    #         'printableName' => __($protocol.' Internal Port'),
+    #         'unique' => 1,
+    #         'editable' => 0,
+    #         'optional' => 1,
+    #         'hiddenOnSetter' => 1,
+    #         'hiddenOnViewer' => 1,
+    #     );
+    # }
 
     my $field = new EBox::Types::Union(
             'fieldName' => 'redir'.$protocol.'_intPort',
@@ -1105,17 +1105,17 @@ sub createFieldProtocolScheme
     my ($self, $protocol, $unique, $defaultValue) = @_;
 
     my $hidden = 0;
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        #$hidden = 1;
-        return new EBox::Types::Text(
-        'fieldName' => 'redir'.$protocol.'_scheme',
-        'printableName' => __($protocol.' Protocol Scheme'),
-        'optional' =>1,
-        'hiddenOnSetter' => 1,
-        'hiddenOnViewer' => 1,
-        'allowUnsafeChars' => 1,
-        );
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     #$hidden = 1;
+    #     return new EBox::Types::Text(
+    #     'fieldName' => 'redir'.$protocol.'_scheme',
+    #     'printableName' => __($protocol.' Protocol Scheme'),
+    #     'optional' =>1,
+    #     'hiddenOnSetter' => 1,
+    #     'hiddenOnViewer' => 1,
+    #     'allowUnsafeChars' => 1,
+    #     );
+    # }
 
     my $field = new EBox::Types::Select(
             'fieldName' => 'redir'.$protocol.'_scheme',
@@ -1211,10 +1211,10 @@ sub createFieldProtocolNote
 
     my $hidden = 0;
     my $help = $self->createFieldDescriptionEditor($protocol.'_Note');
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
-        $help = '';
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     $hidden = 1;
+    #     $help = '';
+    # }
 
     my $field = new EBox::Types::Text(
         'fieldName' => 'redir'.$protocol.'_note',
@@ -1238,10 +1238,10 @@ sub createFieldProtocolNoteWithHr
 
     my $hidden = 0;
     my $HTMLSetter = '/ajax/setter/textareaSetter.mas';
-    if ($protocol eq "https" || $protocol eq "HTTPS") {
-        $hidden = 1;
-        $HTMLSetter = '';
-    }
+    # if ($protocol eq "https" || $protocol eq "HTTPS") {
+    #     $hidden = 1;
+    #     $HTMLSetter = '';
+    # }
 
     my $field = new EBox::Types::Text(
         'fieldName' => 'redir'.$protocol.'_note',
