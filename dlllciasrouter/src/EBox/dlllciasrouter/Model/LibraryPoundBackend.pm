@@ -606,6 +606,8 @@ sub resolveip
 {
     my ($self, $domainName) = @_;
 
+    return '';
+
     #my $ip = qx{resolveip -s ${domainName}};
     
     #my $ip = `dig \@8.8.8.8.8 +short $(domainName)`;
