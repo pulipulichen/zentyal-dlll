@@ -49,6 +49,8 @@ sub getLoadLibrary
 # 取得測試伺服器的資料
 sub checkSSLCert
 {
+  return 0;
+
   my ($self, $domainHash, $domainHTTPSHash) = @_;
 
   # 測試用

@@ -606,7 +606,7 @@ sub end_by($){
 
 sub isCustomizedDomainName
 {
-    return 0;
+    # return 0;
 
     my ($self, $domainName) = @_;
 
