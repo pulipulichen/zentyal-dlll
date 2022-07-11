@@ -265,9 +265,10 @@ sub createFieldInternalVirtualMachineIdentify
                     'unique' => $unique,
                 ),
             ],
+            defaultValue => "127.0.0.1",
             hiddenOnSetter => 0,
             hiddenOnViewer => 1,
-            optional => 1
+            optional => 0
         );
 
     return $field;
