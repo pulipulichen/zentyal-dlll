@@ -1101,7 +1101,7 @@ sub createFieldProtocolInternalPort
                 'defaultValue' => 8006,
                 'value' => 8006,
                 'hidden' => 1,
-                'editable' => 1,),
+                'editable' => 0,),
             new EBox::Types::Port(
                 'fieldName' => 'redir'.$protocol.'_other',
                 'printableName' => __('Other'),
