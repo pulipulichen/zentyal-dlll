@@ -1085,6 +1085,7 @@ sub createFieldProtocolInternalPort
                 'printableName' => __('Other'),
                 'editable' => 1,),
             ];
+
     if ($protocol eq "https" || $protocol eq "HTTPS") {
         @options = [
             new EBox::Types::Port(
@@ -1096,9 +1097,9 @@ sub createFieldProtocolInternalPort
             new EBox::Types::Port(
                 'fieldName' => 'redir'.$protocol.'_default',
                 'printableName' => __('Proxmox VE (8006)'),
-                'defaultValue' => '8006',
-                'hidden' => 1,
-                'editable' => 0,),
+                'defaultValue' => 8806,
+                'hidden' => 0,
+                'editable' => 1,),
             new EBox::Types::Port(
                 'fieldName' => 'redir'.$protocol.'_other',
                 'printableName' => __('Other'),
