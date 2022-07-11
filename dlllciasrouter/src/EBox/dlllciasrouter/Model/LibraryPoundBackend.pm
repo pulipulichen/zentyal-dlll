@@ -285,7 +285,7 @@ sub getServiceParam
         my $descriptionValue = $row->valueByName('description');
         #my $useTestLocalhost = $row->valueByName('useTestLocalhost');
         my $useTestLocalhost = 0;
-        if ($row->hashElements('vmIdentify')) {
+        if ($row->elementExists('vmIdentify')) {
           $useTestLocalhost = ($row->valueByName("vmIdentify") eq '127.0.0.1');
         }
         
@@ -312,7 +312,7 @@ sub getServiceParam
         my $emergencyValue = $row->valueByName('emergencyEnable');
         my $redirHTTP_enable = $row->valueByName('redirHTTP_enable');
 
-        if ($row->hashElements('vmIdentify')) {
+        if ($row->elementExists('vmIdentify')) {
             if ($row->valueByName("vmIdentify") eq '127.0.0.1') {
               $ipaddrValue = "127.0.0.1";
               $portValue = 888;
@@ -407,7 +407,7 @@ sub getServiceParam
                 #$httpsPortValue = $httpPortValue;
                 $portValue = $dnRow->valueByName('port');
 
-                if ($row->hashElements('vmIdentify')) {
+                if ($row->elementExists('vmIdentify')) {
                     if ($row->valueByName("vmIdentify") eq '127.0.0.1') {
                       $ipaddrValue = "127.0.0.1";
                       $portValue = 888;
