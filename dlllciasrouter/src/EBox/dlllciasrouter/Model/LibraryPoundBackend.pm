@@ -203,7 +203,7 @@ sub writePoundConfig
   my $wildcardPemExists = 0;
   if ($primaryDomainName ne '') {
     my $pemFilepath = "/etc/pound/cert/" . $primaryDomainName . ".pem";
-    if (-e $filename) {
+    if (-e $pemFilepath) {
         $wildcardPemExists = 1;
     }
   }
