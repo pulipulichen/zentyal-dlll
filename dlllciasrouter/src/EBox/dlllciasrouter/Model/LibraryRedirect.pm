@@ -889,11 +889,11 @@ sub isProtocolEnable
 {
     my ($self, $row, $protocol) = @_;
 
-    try {
+    if ($row->elementExists('vmIdentify')) {
         if ($row->valueByName('vmIdentify') eq '127.0.0.1') {
             return 0;
         }
-    } catch { };
+    }
 
     my $enable = 0;
 

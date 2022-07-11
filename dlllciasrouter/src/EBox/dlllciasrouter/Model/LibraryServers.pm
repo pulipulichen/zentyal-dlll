@@ -488,7 +488,10 @@ sub updateVMIDIPAddr
 {
     my ($self, $row) = @_;
     
-    my $ipaddr = $row->valueByName("vmIdentify");
+    my $ipaddr = '127.0.0.1';
+    if ($row->elementExists('vmIdentify')) {
+        $ipaddr = $row->valueByName("vmIdentify");
+    }
 
     if (length($ipaddr) < 5) {
         #是VMID
