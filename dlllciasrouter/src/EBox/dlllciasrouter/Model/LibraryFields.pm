@@ -1073,11 +1073,7 @@ sub createFieldProtocolInternalPort
     #     );
     # }
 
-    my $field = new EBox::Types::Union(
-            'fieldName' => 'redir'.$protocol.'_intPort',
-            'printableName' => __($protocol.' Internal Port'),
-            'subtypes' =>
-            [
+    my @options = [
             new EBox::Types::Port(
                 'fieldName' => 'redir'.$protocol.'_default',
                 'printableName' => __('Default '.$protocol.' port ('.$port.')'),
@@ -1088,7 +1084,13 @@ sub createFieldProtocolInternalPort
                 'fieldName' => 'redir'.$protocol.'_other',
                 'printableName' => __('Other'),
                 'editable' => 1,),
-            ],
+            ];
+
+    my $field = new EBox::Types::Union(
+            'fieldName' => 'redir'.$protocol.'_intPort',
+            'printableName' => __($protocol.' Internal Port'),
+            'subtypes' =>
+            @options,
                 hiddenOnSetter => $hidden,
                 hiddenOnViewer => 1,
         );
