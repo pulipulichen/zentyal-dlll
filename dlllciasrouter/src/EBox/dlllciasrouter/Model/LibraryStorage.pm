@@ -221,6 +221,12 @@ sub initNFSServer
 # 20150529 Pulipuli Chen
 sub startNFSServer
 {
+    my ($self) = @_;
+    my $mod = $self->getLibrary('StorageServer');
+    if ($mod->ids() == 0) {
+        return 0;
+    }
+    
     if (readpipe("sudo netstat -plnt | grep '/rpc.mountd'") eq "") {
         system('sudo service nfs-kernel-server start');
     }
