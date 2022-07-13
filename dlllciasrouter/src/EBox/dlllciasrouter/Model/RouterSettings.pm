@@ -632,6 +632,7 @@ sub updatedRowNotify
       if ($domainNameChanged == 1) {
         $self->setNamedConfCertbot($row);
         $self->setCertbotCommand($row);
+
       }
 
       if ($row->valueByName('testDomainName') ne $oldRow->valueByName('testDomainName')) {
@@ -688,6 +689,8 @@ sub setNamedConfCertbot
         \@params,
         { uid => '0', gid => '118', mode => '644' } # gid 118 bind
     );
+
+    EBox::sudo::root("/etc/init.d/bind9 restart");
 }
 
 ##
