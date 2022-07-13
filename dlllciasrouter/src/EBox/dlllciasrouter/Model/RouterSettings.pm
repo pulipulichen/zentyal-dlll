@@ -28,6 +28,7 @@ use Try::Tiny;
 use EBox::Types::Text;
 
 use File::Slurp;
+use EBox::Sudo;
 
 sub trim($)  
 {  
@@ -690,7 +691,7 @@ sub setNamedConfCertbot
         { uid => '0', gid => '118', mode => '644' } # gid 118 bind
     );
 
-    EBox::sudo::root("/etc/init.d/bind9 restart");
+    EBox::Sudo::root("/etc/init.d/bind9 restart");
 }
 
 ##
