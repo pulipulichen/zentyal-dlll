@@ -607,19 +607,19 @@ sub updatedRowNotify
         $subDomainNamePrivateIP = $mainIpaddr;
       }
 
-      my $domainNameChanged = 0
+      my $domainNameChanged = 0;
       my $libDN = $self->getLoadLibrary('LibraryDomainName');
       if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
         $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $mainIpaddr, $mainIpaddr);
         $domainNameChanged = 1;
       }
-      if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
+      if ($row->valueByName('subDomainNamePublic') ne $oldRow->valueByName('subDomainNamePublic')) {
         $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePublic') . '.' . $oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('subDomainNamePublic') . '.' . $row->valueByName('primaryDomainName'), $mainIpaddr, $subDomainNamePublicIP);
         $domainNameChanged = 1;
       }
-      if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
+      if ($row->valueByName('subDomainNamePrivate') ne $oldRow->valueByName('subDomainNamePrivate')) {
         $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePrivate') . '.' . $oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('subDomainNamePrivate') . '.' . $row->valueByName('primaryDomainName'), $mainIpaddr, $subDomainNamePrivateIP);
         $domainNameChanged = 1;
