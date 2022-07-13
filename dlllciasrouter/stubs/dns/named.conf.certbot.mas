@@ -1,5 +1,7 @@
 <%args>
     $domainName
+    $subDomainNamePublic
+    $subDomainNamePrivate
     $key
 </%args>
 key "certbot." {
@@ -17,21 +19,21 @@ zone "_acme-challenge.<% $domainName %>" {
         };
 };
 
-zone "_acme-challenge.paas.<% $domainName %>" {
+zone "_acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>" {
         type master;
-        file "/var/lib/bind/db._acme-challenge.paas.<% $domainName %>";
+        file "/var/lib/bind/db._acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>";
         check-names warn;
         update-policy {
-                grant certbot. name _acme-challenge.paas.<% $domainName %>. txt;
+                grant certbot. name _acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>. txt;
         };
 };
 
-zone "_acme-challenge.paas-vpn.<% $domainName %>" {
+zone "_acme-challenge.<% $subDomainNamePrivate %>.<% $domainName %>" {
         type master;
-        file "/var/lib/bind/db._acme-challenge.paas-vpn.<% $domainName %>";
+        file "/var/lib/bind/db._acme-challenge.<% $subDomainNamePrivate %>.<% $domainName %>";
         check-names warn;
         update-policy {
-                grant certbot. name _acme-challenge.paas-vpn.<% $domainName %>. txt;
+                grant certbot. name _acme-challenge.<% $subDomainNamePrivate %>.<% $domainName %>. txt;
         };
 };
 % }

@@ -607,15 +607,26 @@ sub updatedRowNotify
         $subDomainNamePrivateIP = $mainIpaddr;
       }
 
+      my $domainNameChanged = 0
+      my $libDN = $self->getLoadLibrary('LibraryDomainName');
       if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
-        my $libDN = $self->getLoadLibrary('LibraryDomainName');
         $libDN->deleteWildcardDomainName($oldRow->valueByName('primaryDomainName'));
-        $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePublic') . '.' . $oldRow->valueByName('primaryDomainName'));
-        $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePrivate') . '.' . $oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('primaryDomainName'), $mainIpaddr, $mainIpaddr);
+        $domainNameChanged = 1;
+      }
+      if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
+        $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePublic') . '.' . $oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('subDomainNamePublic') . '.' . $row->valueByName('primaryDomainName'), $mainIpaddr, $subDomainNamePublicIP);
+        $domainNameChanged = 1;
+      }
+      if ($row->valueByName('primaryDomainName') ne $oldRow->valueByName('primaryDomainName')) {
+        $libDN->deleteWildcardDomainName($oldRow->valueByName('subDomainNamePrivate') . '.' . $oldRow->valueByName('primaryDomainName'));
         $libDN->addWildcardDomainName($row->valueByName('subDomainNamePrivate') . '.' . $row->valueByName('primaryDomainName'), $mainIpaddr, $subDomainNamePrivateIP);
-        $self->setNamedConfCertbot($row->valueByName('primaryDomainName'));
+        $domainNameChanged = 1;
+      }
+
+      if ($domainNameChanged == 1) {
+        $self->setNamedConfCertbot($row);
         $self->setCertbotCommand($row);
       }
 
@@ -653,12 +664,18 @@ sub setWebadminPort
 sub setNamedConfCertbot
 {
     # 要在設定防火牆之前修改
-    my ($self, $domainName) = @_;
+    my ($self, $row) = @_;
 
     my @params = ();
-    push(@params, 'domainName' => $domainName);
-    my $key = read_file('/etc/bind/Kcertbot.key');
     
+    my $domainName = $row->valueByName("primaryDomainName");
+    my $subDomainNamePublic = $row->valueByName("subDomainNamePublic");
+    my $subDomainNamePrivate = $row->valueByName("subDomainNamePrivate");
+    push(@params, 'domainName' => $domainName);
+    push(@params, 'subDomainNamePublic' => $subDomainNamePublic);
+    push(@params, 'subDomainNamePrivate' => $subDomainNamePrivate);
+
+    my $key = read_file('/etc/bind/Kcertbot.key');
     push(@params, "key" => trim($key));
 
     $self->parentModule()->writeConfFile(
