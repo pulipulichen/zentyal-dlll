@@ -4,6 +4,7 @@
     $ip
     $subip
     $ns
+    $diffIpaddr
 </%args>
 <%init>
 my @time    = localtime();
@@ -23,5 +24,7 @@ $TTL 3D
 ;
 
 zentyal     IN      A       <% $ip %>
+% if ($diffIpaddr == 0) {
 *.<% $domainName %>.   IN      A       <% $subip %>
+% }
 _acme-challenge IN NS        <% $domainName %>.

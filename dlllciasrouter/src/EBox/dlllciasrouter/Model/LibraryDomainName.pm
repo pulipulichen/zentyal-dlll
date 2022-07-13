@@ -228,7 +228,7 @@ sub deleteDomainName
 # 新增Wildcard Domain Name
 sub addWildcardDomainName
 {
-    my ($self, $domainName, $mainIpaddr, $ipaddr) = @_;
+    my ($self, $domainName, $mainIpaddr, $ipaddr, $diffIpaddr) = @_;
 
     if (!defined($ipaddr) || $ipaddr eq '') {
       $ipaddr = $mainIpaddr
@@ -242,6 +242,7 @@ sub addWildcardDomainName
     push(@dbparams, 'domainName' => $domainName);
     push(@dbparams, 'ip' => $mainIpaddr);
     push(@dbparams, 'subip' => $ipaddr);
+    push(@dbparams, 'diffIpaddr' => $diffIpaddr);
     
 
     $self->parentModule()->writeConfFile(
