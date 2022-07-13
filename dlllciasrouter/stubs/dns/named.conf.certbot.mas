@@ -10,15 +10,6 @@ key "certbot." {
 };
 
 % if ( $domainName ne "" ) {
-zone "<% $domainName %>." {
-        type master;
-        file "/etc/bind/db.<% $domainName %>";
-};
-
-zone "*.<% $domainName %>." {
-        type master;
-        file "/etc/bind/db.<% $domainName %>";
-};
 
 zone "_acme-challenge.<% $domainName %>." {
         type master;
