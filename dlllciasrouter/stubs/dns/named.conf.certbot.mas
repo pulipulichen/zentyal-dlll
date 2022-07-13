@@ -10,7 +10,17 @@ key "certbot." {
 };
 
 % if ( $domainName ne "" ) {
-zone "_acme-challenge.<% $domainName %>" {
+zone "<% $domainName %>." {
+        type master;
+        file "/etc/bind/db.<% $domainName %>";
+};
+
+zone "*.<% $domainName %>." {
+        type master;
+        file "/etc/bind/db.<% $domainName %>";
+};
+
+zone "_acme-challenge.<% $domainName %>." {
         type master;
         file "/var/lib/bind/db._acme-challenge.<% $domainName %>";
         check-names warn;
@@ -18,8 +28,20 @@ zone "_acme-challenge.<% $domainName %>" {
                 grant certbot. name _acme-challenge.<% $domainName %>. txt;
         };
 };
+% }
 
-zone "_acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>" {
+% if ( $subDomainNamePublic ne "" && $domainName ne "" ) {
+zone "<% $subDomainNamePublic %>.<% $domainName %>." {
+        type master;
+        file "/etc/bind/db.<% $subDomainNamePublic %>.<% $domainName %>";
+};
+
+zone "*.<% $subDomainNamePublic %>.<% $domainName %>." {
+        type master;
+        file "/etc/bind/db.<% $subDomainNamePublic %>.<% $domainName %>";
+};
+
+zone "_acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>." {
         type master;
         file "/var/lib/bind/db._acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>";
         check-names warn;
@@ -27,8 +49,20 @@ zone "_acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>" {
                 grant certbot. name _acme-challenge.<% $subDomainNamePublic %>.<% $domainName %>. txt;
         };
 };
+% }
 
-zone "_acme-challenge.<% $subDomainNamePrivate %>.<% $domainName %>" {
+% if ( $subDomainNamePrivate ne "" && $domainName ne "" ) {
+zone "<% $subDomainNamePrivate %>.<% $domainName %>." {
+        type master;
+        file "/etc/bind/db.<% $subDomainNamePrivate %>.<% $domainName %>";
+};
+
+zone "*.<% $subDomainNamePrivate %>.<% $domainName %>." {
+        type master;
+        file "/etc/bind/db.<% $subDomainNamePrivate %>.<% $domainName %>";
+};
+
+zone "_acme-challenge.<% $subDomainNamePrivate %>.<% $domainName %>." {
         type master;
         file "/var/lib/bind/db._acme-challenge.<% $subDomainNamePrivate %>.<% $domainName %>";
         check-names warn;
