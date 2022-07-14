@@ -194,9 +194,6 @@ sub _daemons
     # $log->info("_daemons 1")
     # $log->info("_daemons 2");
     my @daemons = [];
-    if (-e $daemonsLock) {
-        return \@daemons;
-    }
 
     $self->dlllciasrouter_init();
 
@@ -209,6 +206,10 @@ sub _daemons
                 pidfiles => ['/var/run/apache2.pid']
             };
         $i++;
+    }
+
+    if (-e $daemonsLock) {
+        return \@daemons;
     }
 
     $log->info("_daemons 3");
