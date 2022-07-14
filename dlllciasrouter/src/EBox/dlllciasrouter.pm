@@ -45,6 +45,11 @@ sub _create
 
 sub dlllciasrouter_init
 {
+    my $initLock = '/opt/dlllciasrouter_init.txt'
+    if (-e $initLock) {
+        return 1;
+    }
+
     my ($self) = @_;
 
     my $log = EBox::logger;
@@ -132,6 +137,7 @@ sub dlllciasrouter_init
     };
 
     $log->info("dlllciasrouter_init 6");
+    EBox::Sudo::root("touch " . $initLock)
 }
 
 sub menu
