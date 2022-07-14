@@ -194,7 +194,7 @@ sub _daemons
     # $log->info("_daemons 1")
     # $log->info("_daemons 2");
     my @daemons = [];
-    if (-e $initLock) {
+    if (-e $daemonsLock) {
         return \@daemons;
     }
 
