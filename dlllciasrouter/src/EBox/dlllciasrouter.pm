@@ -49,7 +49,7 @@ sub dlllciasrouter_init
 
     my $log = EBox::logger;
     $log->info("dlllciasrouter_init 1");
-    $self->model("LibraryToolkit")->show_exceptions($_ . ' ( dlllciasrouter->dlllciasrouter_init() part.0 )');
+    $self->model("LibraryToolkit")->show_exceptions(' ( dlllciasrouter->dlllciasrouter_init() part.0 )');
 
     # 初始化安裝
     try {
