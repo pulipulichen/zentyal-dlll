@@ -149,7 +149,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldHTTPExternalPort());
     push(@fields, $fieldsFactory->createFieldHTTPInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("HTTP", 0, "http"));
-    push(@fields, $fieldsFactory->createFieldHTTPNote());
+    # push(@fields, $fieldsFactory->createFieldHTTPNote());
     #push(@fields, $fieldsFactory->createFieldHr('hr_http'));
 
 
@@ -163,7 +163,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldHTTPSExternalPort());
     push(@fields, $fieldsFactory->createFieldHTTPSInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("HTTPS", 0, "https"));
-    push(@fields, $fieldsFactory->createFieldHTTPSNote());
+    # push(@fields, $fieldsFactory->createFieldHTTPSNote());
     #push(@fields, $fieldsFactory->createFieldHr('hr_https'));
 
     # --------------------------------
@@ -176,7 +176,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldSSHExternalPort());
     push(@fields, $fieldsFactory->createFieldSSHInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("SSH", 0, "none"));
-    push(@fields, $fieldsFactory->createFieldSSHNote());
+    # push(@fields, $fieldsFactory->createFieldSSHNote());
     #push(@fields, $fieldsFactory->createFieldHr('hr_ssh'));
 
     # --------------------------------
@@ -189,7 +189,7 @@ sub getDataTable
     push(@fields, $fieldsFactory->createFieldRDPExternalPort());
     push(@fields, $fieldsFactory->createFieldRDPInternalPort());
     push(@fields, $fieldsFactory->createFieldProtocolScheme("RDP", 0, "none"));
-    push(@fields, $fieldsFactory->createFieldRDPNote());
+    # push(@fields, $fieldsFactory->createFieldRDPNote());
     #push(@fields, $fieldsFactory->createFieldHr('hr_rdp'));
 
     # --------------------------------
