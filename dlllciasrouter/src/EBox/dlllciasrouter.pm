@@ -208,11 +208,11 @@ sub _daemons
         $i++;
     }
 
-    if (-e $daemonsLock) {
-        return \@daemons;
-    }
+    # if (-e $daemonsLock) {
+        # return \@daemons;
+    # }
 
-    $log->info("_daemons 3");
+    # $log->info("_daemons 3");
     
     $daemons[$i] = {
         'name' => 'pound',
@@ -221,7 +221,7 @@ sub _daemons
     };
     $i++;
 
-    $log->info("_daemons 4");
+    # $log->info("_daemons 4");
 
     $daemons[$i] = {
         'name' => 'lighttpd',
@@ -230,7 +230,7 @@ sub _daemons
     };
     $i++;
 
-    $log->info("_daemons 5");
+    # $log->info("_daemons 5");
 
     # 20150528 Pulipuli Chen 加入MooseFS的控制
     
@@ -271,7 +271,7 @@ sub _daemons
     #        };
     #$i++;
 
-    EBox::Sudo::root("touch " . $daemonsLock);
+    # EBox::Sudo::root("touch " . $daemonsLock);
 
     return \@daemons;
 }
