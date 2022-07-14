@@ -404,7 +404,9 @@ sub checkConfigChange
 # 20181027 Pulipuli Chen
 sub saveModuleChange
 {
-  system('sudo chmod +x /usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm');
-  system('sudo /usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm');
+  #system('sudo chmod +x /usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm');
+  #system('sudo /usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm');
+  EBox::Sudo::root('chmod +x /usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm')
+  # EBox::Sudo::root('/usr/share/zentyal/www/dlllciasrouter/local_scripts/SaveAllModules.pm');
 }
 1;

@@ -100,7 +100,8 @@ xrdp xfce4 xfce4-goodies tightvncserver"
     sudo snap install certbot-dns-rfc2136
     sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
-
+    # Install chinese fonts
+    sudo apt-get install fonts-wqy-zenhei -y
 fi
 echo "All modules are installed."
 
