@@ -282,7 +282,7 @@ sub deleteWildcardDomainName
 
     # $self->deleteDomainName($domainName);
     # '/etc/bind/db.' . $domainName
-    system( 'sudo rm -f /etc/bind/db.' . $domainName );
+    EBox::Sudo::root( 'rm -f /etc/bind/db.' . $domainName );
 
     if ($domainName eq '') {
         return 1;
@@ -292,7 +292,7 @@ sub deleteWildcardDomainName
     
     # unlink($dbPath, $dbPath . ".jnl");
     # system('sudo rm -f ' . $dbPath . '*' );
-    system( 'sudo rm -f /var/lib/bind/db._acme-challenge.' . $domainName );
+    EBox::Sudo::root( 'rm -f /var/lib/bind/db._acme-challenge.' . $domainName );
 }
 
 ##
