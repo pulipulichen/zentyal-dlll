@@ -47,7 +47,7 @@ sub dlllciasrouter_init
 {
     my ($self) = @_;
 
-    my $initLock = '/opt/dlllciasrouter_init.txt'
+    my $initLock = '/opt/dlllciasrouter_init.txt';
     if (-e $initLock) {
         return 1;
     }
