@@ -187,14 +187,19 @@ sub _daemons
 {
     my ($self) = @_;
 
+    my $daemonsLock = '/opt/dlllciasrouter_daemons.txt';
+    
+
     my $log = EBox::logger;
-    $log->info("_daemons 1");
+    # $log->info("_daemons 1")
+    # $log->info("_daemons 2");
+    my @daemons = [];
+    if (-e $initLock) {
+        return \@daemons;
+    }
 
     $self->dlllciasrouter_init();
 
-    $log->info("_daemons 2");
-
-    my @daemons = [];
     my $i = 0;
 
     if (-e '/var/run/apache2.pid') {
@@ -265,6 +270,8 @@ sub _daemons
     #        };
     #$i++;
 
+    EBox::Sudo::root("touch " . $daemonsLock);
+
     return \@daemons;
 }
 
@@ -278,6 +285,9 @@ sub _setConf
 {
 
     my ($self) = @_;
+
+    my $daemonsLock = '/opt/dlllciasrouter_daemons.txt';
+    EBox::Sudo::root("rm -f " . $daemonsLock);
 
     my $log = EBox::logger;
     $log->info("_setConf 1");
