@@ -137,7 +137,7 @@ sub dlllciasrouter_init
     };
 
     $log->info("dlllciasrouter_init 6");
-    EBox::Sudo::root("touch " . $initLock)
+    EBox::Sudo::root("touch " . $initLock);
 }
 
 sub menu
