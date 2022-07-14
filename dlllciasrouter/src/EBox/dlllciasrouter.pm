@@ -45,12 +45,12 @@ sub _create
 
 sub dlllciasrouter_init
 {
+    my ($self) = @_;
+
     my $initLock = '/opt/dlllciasrouter_init.txt'
     if (-e $initLock) {
         return 1;
     }
-
-    my ($self) = @_;
 
     my $log = EBox::logger;
     $log->info("dlllciasrouter_init 1");
