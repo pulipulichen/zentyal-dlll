@@ -552,7 +552,7 @@ sub updateDomainNameLinkDeco
     else {
         $port = ":" . $port;
     }
-    my $link = "http\://" . $domainName . $port . "/";
+    my $link = $domainName . $port . "/";
 
     if ($isHttp == 1) {
         $link = "http\://" . $link;
