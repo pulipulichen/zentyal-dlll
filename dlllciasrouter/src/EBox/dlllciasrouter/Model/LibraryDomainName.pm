@@ -481,7 +481,13 @@ sub updateDomainNameLink
     if ($row->elementExists('redirPOUND_secure')) {
         $secure = $row->valueByName('redirPOUND_secure');
     }
-    my $link = $self->updateDomainNameLinkDeco($domainName, $enable, $secure, $doBreakUrl);
+    my $schema = $row->valueByName('redirMain_scheme');
+    my $isHttp = 0;
+    if ($schema eq "http") {
+        $isHttp = 0;
+    }
+
+    my $link = $self->updateDomainNameLinkDeco($domainName, $enable, $secure, $doBreakUrl, $isHttp);
     
     # -----------------
     # 20150514 Pulipuli Chen
@@ -500,7 +506,8 @@ sub updateDomainNameLink
             #}
             $secure = $dnRow->valueByName('redirPOUND_secure');
             my $otherDomainName = $dnRow->valueByName("domainName");
-            my $otherLink = $self->updateDomainNameLinkDeco($otherDomainName, $enable, $secure, $doBreakUrl);
+
+            my $otherLink = $self->updateDomainNameLinkDeco($otherDomainName, $enable, $secure, $doBreakUrl, $isHttp);
             $link = $link . "<br />, " . $otherLink;
 
             if ($subMod ne '') {
@@ -521,7 +528,7 @@ sub updateDomainNameLink
 
 sub updateDomainNameLinkDeco
 {
-    my ($self, $domainName, $enable, $secure, $doBreakUrl) = @_;
+    my ($self, $domainName, $enable, $secure, $doBreakUrl, $isHttp) = @_;
 
     my $originalUrl = $domainName;
     my $brokenDomainName = $domainName;
@@ -546,6 +553,14 @@ sub updateDomainNameLinkDeco
         $port = ":" . $port;
     }
     my $link = "http\://" . $domainName . $port . "/";
+
+    if ($isHttp == 1) {
+        $link = "http\://" . $link;
+    }
+    else {
+        $link = "https\://" . $link;
+    }
+    
 
     my $textDecoration = "underline";
     if ($enable == 0) {
