@@ -161,7 +161,7 @@ sub updatedRowNotify
         my $scheme = $row->valueByName('redirMain_scheme');
 
         my $intIpaddr = $row->valueByName('ipaddr');
-        my $extIpaddr = $row->valueByName('extIpaddr')
+        my $extIpaddr = $row->valueByName('extIpaddr');
         my $logButton = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$intIpaddr.'">LOGS</a>';
 
         my $sshLink = "";
@@ -180,7 +180,7 @@ sub updatedRowNotify
                 $port = "";
             }
             if ($extIpaddr ne "") {
-                $port = ":" . $row->valueByName('port')
+                $port = ":" . $row->valueByName('port');
             }
 
             my $link = $scheme . "://" . $domainName . $port . "/";
