@@ -161,6 +161,7 @@ sub updatedRowNotify
         my $scheme = $row->valueByName('redirMain_scheme');
 
         my $intIpaddr = $row->valueByName('ipaddr');
+        my $extIpaddr = $row->valueByName('extIpaddr')
         my $logButton = '<a class="btn btn-icon btn-log" title="configure" target="_blank" href="/Logs/Index?search=Search&selected=firewall&filter-fw_dst='.$intIpaddr.'">LOGS</a>';
 
         my $sshLink = "";
@@ -178,8 +179,11 @@ sub updatedRowNotify
             if ($port eq ":80") {
                 $port = "";
             }
+            if ($extIpaddr ne "") {
+                $port = ":" . $row->valueByName('port')
+            }
 
-            my $link = $scheme . "://" . $domainName . $port . "/aaaa";
+            my $link = $scheme . "://" . $domainName . $port . "/";
             my $lanLink = $scheme . "://" . $intIpaddr . ':' . $intPort . "/";
 
             my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
