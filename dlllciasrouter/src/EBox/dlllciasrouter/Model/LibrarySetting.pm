@@ -179,7 +179,7 @@ sub updatedRowNotify
                 $port = "";
             }
 
-            my $link = $scheme . "://" . $domainName . $port . "/";
+            my $link = $scheme . "://" . $domainName . $port . "/aaaa";
             my $lanLink = $scheme . "://" . $intIpaddr . ':' . $intPort . "/";
 
             my $buttonBtn = '<a target="_blank" href="'.$link.'" class="btn btn-icon icon-webserver" style="padding-left: 40px !important;">Open Main Server</a>';
