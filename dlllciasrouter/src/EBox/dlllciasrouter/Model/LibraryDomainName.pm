@@ -481,7 +481,10 @@ sub updateDomainNameLink
     if ($row->elementExists('redirPOUND_secure')) {
         $secure = $row->valueByName('redirPOUND_secure');
     }
-    my $schema = $row->valueByName('redirPOUND_scheme');
+    my $schema = "http";
+    if ($row->elementExists('redirPOUND_secure')) {
+        $schema = $row->valueByName('redirPOUND_scheme');
+    }
     my $isHttp = 0;
     if ($schema eq "http") {
         $isHttp = 0;

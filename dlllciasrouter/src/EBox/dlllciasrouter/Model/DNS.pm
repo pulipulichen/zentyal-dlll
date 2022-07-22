@@ -146,7 +146,7 @@ sub addedRowNotify
     $libCT->setCreateDate($row);
     $libCT->setUpdateDate($row);
 
-    #$libCT->setContactLink($row);
+    $libCT->setContactLink($row);
     $libCT->setDescriptionHTML($row);
 
     if ($self->getLoadLibrary('LibraryServers')->isDomainNameEnable($row) == 1) {
