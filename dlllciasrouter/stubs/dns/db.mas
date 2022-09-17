@@ -82,3 +82,5 @@ $TTL 3D
 % foreach my $srvRR (@srvRRs) {
 _<% $srvRR->{service_name} %>._<% $srvRR->{protocol} %>    IN      SRV     <% $srvRR->{priority} %> <% $srvRR->{weight} %> <% $srvRR->{target_port} %> <% $srvRR->{target_host} %>
 % }
+
+_acme-challenge IN NS        <% $domain->{name} %>.

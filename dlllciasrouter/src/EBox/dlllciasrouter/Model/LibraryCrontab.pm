@@ -100,6 +100,14 @@ sub initRootCrontab
         );
 
         # -------------------------------------
+        $self->parentModule()->writeConfFile(
+            '/root/dlllciasrouter/certbot-renew.sh',
+            "dlllciasrouter/certbot-renew.sh.mas",
+            \@backupParams,
+            { uid => '0', gid => '0', mode => '777' }   #這邊權限必須是7才能執行
+        );
+
+        # -------------------------------------
 
         my @startupParams = ();
 

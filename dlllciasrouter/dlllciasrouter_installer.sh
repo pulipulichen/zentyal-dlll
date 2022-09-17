@@ -166,6 +166,14 @@ else
   sudo crontab -l | { cat; echo "@reboot $SOURCE"; } | sudo crontab -
 fi
 
+# 20220918 增加certbot
+SOURCE="/root/dlllciasrouter/certbot-renew.sh"
+if echo "$LIST" | grep -q "$SOURCE"; then
+  echo "The Certbot renew job had been added.";
+else
+  sudo crontab -l | { cat; echo "0  6  1,15 * 7   $SOURCE"; } | sudo crontab -
+fi
+
 # 20181109 增加firefox的啟動指令
 echo 'pkill -f firefox;/usr/share/zenbuntu-desktop/firefox-launcher' >> ~/Desktop/start-Firefox.sh
 chmod +x ~/Desktop/start-Firefox.sh
@@ -199,7 +207,7 @@ bash git-init.sh
 # Wildcard DNS
 # 20220703-1551 
 
-#sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
+sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/db.mas /usr/share/zentyal/stubs/dns/db.mas
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/dns/named.conf.mas /usr/share/zentyal/stubs/dns/named.conf.mas
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot/certbot-deploy-wildcard.sh /etc/letsencrypt/renewal-hooks/deploy/
 sudo cp -f ~/zentyal-dlll/dlllciasrouter/stubs/certbot/certbot-deploy.sh /etc/letsencrypt/renewal-hooks/deploy/
