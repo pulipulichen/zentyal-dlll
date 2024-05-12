@@ -1,7 +1,13 @@
-zentyal-dlll
+zentyal-dlll: 客製化軟體路由器Zentyal-DLLL
 ===============
 
-這是用開放原始碼的路由器作業系統Zentyal 4.1客製化而成的Zentyal-DLLL路由器系統
+Based on the Zentyal router operating system, the web management interface has been modified to focus on DNS, DHCP, NAT, Reverse Proxy, and knowledge management functions.
+
+基於Zentyal路由器作業系統，修改網頁管理介面，讓它專注於DNS、DHCP、NAT、Reverse Proxy以及知識管理的功能。
+
+![](https://lh3.googleusercontent.com/-zz2M1LGMJ9U/WXhTL2hS6GI/AAAAAAADO8c/3lRt6qDxA1kahukD9P2_vmLzjZ2Pkvl1wCHMYCw/s0/2017-07-26_16-29-00.png)
+
+----
 
 * https://github.com/pulipulichen/zentyal-dlll
 * http://pulipulichen.github.io/zentyal-dlll/
