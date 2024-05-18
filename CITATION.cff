@@ -9,3 +9,6 @@ title: "zentyal-dlll"
 license: "MIT"
 repository-code: "https://github.com/pulipulichen/zentyal-dlll"
 abstract: "Based on the Zentyal router operating system, the web management interface has been modified to focus on DNS, DHCP, NAT, Reverse Proxy, and knowledge management functions."
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.11213958

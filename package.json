@@ -30,6 +30,7 @@
     "url": "https://github.com/pulipulichen/zentyal-dlll/issues"
   },
   "homepage": "https://github.com/pulipulichen/zentyal-dlll#readme",
+  "doi": "10.5281/zenodo.11213958",
   "devDependencies": {
   },
   "dependencies": {
