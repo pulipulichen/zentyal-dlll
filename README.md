@@ -59,6 +59,10 @@ Tools
 * Zentyal ISO download: http://download.zentyal.com/
 * Zentyal source code: https://github.com/zentyal/zentyal/tree/4.1
 
+# Citation
+
+Chen, Y.-T. (2024). *Zentyal-dlll* (20240518.200629) [Computer software]. Zenodo. [https://doi.org/10.5281/ZENODO.11213958](https://doi.org/10.5281/ZENODO.11213958)
+
 ----
 
 TODO
