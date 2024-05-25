@@ -7,7 +7,7 @@ Based on the Zentyal router operating system, the web management interface has b
 
 基於Zentyal路由器作業系統，修改網頁管理介面，讓它專注於DNS、DHCP、NAT、Reverse Proxy以及知識管理的功能。
 
-## 應用技術：
+## Techniques
 - Perl
 - Bind 8：DNS伺服器
 - Pound：反向代理伺服器
